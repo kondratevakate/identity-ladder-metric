@@ -72,3 +72,32 @@ The first run read `scan_*_brain.nii.gz` as the image. That file is the binary b
 was zero and every error was 0. No interpretable value was produced. Intensities now come from `scan_*.nii.gz`
 (N4-corrected, registered), and the brain mask from `scan_*_brain.nii.gz`. A scan with no intensity variation
 inside its mask now stops the run. The degenerate cache and rows were deleted. Nothing else changes.
+
+## Amendment 2 (3 Nov 2026, bilateral and look-alike variants; recorded before these results)
+
+Kate asked for three design changes (3 Nov 2026). They are new variants in `src/donor_ladder_brain_bilateral.py`;
+the original variants are kept unchanged and re-run in the same pass, so old and new sit side by side. Still
+**pre-QC, affine registration only**; the registration gate in `AGENTS.md` is not met.
+
+- **Sides.** Every position is run twice, on the left and on the right hemisphere. The right side is the same
+  experiment on the mirrored scan (x to -x mm), so cubes stay voxel-aligned. A position counts as left if its
+  centre has x < 0 mm. `orig` is the side of the position as drawn (it must reproduce the original run). Each side
+  is normalized by its own V; `L+R` pools both sides' rows per target (mean over patches and sides) and is
+  normalized by the pooled V.
+- **Look-alikes (kNN), three variants**, all within the same side and excluding the target's family:
+  (a) `knn_oracle`: nearest donors by the distance between the target's true cube and the donors' cubes (an
+  upper bound, it uses the answer); (b) `knn`: by the context shell (original); (c) `knn_mirror`: by the
+  distance between the target's own mirrored contralateral cube and the donors' cubes.
+- **Bilateral donor, two variants**: (a) `other_hemisphere`: the mirrored cube at the same location (original);
+  (b) `mirror_block`: the target's shell is matched against shells in its own mirrored hemisphere, within a
+  search window of +-8 mm (1 mm steps, 17^3 offsets) on each axis around the mirrored location; the cube at the
+  best-matching offset is the fill. Candidate cubes must have >= 95% of voxels inside the brain mask, and the x
+  offset is restricted so that the candidate overlaps the target's own cube in x no more than the unshifted
+  mirrored cube does.
+- **Strangers on both sides**: `population` k = 1 is the stranger's same-side cube; `stranger_other_side` is the
+  first stranger (same draw order) with a valid contralateral cube, mirrored; `stranger_block` runs the same
+  +-8 mm block search in that stranger's contralateral hemisphere. `stranger_block` is the control for
+  `mirror_block`, which otherwise gains from choosing the best of 4913 candidates.
+- Table rows use k = 16 for look-alikes and all donors for "same sex and age", as in the ISBI Table 1.
+- Outputs: private rows and region arrays in `donor-ladder-brain-bilateral-20261103-v1\`; public aggregates in
+  `results/donor_ladder_brain_bilateral.json`.
