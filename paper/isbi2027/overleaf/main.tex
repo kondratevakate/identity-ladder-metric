@@ -9,16 +9,20 @@
 \newcommand{\todo}[1]{\textbf{[#1]}}
 \raggedbottom
 
-\title{Fighting regression to the mean in the evaluation of brain MRI inpainting}
-\name{Ekaterina Kondrateva$^{1,2}$, Florian Kofler$^{1,3,4,5}$}
+\title{Regression to the mean in the evaluation of brain MRI inpainting}
+\name{Ekaterina Kondrateva$^{1,2}$, Ivan Ezhov$^{3}$, Nikolay Yordanov$^{4}$, Florian Kofler$^{1,5,6,7}$}
 \address{$^{1}$Hertie Institute for AI in Brain Health, University of T\"ubingen, T\"ubingen, Germany\\
 $^{2}$Department of Radiation Oncology (Maastro), GROW, Maastricht University,\\
 Maastricht, The Netherlands\\
-$^{3}$AI for Image-Guided Diagnosis and Therapy, TUM School of Medicine and Health,\\
+$^{3}$Chair for AI in Healthcare and Medicine, Technical University of Munich, Munich, Germany\\
+$^{4}$Department of Neurointensive Care, Multiprofile Hospital for Active Treatment\\
+in Neurology and Psychiatry ``St. Naum'', Sofia, Bulgaria\\
+$^{5}$AI for Image-Guided Diagnosis and Therapy, TUM School of Medicine and Health,\\
 Technical University of Munich, Munich, Germany\\
-$^{4}$Department of Quantitative Biomedicine, University of Zurich, Zurich, Switzerland\\
-$^{5}$Helmholtz AI, Helmholtz Munich, Neuherberg, Germany\\
-ORCID: E.~Kondrateva 0000-0003-3623-6106; F.~Kofler 0000-0003-0642-7884}
+$^{6}$Department of Quantitative Biomedicine, University of Zurich, Zurich, Switzerland\\
+$^{7}$Helmholtz AI, Helmholtz Munich, Neuherberg, Germany\\
+ORCID: E.~Kondrateva 0000-0003-3623-6106; I.~Ezhov 0000-0002-0862-6513;\\
+N.~Yordanov 0009-0009-1406-4754; F.~Kofler 0000-0003-0642-7884}
 
 \begin{document}
 \maketitle
@@ -26,12 +30,17 @@ ORCID: E.~Kondrateva 0000-0003-3623-6106; F.~Kofler 0000-0003-0642-7884}
 \begin{abstract}
 The BraTS inpainting challenge ranks algorithms for healthy-tissue inpainting in brain MRI by SSIM, PSNR and RMSE.
 Even top-ranked challenge algorithms produce visibly blurred infills.
-We demonstrate that this is a consequence of the ranking metrics.
-Writing tissue as a population mean plus an individual part, the mean fill has half the squared error of another person's tissue and beats every donor whose individual part correlates with the target's by less than $1/2$, a sibling included.
-We test this on T1 scans of 221 young adults from a twin and sibling study, filling cubes of brain tissue from each kind of donor.
-One stranger's tissue had $1.98$ times the error of the dataset mean (predicted $2$), a sibling's $1.82$, the person's own mirrored hemisphere $1.49$, and only the same person's second scan beat the mean ($0.30$); the results held over seeds, cube sizes and positions.
-Dice against the oracle segmentation has the same property with the mode in place of the mean.
-We propose the population-mean fill as a mandatory baseline and plausibility measures that do not reward averaging.
+We demonstrate that this blur is a consequence of the ranking metrics, which reward regression to the mean.
+If each person's tissue is modeled as a population mean plus an individual deviation, filling the mask with the population mean has half the expected squared error of filling it with an unrelated person's tissue.
+The mean also beats every donor whose individual deviation correlates with the target's by less than $1/2$, a sibling included.
+We test this on T1 scans of 221 young adults from a twin and sibling study by filling cubes of brain tissue from each kind of donor.
+An unrelated person's tissue had $1.98$ times the error of the dataset mean (predicted $2$), a sibling's $1.82$ and the person's own mirrored hemisphere $1.49$; only the same person's second scan beat the mean ($0.30$).
+The results held over seeds, cube sizes and positions.
+Dice against the segmentation of the true image (the oracle) has the same property, with the mode in place of the mean.
+The metrics therefore rank a fill that contains no information about the patient above fills that contain some.
+Because mean fills contain no information about the patient beyond their group, they mark the score a method can reach without knowing the individual.
+We propose that evaluations include three mean baselines, the dataset mean, the mean of a sub-cohort matched on sex and age, and the mean of look-alikes with the most similar surrounding tissue, and report each submission's distance from them.
+We hope to open a discussion on new metrics for inpainting that reward information about the patient rather than averaging.
 \end{abstract}
 \begin{keywords}
 inpainting, image synthesis, metric validation, regression to the mean, BraTS
@@ -42,14 +51,13 @@ inpainting, image synthesis, metric validation, regression to the mean, BraTS
 The BraTS challenge on local synthesis of healthy brain tissue asks participants to fill masked healthy regions of T1 scans, and ranks them case-wise by SSIM, PSNR and RMSE inside the mask~\cite{kofler2023brats,inpainting2026}.
 In the 2023 edition the ranking was clear, yet the organisers report that, apart from one 2D diffusion model with stripe artefacts in the orthogonal views, the submissions produced blurry inpaintings in all three views, and that qualitative inspection gave a more varied picture than the ranking~\cite{kofler2023brats}.
 They called for synthesis metrics closer to expert perception.
-The 2025 winner is a U-Net trained to inpaint masked regions~\cite{zhang2025brats}.
 
-A natural remedy is to judge fills by what they are for: segment the inpainted brain with a downstream U-Net and compare the result with the segmentation of the real image.
-Yet such a check scores the segmentation by Dice against the oracle, itself a pointwise score, and we show that it favours averaged fills for the same reason.
+Fills can also be judged by what they are for: segment the inpainted brain with a downstream U-Net and compare the result with the segmentation of the real image, the oracle.
+Blurred fills do well on this check too. We show that this is expected: Dice against the oracle is itself a voxel-wise score and favours averaged fills for the same reason.
 
 We argue that both observations follow from the metrics, not from the models.
 Squared error is minimised by the conditional mean, so when the visible context carries little information about the individual anatomy inside the mask, the optimal fill is close to the population average: regression to the mean.
-Pointwise label agreement is maximised by the most probable label, so a segmentation of an averaged fill lands on the population-typical boundary.
+Voxel-wise label agreement is maximised by the most probable label, so a segmentation of an averaged fill lands on the population-typical boundary.
 Our contributions are (i) closed forms that place the population-mean fill, averages of $k$ people and real tissue from the same person, relatives and strangers on one scale; (ii) the analogue for Dice and accuracy against the oracle; (iii) a test on real brain MRI of twins and siblings, where every fill is real tissue from a known donor, with its robustness to seeds, mask size and position; (iv) lessons from fields that faced the same problem, turned into a reporting protocol.
 
 \begin{figure*}[t]
@@ -64,7 +72,7 @@ The blurred averages beat the real, related tissue of a sibling and of the perso
 
 \section{Theory}
 \label{sec:theory}
-Write the voxels of a masked region of person $p$ in session $s$ as $x=\mu+g_p+e_p+\eta_{ps}+\varepsilon$: population mean $\mu$, genotype $g$ (shared with correlation $1/2$ by siblings), individual development $e$, session nuisance $\eta$ and noise $\varepsilon$, independent and zero-mean, with variances per voxel.
+The voxels of a masked region of person $p$ in session $s$ are modeled as $x=\mu+g_p+e_p+\eta_{ps}+\varepsilon$: population mean $\mu$ (estimated by the dataset mean, Sec.~\ref{sec:experiments}), genotype $g$ (shared with correlation $1/2$ by siblings), individual development $e$, session nuisance $\eta$ and noise $\varepsilon$, independent and zero-mean, with variances per voxel.
 The individual part $\delta=x-\mu$ has variance $V$, and we express every error in units of $V$, the expected squared error of the population mean itself.
 
 \begin{prop}[squared error]
@@ -76,7 +84,7 @@ Hence the identity-free mean beats any single donor with $r<1/2$, every sibling 
 More generally, for any predictor $f$ of the masked region from the visible context $z$, $\mathbb{E}\|x-f(z)\|^2$ is minimised by $\mathbb{E}[x\mid z]$.
 If $z$ is nearly independent of the individual part inside the mask, the optimum is close to $\mu$, so a network trained on squared error, or selected by RMSE and PSNR, is pulled towards the average: a blurred fill is the expected answer, not a failure of optimisation.
 
-\begin{prop}[pointwise label agreement]
+\begin{prop}[voxel-wise label agreement]
 Let a voxel belong to a tissue class with probability $p$ given the context.
 A fill whose segmentation takes the most probable label agrees with the true label with probability $\max(p,1-p)$; an independent donor agrees with probability $p^2+(1-p)^2\le\max(p,1-p)$.
 Expected voxel accuracy, and Dice in the same way, against the oracle segmentation therefore favour the mode over any donor that does not share the target's anatomy.
@@ -111,7 +119,7 @@ Every pool excludes the target's whole family.
 For single donors we report $r=1-\mathrm{ratio}/2$, the share of the individual part they have in common with the target.
 For the averages we fit $(1-R^2)(1+1/k)$ over $k$.
 Intervals are $95\%$ percentiles of 2000 bootstrap resamples of families.
-To test robustness we repeated the analysis with five more seeds for cube positions and donor draws, with cubes of $12$, $24$ and $32$\,mm, with other thresholds for the template and scan masks, and on a fixed subset (every person with a second session and 15 sibling pairs) with SyN registration~\cite{avants2008} added on top of the affine one.
+To test robustness we repeated the analysis with five more seeds for cube positions and donor draws and with cubes of $12$ and $24$\,mm.
 The protocol was written before any result of each run was looked at.
 
 \section{Results}
@@ -147,19 +155,17 @@ Only the same person's repeat scan beat the mean everywhere ($0.19$ to $0.33$, $
 Sex and age explained $1\%$ to $4\%$ of the individual variance: averaging people of the same sex and age did no better than the dataset mean, partly because the participants' ages span only 20 to 29 years.
 Look-alikes chosen by the surrounding tissue beat the mean by $5\%$ in the parietal box, $25\%$ over the random cubes and $55\%$ in the deep box, with a U-shaped error over $k$ and the best $k$ between 8 and 32.
 
-\textbf{Robustness.} Over five further seeds the stranger's error stayed between $1.98$ and $2.00$ over the random cubes, the sibling's $r$ between $0.07$ and $0.10$, the repeat scan's between $0.84$ and $0.87$, and the mirror side's between $0.21$ and $0.39$; the $R^2$ of sex and age stayed at $0.01$.
-Cubes of $12$ and $24$\,mm gave the same picture \todo{32\,mm, mask thresholds and SyN to add}.
+\textbf{Robustness.} Over five further seeds the stranger's error stayed between $1.98$ and $2.00$, the sibling's $r$ between $0.07$ and $0.10$ and the repeat scan's between $0.84$ and $0.87$; cubes of $12$ and $24$\,mm gave the same picture.
 
-\section{How other fields fight it}
+\section{How other fields handle it}
 \label{sec:fields}
 In image restoration, lowering mean distortion provably makes outputs easier to tell apart from real images, so restoration is judged on distortion and perceptual quality together~\cite{blau2018}.
-Deep nowcasting models trained on rain rates give blurry forecasts; a generative model was preferred by expert meteorologists~\cite{ravuri2021}, and verification over neighbourhoods credits a realistic storm placed slightly wrong~\cite{roberts2008}.
-Protein structure models are scored against random pairs, with TM-score normalised so that random pairs score the same at any length~\cite{zhang2004}, and lDDT adds a plausibility check that does not reward closeness to the reference~\cite{mariani2013}.
+Protein structure models are scored against random pairs, with TM-score normalised so that random pairs score the same at any length~\cite{zhang2004}.
 For inpainting this gives four rules.
 \begin{enumerate}
-\item \textbf{The population mean is a baseline entry}, with a blurred version; a method that does not beat it on a metric has shown nothing about the individual on that metric.
-\item \textbf{Report distance from the mean next to distance from the truth.}
-\item \textbf{Score plausibility, not only overlap}: shape and topology of the segmentation, and population-level realism of the fill.
+\item \textbf{Mean fills are baseline entries}: the dataset mean, a sex- and age-matched sub-cohort mean and a look-alike mean. A method that does not beat them on a metric has shown nothing about the individual on that metric.
+\item \textbf{Report distance from the means next to distance from the truth.}
+\item \textbf{Go beyond first-order, voxel-wise scores.} A simple penalty on averaging is easy to game: adding white noise of variance $V$ to the mean restores the spread of real tissue, carries no information about the patient and, by Proposition~1, scores like a stranger. Metrics therefore have to compare second-order structure, such as local covariance or the power spectrum of the fill against real tissue, or leave the voxel level: shape and topology of the segmentation, morphometry and population-level realism.
 \item \textbf{Calibrate raw values} against fills from other people: on this scale the mean scores 1 and a stranger 2, whatever the region.
 \end{enumerate}
 Limitations: one dataset of young adults, affine registration whose visual quality control is not yet complete, real tissue as fills rather than challenge entries, and the label-space result shown in theory only.
@@ -172,7 +178,7 @@ Ethical approval was not required as confirmed by the licence attached with the 
 \label{sec:acknowledgments}
 This work was supported by Anna Valentina Lioba Eleonora Claire Javid Mamasani and the Gemeinn\"utzige Hertie Stiftung.
 The authors declare no conflicts of interest.
-GPT-6 Astra (OpenAI, high effort) in Codex helped write the MRI preparation code, and Claude Opus 5.5 (Anthropic, medium effort) the analysis code, the literature search and the draft text; E.K. re-checked every derivation, number and figure against the released results, and every reference against Crossref, DataCite or PubMed with a dedicated citation-check workflow.
+GPT-6 Astra (OpenAI) helped write the MRI preparation code (Sec.~3) and Claude Opus 5.5 (Anthropic) the analysis code (Sec.~3--4, Figs.~1--2, Table~1), the literature search and draft text; the authors checked all derivations, numbers and references.
 
 \bibliographystyle{IEEEbib}
 {\small\bibliography{refs}}
