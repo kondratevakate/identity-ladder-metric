@@ -68,3 +68,27 @@ def test_cohort_mean_uses_same_sex_within_two_years_without_family():
     want = (sum(pool) - people[1][2]) / (len(pool) - 1)    # 25 y is outside the window, M excluded
     assert np.allclose(got, want, atol=1e-5)
     assert P.cohort_mean(groups, "M", 22.0, []) is None    # 4 donors < COHORT_MIN
+
+
+def test_half_run_uses_only_its_own_families():
+    import pandas as pd
+    rng = np.random.default_rng(5)
+    n, shape = 12, (20, 20, 20)
+    V = rng.normal(size=(n,) + shape).astype(np.float32)
+    M = np.ones((n,) + shape, np.uint8)
+    t = pd.DataFrame({"person": [f"p{i}" for i in range(n)], "session": "ses-01", "family": [f"f{i:02d}" for i in range(n)],
+                      "sex": "F", "age": 25.0})
+    affine = np.eye(4)
+    affine[0, 3] = -9.5
+    fams = np.unique(t.family)
+    half_of = dict(zip(np.random.default_rng(P.B.SEED).permutation(fams), np.arange(len(fams)) % 2))
+    acc, support, _ = P.run(t, affine, V, M, pool_half=0)
+    assert acc.a[("stranger", 1, "n")].sum() == 0 and acc.a[("stranger", 0, "n")].sum() > 0
+    mine = [i for i, f in enumerate(t.family) if half_of[f] == 0]
+    i = mine[0]
+    mu = V[[j for j in mine if j != i]].mean(0)
+    want = P.box((V[i] - mu) ** 2)
+    got_total = acc.a[("stranger", 0, "V")]
+    assert np.allclose(sum(P.box((V[k] - V[[j for j in mine if j != k]].mean(0)) ** 2) for k in mine)[support],
+                       got_total[support], rtol=1e-4, atol=1e-4)
+    assert want.shape == got_total.shape

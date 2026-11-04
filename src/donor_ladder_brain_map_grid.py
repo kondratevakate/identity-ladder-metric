@@ -85,11 +85,13 @@ def knn_error(xi, X, shells, i, donors, k=K):
     return float(np.mean((xi - X[nn].mean(0)) ** 2))
 
 
-def centre_rows(X, Mc, sh2, sh4, valid, mvalid, fam, sex, age, rep_cube, rep_valid, mirror_ok):
-    """Per target at one centre: dict fill -> (error, V) under the cube-ladder rules."""
+def centre_rows(X, Mc, sh2, sh4, valid, mvalid, fam, sex, age, rep_cube, rep_valid, mirror_ok, pool=None):
+    """Per target at one centre: dict fill -> (error, V) under the cube-ladder rules. With `pool` (bool per
+    target), only those scans are targets and donors (independent half maps, Amendment 8)."""
+    pool = np.ones(len(X), bool) if pool is None else pool
     out = []
-    for i in np.flatnonzero(valid):
-        others = np.flatnonzero((fam != fam[i]) & valid)
+    for i in np.flatnonzero(valid & pool):
+        others = np.flatnonzero((fam != fam[i]) & valid & pool)
         if others.size < MIN_DONORS:
             continue
         xi = X[i]
@@ -133,6 +135,7 @@ def main():
     half = np.array([half_of[f] for f in fam])
     x_mm = affine[0, 0] * cs[:, 0] + affine[0, 3]
     acc = {(f, h, q): np.zeros(len(cs)) for f in FILLS for h in (0, 1) for q in ("err", "V", "n")}
+    ind = {(f, h, q): np.zeros(len(cs)) for f in FILLS for h in (0, 1) for q in ("err", "V")}   # own-half pools
     vsum = np.zeros(len(cs))
     vn = np.zeros(len(cs))
     for ci in range(len(cs)):
@@ -152,6 +155,12 @@ def main():
                 acc[(f, half[i], "err")][ci] += e
                 acc[(f, half[i], "V")][ci] += v
                 acc[(f, half[i], "n")][ci] += 1
+        for h in (0, 1):
+            for i, v, r in centre_rows(X, Mc, sh2, sh4, valid, mvalid, fam, sex, age, rep_cube, rep_valid,
+                                       abs(x_mm[ci]) >= P.MIDLINE_MM, half == h):
+                for f, e in r.items():
+                    ind[(f, h, "err")][ci] += e
+                    ind[(f, h, "V")][ci] += v
         if ci % 200 == 0:
             print(f"centre {ci + 1}/{len(cs)}", flush=True)
     shape = tuple(-(-n // STEP) for n in V.shape[1:])
@@ -160,7 +169,7 @@ def main():
     aff8[:3, :3] *= STEP
     aff8[0, 3] += affine[0, 0] * ((a // 2) % STEP)
     out = {"status": "pre-QC: affine registration only, MRI registration QC not met; exploratory maps",
-           "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendment 7)", "grid_mm": STEP, "cube_mm": CUBE,
+           "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendments 7, 8)", "grid_mm": STEP, "cube_mm": CUBE,
            "n_centres": int(len(cs)), "maps": {}}
     vol = np.full(shape, np.nan, np.float32)
     vol[grid_idx] = np.where(vn > 0, vsum / np.maximum(vn, 1), np.nan)
@@ -170,15 +179,23 @@ def main():
         v = acc[(f, 0, "V")] + acc[(f, 1, "V")]
         with np.errstate(invalid="ignore", divide="ignore"):
             ratio = np.where(v > 0, e / v, np.nan)
-            halves = [np.where(acc[(f, h, "V")] > 0, acc[(f, h, "err")] / acc[(f, h, "V")], np.nan) for h in (0, 1)]
+            shared = [np.where(acc[(f, h, "V")] > 0, acc[(f, h, "err")] / acc[(f, h, "V")], np.nan) for h in (0, 1)]
+            halves = [np.where(ind[(f, h, "V")] > 0, ind[(f, h, "err")] / ind[(f, h, "V")], np.nan) for h in (0, 1)]
         vol = np.full(shape, np.nan, np.float32)
         vol[grid_idx] = ratio
         nib.save(nib.Nifti1Image(vol, aff8), os.path.join(P.PRIVATE, f"grid_{f}_ratio.nii.gz"))
+        for h in (0, 1):
+            hv = np.full(shape, np.nan, np.float32)
+            hv[grid_idx] = halves[h]
+            nib.save(nib.Nifti1Image(hv, aff8), os.path.join(P.PRIVATE, f"grid_{f}_ratio_h{h}.nii.gz"))
+        oks = np.isfinite(shared[0]) & np.isfinite(shared[1])
         ok = np.isfinite(halves[0]) & np.isfinite(halves[1])
         fin = np.isfinite(ratio)
         out["maps"][f] = {"pooled_ratio": float(e.sum() / v.sum()) if v.sum() > 0 else None,
                           "quantiles_5_25_50_75_95": [float(q) for q in np.percentile(ratio[fin], [5, 25, 50, 75, 95])],
                           "split_half_r": float(np.corrcoef(halves[0][ok], halves[1][ok])[0, 1]) if ok.sum() > 10 else None,
+                          "split_half_r_shared_pool": (float(np.corrcoef(shared[0][oks], shared[1][oks])[0, 1])
+                                                       if oks.sum() > 10 else None),
                           "centres": int(fin.sum()), "max_targets_per_centre": int((acc[(f, 0, "n")] + acc[(f, 1, "n")]).max())}
     out["minutes"] = round((time.time() - t0) / 60, 1)
     with open(OUT_JSON, "w", encoding="utf-8") as fh:

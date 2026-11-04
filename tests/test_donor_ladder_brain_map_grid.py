@@ -63,3 +63,18 @@ def test_centre_rows_follow_the_cube_ladder_rules():
     assert "knn16_s4" in r0 and "cohort" in r0
     no_mirror = G.centre_rows(X, Mc, sh, sh, valid, valid, fam, sex, age, rep_cube, [False] * n, False)
     assert all("mirror" not in r for _, _, r in no_mirror)
+
+
+def test_centre_rows_with_a_pool_keep_targets_and_donors_inside_it():
+    rng = np.random.default_rng(3)
+    n = 30
+    X, sh = rng.normal(size=(n, 10)), rng.normal(size=(n, 6))
+    fam = np.arange(n)
+    age, sex = np.full(n, 25.0), np.array(["F"] * n)
+    valid = np.ones(n, bool)
+    pool = np.arange(n) % 2 == 0
+    rows = G.centre_rows(X, X, sh, sh, valid, valid, fam, sex, age, [None] * n, [False] * n, True, pool)
+    assert {i for i, _, _ in rows} == set(np.flatnonzero(pool))
+    i, v, _ = rows[0]
+    mu = X[[j for j in np.flatnonzero(pool) if j != i]].mean(0)
+    assert np.isclose(v, np.mean((X[i] - mu) ** 2))

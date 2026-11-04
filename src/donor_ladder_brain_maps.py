@@ -77,37 +77,45 @@ class Acc:
         return self.a[(donor, 0, "n")] + self.a[(donor, 1, "n")]
 
 
-def run(t, affine, V, M):
+def run(t, affine, V, M, pool_half=None):
+    """Accumulated maps; with pool_half (0 or 1) only that half's families enter the pools and the targets
+    (independent half maps, Amendment 8). Support is always taken over every session-1 scan."""
     tg = t[t.session == "ses-01"].reset_index()
     ix = tg["index"].to_numpy()
     fam = tg.family.to_numpy()
     mi = B.mirror_index(affine, V.shape[1])
     rep = {r.person: r.Index for r in t[t.session == "ses-02"].itertuples()}
+    fams = np.unique(fam)
+    half_of = dict(zip(np.random.default_rng(B.SEED).permutation(fams), np.arange(len(fams)) % 2))
+    in_pool = np.array([pool_half is None or half_of[f] == pool_half for f in fam])
     tot_s = np.zeros(V.shape[1:])
     tot_q = np.zeros(V.shape[1:])
     groups = {}                                         # (sex, age) -> [sum of volumes (float32), count]
     support = 0
     for n_done, k in enumerate(ix):
+        support = support + (box(np.asarray(M[k])) >= VALID)
+        if not in_pool[n_done]:
+            continue
         v = np.asarray(V[k], dtype=np.float64)
         tot_s += v
         tot_q += v ** 2
         g = groups.setdefault((t.sex.iloc[k], float(t.age.iloc[k])), [np.zeros(V.shape[1:], np.float32), 0])
         g[0] += v.astype(np.float32)
         g[1] += 1
-        support = support + (box(np.asarray(M[k])) >= VALID)
         if n_done % 50 == 0:
             print(f"pool {n_done + 1}/{len(ix)}", flush=True)
     support = support >= SUPPORT * len(ix)
-    fams = np.unique(fam)
-    half_of = dict(zip(np.random.default_rng(B.SEED).permutation(fams), np.arange(len(fams)) % 2))
+    n_pool = int(in_pool.sum())
     acc = Acc(support.shape)
     for n_f, f in enumerate(fams):
+        if pool_half is not None and half_of[f] != pool_half:
+            continue
         members = np.flatnonzero(fam == f)
         vols = {i: np.asarray(V[ix[i]], dtype=np.float32) for i in members}
         oks = {i: box(np.asarray(M[ix[i]])) >= VALID for i in members}
         fs = sum(vols[i].astype(np.float64) for i in members)
         fq = sum(vols[i].astype(np.float64) ** 2 for i in members)
-        mu, pvar = leave_family_out(tot_s, tot_q, len(ix), fs, fq, len(members))
+        mu, pvar = leave_family_out(tot_s, tot_q, n_pool, fs, fq, len(members))
         bp = box(pvar)
         h = half_of[f]
         for i in members:
@@ -136,8 +144,8 @@ def run(t, affine, V, M):
     return acc, support, np.abs(x_mm) < MIDLINE_MM
 
 
-def split_half(acc, donor, keep):
-    a, b = acc.ratio(donor, (0,)), acc.ratio(donor, (1,))
+def split_half(a, b, keep):
+    """Pearson r between two half maps over the kept voxels (reproducibility of the pattern)."""
     ok = keep & np.isfinite(a) & np.isfinite(b)
     return float(np.corrcoef(a[ok], b[ok])[0, 1]) if ok.sum() > 10 else None
 
@@ -149,10 +157,11 @@ def main():
     _, affine, _ = B.positions(np.random.default_rng(B.SEED))
     V, M = S.cache_volumes(t, affine)
     acc, support, midline = run(t, affine, V, M)
+    halves = [run(t, affine, V, M, h)[0] for h in (0, 1)]   # independent pools per half (Amendment 8)
     aff2 = affine.copy()
     aff2[:3, :3] *= STEP
     out = {"status": "pre-QC: affine registration only, MRI registration QC not met; exploratory maps",
-           "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendment 5)", "window_mm": WIN, "grid_mm": STEP,
+           "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendments 5, 6, 8)", "window_mm": WIN, "grid_mm": STEP,
            "support_voxels": int(support.sum()), "maps": {}}
     v_mean = acc.a[("stranger", 0, "V")] + acc.a[("stranger", 1, "V")]
     n_str = acc.count("stranger")
@@ -165,13 +174,17 @@ def main():
         if d == "mirror":
             keep &= ~midline[:, None, None]
         ratio = np.where(keep, ratio, np.nan)
-        for name, arr in ((f"{d}_ratio", ratio), (f"{d}_n", acc.count(d))):
+        h0, h1 = (np.where(keep, halves[h].ratio(d, (h,)), np.nan) for h in (0, 1))
+        for name, arr in ((f"{d}_ratio", ratio), (f"{d}_n", acc.count(d)), (f"{d}_ratio_h0", h0),
+                          (f"{d}_ratio_h1", h1)):
             nib.save(nib.Nifti1Image(arr.astype(np.float32), aff2), os.path.join(PRIVATE, f"{name}.nii.gz"))
         e = sum(acc.a[(d, h, "err")][keep].sum() for h in (0, 1))
         v = sum(acc.a[(d, h, "V")][keep].sum() for h in (0, 1))
         q = np.nanpercentile(ratio[keep], [5, 25, 50, 75, 95]) if keep.any() else [None] * 5
         out["maps"][d] = {"pooled_ratio": float(e / v) if v > 0 else None, "quantiles_5_25_50_75_95": [float(x) for x in q],
-                          "split_half_r": split_half(acc, d, keep), "max_targets_per_voxel": int(acc.count(d).max()),
+                          "split_half_r": split_half(h0, h1, keep),
+                          "split_half_r_shared_pool": split_half(acc.ratio(d, (0,)), acc.ratio(d, (1,)), keep),
+                          "max_targets_per_voxel": int(acc.count(d).max()),
                           "voxels": int(keep.sum())}
     out["minutes"] = round((time.time() - t0) / 60, 1)
     with open(OUT_JSON, "w", encoding="utf-8") as fh:

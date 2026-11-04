@@ -195,3 +195,23 @@ in `src/donor_ladder_brain_map_grid.py`; the other fills are computed there too,
   map's median) so that regional differences are visible; both show the split-half r next to each map.
 - Outputs: private window cache and aggregate maps in `donor-ladder-brain-maps-20261104-v1\`; summary in
   `results/donor_ladder_brain_map_grid.json`; figures `results/figures/fig_ladder_maps_{common,contrast}.{png,pdf}`.
+
+## Amendment 8 (4 Nov 2026, independent halves, replication display, coverage; before the revised maps)
+
+After a review of the exploratory maps (Kate agreed with it except on contrast):
+
+- **Wording.** Colour = local MSE in the 16 mm window over the error of the dataset mean; the r under a map is
+  the Pearson correlation between the maps of two family halves (reproducibility of the pattern), not a
+  correlation with the donor.
+- **Independent halves.** In Amendment 5 both halves shared the pool of the denominator (and of the stranger and
+  cohort fills). The half maps are now computed with every pool restricted to the families of that half; the
+  main map keeps the full pool. Template and registration remain shared, so a high split-half r is compatible
+  with stable anatomy and with systematic residual misregistration alike.
+- **Contrast.** Kate wants per-map contrast to show regional differences. In the stretched version, voxels where
+  the two independent halves deviate from the map's median in opposite directions are shown faded, so the eye
+  sees what replicates. The common-scale version is kept.
+- **Coverage.** A figure with the repeat and mirror maps on the common scale next to the number of targets per
+  voxel. The stranger map is a control of the expected level (about 2); sibling and cohort maps go to the
+  appendix.
+- The 8 mm look-alike grid of Amendment 7 used shared pools for its halves; an independent-half rerun is listed
+  as pending until it is done.
