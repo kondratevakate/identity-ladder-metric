@@ -139,3 +139,28 @@ mirror search. Computed in `src/donor_ladder_brain_size.py` and `src/donor_ladde
   (cubes 8 and 12 mm with all shells, 16 mm with a 2 mm shell), cube 16 mm with shells 4, 8 and 12 mm (with the
   boxes), cube 32 mm with shells 2, 4 and 8 mm. Dropped, status NOT RUN: cube 24 mm (all shells) and cube 32 mm
   with a 12 mm shell.
+
+## Amendment 5 (4 Nov 2026, brain-wide variability maps; recorded before these results)
+
+Kate asked for maps of how similar each part of the brain is to the same person, a relative and the mean, with
+donors as unbiased as possible and no oracle or image-based selection. Computed in `src/donor_ladder_brain_maps.py`
+from the z-scored volume cache of Amendment 4. Pre-QC, affine registration only: the maps mix anatomy with
+residual misregistration and are exploratory.
+
+- **Window**: 16 mm cube (as the random cubes), centred on every voxel of a 2 mm grid. Local MSE comes from a box
+  filter of the voxel-wise squared difference. A target enters a voxel only if its window and the donor's window
+  each have >= 95% of voxels inside the brain mask.
+- **Donors (fixed rules, no selection on images)**: `repeat`, the same person's session 2; `mirror`, the person's
+  own scan reflected at the same place, with |x| < 8 mm excluded (the window overlaps its reflection);
+  `sibling`, the mean of the errors to all different-age family members; `stranger`, the exact expectation over
+  every session-1 scan of other families, |x_i - mu|^2 + the pool variance (seed-free). Look-alikes, searches,
+  oracles and co-twins (4 pairs) are not mapped.
+- **Unit**: V, the error of the mean of all session-1 scans outside the target's family. Each map is sum of
+  errors / sum of V over the same included targets at that voxel; r = 1 - ratio / 2. V itself is also mapped.
+- **Reliability**: families are split once into two halves with the seed; the maps are recomputed per half and the
+  voxel-wise correlation between halves is reported per map. A count map gives the number of targets per voxel.
+- Outputs: private aggregate NIfTI maps in `donor-ladder-brain-maps-20261104-v1\`; public summary
+  `results/donor_ladder_brain_maps.json` and figure `results/figures/fig_variability_maps.{png,pdf}`.
+- **Pool and support** (added before any map was computed): the mean and the stranger pool use every session-1
+  scan outside the target's family at every voxel; maps are reported only where >= 95% of session-1 scans have a
+  valid window (common support), so the brain edge does not pull the mean towards the zero outside the mask.
