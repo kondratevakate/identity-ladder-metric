@@ -21,6 +21,7 @@ import donor_ladder_brain_bilateral as L  # noqa: E402
 
 SHELL, VALID, SEED = L.SHELL, L.VALID, L.SEED
 ROWS = os.path.join(L.PRIVATE, "rows_hemisphere.csv.gz")
+ROWS_ORACLE = os.path.join(L.PRIVATE, "rows_hemisphere_oracle.csv.gz")   # Amendment 4
 WORKERS = 4
 
 
@@ -35,21 +36,22 @@ def _corr(fa, k, s, out):
     return fft.irfftn(fa * np.conj(fft.rfftn(k, s, workers=WORKERS)), s, workers=WORKERS)[out]
 
 
-def prepare(z, m, half, size, a):
-    """Donor-side FFT terms of one frame for cubes of `size` in one half (padded crop, o2, validity)."""
+def prepare(z, m, half, size, a, oracle=False):
+    """Donor-side FFT terms of one frame for cubes of `size` in one half (padded crop, o2, validity); with
+    `oracle` the match uses the cube itself instead of the shell (Amendment 4)."""
     lo, hi = half_starts(half, size[0], a, z.shape[0])
     P = np.pad(z.astype(np.float64), SHELL)[lo:hi + size[0] + 2 * SHELL]   # padded index o = cube start o
     Pm = np.pad(m.astype(np.float64), SHELL)[lo:hi + size[0] + 2 * SHELL]
     s = tuple(fft.next_fast_len(d, real=True) for d in P.shape)
     kshape = tuple(n + 2 * SHELL for n in size)
     out = tuple(slice(0, d - k + 1) for d, k in zip(P.shape, kshape))
-    sm = L.shell_mask(size)
+    sm = L.match_mask(size, SHELL, oracle)
     km = np.zeros(kshape)
     km[tuple(slice(SHELL, SHELL + n) for n in size)] = 1
     fp = fft.rfftn(P, s, workers=WORKERS)
     o2 = _corr(fft.rfftn(P ** 2, s, workers=WORKERS), sm.astype(np.float64), s, out)
     frac = _corr(fft.rfftn(Pm, s, workers=WORKERS), km, s, out) / np.prod(size)
-    return {"P": P, "fp": fp, "s": s, "out": out, "o2": o2, "ok": frac >= VALID - 1e-4, "lo": lo, "size": size}
+    return {"P": P, "fp": fp, "s": s, "out": out, "o2": o2, "ok": frac >= VALID - 1e-4, "lo": lo, "size": size, "oracle": oracle}
 
 
 def search(win, prep):
@@ -57,7 +59,7 @@ def search(win, prep):
     if not prep["ok"].any():
         return None, None
     size = prep["size"]
-    k = np.where(L.shell_mask(size), win, 0).astype(np.float64)
+    k = np.where(L.match_mask(size, SHELL, prep["oracle"]), win, 0).astype(np.float64)
     d = prep["o2"] - 2 * _corr(prep["fp"], k, prep["s"], prep["out"])
     d[~prep["ok"]] = np.inf
     u = np.unravel_index(int(np.argmin(d)), d.shape)
@@ -65,7 +67,7 @@ def search(win, prep):
     return (prep["lo"] + int(u[0]), int(u[1]), int(u[2])), cube
 
 
-def plan(t, pos, affine):
+def plan(t, pos, affine, suffix=""):
     """Search jobs grouped by searched scan, plus per (target, patch, side) the target cube and the population mean."""
     tg = t[t.session == "ses-01"].reset_index()
     ix = tg["index"].to_numpy()
@@ -86,15 +88,15 @@ def plan(t, pos, affine):
                     continue
                 ref[(i, pi, side)] = (X[i], X[others].mean(0))
                 j = int(np.random.default_rng([SEED, i, pi, 0]).permutation(others)[0])
-                for scan, cohort in ((i, "mirror_hemi"), (j, "stranger_hemi")):
+                for scan, cohort in ((i, "mirror_hemi" + suffix), (j, "stranger_hemi" + suffix)):
                     jobs.append((int(ix[scan]), 1 - fo, drawn, tuple(size), pi, int(i), side, cohort, drawn))
         print(f"plan {pi + 1}/{len(pos)}", flush=True)
     jobs.sort(key=lambda j: j[:4])
     return tg, jobs, ref
 
 
-def run(t, pos, affine):
-    tg, jobs, ref = plan(t, pos, affine)
+def run(t, pos, affine, oracle=False):
+    tg, jobs, ref = plan(t, pos, affine, "_oracle" if oracle else "")
     a = L.mirror_constant(affine, nib.load(t.path.iloc[0]).shape[0])
     ix = tg["index"].to_numpy()
     rows, frames, prep, cur = [], None, {}, None
@@ -108,7 +110,7 @@ def run(t, pos, affine):
             frames, prep, cur = [(z, m), (z[mi], m[mi])], {}, scan
         key = (frame, half, size)
         if key not in prep:
-            prep = {key: prepare(*frames[frame], half, size, a)}   # jobs are sorted: keep one at a time
+            prep = {key: prepare(*frames[frame], half, size, a, oracle)}   # jobs are sorted: keep one at a time
         vol = np.load(L.region_paths(pi)[0], mmap_mode="r")
         win = np.asarray(vol[ix[i], L.own_frame(side, drawn)][tuple(slice(L.W, L.W + n + 2 * SHELL) for n in size)])
         _, cube = search(win, prep[key])
@@ -129,11 +131,13 @@ def main():
     t0 = time.time()
     t = B.scans()
     pos, affine, n_cand = B.positions(np.random.default_rng(SEED))
-    if not os.path.exists(ROWS):
-        run(t, pos, affine).to_csv(ROWS, index=False)
-    base = pd.read_csv(os.path.join(L.PRIVATE, "rows.csv.gz"), dtype={"k": str})
-    hemi = pd.read_csv(ROWS, dtype={"k": str})
-    L.write_summary(pd.concat([base, hemi], ignore_index=True), t, int((t.session == "ses-01").sum()), n_cand, t0)
+    oracle = "--oracle" in sys.argv
+    out = ROWS_ORACLE if oracle else ROWS
+    if not os.path.exists(out):
+        run(t, pos, affine, oracle).to_csv(out, index=False)
+    parts = [pd.read_csv(f, dtype={"k": str}) for f in (os.path.join(L.PRIVATE, "rows.csv.gz"), ROWS, ROWS_ORACLE)
+             if os.path.exists(f)]
+    L.write_summary(pd.concat(parts, ignore_index=True), t, int((t.session == "ses-01").sum()), n_cand, t0)
 
 
 if __name__ == "__main__":

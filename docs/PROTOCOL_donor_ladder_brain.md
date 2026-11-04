@@ -115,3 +115,22 @@ computed in `src/donor_ladder_brain_hemisphere.py` and added to the same rows an
   (the stranger of `population` k = 1); control for `mirror_hemi`.
 - Shell voxels outside the scan grid count as zero (outside the brain). Distances are computed with FFT
   cross-correlation in float64.
+
+## Amendment 4 (4 Nov 2026, size grid and oracle searches; recorded before these results)
+
+Kate asked for the dependence on patch size, shell thickness and their ratio, and for an oracle version of the
+mirror search. Computed in `src/donor_ladder_brain_size.py` and `src/donor_ladder_brain_hemisphere.py`.
+
+- **Grid.** Cube edge p in {8, 12, 16, 24, 32} mm and shell s in {2, 4, 8, 12} mm, 20 configurations. The 32
+  random cubes keep the centres of the original 16 mm draw (start = centre - p/2); the frozen `deep` and `parietal`
+  boxes keep their size and vary only s. Everything else (validity >= 95%, family exclusion, L/R/L+R views, seeds,
+  +-8 mm block search with its overlap rule, k = 16 look-alikes) is as in Amendment 2. Voxels outside the scan
+  grid count as zero (outside the brain).
+- **Oracle searches** (upper bounds, they use the answer): `mirror_block_oracle` / `stranger_block_oracle` pick
+  the +-8 mm offset whose cube is closest to the target's true cube (in the grid), and `mirror_hemi_oracle` /
+  `stranger_hemi_oracle` do the same over the whole contralateral hemisphere (16 mm cubes, 4 mm shell only).
+- Reported per configuration: L+R error over V with 95% family-bootstrap intervals for single donors, k = 16
+  look-alikes, same sex and age (all) and the dataset mean. The shell does not change fills that do not use it
+  (strangers, relatives, mirror at the same place, means); those vary with p only.
+- Outputs: private rows in `donor-ladder-brain-size-20261104-v1\`; public aggregates in
+  `results/donor_ladder_brain_size.json`; figure `results/figures/fig_size_shell_dependence.{png,pdf}`.
