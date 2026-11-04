@@ -1,0 +1,62 @@
+{
+ "status": "pre-QC: affine registration only, MRI registration QC not met; exploratory maps",
+ "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendment 5)",
+ "window_mm": 16,
+ "grid_mm": 2,
+ "support_voxels": 159251,
+ "maps": {
+  "repeat": {
+   "pooled_ratio": 0.2911590814907565,
+   "quantiles_5_25_50_75_95": [
+    0.16015942349259,
+    0.20861211137114496,
+    0.26789178870819536,
+    0.3750917295196995,
+    0.5676487301405441
+   ],
+   "split_half_r": 0.7345398529407378,
+   "max_targets_per_voxel": 23,
+   "voxels": 159251
+  },
+  "mirror": {
+   "pooled_ratio": 1.5591380276588431,
+   "quantiles_5_25_50_75_95": [
+    0.6482884695637541,
+    1.3187298830466003,
+    1.6347462195042084,
+    1.8017870570229138,
+    1.985331282343558
+   ],
+   "split_half_r": 0.9781937337089541,
+   "max_targets_per_voxel": 221,
+   "voxels": 133853
+  },
+  "sibling": {
+   "pooled_ratio": 1.8456414060136261,
+   "quantiles_5_25_50_75_95": [
+    1.626603784495038,
+    1.7731002841836643,
+    1.862142944893107,
+    1.9232104074713905,
+    1.9854561222255058
+   ],
+   "split_half_r": 0.40569367942588463,
+   "max_targets_per_voxel": 102,
+   "voxels": 159251
+  },
+  "stranger": {
+   "pooled_ratio": 1.9918651067117692,
+   "quantiles_5_25_50_75_95": [
+    1.9900280482604988,
+    1.9904682582508453,
+    1.990679593822057,
+    1.9908469389904555,
+    1.9976193387043053
+   ],
+   "split_half_r": -0.929275547241936,
+   "max_targets_per_voxel": 221,
+   "voxels": 159251
+  }
+ },
+ "minutes": 7.5
+}
