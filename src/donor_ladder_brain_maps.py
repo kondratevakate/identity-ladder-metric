@@ -20,7 +20,8 @@ import donor_ladder_brain as B  # noqa: E402
 import donor_ladder_brain_size as S  # noqa: E402
 
 WIN, STEP, VALID, SUPPORT, MIDLINE_MM = 16, 2, 0.95, 0.95, 8
-DONORS = ("repeat", "mirror", "sibling", "stranger")
+DONORS = ("repeat", "mirror", "sibling", "stranger", "cohort")
+COHORT_MIN, AGE_WINDOW = 10, 2
 PRIVATE = os.path.join(B.PROJ, "donor-ladder-brain-maps-20261104-v1")
 OUT_JSON = os.path.join(B.ROOT, "results", "donor_ladder_brain_maps.json")
 
@@ -40,6 +41,19 @@ def leave_family_out(total_s, total_q, n_total, fam_s, fam_q, n_fam):
 def stranger_expectation(v, mu, pool_var):
     """Exact mean over the pool of |v - v_j|^2 voxel-wise: |v - mu|^2 + the pool variance."""
     return (v - mu) ** 2 + pool_var
+
+
+def cohort_mean(groups, sex, age, family):
+    """Mean of the same-sex donors within AGE_WINDOW years outside the family, from (sex, age) running sums;
+    None if fewer than COHORT_MIN donors. family: (sex, age, volume) of the target's family members."""
+    keys = [g for g in groups if g[0] == sex and abs(g[1] - age) <= AGE_WINDOW]
+    s = sum(groups[g][0].astype(np.float64) for g in keys)
+    n = sum(groups[g][1] for g in keys)
+    for fs, fa, fv in family:
+        if fs == sex and abs(fa - age) <= AGE_WINDOW:
+            s = s - fv
+            n -= 1
+    return None if n < COHORT_MIN else (s / n).astype(np.float32)
 
 
 class Acc:
@@ -71,11 +85,15 @@ def run(t, affine, V, M):
     rep = {r.person: r.Index for r in t[t.session == "ses-02"].itertuples()}
     tot_s = np.zeros(V.shape[1:])
     tot_q = np.zeros(V.shape[1:])
+    groups = {}                                         # (sex, age) -> [sum of volumes (float32), count]
     support = 0
     for n_done, k in enumerate(ix):
         v = np.asarray(V[k], dtype=np.float64)
         tot_s += v
         tot_q += v ** 2
+        g = groups.setdefault((t.sex.iloc[k], float(t.age.iloc[k])), [np.zeros(V.shape[1:], np.float32), 0])
+        g[0] += v.astype(np.float32)
+        g[1] += 1
         support = support + (box(np.asarray(M[k])) >= VALID)
         if n_done % 50 == 0:
             print(f"pool {n_done + 1}/{len(ix)}", flush=True)
@@ -104,6 +122,10 @@ def run(t, affine, V, M):
                 n_ok = sum(oks[j].astype(np.float32) for j in sibs)
                 with np.errstate(invalid="ignore", divide="ignore"):
                     acc.add("sibling", h, np.where(n_ok > 0, e / np.maximum(n_ok, 1), 0), Vi, ok & (n_ok > 0))
+            cm = cohort_mean(groups, tg.sex.iloc[i], tg.age.iloc[i],
+                             [(tg.sex.iloc[j], tg.age.iloc[j], vols[j]) for j in members])
+            if cm is not None:
+                acc.add("cohort", h, box((vi - cm) ** 2), Vi, ok)
             r = rep.get(tg.person.iloc[i])
             if r is not None:
                 okr = ok & (box(np.asarray(M[r])) >= VALID)

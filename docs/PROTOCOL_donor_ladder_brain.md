@@ -164,3 +164,13 @@ residual misregistration and are exploratory.
 - **Pool and support** (added before any map was computed): the mean and the stranger pool use every session-1
   scan outside the target's family at every voxel; maps are reported only where >= 95% of session-1 scans have a
   valid window (common support), so the brain edge does not pull the mean towards the zero outside the mask.
+
+## Amendment 6 (4 Nov 2026, same-sex-and-age map; recorded before this map was computed)
+
+Kate asked for a map of the metadata-matched mean in place of the stranger column (the exact stranger map is about
+2 everywhere by construction). `cohort`: the mean of all session-1 scans outside the target's family with the
+same sex and an age within 2 years (the `cohort` rule of the cube ladder, all donors), computed from per
+(sex, age) running sums; targets with fewer than 10 such donors are skipped. Same window, unit, support and
+split-half reliability as Amendment 5; 1 - ratio is the share of individual variation that sex and age explain
+locally (minus the pool's own noise). The stranger map stays in the JSON as a check. The figure shows the
+cohort map instead of the stranger map.

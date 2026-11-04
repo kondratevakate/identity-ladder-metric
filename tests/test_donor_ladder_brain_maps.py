@@ -51,3 +51,20 @@ def test_accumulator_ratio_is_sum_over_sum_and_respects_validity():
     assert np.allclose(acc.ratio("mirror"), [1.5, 1.5])
     assert np.allclose(acc.count("mirror"), [2, 1])
     assert np.allclose(acc.ratio("mirror", (0,))[0], 2.0) and np.isnan(acc.ratio("mirror", (0,))[1])
+
+
+def test_cohort_mean_uses_same_sex_within_two_years_without_family():
+    rng = np.random.default_rng(4)
+    people = [("F", float(a), rng.normal(size=3).astype(np.float32)) for a in (20, 21, 22, 23, 25)] * 3
+    people += [("M", 22.0, rng.normal(size=3).astype(np.float32))] * 4
+    groups = {}
+    for s, a, v in people:
+        g = groups.setdefault((s, a), [np.zeros(3, np.float32), 0])
+        g[0] += v
+        g[1] += 1
+    family = [people[1]]                                   # one F, 21 y family member
+    got = P.cohort_mean(groups, "F", 22.0, family)
+    pool = [v for s, a, v in people if s == "F" and abs(a - 22) <= 2]
+    want = (sum(pool) - people[1][2]) / (len(pool) - 1)    # 25 y is outside the window, M excluded
+    assert np.allclose(got, want, atol=1e-5)
+    assert P.cohort_mean(groups, "M", 22.0, []) is None    # 4 donors < COHORT_MIN

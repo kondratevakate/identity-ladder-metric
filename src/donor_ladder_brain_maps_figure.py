@@ -24,7 +24,7 @@ import donor_ladder_brain_maps as P  # noqa: E402
 from make_figures import INK, MUTED  # noqa: E402  (also applies the paper rcParams)
 
 COLUMNS = [("V", "Individual variation V\n(z units)"), ("repeat", "Repeat scan"), ("mirror", "Own mirror"),
-           ("sibling", "Sibling"), ("stranger", "Stranger")]
+           ("sibling", "Sibling"), ("cohort", "Same sex and age\n(mean of donors)")]
 SLICES = [("z", 55, "axial z = 55 mm"), ("z", 10, "axial z = 10 mm"), ("x", -30, "sagittal x = -30 mm")]
 
 
@@ -41,7 +41,7 @@ def main():
     from nilearn.image import resample_to_img
     res = json.load(open(P.OUT_JSON, encoding="utf-8"))
     maps = {"V": nib.load(os.path.join(P.PRIVATE, "V.nii.gz"))}
-    for d in P.DONORS:
+    for d in [c for c, _ in COLUMNS[1:]]:
         maps[d] = nib.load(os.path.join(P.PRIVATE, f"{d}_ratio.nii.gz"))
     under = resample_to_img(load_mni152_template(resolution=1), maps["V"], interpolation="continuous")
     fig, axes = plt.subplots(len(SLICES), len(COLUMNS), figsize=(7.0, 4.9),
@@ -66,8 +66,7 @@ def main():
         axes[0, j].set_title(title, fontsize=6.8, color=INK, pad=3, linespacing=1.0)
         if key != "V":
             d = res["maps"][key]
-            rel = ("≈ 2 by construction" if key == "stranger"  # exact expectation: split-half r is not informative
-                   else f"split-half r {d['split_half_r']:.2f}")
+            rel = f"split-half r {d['split_half_r']:.2f}"
             axes[-1, j].set_xlabel(f"pooled {d['pooled_ratio']:.2f}\n{rel}", fontsize=5.8, color=INK, labelpad=2)
     cb1 = fig.add_axes([0.08, 0.075, 0.15, 0.015])
     fig.colorbar(im_v, cax=cb1, orientation="horizontal").ax.tick_params(labelsize=5)
@@ -76,11 +75,11 @@ def main():
     cb = fig.colorbar(im_r, cax=cb2, orientation="horizontal")
     cb.ax.tick_params(labelsize=5)
     cb.set_ticks([0, 0.5, 1, 1.5, 2])
-    cb2.set_title("error / dataset-mean error  (blue: beats the mean, red: worse; 2 = stranger)", fontsize=5.6, pad=2)
+    cb2.set_title("error / dataset-mean error  (blue: beats the mean, red: worse; a stranger scores 2)", fontsize=5.6, pad=2)
     fig.text(0.5, 0.012, "QTIM session 1; 16 mm window on a 2 mm grid; fixed donors, no selection. Mirror map: "
              "|x| < 8 mm excluded. Pre-QC, affine registration only: maps mix anatomy with misregistration.",
              ha="center", fontsize=5.4, color=MUTED)
-    fig.suptitle("How alike each part of the brain is: same person, own mirror, sibling, stranger", fontsize=8.5)
+    fig.suptitle("How alike each part of the brain is: same person, own mirror, sibling, sex-and-age mean", fontsize=8.5)
     out = os.path.join(ROOT, "results", "figures", "fig_variability_maps")
     fig.savefig(out + ".png", dpi=250)
     fig.savefig(out + ".pdf", bbox_inches="tight", pad_inches=0.02)
