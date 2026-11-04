@@ -1,6 +1,6 @@
 {
  "status": "pre-QC: affine registration only, MRI registration QC not met; exploratory maps",
- "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendment 5)",
+ "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendments 5, 6, 8)",
  "window_mm": 16,
  "grid_mm": 2,
  "support_voxels": 159251,
@@ -14,7 +14,8 @@
     0.3750917295196995,
     0.5676487301405441
    ],
-   "split_half_r": 0.7345398529407378,
+   "split_half_r": 0.7336080214395108,
+   "split_half_r_shared_pool": 0.7345398529407378,
    "max_targets_per_voxel": 23,
    "voxels": 159251
   },
@@ -27,7 +28,8 @@
     1.8017870570229138,
     1.985331282343558
    ],
-   "split_half_r": 0.9781937337089541,
+   "split_half_r": 0.9781172271130701,
+   "split_half_r_shared_pool": 0.9781937337089541,
    "max_targets_per_voxel": 221,
    "voxels": 133853
   },
@@ -40,7 +42,8 @@
     1.9232104074713905,
     1.9854561222255058
    ],
-   "split_half_r": 0.40569367942588463,
+   "split_half_r": 0.3954813653069063,
+   "split_half_r_shared_pool": 0.40569367942588463,
    "max_targets_per_voxel": 102,
    "voxels": 159251
   },
@@ -53,7 +56,8 @@
     1.9908469389904555,
     1.9976193387043053
    ],
-   "split_half_r": -0.929275547241936,
+   "split_half_r": 0.5187299845792438,
+   "split_half_r_shared_pool": -0.929275547241936,
    "max_targets_per_voxel": 221,
    "voxels": 159251
   },
@@ -66,10 +70,11 @@
     1.0120128233063306,
     1.0157992870392691
    ],
-   "split_half_r": 0.23612971274415798,
+   "split_half_r": 0.18941773801104425,
+   "split_half_r_shared_pool": 0.23612971274415798,
    "max_targets_per_voxel": 220,
    "voxels": 159251
   }
  },
- "minutes": 7.2
+ "minutes": 17.8
 }
