@@ -174,3 +174,24 @@ same sex and an age within 2 years (the `cohort` rule of the cube ladder, all do
 split-half reliability as Amendment 5; 1 - ratio is the share of individual variation that sex and age explain
 locally (minus the pool's own noise). The stranger map stays in the JSON as a check. The figure shows the
 cohort map instead of the stranger map.
+
+## Amendment 7 (4 Nov 2026, coarse-grid ladder map with look-alikes; recorded before these results)
+
+Kate asked for every fill of the main figure as a brain map, including k look-alikes, with contrast that shows
+regional differences. Look-alikes need a neighbour search at every location, so they are mapped on a coarse grid
+in `src/donor_ladder_brain_map_grid.py`; the other fills are computed there too, as a check on the 2 mm maps.
+
+- **Centres**: 8 mm grid through the midline voxel (x = 0 mm), every centre whose 24 mm window has >= 90% of
+  voxels inside the template brain mask (the rule of the random cubes); 2296 centres. Cube: 16 mm around the
+  centre; shells of 2 and 4 mm from the same 24 mm window.
+- **Fills at each centre**, with the cube-ladder rules (targets session 1, whole family excluded, cube validity
+  >= 95%, at least 10 valid donors, V = error of the mean of the valid donors): `repeat`; `mirror` (own mirrored
+  scan, same place; centres with |x| < 8 mm excluded); `sibling` (mean error over all valid different-age family
+  members); `stranger` (exact expectation over the valid donors); `cohort` (mean of the valid donors of the same
+  sex and age within 2 years, at least 10); `knn16_s4`, `knn16_s2` (mean of the 16 donors closest on the 4 mm or
+  2 mm shell; selection by context only, no oracle).
+- Each centre: sum of errors / sum of V over its targets; split-half reliability over the two family halves of
+  Amendment 5. Figures: one common colour scale, and one with a per-map range (2nd to 98th percentile around the
+  map's median) so that regional differences are visible; both show the split-half r next to each map.
+- Outputs: private window cache and aggregate maps in `donor-ladder-brain-maps-20261104-v1\`; summary in
+  `results/donor_ladder_brain_map_grid.json`; figures `results/figures/fig_ladder_maps_{common,contrast}.{png,pdf}`.
