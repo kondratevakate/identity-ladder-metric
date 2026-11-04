@@ -263,9 +263,18 @@ def main():
         extract(t, pos, affine)
     r, n = run(t, pos, affine)
     r.to_csv(os.path.join(PRIVATE, "rows.csv.gz"), index=False)
+    hemi = os.path.join(PRIVATE, "rows_hemisphere.csv.gz")   # Amendment 3 rows, if already computed
+    if os.path.exists(hemi):
+        r = pd.concat([r, pd.read_csv(hemi, dtype={"k": str})], ignore_index=True)
+    write_summary(r, t, n, n_cand, t0)
+
+
+def write_summary(r, t, n, n_cand, t0):
+    """Public aggregates of all rows (bilateral and, when present, whole-hemisphere search)."""
     out = {"status": "pre-QC: affine registration only, MRI registration QC not met",
-           "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendment 2)", "seed": SEED, "patch_mm": B.PATCH,
+           "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendments 2 and 3)", "seed": SEED, "patch_mm": B.PATCH,
            "shell_mm": SHELL, "block_search_halfwindow_mm": W,
+           "hemisphere_search": "mirror_hemi / stranger_hemi: whole contralateral hemisphere (Amendment 3)",
            "views": {"orig": "side as drawn (reproduces donor_ladder_brain.json)", "L": "left hemisphere",
                      "R": "right hemisphere (mirrored scan)", "LR": "both sides pooled per target, pooled V"},
            "QTIM": F.summarize(views(r), n_targets=n, n_scans=len(t), n_people=int(t.person.nunique()),

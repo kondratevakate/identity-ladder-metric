@@ -23,7 +23,8 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(ROOT, "paper", "isbi2027"))
 import donor_ladder_brain as B  # noqa: E402
 import donor_ladder_brain_bilateral as L  # noqa: E402
-from make_figures import INK, MUTED, ORANGE  # noqa: E402  (also applies the paper rcParams)
+import donor_ladder_brain_hemisphere as H  # noqa: E402
+from make_figures import GRID, INK, MUTED, ORANGE  # noqa: E402  (also applies the paper rcParams)
 
 CROP = (slice(30, 170), slice(20, 210))
 DISPLAY = (-2.5, 2.5)
@@ -31,7 +32,7 @@ DISPLAY = (-2.5, 2.5)
 COLUMNS = [("target", "Target", None),
            ("repeat", "Repeat\nscan", ("repeat", "1")),
            ("other_hemisphere", "Mirror,\nsame place", ("other_hemisphere", "1")),
-           ("mirror_block", "Mirror,\nbest of ±8 mm", ("mirror_block", "1")),
+           ("mirror_hemi", "Mirror, best\nin hemisphere", ("mirror_hemi", "1")),
            ("sibling", "Sibling", ("sibling", "1")),
            ("stranger", "Stranger,\nsame side", ("population", "1")),
            ("stranger_other_side", "Stranger,\nother side", ("stranger_other_side", "1")),
@@ -78,20 +79,20 @@ def case():
     coh = others[(sex[others] == sex[i]) & (np.abs(age[others] - age[i]) <= 2)]
     order = np.random.default_rng([B.SEED, i, pi, 0]).permutation(others)
     nn = lambda d: others[np.argsort(d[others], kind="stable")][:16]  # noqa: E731
-    a = L.mirror_constant(affine, nib.load(t.path.iloc[0]).shape[0])
-    allowed = L.allowed_offsets(start[0], size[0], a)
-    other = np.asarray(vol[ix[i], 1])
-    _, block = L.block_search(win, other, size, *L.search_terms(other, np.asarray(mask[ix[i], 1]), size), allowed)
+    row = t.loc[ix[i]]
+    v = nib.load(row.path.replace("_brain.nii.gz", ".nii.gz")).get_fdata(dtype=np.float32)
+    m = nib.load(row.path).get_fdata(dtype=np.float32) > 0.5
+    z = np.where(m, (v - v[m].mean()) / (v[m].std() + 1e-6), 0).astype(np.float32)
+    a = L.mirror_constant(affine, v.shape[0])
+    mi = B.mirror_index(affine, v.shape[0])
+    _, hemi = H.search(win, H.prepare(z[mi], m[mi], "L", size, a))
     so = [j for j in order if mvalid[j]]
-    fills = {"target": X[i], "repeat": X_all[jr], "other_hemisphere": M[i], "mirror_block": block.ravel(),
+    fills = {"target": X[i], "repeat": X_all[jr], "other_hemisphere": M[i], "mirror_hemi": hemi.ravel(),
              "sibling": X[js], "stranger": X[order[0]], "stranger_other_side": M[so[0]],
              "knn_oracle": X[nn(((X - X[i]) ** 2).sum(1))].mean(0), "knn": X[nn(((C - C[i]) ** 2).sum(1))].mean(0),
              "knn_mirror": X[nn(((X - M[i]) ** 2).sum(1))].mean(0),
              "cohort": X[coh].mean(0), "population": X[others].mean(0)}
-    row = t.loc[ix[i]]
-    v = nib.load(row.path.replace("_brain.nii.gz", ".nii.gz")).get_fdata(dtype=np.float32)
-    m = nib.load(row.path).get_fdata(dtype=np.float32) > 0.5
-    zv = np.where(m, (v - v[m].mean()) / (v[m].std() + 1e-6), DISPLAY[0])
+    zv = np.where(m, z, DISPLAY[0])  # outside brain: black
     return zv, start, size, fills, {"n_candidates": len(cands), "this_population": int(len(others)),
                                     "this_cohort": int(len(coh)), "mirror_valid": bool(mvalid[i])}
 
@@ -140,9 +141,117 @@ def draw(zv, start, size, fills, group, dest_pdf, dest_png):
     plt.close(fig)
 
 
+BLUE, GREEN, AMBER, PINK, VIOLET, TEAL = "#2a78d6", "#1baf7a", "#eda100", "#e87ba4", "#6250d6", "#008300"
+# rows of the theory panel (b): cohort, k, label, colour, prediction kind (None: no closed form)
+THEORY_ROWS = [("repeat", "1", "Repeat scan", TEAL, None),
+               ("other_hemisphere", "1", "Mirror, same place", PINK, None),
+               ("mirror_block", "1", "Mirror, best of ±8 mm", PINK, None),
+               ("mirror_hemi", "1", "Mirror, best in hemisphere", PINK, None),
+               ("sibling", "1", "Sibling", VIOLET, None),
+               ("population", "1", "Stranger, same side", BLUE, "stranger"),
+               ("stranger_other_side", "1", "Stranger, other side", BLUE, "stranger"),
+               ("stranger_block", "1", "Stranger, best of ±8 mm", BLUE, None),
+               ("stranger_hemi", "1", "Stranger, best in hemisphere", BLUE, None),
+               ("knn_oracle", "16", "16 look-alikes by true box*", AMBER, None),
+               ("knn", "16", "16 look-alikes by surround", AMBER, None),
+               ("knn_mirror", "16", "16 look-alikes by own mirror", AMBER, None),
+               ("cohort", "all", "Same sex and age", GREEN, "cohort"),
+               ("population", "all", "Dataset mean", BLUE, "mean")]
+N_COHORT = 51   # median same-sex-and-age pool (paper Fig. 1 caption)
+
+
+def theory(views, region_title, dest_pdf, dest_png):
+    """Model prediction against the measured error, L+R mean with left and right marked.
+    (a) averages of k donors; (b) every single fill and average, with predictions where the model has a closed
+    form: 2 for one stranger (either side), (1 - R2)(1 + 1/n) for the same-sex-and-age mean, 1 for the mean."""
+    lr, left, right = views["LR"], views["L"], views["R"]
+    fig, (a, b) = plt.subplots(1, 2, figsize=(7.0, 3.6), gridspec_kw={"width_ratios": [0.9, 1.1], "wspace": 0.75})
+    fig.subplots_adjust(top=0.84, bottom=0.12, left=0.07, right=0.985)
+    note = dict(fontsize=5.8, color=MUTED, linespacing=1.15)
+    ks = np.array([1, 2, 4, 8, 16, 32, 64])
+    kk = np.geomspace(1, 64, 200)
+    r2 = lr["cohort"]["fit"]["R2"]
+    a.plot(kk, 1 + 1 / kk, color=BLUE, lw=1.2, zorder=2, label="Model: k strangers, 1 + 1/k")
+    a.plot(kk, (1 - r2) * (1 + 1 / kk), color=GREEN, lw=0.9, ls=(0, (3, 2)), zorder=2,
+           label=f"Model: same sex and age, R$^2$ = {r2:.2f}")
+    series = (("population", BLUE, "o", "Strangers"), ("cohort", GREEN, "o", "Same sex and age"),
+              ("knn", AMBER, "o", "Look-alikes by surround"), ("knn_oracle", AMBER, "^", "Look-alikes by true box*"),
+              ("knn_mirror", AMBER, "s", "Look-alikes by own mirror"))
+    for n_s, (c, col, mk, lab) in enumerate(series):
+        dx = 1 + 0.025 * (n_s - 2)
+        y = np.array([lr[c][str(k)]["err_over_V"] for k in ks])
+        lo = np.array([lr[c][str(k)]["ci95"][0] for k in ks])
+        hi = np.array([lr[c][str(k)]["ci95"][1] for k in ks])
+        a.errorbar(ks * dx, y, yerr=[y - lo, hi - y], fmt=mk, ms=3.0, color=col, mec="white", mew=0.4,
+                   elinewidth=0.7, capsize=0, zorder=3, label=f"Measured: {lab}")
+    a.axhline(1, color=MUTED, lw=0.6, ls=(0, (2, 2)), zorder=1)
+    a.text(1.1, 0.98, "dataset mean = 1", va="top", **note)
+    a.set_xscale("log", base=2)
+    a.set_xticks(ks, [str(k) for k in ks])
+    a.set_xlim(0.8, 80)
+    a.set_ylim(0.3, 2.1)
+    a.set_xlabel("Number of people averaged, k")
+    a.set_ylabel("Error, relative to the dataset mean")
+    a.set_title("(a) Averages of k people", fontsize=7, loc="left", pad=4)
+    a.legend(frameon=False, fontsize=5.2, loc="upper right", handlelength=1.6)
+
+    pred = {"stranger": 2.0, "cohort": (1 - r2) * (1 + 1 / N_COHORT), "mean": 1.0}
+    y = np.arange(len(THEORY_ROWS))[::-1]
+    for yi, (c, k, lab, col, kind) in zip(y, THEORY_ROWS):
+        v = lr.get(c, {}).get(k)
+        if v is None:
+            continue
+        e = v["err_over_V"]
+        if kind is not None:
+            b.scatter(pred[kind], yi, s=24, marker="D", facecolor="white", edgecolor=col, lw=0.8, zorder=2)
+        for side, mk in ((left, "<"), (right, ">")):
+            sv = side.get(c, {}).get(k)
+            if sv is not None:
+                b.scatter(sv["err_over_V"], yi + 0.28, s=7, marker=mk, color=col, alpha=0.6, lw=0, zorder=2)
+        b.errorbar(e, yi, xerr=[[e - v["ci95"][0]], [v["ci95"][1] - e]], fmt="o", ms=3.4, color=col, mec="white",
+                   mew=0.4, elinewidth=0.8, capsize=0, zorder=3)
+        shared = f"  r = {1 - e / 2:.2f}" if c in ("repeat", "other_hemisphere", "mirror_block", "mirror_hemi",
+                                                    "sibling") else ""
+        b.text(3.05, yi, f"{e:.2f}{shared}", va="center", ha="right", fontsize=5.8, color=INK)
+    for x in (1, 2):
+        b.axvline(x, color=MUTED, lw=0.6, ls=(0, (2, 2)), zorder=1)
+    for h in (4.5, 9.5):     # same person | another person | averages
+        b.axhline(h, color=GRID, lw=0.6)
+    b.set_yticks(y, [r[2] for r in THEORY_ROWS], fontsize=6)
+    b.set_ylim(-0.6, len(THEORY_ROWS) - 0.3)
+    b.set_xlim(0, 3.1)
+    b.set_xticks([0, 0.5, 1, 1.5, 2, 2.5])
+    b.scatter([], [], s=24, marker="D", facecolor="white", edgecolor=MUTED, lw=0.8, label="model prediction")
+    b.scatter([], [], s=12, color=MUTED, label="measured, L+R (95% CI)")
+    b.scatter([], [], s=7, marker="<", color=MUTED, label="left")
+    b.scatter([], [], s=7, marker=">", color=MUTED, label="right")
+    b.legend(frameon=False, fontsize=5.2, loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=4,
+             handletextpad=0.2, columnspacing=0.8)
+    b.set_xlabel("Error, relative to the dataset mean (lower = 'better')")
+    b.set_title("(b) Single donors and averages", fontsize=7, loc="left", pad=15)
+    for ax in (a, b):
+        for s in ("top", "right"):
+            ax.spines[s].set_visible(False)
+    fig.text(0.5, 0.005, f"{region_title}. * upper bound: neighbours chosen with the answer. "
+             "No closed form for search or look-alike fills. Pre-QC, affine registration only.",
+             ha="center", fontsize=5.4, color=MUTED)
+    fig.suptitle("Model and measurement on real brains, left and right", fontsize=9, y=0.995)
+    fig.savefig(dest_png, dpi=250)
+    fig.savefig(dest_pdf, bbox_inches="tight", pad_inches=0.02)
+    plt.close(fig)
+
+
 def main():
     res = json.load(open(L.OUT_JSON, encoding="utf-8"))
-    group = res["QTIM"]["regions"]["parietal/LR"]["cohorts"]
+    regions = res["QTIM"]["regions"]
+    figs = os.path.join(ROOT, "results", "figures")
+    for reg, title in (("parietal", "Parietal box"), ("random_patches", "32 random 16 mm cubes")):
+        views = {v: regions[f"{reg}/{v}"]["cohorts"] for v in ("LR", "L", "R")}
+        out = os.path.join(figs, f"fig_real_theory_v2_{reg}")
+        theory(views, title, out + ".pdf", out + ".png")
+    if "--theory-only" in sys.argv:
+        return
+    group = regions["parietal/LR"]["cohorts"]
     zv, start, size, fills, info = case()
     out = os.path.join(ROOT, "results", "figures", "fig_real_case_parietal_v2")
     draw(zv, start, size, fills, group, out + ".pdf", out + ".png")

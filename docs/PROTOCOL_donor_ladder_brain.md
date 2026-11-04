@@ -101,3 +101,17 @@ the original variants are kept unchanged and re-run in the same pass, so old and
 - Table rows use k = 16 for look-alikes and all donors for "same sex and age", as in the ISBI Table 1.
 - Outputs: private rows and region arrays in `donor-ladder-brain-bilateral-20261103-v1\`; public aggregates in
   `results/donor_ladder_brain_bilateral.json`.
+
+## Amendment 3 (3 Nov 2026, whole-hemisphere block search; recorded before these results)
+
+Kate asked to search the whole contralateral hemisphere instead of a +-8 mm window. Two new single-donor fills,
+computed in `src/donor_ladder_brain_hemisphere.py` and added to the same rows and summary; the +-8 mm variants stay.
+
+- `mirror_hemi`: the target's shell (unchanged) is matched against every cube position of its own mirrored scan
+  whose cube lies wholly on the target's side of the template midline (x <= 0 mm for left, x >= 0 mm for right,
+  1 mm steps), i.e. anywhere in the contralateral hemisphere; candidates need >= 95% of cube voxels inside the
+  brain mask; the cube at the best match is the fill.
+- `stranger_hemi`: the same search in the contralateral hemisphere of the first stranger of the population draw
+  (the stranger of `population` k = 1); control for `mirror_hemi`.
+- Shell voxels outside the scan grid count as zero (outside the brain). Distances are computed with FFT
+  cross-correlation in float64.
