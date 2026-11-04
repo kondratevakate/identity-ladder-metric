@@ -134,3 +134,8 @@ mirror search. Computed in `src/donor_ladder_brain_size.py` and `src/donor_ladde
   (strangers, relatives, mirror at the same place, means); those vary with p only.
 - Outputs: private rows in `donor-ladder-brain-size-20261104-v1\`; public aggregates in
   `results/donor_ladder_brain_size.json`; figure `results/figures/fig_size_shell_dependence.{png,pdf}`.
+- **Trim (4 Nov 2026, Kate, for runtime; decided before the remaining configurations were computed).** Run time
+  grows with the region volume (about 14 h left for the full grid). Kept: every configuration already finished
+  (cubes 8 and 12 mm with all shells, 16 mm with a 2 mm shell), cube 16 mm with shells 4, 8 and 12 mm (with the
+  boxes), cube 32 mm with shells 2, 4 and 8 mm. Dropped, status NOT RUN: cube 24 mm (all shells) and cube 32 mm
+  with a 12 mm shell.

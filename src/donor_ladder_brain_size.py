@@ -22,6 +22,8 @@ import donor_ladder_fundus as F  # noqa: E402
 
 PATCHES = (8, 12, 16, 24, 32)
 SHELLS = (2, 4, 8, 12)
+NOT_RUN = {(24, 2), (24, 4), (24, 8), (24, 12), (32, 12)}   # trimmed for runtime (Amendment 4)
+GRID = [(p, s) for p in PATCHES for s in SHELLS if (p, s) not in NOT_RUN]
 PRIVATE = os.path.join(B.PROJ, "donor-ladder-brain-size-20261104-v1")
 OUT_JSON = os.path.join(B.ROOT, "results", "donor_ladder_brain_size.json")
 KEEP = {("population", "all"), ("population", "1"), ("cohort", "all"), ("knn", "16"), ("knn_oracle", "16"),
@@ -147,21 +149,21 @@ def main():
     out = {"status": "pre-QC: affine registration only, MRI registration QC not met",
            "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendment 4)", "seed": B.SEED,
            "patch_mm": list(PATCHES), "shell_mm": list(SHELLS), "block_search_halfwindow_mm": L.W,
-           "view": "L+R: both sides pooled per target, pooled V", "configs": {}}
+           "view": "L+R: both sides pooled per target, pooled V",
+           "not_run": [f"p{p}_s{s}" for p, s in sorted(NOT_RUN)], "configs": {}}
     if os.path.exists(OUT_JSON):
         out["configs"] = json.load(open(OUT_JSON, encoding="utf-8"))["configs"]
-    for p in PATCHES:
-        for s in SHELLS:
-            key = f"p{p}_s{s}"
-            f = os.path.join(PRIVATE, f"rows_{key}.csv.gz")
-            if not os.path.exists(f):
-                run_config(t, pos, affine, V, M, p, s).to_csv(f, index=False)
-            if key not in out["configs"]:
-                r = pd.read_csv(f, dtype={"k": str})
-                out["configs"][key] = {"patch_mm": p, "shell_mm": s, "regions": summary(r.assign(region=r.region + "/LR"))}
-                with open(OUT_JSON, "w", encoding="utf-8") as fh:
-                    json.dump(B.finite(out), fh, indent=1, allow_nan=False)
-            print(f"config {key} done, {round((time.time() - t0) / 60, 1)} min", flush=True)
+    for p, s in GRID:
+        key = f"p{p}_s{s}"
+        f = os.path.join(PRIVATE, f"rows_{key}.csv.gz")
+        if not os.path.exists(f):
+            run_config(t, pos, affine, V, M, p, s).to_csv(f, index=False)
+        if key not in out["configs"]:
+            r = pd.read_csv(f, dtype={"k": str})
+            out["configs"][key] = {"patch_mm": p, "shell_mm": s, "regions": summary(r.assign(region=r.region + "/LR"))}
+            with open(OUT_JSON, "w", encoding="utf-8") as fh:
+                json.dump(B.finite(out), fh, indent=1, allow_nan=False)
+        print(f"config {key} done, {round((time.time() - t0) / 60, 1)} min", flush=True)
     drop_tmp()
 
 
