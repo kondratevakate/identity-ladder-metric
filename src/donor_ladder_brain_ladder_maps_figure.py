@@ -89,7 +89,7 @@ def frame(ax):
 
 
 def below(fig, ax, text):
-    fig.text((ax.get_position().x0 + ax.get_position().x1) / 2, 0.075, text, ha="center", va="top", fontsize=5.4,
+    fig.text((ax.get_position().x0 + ax.get_position().x1) / 2, 0.095, text, ha="center", va="top", fontsize=5.4,
              color=INK)
 
 
@@ -149,11 +149,12 @@ def draw(maps, under, rel, mode, dest):
         y = 0.895
         fig.add_artist(plt.Line2D([x0, x0, x1, x1], [y - 0.012, y, y, y - 0.012], color=MUTED, lw=0.6))
         fig.text((x0 + x1) / 2, y + 0.006, text, ha="center", va="bottom", fontsize=6.4, color=MUTED)
-    scale = ("one scale: 1 = dataset mean (white), 2 = stranger; blue beats the mean" if mode == "common" else
-             "own range per map: 2nd-98th percentile around the map's median (white); faded where two independent "
-             "family halves disagree on the side of the median")
-    fig.text(0.5, 0.012, f"{scale}. * 8 mm grid, neighbours chosen by the 4 mm shell only. QTIM session 1, 16 mm "
-             "window. Pre-QC, affine registration only.", ha="center", fontsize=5.0, color=MUTED)
+    scale = ("One scale: 1 = dataset mean (white), 2 = stranger; blue beats the mean." if mode == "common" else
+             "Own range per map: 2nd-98th percentile around its median (white); faded where two independent family "
+             "halves fall on opposite sides of the median (look-alikes: not yet, halves pending).")
+    fig.text(0.5, 0.03, scale, ha="center", fontsize=5.0, color=MUTED)
+    fig.text(0.5, 0.008, "* 8 mm grid, neighbours chosen by the 4 mm shell only. QTIM session 1, 16 mm window. "
+             "Pre-QC, affine registration only.", ha="center", fontsize=5.0, color=MUTED)
     fig.suptitle("Real brain, every location: pixel error ranks the dataset mean above related anatomy"
                  + ("" if mode == "common" else " (contrast per map)"), fontsize=8.2, y=0.99)
     fig.savefig(dest + ".png", dpi=250)

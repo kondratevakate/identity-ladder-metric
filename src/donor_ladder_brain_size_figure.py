@@ -79,14 +79,17 @@ def main():
     c.set_xticks([1 / 16, 1 / 8, 1 / 4, 1 / 2, 1], ["1/16", "1/8", "1/4", "1/2", "1"])
     c.set_xlabel("Shell / cube edge")
     c.set_title("(c) Shell-based fills: ratio", fontsize=7, loc="left")
-    c.legend(frameon=False, fontsize=5, loc="lower right")
     for ax, region, title in ((axes[1, 0], "deep", "(d) Deep box: shell"), (axes[1, 1], "parietal", "(e) Parietal box: shell")):
         curve(ax, configs, region, list(S.SHELLS), lambda s: f"p16_s{s}", FILLS, "Shell, mm")
         ax.set_title(title, fontsize=7, loc="left")
     axes[1, 0].set_ylabel("Error / dataset-mean error")
     axes[1, 2].axis("off")
     h, lab = axes[0, 0].get_legend_handles_labels()
-    axes[1, 2].legend(h, lab, frameon=False, fontsize=5.6, loc="center left")
+    first = axes[1, 2].legend(h, lab, frameon=False, fontsize=5.4, loc="upper left", bbox_to_anchor=(0, 1.08))
+    axes[1, 2].add_artist(first)
+    hm, lm = c.get_legend_handles_labels()
+    axes[1, 2].legend(hm, lm, frameon=False, fontsize=5.4, loc="upper left", bbox_to_anchor=(0, -0.02),
+                      title="markers in (c)", title_fontsize=5.4, ncol=3, handletextpad=0.2, columnspacing=0.8)
     for ax in axes.ravel():
         for s in ("top", "right"):
             ax.spines[s].set_visible(False)
