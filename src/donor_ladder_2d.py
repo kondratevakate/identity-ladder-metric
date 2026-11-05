@@ -270,10 +270,17 @@ def summary(r, keep=None, **counts):
 def main():
     os.makedirs(PRIVATE, exist_ok=True)
     t0 = time.time()
+    ext = os.environ.get("LADDER_EXTERNAL")   # a checkout's `external/` (git-ignored, absent in worktrees)
+    if ext:
+        F.S.GRAPE_META = os.path.join(ext, *os.path.relpath(F.S.GRAPE_META, os.path.join(
+            os.path.dirname(F.S.__file__), "..", "external")).split(os.sep))
+    names = next((a.split("=", 1)[1].split(",") for a in sys.argv if a.startswith("--datasets=")), ["PAPILA", "GRAPE"])
     out = {"status": "pre-QC: disc-fovea landmarks not visually accepted",
            "protocol": "docs/PROTOCOL_donor_ladder_general.md (section 9)", "seed": SEED, "grid": G,
            "block_search_halfwindow_px": W, "datasets": {}}
-    for name in ("PAPILA", "GRAPE"):
+    if os.path.exists(OUT_JSON):
+        out["datasets"] = json.load(open(OUT_JSON, encoding="utf-8"))["datasets"]
+    for name in names:
         so = setup(name)
         u, fellow, other = so[3], so[6], so[7]
         counts = dict(n_units=len(u), n_fellow=int((fellow >= 0).sum()), n_other=int((other >= 0).sum()))
