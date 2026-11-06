@@ -33,8 +33,10 @@ def mean_image(name, tag=""):
     path = (os.path.join(F.PRIVATE, f"{name}_canonical.npz") if not tag else
             os.path.join(D.PRIVATE, f"{name}_canonical{tag}.npz"))
     img, fov, ok, _ = F.load_all(None, path)
-    m = img[ok].mean(0)
-    return np.where(fov[ok].mean(0) > 0.5, m, np.nan)
+    img, fov = img[ok], fov[ok]
+    n = fov.sum(0)                                  # outside the field is missing, never 0 (protocol section 8)
+    m = (img * fov).sum(0) / np.maximum(n, 1)
+    return np.where(n >= 0.5 * len(fov), m, np.nan)
 
 
 def draw(mode, res, dest, tag=""):
