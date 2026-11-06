@@ -26,8 +26,32 @@ def sheet(name, t, picks, page, version):
     fig, axes = plt.subplots(3, PER_SHEET, figsize=(2.0 * PER_SHEET, 6.6))
     stats = []
     for j, i in enumerate(picks):
-        rgb = F.L.load_base(t.path.iloc[i], 512, True)
         ax = axes[0, j]
+        if version == "P9":                               # PAPILA whole photo on the larger canvas
+            from PIL import Image
+            path, side = t.path.iloc[i], t.side.iloc[i]
+            found = P.papila_expert_disc_raw(path)
+            k = 512 / P.P9_RAW
+            im = Image.open(path).convert("RGB")
+            small = np.asarray(im.resize((round(im.size[0] * k), round(im.size[1] * k)), Image.BOX), np.float32) / 255
+            r = P.analysis_image_p9(path, side) if found is not None else None
+            status = "no expert disc" if r is None else ("clipped at canvas edge" if r[2] else "whole field")
+            stats.append(status)
+            ax.imshow(np.clip(P.oriented(small, side), 0, 1))
+            if found is not None:
+                d = found[0] * k
+                if side == "L":
+                    d = np.array([small.shape[1] - 1 - d[0], d[1]])
+                ax.add_patch(plt.Circle(d, found[1] * k, fill=False, ec="yellow", lw=1))
+            ax.set_title(f"{i} {side}: {status}", fontsize=7, color="black" if r is not None and not r[2] else "red")
+            if r is not None:
+                c, inside = P.canvas_p9(small, found[0] * k, side)
+                axes[1, j].imshow(np.clip(c, 0, 1))
+                axes[1, j].contour(inside, levels=[0.5], colors="cyan", linewidths=0.6)
+                axes[1, j].plot(*P.P9_CENTRE, "yo", ms=10, mfc="none", mew=1)
+                axes[2, j].imshow(np.where(r[1], r[0], np.nan), cmap="gray", vmin=-2.5, vmax=2.5)
+            continue
+        rgb = F.L.load_base(t.path.iloc[i], 512, True)
         if version in ("P2", "P3", "P4", "P5", "P6", "P7", "P8"):
             side, frame = t.side.iloc[i], P.FRAMES[name]
             fn = {"P2": (P.landmarks_p2, P.frame_ok, P.canonical_p2, P.analysis_image_p2),
@@ -86,7 +110,7 @@ def sheet(name, t, picks, page, version):
             for r in (1, 2):
                 axes[r, j].text(0.5, 0.5, "frame failure\n(left out)", ha="center", va="center", fontsize=7,
                                 color="red", transform=axes[r, j].transAxes)
-    for r, lab in enumerate((("oriented raw, " if version in ("P2", "P3", "P4", "P5", "P6", "P7", "P8") else "raw: P0 red, ") + version + " yellow/cyan", version + " frame + targets",
+    for r, lab in enumerate((("oriented raw, " if version in ("P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9") else "raw: P0 red, ") + version + " yellow/cyan", version + " frame + targets",
                              version + " analysis image")):
         axes[r, 0].set_ylabel(lab, fontsize=8)
     for ax in axes.ravel():

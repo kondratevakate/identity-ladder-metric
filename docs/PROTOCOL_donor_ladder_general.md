@@ -267,6 +267,21 @@ set of targets (and of pool donors) jumps along lines. The pattern is a change o
   threshold (red > 0.1) -> largest connected component -> morphological opening with a disc of 0.12 of the field
   radius (removes the notch and other protrusions) -> erosion by 0.03 of the field radius (removes the dark rim).
   This mask is used for the background estimate, the z-scoring and every validity rule (patches, maps).
+- **P9** (6 Nov 2026, recorded before it runs; Kate: keep the acquired field, section 8). P0-P8 load a centre
+  square of 1934 x 1934 from the 2576 x 1934 PAPILA photo, dropping about 220 raw px of field on each side, and the
+  P7 translation onto the 512 canvas clips more. Measured on all 488 images: one camera mask (circle of diameter
+  ~2377 raw px, cut at the top and bottom by the sensor); disc offset from the field centre after reflecting left
+  eyes, raw px: dx -460 to 619 (1st-99th percentile -228 to 503), dy -515 to 309 (-314 to 213). P9, PAPILA only:
+  the whole photo is resized by k = 512 / 3120 (field diameter + the 1st-99th percentile spread of dx, + rounding
+  margin), the disc (mean expert contour, raw) is moved by translation only to (278, 247), the middle of the
+  positions that keep every 1st-99th percentile offset fully on the canvas (the offsets are asymmetric) (scale 1, no
+  per-image disc-size normalisation; Hemelings et al. 2023 keep natural disc-size variation for the same reason),
+  outside the photo is missing; the P8 clean mask, background division (window scaled by k / k_P8 so it covers the
+  same retina) and z-scoring follow, on the 256 grid. Costs, stated in advance: one grid pixel is 12.2 raw px
+  instead of 7.6 (resolution x 0.62), so a 48 px window covers 1.6 x more retina than in P8; images with an offset
+  beyond the 1st-99th percentile lose a sliver of field at the canvas edge (counted and reported). A finer grid
+  (384) would keep the P8 resolution but touches every fixed position on the 256 grid; deferred, Kate's call.
+  GRAPE keeps P8 in this version (its crop loss is measured and reported separately).
 
 ### Amendment 9.4 (6 Nov 2026, outside the field of view is missing in the block search)
 

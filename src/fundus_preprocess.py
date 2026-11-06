@@ -453,3 +453,61 @@ def analysis_image_p8(rgb, lm, side, frame):
     fov = fov512.reshape(G, 2, G, 2).all(axis=(1, 3))
     v = img[fov]
     return np.where(fov, (img - v.mean()) / (v.std() + 1e-6), 0.0).astype(np.float32), fov
+
+
+# ---------- P9 (Amendment 9.2): PAPILA whole photo on a larger canvas, disc to the centre, outside = missing ----------
+
+P9_RAW = 3120.0                       # raw px mapped onto the 512 canvas (field diameter + 1-99% spread of disc dx)
+P9_CENTRE = np.array([278.0, 247.0])  # disc target: middle of the range that keeps the 1-99% offsets fully inside
+K_P8 = 512 / 1934.0                   # raw -> 512 scale of P0-P8 (centre square of the PAPILA photo)
+
+
+def papila_expert_disc_raw(image_path):
+    """Mean expert disc (centre, radius) in raw photo px, or None if a contour is missing."""
+    import os
+    base = os.path.splitext(os.path.basename(image_path))[0]
+    root = os.path.join(os.path.dirname(os.path.dirname(image_path)), "ExpertsSegmentations", "Contours")
+    files = [os.path.join(root, f"{base}_disc_exp{k}.txt") for k in (1, 2)]
+    if not all(os.path.exists(f) for f in files):
+        return None
+    cs, rs = zip(*(polygon(f) for f in files))
+    return np.mean(cs, axis=0), float(np.mean(rs))
+
+
+def canvas_p9(small, disc, side, size=512):
+    """Place the (already k-scaled) photo on a size x size canvas with the disc at P9_CENTRE, left eyes reflected.
+    Returns (canvas rgb, photo mask): the mask marks where the photo is, so outside is missing by construction."""
+    from skimage.transform import SimilarityTransform, warp
+    disc = np.asarray(disc, float).copy()
+    if side == "L":
+        small = small[:, ::-1]
+        disc[0] = small.shape[1] - 1 - disc[0]
+    t = SimilarityTransform(translation=disc - P9_CENTRE)
+    c = warp(small, t, output_shape=(size, size), order=1, mode="constant", cval=0.0).astype(np.float32)
+    inside = warp(np.ones(small.shape[:2]), t, output_shape=(size, size), order=0, mode="constant", cval=0.0) > 0.5
+    return c, inside
+
+
+def analysis_image_p9(image_path, side):
+    """(image, fov, clipped) on the 256 grid, or None without an expert disc. `clipped`: field reaches the canvas
+    edge (acquired field lost there)."""
+    from PIL import Image
+    found = papila_expert_disc_raw(image_path)
+    if found is None:
+        return None
+    k = 512 / P9_RAW
+    im = Image.open(image_path).convert("RGB")
+    w, h = im.size
+    small = np.asarray(im.resize((int(round(w * k)), int(round(h * k))), Image.BOX), np.float32) / 255.0
+    disc, rd = found
+    c, inside = canvas_p9(small, disc * k, side)
+    field = field_of_view(c) & inside
+    clipped = bool(field[0].any() or field[-1].any() or field[:, 0].any() or field[:, -1].any())
+    fov512 = clean_fov(np.where(inside[..., None], c, 0.0)) & inside
+    g = c[..., 1].astype(np.float32)
+    size = max(int(round(25 * k / K_P8)), 3)          # same retina per background window as P8
+    flat = np.where(fov512, g / background(g, fov512, P9_CENTRE, 2 / 1.5 * rd * k, size=size), 0)
+    img = flat.reshape(G, 2, G, 2).mean(axis=(1, 3))
+    fov = fov512.reshape(G, 2, G, 2).all(axis=(1, 3))
+    v = img[fov]
+    return np.where(fov, (img - v.mean()) / (v.std() + 1e-6), 0.0).astype(np.float32), fov, clipped

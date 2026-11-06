@@ -117,18 +117,27 @@ def load_arm(t, name, arm):
     n = len(t)
     img, fov = np.zeros((n, G, G), np.float32), np.zeros((n, G, G), bool)
     ok, dr = np.zeros(n, bool), np.zeros(n, bool)
-    if arm == "p7":                                   # Amendment 9.2, approved version
+    if arm in ("p7", "p8", "p9"):                     # Amendment 9.2 versions (p9: PAPILA whole field, GRAPE = p8)
         import fundus_preprocess as FP
+        clipped = 0
         for i, (p, sd) in enumerate(zip(t.path, t.side)):
-            rgb = F.L.load_base(p, 512, True)
-            lm = FP.landmarks_p7(rgb, sd, p, name)
-            r = FP.analysis_image_p3(rgb, lm, sd, FP.FRAMES[name])
+            if arm == "p9" and name == "PAPILA":
+                r = FP.analysis_image_p9(p, sd)
+                if r is not None:
+                    clipped += r[2]
+                    r = r[:2]
+            else:
+                rgb = F.L.load_base(p, 512, True)
+                lm = FP.landmarks_p7(rgb, sd, p, name)
+                r = (FP.analysis_image_p3 if arm == "p7" else FP.analysis_image_p8)(rgb, lm, sd, FP.FRAMES[name])
             dr[i] = sd == "R"                         # laterality from the metadata
             if r is not None:
                 img[i], fov[i] = r
                 ok[i] = True
             if i % 50 == 0:
-                print(f"{name} p7 load {i + 1}/{n}", flush=True)
+                print(f"{name} {arm} load {i + 1}/{n}", flush=True)
+        if arm == "p9" and name == "PAPILA":
+            print(f"PAPILA p9: {clipped} of {int(ok.sum())} images clipped at the canvas edge", flush=True)
         np.savez_compressed(cache, img=img, fov=fov, ok=ok, disc_right=dr)
         return img, fov, ok, dr
     for i, p in enumerate(t.path):
