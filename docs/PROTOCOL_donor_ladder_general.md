@@ -393,3 +393,9 @@ Design (no pairwise target-donor optimisation, which would favour some rungs; th
   diverged: scale 0.87-1.13, shifts up to 28 px). Determinism: ANTS_RANDOM_SEED=1 and one ITK thread per process
   (repeats identical), parallel across processes. A failed registration is counted and reported; that image is
   missing everywhere, never silently dropped.
+- R2b (6 Nov 2026, Kate likes affine + SyN but R2 visibly bends the field; recorded before running): the same as R2
+  with a smoother, shorter SyN: flow_sigma 6 (R2: 3), total_sigma 1 (R2: 0), reg_iterations (20, 10, 0) (R2:
+  ANTsPy default (40, 20, 0)). Compared with R2 on the same 40 images per dataset by (a) the image's vessel-pattern
+  correlation with the leave-one-out template (high-pass, sigma 6 px; edge excluded) and (b) bending = mean |log det
+  Jacobian| of the SyN warp inside the image's field (0 = no bending). The arm with the better trade-off goes to
+  Kate's QC; both stay reported.

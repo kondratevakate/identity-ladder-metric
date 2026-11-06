@@ -26,7 +26,7 @@ def scene(shift=(0.0, 0.0)):
 def test_affine_recovers_a_known_shift():
     t, tm = scene()
     s, sm = scene((4.0, -3.0))
-    w, wm = R.register_to(t, tm, s, sm, "R1")
+    w, wm, _ = R.register_to(t, tm, s, sm, "R1")
     inner = tm & wm & (ndimage.distance_transform_edt(tm) > 8)
     before = np.mean((s - t)[inner & sm] ** 2)
     after = np.mean((w - t)[inner] ** 2)
@@ -36,7 +36,7 @@ def test_affine_recovers_a_known_shift():
 def test_warped_mask_never_extends_the_field():
     t, tm = scene()
     s, sm = scene((4.0, -3.0))
-    w, wm = R.register_to(t, tm, s, sm, "R1")
+    w, wm, _ = R.register_to(t, tm, s, sm, "R1")
     assert wm.sum() <= sm.sum() * 1.02          # interpolation cannot invent valid pixels
     assert np.all(w[~wm] == 0)                   # outside stays missing (stored as 0 only with its mask)
 
@@ -55,5 +55,13 @@ def test_zero_mean_images_do_not_fly_off():
     s, sm = scene((2.0, 1.0))
     t = np.where(tm, (t - t[tm].mean()) / t[tm].std(), 0).astype(np.float32)
     s = np.where(sm, (s - s[sm].mean()) / s[sm].std(), 0).astype(np.float32)
-    w, wm = R.register_to(t, tm, s, sm, "R1")
+    w, wm, _ = R.register_to(t, tm, s, sm, "R1")
     assert wm.sum() > 0.8 * sm.sum()
+
+
+def test_bending_is_zero_for_affine_and_small_for_a_pure_shift():
+    t, tm = scene()
+    s, sm = scene((3.0, 0.0))
+    *_, b1 = R.register_to(t, tm, s, sm, "R1")
+    *_, b2 = R.register_to(t, tm, s, sm, "R2b")
+    assert b1 == 0.0 and 0.0 <= b2 < 0.1           # a rigid shift needs no bending
