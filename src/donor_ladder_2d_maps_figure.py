@@ -77,6 +77,8 @@ def draw(mode, res, dest, tag=""):
                 norm, cmap = common, "RdBu_r"
             else:
                 lo, med, hi = np.percentile(fin, [2, 50, 98])
+                if hi - lo < 1e-3:                               # near-constant map (stranger): no fake contrast
+                    lo, hi = med - 0.05, med + 0.05
                 norm = (TwoSlopeNorm(vmin=lo, vcenter=med, vmax=hi) if lo < med < hi else
                         plt.Normalize(lo, max(hi, lo + 1e-6)))
                 cmap = "PuOr_r"
