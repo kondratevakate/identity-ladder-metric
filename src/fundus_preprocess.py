@@ -511,3 +511,65 @@ def analysis_image_p9(image_path, side):
     fov = fov512.reshape(G, 2, G, 2).all(axis=(1, 3))
     v = img[fov]
     return np.where(fov, (img - v.mean()) / (v.std() + 1e-6), 0.0).astype(np.float32), fov, clipped
+
+
+# ---------- H1 (Amendment 9.9): one harmonised frame for PAPILA and GRAPE, as the face pipeline ----------
+
+H1_SIZE, H1_RADIUS, H1_FIELD = 512, 30.0, 225.0
+H1_CENTRE = np.array([256.0, 256.0])
+H1_BG_SIZE = 12          # background median window at 1/4 resolution: ~1.7 median disc diameters, as P8 on PAPILA
+
+
+def load_square(path, size=H1_SIZE):
+    """Whole photo padded to a square of its longer side and box-resized; returns (rgb, inside, k, offset): inside
+    marks the photo (padding is missing), k = size / side, offset = raw px of padding (x, y)."""
+    from PIL import Image
+    im = Image.open(path).convert("RGB")
+    w, h = im.size
+    s = max(w, h)
+    off = ((s - w) // 2, (s - h) // 2)
+    canvas = Image.new("RGB", (s, s))
+    canvas.paste(im, off)
+    mask = Image.new("L", (s, s), 0)
+    mask.paste(255, (off[0], off[1], off[0] + w, off[1] + h))
+    rgb = np.asarray(canvas.resize((size, size), Image.BOX), np.float32) / 255.0
+    inside = np.asarray(mask.resize((size, size), Image.BOX), np.float32) / 255.0 > 0.99
+    return rgb, inside, size / s, np.array(off, float)
+
+
+def detect_h1(rgb, inside, side):
+    """The P7 disc detector (disc_p4 + raw-brightness gate) on the oriented square image; ((centre, radius), status)."""
+    rgb, inside = oriented(rgb, side), oriented(inside, side)
+    fov = field_of_view(rgb) & inside
+    if fov.sum() < 1000:
+        return None, "no_fov"
+    r = np.sqrt(fov.sum() / np.pi)
+    inner = ndimage.binary_erosion(fov, iterations=25)
+    raw12 = ndimage.gaussian_filter((rgb[..., 0] + rgb[..., 1]).astype(np.float32), 12)
+    return disc_p4(rgb, fov, r, inner & (raw12 >= np.percentile(raw12[fov], 75)))
+
+
+def frame_h1(rgb, inside, side, disc, scale, size=H1_SIZE):
+    """Oriented image moved so that `disc` lands on H1_CENTRE and scaled by `scale` (no rotation); returns (canvas,
+    photo mask, field circle)."""
+    from skimage.transform import SimilarityTransform, warp
+    rgb, inside = oriented(rgb, side), oriented(inside, side)
+    t = SimilarityTransform(scale=1.0 / scale, translation=np.asarray(disc, float) - H1_CENTRE / scale)
+    c = warp(rgb, t, output_shape=(size, size), order=1, mode="constant", cval=0.0).astype(np.float32)
+    ins = warp(inside.astype(float), t, output_shape=(size, size), order=0, mode="constant", cval=0.0) > 0.5
+    yy, xx = np.mgrid[:size, :size]
+    circle = np.hypot(xx - H1_CENTRE[0], yy - H1_CENTRE[1]) <= H1_FIELD
+    return c, ins, circle
+
+
+def analysis_image_h1(rgb, inside, side, disc, radius, scale):
+    """(image, fov) on the 256 grid: H1 frame, P8 clean mask within the photo and the field circle, green /
+    background with the disc removed, z-scored inside the mask."""
+    c, ins, circle = frame_h1(rgb, inside, side, disc, scale)
+    fov512 = clean_fov(np.where(ins[..., None], c, 0.0)) & ins & circle
+    g = c[..., 1].astype(np.float32)
+    flat = np.where(fov512, g / background(g, fov512, H1_CENTRE, 2 / 1.5 * radius * scale, size=H1_BG_SIZE), 0)
+    img = flat.reshape(G, 2, G, 2).mean(axis=(1, 3))
+    fov = fov512.reshape(G, 2, G, 2).all(axis=(1, 3))
+    v = img[fov]
+    return np.where(fov, (img - v.mean()) / (v.std() + 1e-6), 0.0).astype(np.float32), fov

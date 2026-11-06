@@ -399,3 +399,21 @@ Design (no pairwise target-donor optimisation, which would favour some rungs; th
   correlation with the leave-one-out template (high-pass, sigma 6 px; edge excluded) and (b) bending = mean |log det
   Jacobian| of the SyN warp inside the image's field (0 = no bending). The arm with the better trade-off goes to
   Kate's QC; both stay reported.
+
+### Amendment 9.9 (6 Nov 2026, H1: one harmonised frame for both fundus datasets, as for faces; before any result)
+
+Kate: stop tuning registration (R2's warps of the field look odd) and use preprocessing that makes the two datasets
+alike, as the face pipeline does (both face datasets go through the same landmarks, template, scale and crop).
+H1, applied identically to PAPILA and GRAPE:
+- Load: the whole photo padded to a square of its longer side (outside the photo missing), box-resized to 512
+  (PAPILA 2576 x 1934; GRAPE square, 1556 / 1611 / 2136). Left eyes reflected (disc right).
+- Disc: one detector for both, the P7 brightness detector (disc_p4 + raw-brightness gate). PAPILA expert contours
+  are not used for the frame; they validate the detector (centre error in disc radii, radius ratio), reported.
+- Frame: translation of the detected disc centre to (256, 256) and one scale factor per dataset so that its median
+  detected disc radius becomes 30 px (512 grid); individual disc size is kept (as Hemelings et al. 2023). No
+  rotation, no deformation.
+- Field: a disc-centred circle of radius 225 px (7.5 median disc radii) in both datasets; outside a photo, its
+  clean mask (P8) or that circle is missing.
+- Intensity: as P8 (green / background with the disc removed, z-scored inside the mask), 256 grid.
+- Prototype gate: 40 evenly spaced images per dataset; QC = detector validation on PAPILA, sheets (photo with
+  detected and expert disc, H1 frame, analysis image), the two dataset means side by side; Kate's verdict first.
