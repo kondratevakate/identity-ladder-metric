@@ -433,3 +433,30 @@ geometric disc centre). Display only; no number changes.
   other (panels in disc units); GRAPE's field is outlined on the first PAPILA panel only. Caveat: on PAPILA's mean the
   white spot is mostly the bright cup (5.6 px on the 128 frame), while the expert contours give a disc radius of
   ~9.3 px, so the outline's scale is approximate.
+
+### Amendment 9.11 (6 Nov 2026, drop the top-bottom mirror rungs; recorded before the rerun)
+
+Kate: the within-eye top-bottom reflection adds a sharp seam along the axis and little information; the paired
+symmetry of the two eyes is enough. Its strip and reflected field also cut notches ("ears") into every panel at the
+axis height through the common display mask. Dropped: "Mirror side" (within one eye) and "Fellow eye mirrored" (the
+diagonal, which also uses the top-bottom flip). The ladder's mirror rung for eyes is the fellow eye, shown as
+"Mirror side (fellow eye)", with both directions (right eye as target, left eye as target) under the result spec.
+The 9.6-9.7 numbers stay in git history.
+
+### Amendment 9.12 (6 Nov 2026, pairwise registration and intensity match for single-image donors; before results)
+
+Kate: when the fellow eye is laid over the target it must be registered to that target eye and its intensity
+normalised to that eye; otherwise it is unclear what the reflection is compared with. Rule (section 5, every
+selection has controls): the same steps are applied to a stranger as the control, so that what registration and
+matching buy for any image is visible next to what the person adds.
+- Single-image donors registered to the target: Another photo (GRAPE), Mirror side (fellow eye, already reflected
+  into the same orientation), and the control "Stranger, registered" (the first of the target's 8 random same-side
+  strangers). Registration on the 128 frame, as Amendment 9.8 R2 (affine + SyN, masks of both images in every stage,
+  identity start, Mattes, ANTS_RANDOM_SEED=1, one thread per process); warped masks valid only where ~1; a failed
+  registration is counted and that donor is missing.
+- Intensity match to the target after registration: least-squares gain and offset (donor -> target) over the joint
+  valid pixels, applied to the donor. The same for the registered stranger.
+- Reported: the registered and matched rungs (shown in the figure) and the frame-only rungs (JSON, for comparison).
+  Means, look-alikes and same sex and age stay as they are (they are not single images). Directions and the result
+  spec as before; the registered-stranger rung is a soft check: if it falls well below 2, registration itself pulls
+  images toward the target and the registered person rungs must be read against it, not against 2.

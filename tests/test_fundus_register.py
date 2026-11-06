@@ -65,3 +65,25 @@ def test_bending_is_zero_for_affine_and_small_for_a_pure_shift():
     *_, b1 = R.register_to(t, tm, s, sm, "R1")
     *_, b2 = R.register_to(t, tm, s, sm, "R2b")
     assert b1 == 0.0 and 0.0 <= b2 < 0.1           # a rigid shift needs no bending
+
+
+def test_intensity_match_recovers_gain_and_offset_on_valid_pixels_only():
+    rng = np.random.default_rng(0)
+    t = rng.normal(size=(32, 32)).astype(np.float32)
+    m = np.ones_like(t, bool)
+    m[:, :4] = False
+    d = (t - 0.5) / 2.0
+    d[:, :4] = 99.0                                   # filler outside the donor mask must not enter the fit
+    out, (g, b) = R.intensity_match(t, m, d, m)
+    assert abs(g - 2.0) < 1e-4 and abs(b - 0.5) < 1e-4
+    assert np.allclose(out[m], t[m], atol=1e-4) and np.all(out[~m] == 0)
+
+
+def test_register_pair_aligns_a_shifted_copy():
+    t, tm = scene()
+    s, sm = scene((3.0, -2.0))
+    out = R.register_pair((t, tm, 0.5 * s + 0.1, sm))
+    assert out is not None
+    w, wm, bend, (g, b) = out
+    inner = tm & wm & (ndimage.distance_transform_edt(tm) > 8)
+    assert np.mean((w - t)[inner] ** 2) < 0.2 * np.mean((s - t)[inner & sm] ** 2)

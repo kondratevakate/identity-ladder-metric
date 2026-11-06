@@ -24,8 +24,8 @@ import result_spec  # noqa: E402
 SIZE, WIN, STEP, RING, K_LOOK, N_STRANGER, MIN_HAVE = 128, 16, 4, 8, 16, 8, 8
 SETS = (("PAPILA", "p9"), ("GRAPE", "p8"))
 OUT_JSON = os.path.join(ROOT, "results", "donor_ladder_2d_facefmt.json")
-COLS = ("repeat", "mirror", "fellow", "fellow_mirror", "stranger", "lookalike", "sexage")
-MIRRORS = {"mirror": "halves", "fellow": "sides", "fellow_mirror": "sides"}   # result spec: direction kinds
+COLS = ("repeat", "fellow", "stranger", "lookalike", "sexage")       # Amendment 9.11: no top-bottom mirror
+MIRRORS = {"fellow": "sides"}   # result spec: direction kinds
 AXIS_Y = {"PAPILA": (247.0 + 0.5) / 4 - 0.5, "GRAPE": (256.0 + 0.5) / 4 - 0.5}  # 512-grid row -> 128 frame (9.6)
 STRIP = 2.5                                            # excluded either side of the axis, as the face midline
 
@@ -170,11 +170,9 @@ def run_dataset(name, arm):
                 fills = {}
                 if other[i] >= 0:
                     fills["repeat"] = [(X[other[i]], M[other[i]])]
-                fills["mirror"] = [mirror_fill(xt, mt, AXIS_Y[name])]
                 j = fellow[i]
                 if j >= 0 and members[j]:
                     fills["fellow"] = [(X[idx[j]], M[idx[j]])]
-                    fills["fellow_mirror"] = [mirror_fill(X[idx[j]], M[idx[j]], y0)]
                 pool = S[person[S] != person[i]]
                 result_spec.assert_leave_person_out(person[i], person[pool])
                 strangers = np.random.default_rng([D.SEED, int(i)]).choice(pool, N_STRANGER, replace=False)
@@ -253,7 +251,7 @@ def run():
     for name, arm in SETS:
         results[name] = {"arm": arm, **run_dataset(name, arm)}
         print(name, json.dumps(results[name]), flush=True)
-    meta = {"protocol": "docs/PROTOCOL_donor_ladder_general.md, Amendments 9.5-9.7", "status": "pre-QC",
+    meta = {"protocol": "docs/PROTOCOL_donor_ladder_general.md, Amendments 9.5-9.11", "status": "pre-QC",
             "spec": result_spec.SPEC,
             "spec_meta": {"bootstrap_unit": "person", "pools": "leave-person-out", "stranger_rung": "stranger",
                           "mirror_rungs": MIRRORS},
@@ -289,8 +287,8 @@ def figure():
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     res = json.load(open(OUT_JSON, encoding="utf-8"))["results"]
-    cols = [("meanfundus", "Mean fundus"), ("repeat", "Another photo"), ("mirror", "Mirror side**"),
-            ("fellow", "Fellow eye"), ("fellow_mirror", "Fellow eye mirrored**"), ("sibling", "Sibling"), ("stranger", "Stranger"), ("lookalike", "16 look-alikes*"),
+    cols = [("meanfundus", "Mean fundus"), ("repeat", "Another photo"), ("fellow", "Mirror side (fellow eye)"),
+            ("sibling", "Sibling"), ("stranger", "Stranger"), ("lookalike", "16 look-alikes*"),
             ("sexage", "Same sex and age"), ("V", "Dataset mean")]
     plt.rcParams["font.family"] = "serif"
     order = (("GRAPE", "p8"), ("PAPILA", "p9"))       # Amendment 9.10: the larger field first
@@ -322,6 +320,7 @@ def figure():
         lim_y = [min(lim_y[0], gy[v].min()), max(lim_y[1], gy[v].max())]
     pad = 0.6
     fig, ax = plt.subplots(len(order), len(cols), figsize=(2.1 * len(cols), 2.6 * len(order) + 0.9))
+    v_ims, ratio_im = {}, None
     for r, (name, arm) in enumerate(order):
         z, valid = data[name]
         under = np.where(valid, z["meanfundus"], np.nan)
@@ -349,25 +348,37 @@ def figure():
                 continue
             m = np.where(valid, z[key], np.nan)
             if key == "V":
-                a.imshow(m, cmap="viridis", extent=ext[name])
-                a.text(0.5, -0.08, "MSE = 1 x mean\n(shown: V, z units)", ha="center", va="top",
+                v_ims[r] = a.imshow(m, cmap="viridis", extent=ext[name])
+                a.text(0.5, -0.08, "MSE = 1 x mean by definition\n(shown: V itself, own scale, z$^2$)", ha="center", va="top",
                        transform=a.transAxes, fontsize=8.5)
                 continue
             s = res[name][key]
-            a.imshow(m, cmap="RdBu_r", vmin=0, vmax=2, alpha=0.9, extent=ext[name])
+            ratio_im = a.imshow(m, cmap="RdBu_r", vmin=0, vmax=2, alpha=0.9, extent=ext[name])
             r_txt = f"split-half r {s['split_half_r']:.2f}" if s.get("split_half_r") is not None else "split-half r n/a"
             ci = s["ci95"]
             a.text(0.5, -0.08, f"MSE = {s['ratio']:.2f} x mean [{ci[0]:.2f}, {ci[1]:.2f}]\n{r_txt}\nn = {s['targets']}",
                    ha="center", va="top", transform=a.transAxes, fontsize=8.5)
     fig.suptitle("Fundus, every location: pixel error against the dataset mean (pre-QC)", fontsize=13)
     fig.text(0.5, 0.01, "One scale: 1 = dataset mean (white), 2 = stranger; blue beats the mean. * neighbours chosen on "
-             "a 4 px grid by the 8 px ring around the 16 px window. ** the same eye reflected top-bottom about the "
-             "disc-fovea line (2.5 px strip excluded);\nPAPILA: line through the disc, fovea outside the field. "
-             "128 px frame, 16 px window; outside the field "
+             "a 4 px grid by the 8 px ring around the 16 px window. Mirror side: the other eye, reflected into the "
+             "same orientation.\n128 px frame, 16 px window; outside the field "
              "is missing. GRAPE P8, PAPILA P9 (Amendment 9.2); persons left out of their own pools. Both rows at one scale, set by the disc "
              f"on each mean (radius GRAPE {radius['GRAPE']:.1f} px, PAPILA {radius['PAPILA']:.1f} px), discs aligned.",
              ha="center", fontsize=8.5, color="#52514e")
-    fig.tight_layout(rect=(0, 0.06, 1, 0.95))
+    fig.tight_layout(rect=(0, 0.08, 0.985, 0.95))
+    # colour keys (Kate): ratio columns share one diverging scale; the last column is V itself, its own scale per row
+    first, last = ax[-1, 1].get_position(), ax[-1, -2].get_position()
+    cax = fig.add_axes([first.x0, 0.075, last.x1 - first.x0, 0.012])
+    cb = fig.colorbar(ratio_im, cax=cax, orientation="horizontal", ticks=[0, 0.5, 1, 1.5, 2])
+    cb.ax.tick_params(labelsize=8)
+    cb.set_label("columns 2 to 9: error of the donor / error of the dataset mean (1 = as good as the mean, white; "
+                 "2 = stranger; blue beats the mean)", fontsize=8.5)
+    for r, im in v_ims.items():
+        pos = ax[r, -1].get_position()
+        vc = fig.add_axes([pos.x1 + 0.002, pos.y0 + 0.15 * pos.height, 0.005, 0.7 * pos.height])
+        vb = fig.colorbar(im, cax=vc)
+        vb.ax.tick_params(labelsize=7)
+        vb.set_label("V (z$^2$)", fontsize=7.5)
     for ext in ("png", "pdf"):
         fig.savefig(os.path.join(ROOT, "results", "figures", f"fig_ladder2d_facefmt.{ext}"), dpi=200)
     print("figure written")

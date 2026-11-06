@@ -152,3 +152,28 @@ def prototype(kinds=("R2", "R2b"), n_img=40):
 if __name__ == "__main__":  # the guard is required: groupwise() starts worker processes
     if "prototype" in sys.argv[1:]:
         prototype(tuple(a for a in sys.argv[2:] if a in KINDS) or ("R2", "R2b"))
+
+
+def intensity_match(target, tmask, donor, dmask, min_px=50):
+    """Least-squares gain and offset mapping the donor onto the target over the joint valid pixels (Amendment 9.12);
+    returns the matched donor (outside its mask stays 0 and missing) and (gain, offset), or None if too few pixels."""
+    jm = tmask & dmask
+    if jm.sum() < min_px:
+        return None
+    A = np.stack([donor[jm], np.ones(int(jm.sum()))], 1).astype(np.float64)
+    g, b = np.linalg.lstsq(A, target[jm].astype(np.float64), rcond=None)[0]
+    return np.where(dmask, g * donor + b, 0.0).astype(np.float32), (float(g), float(b))
+
+
+def register_pair(args):
+    """Pairwise donor -> target (Amendment 9.12): R2 registration, then intensity match. Returns (matched donor,
+    warped mask, bending, (gain, offset)) or None on failure (counted by the caller)."""
+    target, tmask, donor, dmask = args
+    try:
+        w, wm, bend = register_to(target, tmask, donor, dmask, "R2")
+    except RuntimeError:
+        return None
+    m = intensity_match(target, tmask, w, wm)
+    if m is None:
+        return None
+    return m[0], wm, bend, m[1]
