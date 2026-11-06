@@ -233,3 +233,8 @@ Versions (each is frozen once recorded; results always name their version):
   disc, fovea on the faint central dark spot; the dark blob next to the disc in its analysis image is the
   haemorrhage, a real finding); the other 19 unchanged from P4 (198 still uncertain). PAPILA = P6 (passed).
   Status: **passes Claude's visual QC; awaiting Kate's review** before any ladder rerun.
+- **Kate approved P7 (6 Nov 2026, "да давай").** The fundus ladder is rerun on P7 (`--arm=p7` in
+  `src/donor_ladder_2d.py`): primary geometry and maps first for PAPILA and GRAPE, then the sensitivity grid.
+  Laterality comes from the metadata, so the P0 side-conflict exclusion no longer applies; frame failures are
+  counted per dataset. P0 results stay in `results/donor_ladder_2d.json` for comparison; P7 results go to
+  `results/donor_ladder_2d_p7.json`.

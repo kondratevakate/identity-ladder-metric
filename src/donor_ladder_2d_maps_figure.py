@@ -29,22 +29,24 @@ COLUMNS = [("target", "Target"), ("other_visit", "Repeat (other visit)"), ("fell
            ("stranger", "Stranger"), ("cohort", "Same sex and age"), ("V", "Dataset mean")]
 
 
-def mean_image(name):
-    img, fov, ok, _ = F.load_all(None, os.path.join(F.PRIVATE, f"{name}_canonical.npz"))
+def mean_image(name, tag=""):
+    path = (os.path.join(F.PRIVATE, f"{name}_canonical.npz") if not tag else
+            os.path.join(D.PRIVATE, f"{name}_canonical{tag}.npz"))
+    img, fov, ok, _ = F.load_all(None, path)
     m = img[ok].mean(0)
     return np.where(fov[ok].mean(0) > 0.5, m, np.nan)
 
 
-def draw(mode, res, dest):
-    names = [n for n in ("PAPILA", "GRAPE") if os.path.exists(os.path.join(D.PRIVATE, f"{n}_maps.npz"))]
+def draw(mode, res, dest, tag=""):
+    names = [n for n in ("PAPILA", "GRAPE") if os.path.exists(os.path.join(D.PRIVATE, f"{n}_maps{tag}.npz"))]
     h = 1.75 * len(names) + 0.7
     fig, axes = plt.subplots(len(names), len(COLUMNS), figsize=(7.2, h), squeeze=False,
                              gridspec_kw={"wspace": 0.05, "hspace": 0.9})
     fig.subplots_adjust(top=1 - 0.42 / h, bottom=0.62 / h + 0.06, left=0.06, right=0.995)
     common = TwoSlopeNorm(vmin=0, vcenter=1, vmax=2.4)
     for r, name in enumerate(names):
-        z = np.load(os.path.join(D.PRIVATE, f"{name}_maps.npz"))
-        under = mean_image(name)
+        z = np.load(os.path.join(D.PRIVATE, f"{name}_maps{tag}.npz"))
+        under = mean_image(name, tag)
         rel = res[name]["maps"]
         shown = np.isfinite(z["all_V"])                         # crop every panel to the mapped area
         ys, xs = np.flatnonzero(shown.any(1)), np.flatnonzero(shown.any(0))
@@ -95,14 +97,18 @@ def draw(mode, res, dest):
                         va="top", fontsize=5.2, color=INK)
             else:
                 rr = rel[key]
-                note = "≈ 2 by construction" if key == "stranger" else f"split-half r {rr['split_half_r']:.2f}"
+                sh = rr["split_half_r"]
+                note = ("≈ 2 by construction" if key == "stranger" else
+                        "split-half r n/a" if sh is None else f"split-half r {sh:.2f}")
                 ax.text(0.5, -0.32, f"median {rr['median_ratio']:.2f} × mean\n{note}", transform=ax.transAxes,
                         ha="center", va="top", fontsize=5.2, color=INK)
     scale = ("One scale: 1 = dataset mean (white), 2 = stranger; blue beats the mean." if mode == "common" else
              "Own range per map around its median (white); faded where two independent person halves disagree.")
-    fig.text(0.5, 0.03, f"{scale} Disc-right frame, green channel z-scored in the field of view, 48 px window on the "
+    prep = ("P7: PAPILA expert-disc translation frame, GRAPE disc-fovea frame; green / background, z-scored"
+            if tag == "_p7" else "P0: disc-fovea frame (fovea unreliable); green z-scored")
+    fig.text(0.5, 0.03, f"{scale} {prep} in the field of view, 48 px window on the "
              "256 grid. Pre-QC.", ha="center", fontsize=5.0, color=MUTED)
-    fig.suptitle("Fundus, every location: error of each donor in units of the dataset mean"
+    fig.suptitle(f"Fundus{(' ' + tag[1:].upper()) if tag else ''}, every location: error of each donor in units of the dataset mean"
                  + ("" if mode == "common" else " (contrast per map)"), fontsize=8.2, y=0.99)
     fig.savefig(dest + ".png", dpi=250)
     fig.savefig(dest + ".pdf", bbox_inches="tight", pad_inches=0.02)
@@ -110,9 +116,10 @@ def draw(mode, res, dest):
 
 
 def main():
-    res = json.load(open(D.OUT_JSON, encoding="utf-8"))["datasets"]
+    tag = next((f"_{a.split('=', 1)[1]}" for a in sys.argv if a.startswith("--arm=")), "")   # preprocessing version
+    res = json.load(open(D.OUT_JSON.replace(".json", f"{tag}.json"), encoding="utf-8"))["datasets"]
     for mode in ("common", "contrast"):
-        draw(mode, res, os.path.join(ROOT, "results", "figures", f"fig_ladder2d_maps_{mode}"))
+        draw(mode, res, os.path.join(ROOT, "results", "figures", f"fig_ladder2d_maps{tag}_{mode}"), tag)
 
 
 if __name__ == "__main__":

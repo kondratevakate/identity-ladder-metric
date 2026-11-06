@@ -113,6 +113,20 @@ def load_arm(t, name, arm):
     n = len(t)
     img, fov = np.zeros((n, G, G), np.float32), np.zeros((n, G, G), bool)
     ok, dr = np.zeros(n, bool), np.zeros(n, bool)
+    if arm == "p7":                                   # Amendment 9.2, approved version
+        import fundus_preprocess as FP
+        for i, (p, sd) in enumerate(zip(t.path, t.side)):
+            rgb = F.L.load_base(p, 512, True)
+            lm = FP.landmarks_p7(rgb, sd, p, name)
+            r = FP.analysis_image_p3(rgb, lm, sd, FP.FRAMES[name])
+            dr[i] = sd == "R"                         # laterality from the metadata
+            if r is not None:
+                img[i], fov[i] = r
+                ok[i] = True
+            if i % 50 == 0:
+                print(f"{name} p7 load {i + 1}/{n}", flush=True)
+        np.savez_compressed(cache, img=img, fov=fov, ok=ok, disc_right=dr)
+        return img, fov, ok, dr
     for i, p in enumerate(t.path):
         r = load_flat(p)
         if r is not None:
@@ -263,7 +277,7 @@ def box(x):
     return ndimage.uniform_filter(x.astype(np.float32), MAP_WIN, mode="constant")
 
 
-def maps(name, setup_out, tag=""):
+def maps(name, setup_out, suffix=""):
     """Local-error maps on the canonical frame for fixed-rule donors; pools per side without the target's person;
     independent person halves (pools inside each half). Returns aggregate arrays only."""
     t, img, fov, u, _, _, fellow, other = setup_out
@@ -311,7 +325,7 @@ def maps(name, setup_out, tag=""):
         a, b = out["h0"][d], out["h1"][d]
         ok = np.isfinite(a) & np.isfinite(b)
         rel[d] = float(np.corrcoef(a[ok], b[ok])[0, 1]) if ok.sum() > 10 else None
-    np.savez_compressed(os.path.join(PRIVATE, f"{name}_maps{tag}.npz"),
+    np.savez_compressed(os.path.join(PRIVATE, f"{name}_maps{suffix}.npz"),
                         **{f"{tag}_{d}": m.astype(np.float32) for tag, mm in out.items() for d, m in mm.items()})
     return {d: {"median_ratio": (float(np.nanmedian(out["all"][d])) if np.isfinite(out["all"][d]).any() else None),
                 "split_half_r": rel[d]} for d in rel}
@@ -343,7 +357,8 @@ def main():
     for name in names:
         so = setup(name, arm)
         u, fellow, other = so[3], so[6], so[7]
-        counts = dict(n_units=len(u), n_fellow=int((fellow >= 0).sum()), n_other=int((other >= 0).sum()))
+        counts = dict(n_units=len(u), n_fellow=int((fellow >= 0).sum()), n_other=int((other >= 0).sum()),
+                      n_images=len(so[0]), n_frame_ok=int(load_arm(so[0], name, arm)[2].sum()))
         d = {"counts": counts, "configs": {}}
         r = run_config(name, so, 48, 16, F.KS, True)
         r.to_csv(os.path.join(PRIVATE, f"{name}_rows_p48_r16{tag}.csv.gz"), index=False)
