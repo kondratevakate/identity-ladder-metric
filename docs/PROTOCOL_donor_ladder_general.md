@@ -223,3 +223,13 @@ Versions (each is frozen once recorded; results always name their version):
   the analysed windows). GRAPE (= P4): 19 of 20 accepted, fovea on its dark spot on 18, image 198 uncertain (no
   clear dark spot, plausible position); image 464 a counted frame failure (wrong disc). Status: **passes Claude's
   visual QC; awaiting Kate's review** before any ladder rerun.
+- **Kate's review of P6 (6 Nov 2026).** GRAPE image 464 (very bright) is a wrong rejection: the disc is where it
+  should be. Diagnosis: on a bright image the disc's ratio to the broad background (1.32) is no higher than a
+  darker corner's (1.33), which the background division lifts; by raw brightness the corner is at the 36th
+  percentile of the field of view and the true disc at the 100th.
+- **P7** (recorded before it runs): GRAPE as P4 with the P5 raw-brightness gate on disc candidates (raw red +
+  green, 12 px smoothing, at least the 75th percentile of the field of view). PAPILA unchanged from P6.
+- **P7 QC result (6 Nov 2026, Claude's review).** GRAPE: 20 of 20 accepted; image 464 now correct (disc on the
+  disc, fovea on the faint central dark spot; the dark blob next to the disc in its analysis image is the
+  haemorrhage, a real finding); the other 19 unchanged from P4 (198 still uncertain). PAPILA = P6 (passed).
+  Status: **passes Claude's visual QC; awaiting Kate's review** before any ladder rerun.

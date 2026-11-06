@@ -28,13 +28,15 @@ def sheet(name, t, picks, page, version):
     for j, i in enumerate(picks):
         rgb = F.L.load_base(t.path.iloc[i], 512, True)
         ax = axes[0, j]
-        if version in ("P2", "P3", "P4", "P5", "P6"):
+        if version in ("P2", "P3", "P4", "P5", "P6", "P7"):
             side, frame = t.side.iloc[i], P.FRAMES[name]
             fn = {"P2": (P.landmarks_p2, P.frame_ok, P.canonical_p2, P.analysis_image_p2),
                   "P3": (P.landmarks_p3, P.frame_ok_p3, P.canonical_p3, P.analysis_image_p3),
                   "P4": (P.landmarks_p4, P.frame_ok_p3, P.canonical_p3, P.analysis_image_p3),
                   "P5": (P.landmarks_p5, P.frame_ok_p3, P.canonical_p3, P.analysis_image_p3),
                   "P6": (lambda im, sd: P.landmarks_p6(im, sd, t.path.iloc[i], name), P.frame_ok_p3,
+                         P.canonical_p3, P.analysis_image_p3),
+                  "P7": (lambda im, sd: P.landmarks_p7(im, sd, t.path.iloc[i], name), P.frame_ok_p3,
                          P.canonical_p3, P.analysis_image_p3)}[version]
             lm = fn[0](rgb, side)
             ok = fn[1](lm, frame)
@@ -82,7 +84,7 @@ def sheet(name, t, picks, page, version):
             for r in (1, 2):
                 axes[r, j].text(0.5, 0.5, "frame failure\n(left out)", ha="center", va="center", fontsize=7,
                                 color="red", transform=axes[r, j].transAxes)
-    for r, lab in enumerate((("oriented raw, " if version in ("P2", "P3", "P4", "P5", "P6") else "raw: P0 red, ") + version + " yellow/cyan", version + " frame + targets",
+    for r, lab in enumerate((("oriented raw, " if version in ("P2", "P3", "P4", "P5", "P6", "P7") else "raw: P0 red, ") + version + " yellow/cyan", version + " frame + targets",
                              version + " analysis image")):
         axes[r, 0].set_ylabel(lab, fontsize=8)
     for ax in axes.ravel():

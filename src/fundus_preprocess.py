@@ -402,3 +402,25 @@ def landmarks_p6(rgb, side, image_path=None, dataset="GRAPE"):
     if side == "L":                                    # oriented() reflects left eyes
         disc = np.array([rgb.shape[1] - 1 - disc[0], disc[1]])
     return {**out, "disc": disc, "radius": rd, "status": "ok"}
+
+
+# ---------- P7 (Amendment 9.2): GRAPE = P4 + the P5 raw-brightness gate on disc candidates; PAPILA = P6 ----------
+
+def disc_p7(rgb, fov, r, inner):
+    rg = (rgb[..., 0] + rgb[..., 1]).astype(np.float32)
+    raw12 = ndimage.gaussian_filter(rg, 12)
+    return disc_p4(rgb, fov, r, inner & (raw12 >= np.percentile(raw12[fov], 75)))
+
+
+def landmarks_p7(rgb, side, image_path=None, dataset="GRAPE"):
+    if dataset == "PAPILA":
+        return landmarks_p6(rgb, side, image_path, dataset)
+    global disc_p4
+    saved = disc_p4
+    disc_p4 = lambda rgb_, fov_, r_, inner_: saved(rgb_, fov_, r_, inner_ & (  # noqa: E731
+        ndimage.gaussian_filter((rgb_[..., 0] + rgb_[..., 1]).astype(np.float32), 12)
+        >= np.percentile(ndimage.gaussian_filter((rgb_[..., 0] + rgb_[..., 1]).astype(np.float32), 12)[fov_], 75)))
+    try:
+        return landmarks_p4(rgb, side)
+    finally:
+        disc_p4 = saved
