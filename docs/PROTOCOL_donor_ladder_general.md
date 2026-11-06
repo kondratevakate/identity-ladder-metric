@@ -429,3 +429,7 @@ position (frame targets) and disc size. Disc size is measured the same way in bo
 the bright blob around the disc target above half the way from its peak (within 10 px) to the median of the 15-30 px
 ring, r = sqrt(area / pi) (a radial profile from the target failed on PAPILA, whose bright cup lies off the
 geometric disc centre). Display only; no number changes.
+- Revision (Kate): both rows are drawn at one scale set by the white disc on each mean, discs aligned one under the
+  other (panels in disc units); GRAPE's field is outlined on the first PAPILA panel only. Caveat: on PAPILA's mean the
+  white spot is mostly the bright cup (5.6 px on the 128 frame), while the expert contours give a disc radius of
+  ~9.3 px, so the outline's scale is approximate.

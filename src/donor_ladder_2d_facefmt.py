@@ -268,7 +268,6 @@ def run():
 
 DISC_XY = {"PAPILA": ((278.0 + 0.5) / 4 - 0.5, (247.0 + 0.5) / 4 - 0.5),     # frame disc targets, 128 frame
            "GRAPE": ((330.0 + 0.5) / 4 - 0.5, (256.0 + 0.5) / 4 - 0.5)}
-PAD = 64                                                                        # room around PAPILA for the outline
 
 
 def disc_radius(mean, centre):
@@ -283,16 +282,6 @@ def disc_radius(mean, centre):
     base = np.nanmedian(np.where((d >= 15) & (d <= 30), mean, np.nan))
     lab, _ = ndimage.label(m > (m[py, px] + base) / 2)
     return float(np.sqrt((lab == lab[py, px]).sum() / np.pi))
-
-
-def grape_outline_on_papila(grape_valid, r_grape, r_papila, shape):
-    """GRAPE's displayed field mapped into the padded PAPILA frame by disc position and disc size."""
-    from scipy.ndimage import map_coordinates
-    yy, xx = np.mgrid[:shape[0], :shape[1]].astype(float)
-    k = r_grape / r_papila
-    gx = DISC_XY["GRAPE"][0] + (xx - PAD - DISC_XY["PAPILA"][0]) * k
-    gy = DISC_XY["GRAPE"][1] + (yy - PAD - DISC_XY["PAPILA"][1]) * k
-    return map_coordinates(grape_valid.astype(float), [gy, gx], order=0, cval=0.0) > 0.5
 
 
 def figure():
@@ -314,43 +303,58 @@ def figure():
                 valid &= np.isfinite(z[key])
         data[name] = (z, valid)
         radius[name] = disc_radius(np.where(z["valid"] > 0.5, z["meanfundus"], np.nan), DISC_XY[name])
+    # Amendment 9.10 (Kate): one scale for both rows, set by the white disc; discs aligned one under the other.
+    # Every panel is drawn in disc units (x, y relative to the disc target, divided by the disc radius on the mean).
+    ext, grids = {}, {}
+    for name, _ in order:
+        z, valid = data[name]
+        dx, dy = DISC_XY[name]
+        rr = radius[name]
+        h, w = valid.shape
+        ext[name] = [(-0.5 - dx) / rr, (w - 0.5 - dx) / rr, (h - 0.5 - dy) / rr, (-0.5 - dy) / rr]
+        yy, xx = np.mgrid[:h, :w]
+        grids[name] = ((xx - dx) / rr, (yy - dy) / rr)
+    lim_x, lim_y = [np.inf, -np.inf], [np.inf, -np.inf]
+    for name, _ in order:
+        gx, gy = grids[name]
+        v = data[name][1]
+        lim_x = [min(lim_x[0], gx[v].min()), max(lim_x[1], gx[v].max())]
+        lim_y = [min(lim_y[0], gy[v].min()), max(lim_y[1], gy[v].max())]
+    pad = 0.6
     fig, ax = plt.subplots(len(order), len(cols), figsize=(2.1 * len(cols), 2.6 * len(order) + 0.9))
     for r, (name, arm) in enumerate(order):
         z, valid = data[name]
-        outline, shown = None, valid
-        if name == "PAPILA":                              # pad, then outline GRAPE's field in PAPILA's frame
-            z = {k: np.pad(np.asarray(v, float), PAD, constant_values=np.nan) for k, v in z.items()}
-            valid = np.pad(valid, PAD, constant_values=False)
-            outline = grape_outline_on_papila(data["GRAPE"][1], radius["GRAPE"], radius["PAPILA"], valid.shape)
-            shown = valid | outline
-        ys, xs = np.flatnonzero(shown.any(1)), np.flatnonzero(shown.any(0))
-        crop = (slice(max(ys[0] - 4, 0), ys[-1] + 5), slice(max(xs[0] - 4, 0), xs[-1] + 5))
-        under = np.where(valid, z["meanfundus"], np.nan)[crop]
+        under = np.where(valid, z["meanfundus"], np.nan)
         for c, (key, title) in enumerate(cols):
             a = ax[r, c]
             a.axis("off")
+            a.set_xlim(lim_x[0] - pad, lim_x[1] + pad)
+            a.set_ylim(lim_y[1] + pad, lim_y[0] - pad)
             if r == 0:
                 a.set_title(title, fontsize=11)
-            a.imshow(under, cmap="gray", vmin=-2.5, vmax=2.5)
+            a.imshow(under, cmap="gray", vmin=-2.5, vmax=2.5, extent=ext[name])
             if key == "meanfundus":
-                extra = "\ndashed: GRAPE field, matched by disc" if name == "PAPILA" else ""
+                extra = ""
+                if name == "PAPILA":                      # GRAPE's field on the first PAPILA panel only
+                    gx, gy = grids["GRAPE"]
+                    a.contour(gx, gy, data["GRAPE"][1].astype(float), levels=[0.5], colors="#444444",
+                              linewidths=0.9, linestyles="--")
+                    extra = "\ndashed: GRAPE field (same disc scale)"
                 a.text(0.5, -0.08, f"{name} ({arm.upper()})\n(pool mean, no person){extra}", ha="center", va="top",
                        transform=a.transAxes, fontsize=8.5)
                 continue
-            if outline is not None:
-                a.contour(outline[crop], levels=[0.5], colors="#444444", linewidths=0.8, linestyles="--")
             if key not in z or key not in res[name] and key != "V":
                 a.text(0.5, 0.5, "not available", ha="center", va="center", transform=a.transAxes, fontsize=9,
                        bbox=dict(fc="white", ec="none", alpha=0.8))
                 continue
-            m = np.where(valid, z[key], np.nan)[crop]
+            m = np.where(valid, z[key], np.nan)
             if key == "V":
-                a.imshow(m, cmap="viridis")
+                a.imshow(m, cmap="viridis", extent=ext[name])
                 a.text(0.5, -0.08, "MSE = 1 x mean\n(shown: V, z units)", ha="center", va="top",
                        transform=a.transAxes, fontsize=8.5)
                 continue
             s = res[name][key]
-            a.imshow(m, cmap="RdBu_r", vmin=0, vmax=2, alpha=0.9)
+            a.imshow(m, cmap="RdBu_r", vmin=0, vmax=2, alpha=0.9, extent=ext[name])
             r_txt = f"split-half r {s['split_half_r']:.2f}" if s.get("split_half_r") is not None else "split-half r n/a"
             ci = s["ci95"]
             a.text(0.5, -0.08, f"MSE = {s['ratio']:.2f} x mean [{ci[0]:.2f}, {ci[1]:.2f}]\n{r_txt}\nn = {s['targets']}",
@@ -360,9 +364,8 @@ def figure():
              "a 4 px grid by the 8 px ring around the 16 px window. ** the same eye reflected top-bottom about the "
              "disc-fovea line (2.5 px strip excluded);\nPAPILA: line through the disc, fovea outside the field. "
              "128 px frame, 16 px window; outside the field "
-             "is missing. GRAPE P8, PAPILA P9 (Amendment 9.2); persons left out of their own pools. Dashed on PAPILA: GRAPE's "
-             f"field mapped by disc position and size (disc radius on the means: GRAPE {radius['GRAPE']:.0f} px, "
-             f"PAPILA {radius['PAPILA']:.0f} px).",
+             "is missing. GRAPE P8, PAPILA P9 (Amendment 9.2); persons left out of their own pools. Both rows at one scale, set by the disc "
+             f"on each mean (radius GRAPE {radius['GRAPE']:.1f} px, PAPILA {radius['PAPILA']:.1f} px), discs aligned.",
              ha="center", fontsize=8.5, color="#52514e")
     fig.tight_layout(rect=(0, 0.06, 1, 0.95))
     for ext in ("png", "pdf"):
