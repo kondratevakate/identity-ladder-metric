@@ -266,6 +266,35 @@ def run():
         json.dump(meta, fh, indent=1)
 
 
+DISC_XY = {"PAPILA": ((278.0 + 0.5) / 4 - 0.5, (247.0 + 0.5) / 4 - 0.5),     # frame disc targets, 128 frame
+           "GRAPE": ((330.0 + 0.5) / 4 - 0.5, (256.0 + 0.5) / 4 - 0.5)}
+PAD = 64                                                                        # room around PAPILA for the outline
+
+
+def disc_radius(mean, centre):
+    """Disc radius on a dataset mean (Amendment 9.10), same rule for both datasets: the bright blob around the disc
+    target above half the way from its peak (within 10 px) to the median of the 15-30 px ring; r = sqrt(area / pi)."""
+    from scipy import ndimage
+    yy, xx = np.mgrid[:mean.shape[0], :mean.shape[1]]
+    d = np.hypot(xx - centre[0], yy - centre[1])
+    m = np.nan_to_num(mean, nan=-np.inf)
+    near = np.where(d <= 10, m, -np.inf)
+    py, px = np.unravel_index(np.argmax(near), near.shape)
+    base = np.nanmedian(np.where((d >= 15) & (d <= 30), mean, np.nan))
+    lab, _ = ndimage.label(m > (m[py, px] + base) / 2)
+    return float(np.sqrt((lab == lab[py, px]).sum() / np.pi))
+
+
+def grape_outline_on_papila(grape_valid, r_grape, r_papila, shape):
+    """GRAPE's displayed field mapped into the padded PAPILA frame by disc position and disc size."""
+    from scipy.ndimage import map_coordinates
+    yy, xx = np.mgrid[:shape[0], :shape[1]].astype(float)
+    k = r_grape / r_papila
+    gx = DISC_XY["GRAPE"][0] + (xx - PAD - DISC_XY["PAPILA"][0]) * k
+    gy = DISC_XY["GRAPE"][1] + (yy - PAD - DISC_XY["PAPILA"][1]) * k
+    return map_coordinates(grape_valid.astype(float), [gy, gx], order=0, cval=0.0) > 0.5
+
+
 def figure():
     import matplotlib
     matplotlib.use("Agg")
@@ -275,14 +304,26 @@ def figure():
             ("fellow", "Fellow eye"), ("fellow_mirror", "Fellow eye mirrored**"), ("sibling", "Sibling"), ("stranger", "Stranger"), ("lookalike", "16 look-alikes*"),
             ("sexage", "Same sex and age"), ("V", "Dataset mean")]
     plt.rcParams["font.family"] = "serif"
-    fig, ax = plt.subplots(len(SETS), len(cols), figsize=(2.1 * len(cols), 2.6 * len(SETS) + 0.9))
-    for r, (name, arm) in enumerate(SETS):
-        z = np.load(os.path.join(D.PRIVATE, f"facefmt_{name}_{arm}.npz"))
+    order = (("GRAPE", "p8"), ("PAPILA", "p9"))       # Amendment 9.10: the larger field first
+    data, radius = {}, {}
+    for name, arm in order:
+        z = dict(np.load(os.path.join(D.PRIVATE, f"facefmt_{name}_{arm}.npz")))
         valid = z["valid"] > 0.5
         for key, _ in cols:                               # common display mask: a pixel shown in every panel of the
-            if key in z.files and key not in ("meanfundus", "valid"):   # row only if every map is defined there
+            if key in z and key not in ("meanfundus", "valid"):   # row only if every map is defined there
                 valid &= np.isfinite(z[key])
-        ys, xs = np.flatnonzero(valid.any(1)), np.flatnonzero(valid.any(0))
+        data[name] = (z, valid)
+        radius[name] = disc_radius(np.where(z["valid"] > 0.5, z["meanfundus"], np.nan), DISC_XY[name])
+    fig, ax = plt.subplots(len(order), len(cols), figsize=(2.1 * len(cols), 2.6 * len(order) + 0.9))
+    for r, (name, arm) in enumerate(order):
+        z, valid = data[name]
+        outline, shown = None, valid
+        if name == "PAPILA":                              # pad, then outline GRAPE's field in PAPILA's frame
+            z = {k: np.pad(np.asarray(v, float), PAD, constant_values=np.nan) for k, v in z.items()}
+            valid = np.pad(valid, PAD, constant_values=False)
+            outline = grape_outline_on_papila(data["GRAPE"][1], radius["GRAPE"], radius["PAPILA"], valid.shape)
+            shown = valid | outline
+        ys, xs = np.flatnonzero(shown.any(1)), np.flatnonzero(shown.any(0))
         crop = (slice(max(ys[0] - 4, 0), ys[-1] + 5), slice(max(xs[0] - 4, 0), xs[-1] + 5))
         under = np.where(valid, z["meanfundus"], np.nan)[crop]
         for c, (key, title) in enumerate(cols):
@@ -292,10 +333,13 @@ def figure():
                 a.set_title(title, fontsize=11)
             a.imshow(under, cmap="gray", vmin=-2.5, vmax=2.5)
             if key == "meanfundus":
-                a.text(0.5, -0.08, f"{name} ({arm.upper()})\n(pool mean, no person)", ha="center", va="top",
+                extra = "\ndashed: GRAPE field, matched by disc" if name == "PAPILA" else ""
+                a.text(0.5, -0.08, f"{name} ({arm.upper()})\n(pool mean, no person){extra}", ha="center", va="top",
                        transform=a.transAxes, fontsize=8.5)
                 continue
-            if key not in z.files or key not in res[name] and key != "V":
+            if outline is not None:
+                a.contour(outline[crop], levels=[0.5], colors="#444444", linewidths=0.8, linestyles="--")
+            if key not in z or key not in res[name] and key != "V":
                 a.text(0.5, 0.5, "not available", ha="center", va="center", transform=a.transAxes, fontsize=9,
                        bbox=dict(fc="white", ec="none", alpha=0.8))
                 continue
@@ -316,7 +360,9 @@ def figure():
              "a 4 px grid by the 8 px ring around the 16 px window. ** the same eye reflected top-bottom about the "
              "disc-fovea line (2.5 px strip excluded);\nPAPILA: line through the disc, fovea outside the field. "
              "128 px frame, 16 px window; outside the field "
-             "is missing. PAPILA P9, GRAPE P8 (Amendment 9.2); persons left out of their own pools.",
+             "is missing. GRAPE P8, PAPILA P9 (Amendment 9.2); persons left out of their own pools. Dashed on PAPILA: GRAPE's "
+             f"field mapped by disc position and size (disc radius on the means: GRAPE {radius['GRAPE']:.0f} px, "
+             f"PAPILA {radius['PAPILA']:.0f} px).",
              ha="center", fontsize=8.5, color="#52514e")
     fig.tight_layout(rect=(0, 0.06, 1, 0.95))
     for ext in ("png", "pdf"):

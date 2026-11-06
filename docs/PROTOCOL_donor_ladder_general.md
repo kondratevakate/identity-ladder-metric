@@ -417,3 +417,15 @@ H1, applied identically to PAPILA and GRAPE:
 - Intensity: as P8 (green / background with the disc removed, z-scored inside the mask), 256 grid.
 - Prototype gate: 40 evenly spaced images per dataset; QC = detector validation on PAPILA, sheets (photo with
   detected and expert disc, H1 frame, analysis image), the two dataset means side by side; Kate's verdict first.
+- Outcome of H1 (6 Nov 2026, Kate's QC): rejected. Moving the disc to the centre cuts away much of GRAPE's field
+  (its disc sits near the field edge), and the shared detector behaves differently at the two pixel scales (PAPILA:
+  radius 0.71 of the expert's). Each dataset stays in its own frame (PAPILA P9, GRAPE P8; Amendments 9.5-9.7).
+
+### Amendment 9.10 (6 Nov 2026, figure: GRAPE first, GRAPE's field outlined on PAPILA)
+
+Kate: show that GRAPE covers more retina and that PAPILA is cropped. In the face-format figure GRAPE is the first
+row; every PAPILA panel carries a dashed outline of GRAPE's displayed field mapped into PAPILA's frame by disc
+position (frame targets) and disc size. Disc size is measured the same way in both datasets: on the dataset mean,
+the bright blob around the disc target above half the way from its peak (within 10 px) to the median of the 15-30 px
+ring, r = sqrt(area / pi) (a radial profile from the target failed on PAPILA, whose bright cup lies off the
+geometric disc centre). Display only; no number changes.
