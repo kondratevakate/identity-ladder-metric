@@ -495,3 +495,78 @@ intensity fit (gain 0.5-0.9) is a shrinkage toward the mean and is not used. Con
 GRAPE another photo 0.49 x mean (positive), strangers 1.99 and 2.01 (negative). The rigid-by-vessels arm is kept as a
 possible sensitivity analysis (order of rungs), not run here. Figure: Amendments 9.10-9.11 (GRAPE first, one disc
 scale, fellow eye as the mirror rung, colour keys).
+
+### Amendment 9.14 (6 Nov 2026, fundus metric panel; recorded before any metric result)
+
+The CVPR metric panel on the fundus ladder, the same way as the brain (`PROTOCOL_donor_ladder_brain.md`, Amendments
+10-14) and face (`PROTOCOL_face_metrics.md`, Amendment F1) audits. Script `src/fundus_ladder_metrics.py`, output
+`results/fundus_ladder_metrics.json` (`ladder-result-spec/1`). Pre-QC (Amendment 9.13 frame, no pairwise
+registration, no intensity fit; GRAPE P8, PAPILA P9).
+
+- Frame and data: the 128 px frame of `donor_ladder_2d_facefmt` (`down2`: a pixel is valid only if its four source
+  pixels are), z-scored green channel, units, fellow eyes and GRAPE other visits as `donor_ladder_2d.setup`. Pools are
+  same-side and leave-person-out (asserted for every target). Coverage `valid` = pixels inside the field of >= 90% of
+  the units, as the face-format maps.
+- Windows: 16 x 16 px squares (ladder patch definitions, not maps) on a 16 px grid; a position needs >= 95% of the
+  window and >= 50% of its 8 px ring in `valid`. A target enters a position if >= 50% of the window is in its own
+  mask and `valid`. Scored pixels E = window AND target mask AND fill validity AND `valid`; missing is never zero.
+- Rungs: repeat (GRAPE: same eye, nearest other visit; PAPILA: not available), fellow eye (mirror rung, directions
+  "R eye as target" and "L eye as target"), stranger (first of a seeded permutation of the pool) and 16 strangers
+  str00-str15 (anchor), mean of 2 (first two strangers), same sex and age (sex, age +-5 y, GRAPE also same device,
+  >= 10 people; else missing), dataset mean, look-alike k = 1 and 16 look-alikes (nearest on the 8 px ring, masked
+  distance, >= 50% of the target's ring shared, candidate window >= 50% in its mask), oracle look-alike k = 1 (on the
+  window; an upper bound). Controls: wrong detail (dataset mean + the stranger's residual orthogonal to the target's,
+  scaled to its norm on E), white noise (dataset mean + Gaussian noise with the SD of the target's residual on E),
+  shrink of the repeat and of the fellow eye (mean + lambda (donor - mean), lambda = r = 1 - ratio / 2 of that rung
+  in `results/donor_ladder_2d_facefmt.json`). Self (a fill equal to the target) enters analytically (Amendment F1).
+- The 26 confirmatory base metrics and their status for 2D colour fundus (blocked endpoints stay in the Holm
+  denominator as p = 1):
+  - A fidelity: MSE, RMSE, PSNR, MAE, SSIM (brain functions imported unchanged), MS-SSIM (new: masked Gaussian SSIM
+    at 3 scales, 1, 1/2, 1/4, of the composite image = target outside the window and the fill inside, weights of
+    Wang et al. 2003 renormalised over the first 3 scales, contrast-structure terms clipped at 0; scored on the
+    window pixels at each scale), LPIPS: blocked (needs ImageNet network weights; none on this machine, a download
+    needs Kate's approval).
+  - A anomaly: ACC vs dataset mean and vs the matched (sex-age) mean; amplitude ratio ||f - mu|| / ||x - mu|| vs both.
+    The amplitude has no closeness orientation; it enters the tests as |1 - amplitude| (lower = closer) and has no R.
+  - B structure: lDDT-like (brain function); intensity persistence = 1-Wasserstein distance between the 0-dimensional
+    persistence diagrams of target and fill on E (sublevel plus superlevel filtration, 4-connectivity, only pixels in
+    E enter); Betti matching matched and unmatched: blocked (needs the Betti-matching library; a home-made induced
+    matching would not be the published metric).
+  - B identity embeddings (angle, norm, PFE, PLDA): blocked. A fundus encoder (RETFound) needs gated weights;
+    the GRAPE RETFound features shipped with the re-identification repository are Python pickles from an external
+    source and are not unpickled; PAPILA has none. PFE needs an uncertainty head and PLDA a fitted model.
+  - B latent geometry (deterministic pullback, stochastic Fisher-Rao, LDDMM): blocked (no generative fundus model;
+    LDDMM between 16 px windows is not set up and would be a pairwise registration, which the stop rule excludes).
+  - C reference-free (plausibility, FID, FWD, Topology Distance): blocked for this run (set-level metrics with no
+    per-target value; plausibility and FID need trained weights).
+  Supplementary, outside the Holm family: PSNR fixed, Pearson r, and the protein-style group (TM-, GDT-, lDDT_rep,
+  RMSE_rep with sigma_rep from GRAPE repeat pairs of other persons, >= 5 pairs; PAPILA: not available, no repeats).
+- Scales: R_self(rung) = (D(rung) - d_self) / (D(16 strangers) - d_self) with D = mean distance over (target,
+  window) cells (Amendment F1); PSNR has no R_self. GRAPE also reports R anchored on the repeat (descriptive).
+  Raw means and the squared-error ratio to the dataset mean on the same pixels (the spec block) are reported too.
+- Tests per metric (oriented, higher = closer), paired per target averaged over its windows, then per person,
+  one-sided Wilcoxon on person means (>= 10 persons): T1 repeat beats the dataset mean (GRAPE; PAPILA not available);
+  T2 the reference beats its shrink; T3a the reference beats wrong detail; T3b the reference beats noise. Reference =
+  repeat for GRAPE, fellow eye for PAPILA (GRAPE also reports the fellow-referenced tests, outside Holm). Holm per
+  dataset over 26 x 4 = 104 hypotheses. TOST for the predicted ties of reality B (wrong detail = stranger; same
+  sex and age mean = dataset mean): equivalent when the 90% person-bootstrap interval of the difference in R_self lies
+  inside +-0.1.
+- Intervals: bootstrap over persons, 2000 resamples, seed 20261102.
+- Calibration transforms on the rows (brain Amendment 12 group 2): Tnorm z against the 16 strangers, EVT P-value,
+  P(same | z) (GRAPE only, needs repeats), c, and the 0 = mean / 1 = repeat position (GRAPE only).
+- Gate: smoke run and a QC sheet of evenly spaced targets (private folder) are looked at, and Kate's verdict is
+  obtained, before the full cohort.
+- Revision after the smoke-run QC sheet (6 Nov 2026, before the full run): a fill enters a (target, window) cell only
+  if its scored pixels E cover >= 50% of the target's valid window pixels (seen: a stranger with no field over most
+  of the window was scored on a few pixels). The same rule for every rung, controls included. QC sheets now vary the
+  window position down the page and draw missing pixels in light blue (distinct from a saturated disc).
+- QC verdict: Kate approved the smoke-run QC sheets (12 evenly spaced targets per dataset; private folder) on
+  6 Nov 2026 ("QC ok, run it"); the full cohort was run after this.
+- Outcome (full cohort, pre-QC; `results/fundus_ladder_metrics.json`, spec: all passed). Squared-error ratio to the
+  dataset mean on the window pixels: GRAPE repeat 0.43, fellow 1.30 (R eye 1.31, L eye 1.28), stranger 2.05;
+  PAPILA fellow 1.44 (1.42, 1.45), stranger 1.99. Computed: 12 of the 26 confirmatory metrics; 14 blocked as listed
+  above. Holm (104 per dataset): T2 "no reward for shrinkage" fails for every closeness metric in both datasets (only
+  the amplitude ratio, and intensity persistence in PAPILA, prefer the donor over its shrink); T3a and T3b pass for
+  the closeness metrics except MS-SSIM against noise in PAPILA and the amplitude ratio (wrong detail and noise have
+  amplitude about 1 by construction); T1 passes in GRAPE for every computed metric except the matched-mean ones
+  (37 GRAPE targets have a same sex, age and device cohort).
