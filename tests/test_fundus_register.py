@@ -82,8 +82,23 @@ def test_intensity_match_recovers_gain_and_offset_on_valid_pixels_only():
 def test_register_pair_aligns_a_shifted_copy():
     t, tm = scene()
     s, sm = scene((3.0, -2.0))
-    out = R.register_pair((t, tm, 0.5 * s + 0.1, sm))
-    assert out is not None
-    w, wm, bend, (g, b) = out
+    out = R.register_pair((t, tm, 0.75 * s + 0.1, sm))
+    assert out[0] is not None, out
+    w, wm, bend, (g, b), scale = out
+    assert bend == 0.0 and 0.9 < scale < 1.1
     inner = tm & wm & (ndimage.distance_transform_edt(tm) > 8)
     assert np.mean((w - t)[inner] ** 2) < 0.2 * np.mean((s - t)[inner & sm] ** 2)
+
+
+def test_register_pair_rejects_an_implausible_gain():
+    t, tm = scene()
+    s, sm = scene((1.0, 0.0))
+    out = R.register_pair((t, tm, 0.1 * s, sm))          # needs gain ~10: implausible, counted as a failure
+    assert out[0] is None and out[1].startswith("gain_")
+
+
+def test_rigid_pair_never_scales():
+    t, tm = scene()
+    s, sm = scene((2.0, -1.0))
+    out = R.register_pair((t, tm, s, sm))
+    assert out[0] is not None and abs(out[4] - 1.0) < 1e-3     # rigid: |det| = 1

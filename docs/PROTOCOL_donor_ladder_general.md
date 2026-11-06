@@ -460,3 +460,13 @@ matching buy for any image is visible next to what the person adds.
   Means, look-alikes and same sex and age stay as they are (they are not single images). Directions and the result
   spec as before; the registered-stranger rung is a soft check: if it falls well below 2, registration itself pulls
   images toward the target and the registered person rungs must be read against it, not against 2.
+- QC outcome and choice (6 Nov 2026, before the ladder rerun): with affine + SyN to a specific target, a stranger
+  registered and matched the same way fell from ~2 to ~1 x mean (PAPILA 1.15, 2.70, 1.24, 0.95; GRAPE 0.95, 1.14,
+  1.46, 0.94), and some stranger registrations failed silently (GRAPE: scaled to fill the frame, gain 0.22; shrunk,
+  bend 0.18). Pairwise SyN can remodel any eye toward the target. Kate chose affine only + intensity match (R1;
+  shift, rotation, scale, shear; no local bending). Sanity checks, counted as failures (donor missing): affine scale
+  sqrt(|det|) outside [0.8, 1.25] or intensity gain outside [0.5, 2]. The registered-stranger control stays.
+- Revision (Kate, 6 Nov 2026, before any ladder result): no stretching. The fellow eye and the stranger control are
+  aligned rigidly to the target (rotation + translation only, ANTs "Rigid"); within a dataset the resolution is one,
+  so scale and shear are not estimated. Intensity match (gain, offset) and the gain check stay; the scale check is
+  moot for a rigid transform. The affine variant above is not used.

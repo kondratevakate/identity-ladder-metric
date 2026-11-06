@@ -16,7 +16,7 @@ import numpy as np  # noqa: E402
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-KINDS = {"R1": ("Affine", {}), "R2": ("SyN", {}),
+KINDS = {"Rigid": ("Rigid", {}), "R1": ("Affine", {}), "R2": ("SyN", {}),
          "R2b": ("SyN", {"flow_sigma": 6, "total_sigma": 1, "reg_iterations": (20, 10, 0)})}   # softer SyN
 
 
@@ -25,7 +25,7 @@ def valid_mean(X, M):
     return np.where(n > 0, (X * M).sum(0) / np.maximum(n, 1), 0.0).astype(np.float32), n
 
 
-def register_to(template, tmask, img, mask, kind):
+def register_to(template, tmask, img, mask, kind, info=None):
     """Warp (img, mask) onto the template; returns (warped image, warped validity, bending), bending = mean |log det
     Jacobian| of the deformable warp inside the warped field (0 for affine arms)."""
     import ants
@@ -37,10 +37,13 @@ def register_to(template, tmask, img, mask, kind):
     tf, extra = KINDS[kind]
     reg = ants.registration(f, m, type_of_transform=tf, initial_transform="identity", aff_metric="mattes",
                             mask=fm, moving_mask=mm, mask_all_stages=True, **extra)
+    if info is not None:                              # affine scale for sanity checks (Amendment 9.12)
+        p = np.asarray(ants.read_transform(reg["fwdtransforms"][-1]).parameters, float)
+        info["affine_scale"] = float(np.sqrt(abs(p[0] * p[3] - p[1] * p[2])))
     w = ants.apply_transforms(f, m, transformlist=reg["fwdtransforms"], interpolator="linear").numpy()
     wm = ants.apply_transforms(f, mm, transformlist=reg["fwdtransforms"], interpolator="linear").numpy() > 0.99
     bend = 0.0
-    if tf != "Affine" and wm.any():
+    if tf not in ("Affine", "Rigid") and wm.any():
         lj = ants.create_jacobian_determinant_image(f, reg["fwdtransforms"][0], do_log=True).numpy()
         bend = float(np.mean(np.abs(lj[wm])))
     return np.where(wm, w, 0.0).astype(np.float32), wm, bend
@@ -165,15 +168,25 @@ def intensity_match(target, tmask, donor, dmask, min_px=50):
     return np.where(dmask, g * donor + b, 0.0).astype(np.float32), (float(g), float(b))
 
 
+SCALE_OK, GAIN_OK = (0.8, 1.25), (0.5, 2.0)
+
+
 def register_pair(args):
-    """Pairwise donor -> target (Amendment 9.12): R2 registration, then intensity match. Returns (matched donor,
-    warped mask, bending, (gain, offset)) or None on failure (counted by the caller)."""
-    target, tmask, donor, dmask = args
+    """Pairwise donor -> target (Amendment 9.12): rigid registration (rotation + translation), then intensity match, with sanity checks.
+    args = (target, tmask, donor, dmask[, kind]). Returns (matched donor, warped mask, bending, (gain, offset),
+    affine scale) or (None, reason) on failure, counted by the caller."""
+    target, tmask, donor, dmask, *rest = args
+    kind = rest[0] if rest else "Rigid"                # Kate: rotate and align only, no stretching
+    info = {}
     try:
-        w, wm, bend = register_to(target, tmask, donor, dmask, "R2")
+        w, wm, bend = register_to(target, tmask, donor, dmask, kind, info)
     except RuntimeError:
-        return None
+        return None, "registration_error"
+    if not SCALE_OK[0] <= info["affine_scale"] <= SCALE_OK[1]:
+        return None, f"affine_scale_{info['affine_scale']:.2f}"
     m = intensity_match(target, tmask, w, wm)
     if m is None:
-        return None
-    return m[0], wm, bend, m[1]
+        return None, "too_few_joint_pixels"
+    if not GAIN_OK[0] <= m[1][0] <= GAIN_OK[1]:
+        return None, f"gain_{m[1][0]:.2f}"
+    return m[0], wm, bend, m[1], info["affine_scale"]

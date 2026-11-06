@@ -68,6 +68,7 @@ def main():
         fig, ax = plt.subplots(2 * N_PERSONS, 6, figsize=(16, 5.6 * N_PERSONS))
         for c, (i, j, q, mean, mm) in enumerate(cases):
             fr, sr = out[2 * c], out[2 * c + 1]
+            fr, sr = (fr if fr[0] is not None else None), (sr if sr[0] is not None else None)
             xt, mt = X[idx[i]], M[idx[i]]
             top, bot = ax[2 * c], ax[2 * c + 1]
             top[0].imshow(raw_small(t.path.iloc[idx[i]]))
@@ -78,16 +79,16 @@ def main():
             show(top[2], xt, mt)
             top[2].set_title("target: right eye, frame", fontsize=9)
             donors = [("fellow, frame only", X[idx[j]], M[idx[j]], None),
-                      ("fellow, registered + matched", *(fr[:2] if fr else (None, None)), fr),
-                      ("stranger, registered + matched", *(sr[:2] if sr else (None, None)), sr)]
+                      ("fellow, rigid + matched", *(fr[:2] if fr else (None, None)), fr),
+                      ("stranger, rigid + matched", *(sr[:2] if sr else (None, None)), sr)]
             show(bot[2], mean, mm)
             bot[2].set_title("leave-person-out mean", fontsize=9)
             for k, (lab, f, fm, o) in enumerate(donors, start=3):
                 if f is None:
-                    top[k].text(0.5, 0.5, "registration failed", ha="center", transform=top[k].transAxes, color="red")
+                    top[k].text(0.5, 0.5, "registration rejected" + "\n(counted as missing)", ha="center", transform=top[k].transAxes, color="red")
                     continue
                 show(top[k], f, fm)
-                extra = f"\nbend {o[2]:.3f}, gain {o[3][0]:.2f}, offset {o[3][1]:+.2f}" if o is not None else ""
+                extra = f"\nscale {o[4]:.2f}, gain {o[3][0]:.2f}, offset {o[3][1]:+.2f}" if o is not None else ""
                 top[k].set_title(lab + extra, fontsize=8.5)
                 jm = mt & fm & mm
                 bot[k].imshow(err_map(xt, f, jm), cmap="magma", vmin=0, vmax=3)
@@ -96,13 +97,13 @@ def main():
                 a.axis("off")
         for a in ax.ravel():
             a.set(xticks=[], yticks=[])
-        fig.suptitle(f"{name}: fellow eye laid over the target - frame only vs registered + intensity-matched "
+        fig.suptitle(f"{name}: fellow eye laid over the target - frame only vs rigid (rotation + shift) + intensity-matched "
                      "(stranger = control). Pre-QC, private.", fontsize=12)
         fig.tight_layout()
         outp = os.path.join(D.PRIVATE, f"qc_pair_{name}.png")
         fig.savefig(outp, dpi=90)
         plt.close(fig)
-        print(outp, "failed", sum(o is None for o in out), "of", len(out), flush=True)
+        print(outp, "rejected", [o[1] for o in out if o[0] is None], "of", len(out), flush=True)
 
 
 if __name__ == "__main__":
