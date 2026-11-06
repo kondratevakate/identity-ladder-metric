@@ -1,0 +1,213 @@
+% ISBI 2027 4-page paper, reframed draft of 2 November 2026. Template: ISBI_template-master (spconf.sty, IEEEbib.bst).
+\documentclass{article}
+\usepackage{spconf,amsmath,amssymb,graphicx}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\setlist{nosep, leftmargin=12pt}
+\newtheorem{prop}{Proposition}
+\newtheorem{cor}{Corollary}
+\newcommand{\todo}[1]{\textbf{[#1]}}
+\raggedbottom
+
+\title{Fighting regression to the mean in the evaluation of brain MRI inpainting}
+\name{Ekaterina Kondrateva$^{1,2}$, Florian Kofler$^{1,3,4,5}$}
+\address{$^{1}$Hertie Institute for AI in Brain Health, University of T\"ubingen, T\"ubingen, Germany\\
+$^{2}$Department of Radiation Oncology (Maastro), GROW, Maastricht University,\\
+Maastricht, The Netherlands\\
+$^{3}$AI for Image-Guided Diagnosis and Therapy, TUM School of Medicine and Health,\\
+Technical University of Munich, Munich, Germany\\
+$^{4}$Department of Quantitative Biomedicine, University of Zurich, Zurich, Switzerland\\
+$^{5}$Helmholtz AI, Helmholtz Munich, Neuherberg, Germany\\
+ORCID: E.~Kondrateva 0000-0003-3623-6106; F.~Kofler 0000-0003-0642-7884}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Inpainting fills a masked region of an image with plausible content, for example healthy brain tissue in place of a tumour.
+Challenges usually rank inpainting methods by pixel metrics such as MSE, PSNR and SSIM.
+In theory, these metrics favour the average of all images that fit the visible context.
+The winning infills of the BraTS inpainting challenge are consistent with this: they are blurred and have very low contrast.
+Yet the infills may still carry information about the anatomy, since segmenters may recover sensible tissue maps after denoising.
+This raises the question whether the blur is a failure and whether the metrics measure what downstream tasks need.
+We make three contributions.
+First, we give a simple theory in which pixel metrics reward the context average and a perfect generator that draws one realistic image has exactly twice its error.
+Second, we model a trained inpainter as an average over donor images from training and estimate how many donors it effectively uses ($k_{\mathrm{eff}}$).
+Third, we introduce an identity ladder that places any method between ``everyone'' and ``this person''.
+We show that regression to the mean gives the best estimate only for quantities that are linear in the image.
+Volumes, thickness and folding are not linear.
+For them, the best estimate averages the measurements of many plausible fills instead of measuring one averaged fill.
+Current methods are therefore close to the ceiling of pixel metrics, not of the tasks those metrics are meant to serve.
+\end{abstract}
+\begin{keywords}
+inpainting, image synthesis, metric validation, regression to the mean, BraTS
+\end{keywords}
+
+\section{Introduction}
+\label{sec:intro}
+Inpainting fills a masked region of an image with plausible content.
+In brain MRI it replaces a tumour with healthy-looking tissue, so that tools built for healthy brains, such as segmentation and morphometry, can run on the scan~\cite{kofler2023brats}.
+FastSurfer-LIT, for example, inpaints lesions so that whole-brain segmentation can analyse scans with tumours and resection cavities~\cite{pollak2025}.
+
+The BraTS challenge on local synthesis of healthy brain tissue ranks methods case-wise by SSIM, PSNR and RMSE inside the mask~\cite{kofler2023brats,inpainting2026}.
+Recent winning entries, including the 2025 winner, are U-Nets trained to inpaint randomly masked healthy regions~\cite{zhang2024brats,zhang2025brats}.
+
+Squared error is minimised by the average of all masked regions that fit the visible part.
+When the context carries little information about the individual anatomy inside the mask, this average is close to the dataset average.
+The optimal fill is therefore a blend of all brains that could be there, not one realistic brain.
+This regression to the mean is a known phenomenon in computer vision.
+Video predictors trained with MSE give inherently blurry predictions~\cite{mathieu2016}, and context encoders for inpainting give much sharper fills when an adversarial loss is added to the pixel-wise loss, because it handles multiple modes~\cite{pathak2016}.
+In MRI, deep denoisers that rely on minimum-MSE estimates tend to produce blurred output~\cite{chung2023}.
+In CT reconstruction, pixel-wise metrics often fail to capture whether anatomical structures are complete, particularly small or thin ones~\cite{lin2025care}.
+Blau and Michaeli proved that lowering mean distortion must make outputs easier to tell apart from real images~\cite{blau2018}, and the minimal distortion under a perception constraint has been derived in closed form~\cite{freirich2021}.
+Sampling from the posterior has exactly twice the minimum MSE~\cite{blau2018,ohayon2025}.
+These results concern training and restoration; we carry them to the ranking of brain MRI inpainting and ask which downstream tasks the ranking serves.
+
+The challenge results are consistent with this.
+In the 2023 edition the organisers report blurry inpaintings for nearly all submissions and a qualitative picture more varied than the ranking~\cite{kofler2023brats}.
+\todo{Fig.~2: BraTS target, winners' infills, mean fill.}
+
+Blurred infills may nevertheless carry useful information.
+On healthy HCP volumes, two inpainters with similar SSIM and PSNR gave clearly different tissue Dice after FAST and FastSurfer segmentation~\cite{kwark2025,henschel2020}.
+Pixel scores and downstream segmentation can therefore disagree.
+After denoising, a blurred BraTS infill may still give sensible tissue maps.
+
+This raises two questions: is the blur a failure, and do the ranking metrics measure what downstream tasks need?
+We show that the answer depends on the task.
+The average preserves quantities that are linear in the image.
+Volumes, thickness and folding are nonlinear, and measuring them on one averaged fill biases them.
+
+We (i) extend the known factor two of posterior sampling to averages over donors and show that linear and nonlinear read-outs of a fill diverge; (ii) model a trained inpainter as an average over $k$ donors from training and estimate an effective number $k_{\mathrm{eff}}$ without ground truth; and (iii) introduce an identity ladder from ``everyone'' to ``this person'', demonstrated on fundus images where a person's other eye is a natural donor.
+
+\section{Theory}
+\label{sec:theory}
+\subsection{Donor averaging}
+The masked region of a target is modeled as $x=\mu+\delta$, with population mean $\mu$ and individual deviation $\delta$ of variance $V$ per voxel in $D$ voxels.
+A donor is a real image whose masked region is used to fill the target.
+Donors are selected by a condition, such as a cohort label, the visible context or the person, and we call each level of conditioning a rung.
+The condition splits $\delta=p+w$ into a predicted part $p=\mathbb{E}[\delta\mid\text{condition}]$ with variance $R^2V$ and an independent residual $w$ with variance $(1-R^2)V$, so $R^2$ is the share of the individual deviation that the rung explains.
+A donor from the same rung shares $p$ and carries its own residual $w_j$.
+A $k$-donor fill averages $k$ donors, $f_k=\mu+p+\tfrac1k\sum_j w_j$.
+
+\begin{prop}[donor averaging]
+$\mathbb{E}\|x-f_k\|^2/D=(1-R^2)\,V\,(1+1/k)$.
+\end{prop}
+\noindent\emph{Proof.} $x-f_k=w-\bar w$ with independent zero-mean terms, so the error is $(1-R^2)V$ from $w$ plus $(1-R^2)V/k$ from $\bar w$. $\square$
+
+\noindent The population mean is the case $R^2=0$, $k\to\infty$ (error $V$); an unrelated person is $R^2=0$, $k=1$ ($2V$); a cohort mean is $R^2=s$, the cohort's share of the individual deviation; $k$ nearest neighbours by visible context are $R^2=R^2_{\mathrm{ctx}}$.
+Averaging more donors therefore lowers the error, but never below the rung mean.
+
+\begin{cor}[factor two]
+At any rung a single donor, which is one draw from the conditional distribution, has exactly twice the error of the rung mean.
+A perfect generator that samples from $p(x\mid z)$ therefore scores twice the conditional average under MSE, however realistic its samples.
+\end{cor}
+\noindent For posterior sampling this factor is known~\cite{blau2018,ohayon2025}; Prop.~1 extends it to averages of $k$ donors at every rung.
+
+\begin{cor}[individual against average]
+One donor whose individual deviation has correlation $r$ with the target's has error $2V(1-r)$.
+It beats the $k$-average of a rung with share $R^2$ only if $2(1-r)<(1-R^2)(1+1/k)$; against the population mean, only if $r>1/2$.
+\end{cor}
+\noindent A person's own other eye, or a sibling, therefore loses on pixels to the average of unrelated people unless it shares more than half of the target's individual deviation.
+The metrics rank a fill that contains no information about the person above fills that contain some.
+SSIM favours flat fills for a different reason.
+For a fill that is flat within a window, the structure term reduces to $C_2/(\sigma_x^2+C_2)$~\cite{wang2004}, which is close to 1 where the reference itself has low local contrast.
+
+\subsection{Linear and nonlinear read-outs}
+A read-out is any quantity computed from a fill, such as its mean intensity or the volume of a tissue class.
+\begin{prop}[what averaging preserves]
+For a linear read-out $L$, $\mathbb{E}[L(x)\mid z]=L(\mathbb{E}[x\mid z])$, so the averaged fill gives the best estimate of $L$.
+For a voxel-wise threshold segmenter on two-class tissue with contrast $c$, $\mathbb{E}[x\mid z]=c\,q$ with $q$ the class probability, and segmenting the averaged fill assigns the class where $q>1/2$: the mode, not the expectation.
+Its volume differs from the expected volume $\sum_v q_v$; a class whose position varies, $q<1/2$ everywhere, vanishes from the averaged fill although its expected volume is $\sum_v q_v>0$.
+Averaging the segmentations of $k$ fills instead is unbiased for the expected volume, with variance falling as $1/k$.
+\end{prop}
+\noindent Mean intensity and soft tissue fractions are linear; volumes from hard segmentation, cortical thickness, surface area and folding are not.
+For them the right estimate averages measurements over plausible fills, which needs samples, not the conditional mean.
+
+\subsection{Effective number of donors}
+The spread of a fill around the population mean shrinks with averaging: $\mathbb{E}\|f_k-\mu\|^2/D=R^2V+(1-R^2)V/k$.
+Matching a method's fill to this curve defines
+\begin{equation}
+k_{\mathrm{eff}}=\frac{(1-R^2)V}{\|f-\mu\|^2/D-R^2V},
+\label{eq:keff}
+\end{equation}
+which at the population rung is $V/(\|f-\mu\|^2/D)$, the ratio of the population variance to the fill's spread.
+It needs no ground truth: $k_{\mathrm{eff}}\approx1$ is a fill as varied as real tissue, a large $k_{\mathrm{eff}}$ is a fill near the mean.
+A network is not literally a donor average, so $k_{\mathrm{eff}}$ is an equivalent number, not a count; unequal donor weights $w_j$ replace $1/k$ by $\sum_j w_j^2$.
+
+\subsection{Identity ladder}
+The rungs order donors by how much of the target's individual part they share: everyone ($R^2=0$), a subgroup matched on age, sex and device ($R^2=s$), nearest neighbours by visible context ($R^2_{\mathrm{ctx}}$), and the same person ($r$).
+Fitting Prop.~1 to error against $k$ for each rung estimates its $R^2$; Corollary~2 then predicts in advance whether an individual donor wins or loses on pixels.
+
+\section{Methods}
+\label{sec:methods}
+\textbf{Simulation with a known distribution.}
+For pixel error we draw Gaussian vectors with $D=256$ and $V=1$, 2000 targets per setting, $R^2\in\{0,0.3,0.6\}$, $k\in\{1,\dots,32,\infty\}$, and single donors with $r\in\{0.25,0.5,0.75\}$, and compute $k_{\mathrm{eff}}$ from Eq.~\ref{eq:keff}.
+For read-outs we generate $64\times64$ images of a sparse class (prevalence 0.2, like sulcal CSF), $\mathbf{1}[\sqrt{R^2}F_c+\sqrt{1-R^2}F_i>t]$, where $F_c$ and $F_i$ are smooth unit-variance Gaussian fields ($\sigma=3$ px) for the rung and the individual, with contrast 1 and noise SD 0.1.
+Donors share $F_c$ and draw new $F_i$, and $k=\infty$ is the exact conditional mean image.
+A threshold at $1/2$ segments each fill, and we report the relative volume bias against the target for segmenting the $k$-average and for averaging $k$ segmentations, with 200 targets per $R^2$ and seed 2027.
+
+\textbf{BraTS.}
+\todo{Winners' infills (2023--2025) on the surrogate masks of the validation cases; the leave-one-out population-mean fill and stranger fills; pixel metrics with the official package~\cite{inpainting2026}; $k_{\mathrm{eff}}$ at the population rung after alignment to a common space; denoising or contrast restoration, then FastSurfer~\cite{henschel2020} and a classical segmenter; regional volumes inside the mask against those of the ground truth.}
+
+\textbf{Fundus ladder.}
+\todo{PAPILA~\cite{kovalyk2022papila} (both eyes) and GRAPE~\cite{huang2023grape} (follow-up visits); mask around the disc or a vessel arcade; fills from the population (same side, both sides with the other side mirrored), a matched subgroup, $k$ nearest neighbours by visible context, the other eye (mirrored, $k=1$) and the same eye at another visit ($k=1$); registration with visual quality control before any metric.}
+
+\section{Results}
+\label{sec:results}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_theory.pdf}
+\caption{Simulation with a known distribution.
+(a) One target ($R^2=0.3$), one donor, the average of 4 donors and the exact conditional mean, with threshold segmentations below: the sparse class fades and then disappears as fills are averaged.
+(b) Pixel error against the number of donors averaged; dots are simulated, lines are Prop.~1, dotted lines the rung means; crosses are single donors with correlation $r$.
+(c) Relative bias of the sparse-class volume when the average is segmented (solid) and when the segmentations are averaged (dashed); colours as in (b).}
+\label{fig:theory}
+\end{figure*}
+
+\textbf{Simulation.}
+Measured pixel error followed Prop.~1 within 0.003 of $V$ at every $R^2$ and $k$ (Fig.~\ref{fig:theory}b): one donor scored $2.00$, $1.40$ and $0.80$, the rung means $1.00$, $0.70$ and $0.40$, exactly the factor two of Corollary~1.
+Single donors with $r=0.25$, $0.5$ and $0.75$ scored $1.50$, $1.00$ and $0.50$, losing to, tying with and beating the population mean as Corollary~2 predicts.
+Eq.~\ref{eq:keff} recovered $k$ from the spread alone ($k_{\mathrm{eff}}=1.00$, $3.94$--$4.00$ and $15.99$--$16.61$ for $k=1$, 4 and 16).
+For the sparse class, segmenting the averaged fill lost volume as $k$ grew: at $k=32$ the class had vanished for $R^2=0$ and had lost $65\%$ and $29\%$ of its volume for $R^2=0.3$ and $0.6$ (Fig.~\ref{fig:theory}a,c).
+Averaging the $k$ segmentations stayed within about $3\%$ of the true volume at every $k$ and $R^2$, as did the linear soft volume.
+The fill that MSE ranks best therefore gives the most biased volume.
+
+\textbf{BraTS.} \todo{Where the winners sit between the mean fill ($\times1$) and a real donor ($\times2$); their $k_{\mathrm{eff}}$; volume error inside the mask for large structures and for thin ones and CSF after denoising.}
+
+\textbf{Fundus ladder.} \todo{Error against $k$ per rung with the fitted $R^2$; the other eye at $2(1-r)$; whether it wins on pixels, against the prediction of Corollary~2.}
+
+\section{Discussion}
+\label{sec:discussion}
+Pixel metrics are appropriate when the task is linear in the image, as for mean intensity, soft tissue fractions and coarse composition.
+For such tasks the winners are close to the best the metrics allow, because the best estimate is the context average they approximate.
+For nonlinear tasks the same metrics reward the wrong fill.
+A perfect generator scores twice the error of the blurred fill, and averaging removes structures whose position varies between people, such as sulcal CSF.
+Sampling has its own cost: as perceptual quality rises, generative restoration models hallucinate more, a trade-off between uncertainty and perception~\cite{cohen2024}.
+Averaging measurements over many samples, as Prop.~2 recommends, also exposes this uncertainty instead of hiding it in one fill.
+Other fields met the same trade-off.
+Image restoration is evaluated on distortion and perceptual quality together~\cite{blau2018}, and deep features match human similarity judgements better than PSNR and SSIM~\cite{zhang2018lpips}.
+Deep nowcasting models trained on rain rates give blurry forecasts, and a generative model was preferred by expert meteorologists~\cite{ravuri2021}; neighbourhood verification credits realistic but slightly misplaced storms~\cite{roberts2008}.
+Protein structure scores are calibrated against random pairs~\cite{zhang2004} and complemented by plausibility checks that need no reference~\cite{mariani2013,chen2010}.
+
+For inpainting this gives three rules: include the leave-one-out mean fill as a baseline entry; for nonlinear read-outs, average measurements over several fills rather than measure one averaged fill; and report where a method sits on the identity ladder, with $k_{\mathrm{eff}}$.
+
+Two findings limit the claim.
+A diffusion model with only two sampling steps also reaches high SSIM and PSNR on the BraTS inpainting test set~\cite{durrer2025fastwdm3d}, so high pixel scores alone do not prove blur, and whether the ranking tracks blur must be measured with the mean fill as a control.
+Modern segmenters are robust to contrast and resolution~\cite{billot2023synthseg}, so the volume bias of blurred fills may be small; it has to be quantified, starting with thin structures and CSF inside the mask.
+Further limitations: the theory is Gaussian and additive with independent residuals and equal variance on every rung; nearest neighbours from a finite training set add a mismatch term, so a measured $R^2_{\mathrm{ctx}}$ is a lower bound; the surrogate masks of BraTS lie in healthy tissue; and fundus vessels are a proxy for individual anatomy, not a brain.
+
+\section{Compliance with ethical standards}
+\label{sec:ethics}
+The simulations use synthetic data only.
+The BraTS, PAPILA and GRAPE data are publicly available and de-identified and are used under their data-use terms; no new data were collected. \todo{confirm the terms of each dataset}
+
+\section{Acknowledgments}
+\label{sec:acknowledgments}
+This work was supported by Anna Valentina Lioba Eleonora Claire Javid Mamasani and the Gemeinn\"utzige Hertie Stiftung.
+The authors declare no conflicts of interest \todo{to confirm}.
+Claude (Anthropic) was used to write and test the analysis code, to search and check literature sources, and to draft the text; the authors checked the derivations, the numbers against the released results and the final text.
+
+\bibliographystyle{IEEEbib}
+\bibliography{refs}
+\end{document}
