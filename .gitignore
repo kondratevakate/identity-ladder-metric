@@ -12,3 +12,9 @@ paper/isbi2027/*.out
 paper/isbi2027/main.pdf
 paper/isbi2027/template/
 paper/isbi2027/template-download/
+
+# Videos and animations of real images stay in C:\Projects\data (private run folders), never in git
+*.mp4
+*.gif
+*.mov
+*.webm
