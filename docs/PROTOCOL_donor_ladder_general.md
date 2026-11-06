@@ -81,6 +81,15 @@ and the visit. Report the repeat interval and device change.
 
 - Every design change is an amendment written before its results; tests with known geometry for each new
   function; aggregates only leave the private folder; metrics board before and after; commit and push in steps.
+- Missing is never zero (added 6 Nov 2026 after Amendment 9.4; applies to every dataset and modality). Pixels or
+  voxels outside the field of view, brain mask or any acquisition mask are missing values. Store a validity mask
+  with every image; every error, distance, mean, variance and normalisation uses only pixels valid in all images it
+  touches (target, donor, every pool member), or leaves that location out. Never let a filler value (0, the
+  z-score mean, padding) enter a statistic. Each new dataset gets a regression test in which a filler-valued region
+  outside the mask would win or shift the result if it were counted.
+- Keep the acquired field (added 6 Nov 2026). Do not crop away part of the field of view for convenience (a centre
+  square, a fixed ROI); embed the whole field in a larger canvas with the outside marked missing. Any crop that
+  drops acquired tissue is a design change: an amendment that states how much is lost and why.
 
 ## 9. Fundus instance (run 5 Nov 2026, `src/donor_ladder_2d.py`)
 

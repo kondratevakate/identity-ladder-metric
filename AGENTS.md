@@ -7,3 +7,4 @@
 - Reproduce independently testable endpoints even if another endpoint is blocked. Preserve eligibility per endpoint; never quietly reduce the cohort. Keep original reproduction separate from exploratory changes and H19 extensions.
 - Preserve each iteration's artifacts and protocol/input/code hashes; the board is a generated latest view, not a replacement for history. No new global skills or public logbooks are implied.
 - Do not modify another session's files or duplicate its running QTIM/SyN jobs. Commit explicit owned paths only; inspect the staged diff for secrets and personal/health data.
+- Missing is never zero, for every dataset: outside the field of view or mask is a missing value, never a filler (0, the z mean, padding) inside an error, distance, mean or normalisation; keep a validity mask per image and add a regression test per dataset. Do not crop away acquired field; see `docs/PROTOCOL_donor_ladder_general.md` section 8.
