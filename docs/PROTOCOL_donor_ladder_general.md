@@ -369,3 +369,27 @@ Two eyes give three mirror-type rungs, each reported with both directions (secti
   excluded), so the upper arcade of one eye meets the lower arcade of the other; directions as for the fellow eye.
 Figure columns: Mean fundus / Another photo / Mirror side / Fellow eye / Fellow eye mirrored / Sibling / Stranger /
 16 look-alikes / Same sex and age / Dataset mean. The JSON declares the spec and carries its checks.
+
+### Amendment 9.8 (6 Nov 2026, groupwise fundus registration before the ladder; recorded before any result)
+
+Kate chose registration first: Amendment 9.7 showed that every paired rung (even the fellow eye with no reflection)
+rises from ~1.1-1.3 x mean along the disc row to ~1.8-1.9 x mean over the arcades, while look-alikes (which adapt to
+local position through their ring) stay flat: paired donors are only aligned at the disc (PAPILA: translation;
+GRAPE: disc-fovea similarity), so their vessels miss the target's.
+Design (no pairwise target-donor optimisation, which would favour some rungs; the brain analogue is MNI):
+- Per dataset, every analysis image (PAPILA P9, GRAPE P8; 256 grid) is registered to one groupwise template with
+  ANTsPy 0.6.3 (`ants.registration`), with the fixed (template) mask and the moving (image) mask in every stage
+  (`mask_all_stages`), so the filler outside a field never acts as an edge. Template_0 = valid-pixel mean of the
+  current frame; template_k = valid-pixel mean of all images warped at iteration k; 3 iterations.
+- Two arms, both reported (selection sweep rule): R1 = affine to the template; R2 = R1 then SyN (ANTs defaults for
+  2D unless QC says otherwise). Warped masks: linear interpolation, valid only where the warped mask is ~1.
+- Statement of cost: R2 bends each eye toward the group's geometry, removing part of the geometric (vessel layout)
+  individuality; the ladder after R2 measures appearance after shape normalisation (as nonlinear MNI for brains).
+- Gate (visual-qc-gate): prototype on 40 evenly spaced images per dataset; QC sheets (before / R1 / R2 with the
+  template's vessel outline over each image) and an alignment video; Kate's verdict before any ladder rerun.
+- Settings fixed after the first prototype failed (before any result): ANTs' default centre-of-mass start divides by
+  ~0 on z-scored images (translation ~4e10 px, every warped mask empty), so registration starts from the identity
+  (the disc frame is already the start). Metric Mattes (ANTs default; global correlation also sane; mean squares
+  diverged: scale 0.87-1.13, shifts up to 28 px). Determinism: ANTS_RANDOM_SEED=1 and one ITK thread per process
+  (repeats identical), parallel across processes. A failed registration is counted and reported; that image is
+  missing everywhere, never silently dropped.
