@@ -28,7 +28,7 @@ def sheet(name, t, picks, page, version):
     for j, i in enumerate(picks):
         rgb = F.L.load_base(t.path.iloc[i], 512, True)
         ax = axes[0, j]
-        if version in ("P2", "P3", "P4", "P5", "P6", "P7"):
+        if version in ("P2", "P3", "P4", "P5", "P6", "P7", "P8"):
             side, frame = t.side.iloc[i], P.FRAMES[name]
             fn = {"P2": (P.landmarks_p2, P.frame_ok, P.canonical_p2, P.analysis_image_p2),
                   "P3": (P.landmarks_p3, P.frame_ok_p3, P.canonical_p3, P.analysis_image_p3),
@@ -37,7 +37,9 @@ def sheet(name, t, picks, page, version):
                   "P6": (lambda im, sd: P.landmarks_p6(im, sd, t.path.iloc[i], name), P.frame_ok_p3,
                          P.canonical_p3, P.analysis_image_p3),
                   "P7": (lambda im, sd: P.landmarks_p7(im, sd, t.path.iloc[i], name), P.frame_ok_p3,
-                         P.canonical_p3, P.analysis_image_p3)}[version]
+                         P.canonical_p3, P.analysis_image_p3),
+                  "P8": (lambda im, sd: P.landmarks_p7(im, sd, t.path.iloc[i], name), P.frame_ok_p3,
+                         P.canonical_p3, P.analysis_image_p8)}[version]
             lm = fn[0](rgb, side)
             ok = fn[1](lm, frame)
             status = lm["status"] if frame == "disc_fovea" else ("ok (disc frame)" if ok else lm["status"])
@@ -84,7 +86,7 @@ def sheet(name, t, picks, page, version):
             for r in (1, 2):
                 axes[r, j].text(0.5, 0.5, "frame failure\n(left out)", ha="center", va="center", fontsize=7,
                                 color="red", transform=axes[r, j].transAxes)
-    for r, lab in enumerate((("oriented raw, " if version in ("P2", "P3", "P4", "P5", "P6", "P7") else "raw: P0 red, ") + version + " yellow/cyan", version + " frame + targets",
+    for r, lab in enumerate((("oriented raw, " if version in ("P2", "P3", "P4", "P5", "P6", "P7", "P8") else "raw: P0 red, ") + version + " yellow/cyan", version + " frame + targets",
                              version + " analysis image")):
         axes[r, 0].set_ylabel(lab, fontsize=8)
     for ax in axes.ravel():
@@ -104,10 +106,12 @@ def main(name="PAPILA", version="P1"):
         F.S.GRAPE_META = os.path.join(ext, *os.path.relpath(F.S.GRAPE_META, os.path.join(
             os.path.dirname(F.S.__file__), "..", "external")).split(os.sep))
     t = F.papila_table() if name == "PAPILA" else F.grape_table()
-    picks = np.linspace(0, len(t) - 1, N_SHOW).astype(int)
+    n_show = int(os.environ.get("QC_N", N_SHOW))
+    offset = int(os.environ.get("QC_OFFSET", 0))      # extra sheets: shift the even spacing to new images
+    picks = (np.linspace(0, len(t) - 1, n_show).astype(int) + offset) % len(t)
     stats = []
-    for page in range(N_SHOW // PER_SHEET):
-        out, s = sheet(name, t, picks[page * PER_SHEET:(page + 1) * PER_SHEET], page + 1, version)
+    for page in range(n_show // PER_SHEET):
+        out, s = sheet(name, t, picks[page * PER_SHEET:(page + 1) * PER_SHEET], page + 1 + 100 * (offset > 0), version)
         stats += s
         print(out)
     print({k: stats.count(k) for k in sorted(set(stats))})

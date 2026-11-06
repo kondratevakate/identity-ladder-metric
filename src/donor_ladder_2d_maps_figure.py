@@ -77,7 +77,9 @@ def draw(mode, res, dest, tag=""):
                 norm, cmap = common, "RdBu_r"
             else:
                 lo, med, hi = np.percentile(fin, [2, 50, 98])
-                norm, cmap = TwoSlopeNorm(vmin=lo, vcenter=med, vmax=max(hi, med + 1e-6)), "PuOr_r"
+                norm = (TwoSlopeNorm(vmin=lo, vcenter=med, vmax=hi) if lo < med < hi else
+                        plt.Normalize(lo, max(hi, lo + 1e-6)))
+                cmap = "PuOr_r"
             mm = np.ma.masked_invalid(m)
             if mode == "contrast" and key != "V":
                 med = float(np.median(fin))

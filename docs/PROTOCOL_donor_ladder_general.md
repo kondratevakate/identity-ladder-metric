@@ -238,3 +238,23 @@ Versions (each is frozen once recorded; results always name their version):
   Laterality comes from the metadata, so the P0 side-conflict exclusion no longer applies; frame failures are
   counted per dataset. P0 results stay in `results/donor_ladder_2d.json` for comparison; P7 results go to
   `results/donor_ladder_2d_p7.json`.
+
+### Amendment 9.3 (6 Nov 2026, fixed-composition maps; recorded before the revised maps)
+
+Kate's review of the P7 maps: straight steps and diamond-shaped edges. Cause: each pixel averaged only the targets
+whose 48 px window lies inside their field of view, and after alignment many fields share similar borders, so the
+set of targets (and of pool donors) jumps along lines. The pattern is a change of composition, not anatomy.
+
+- Maps now use a fixed composition: region R = pixels where the window is valid in at least 95% of the dataset's
+  aligned images; targets and pool members = the images whose window is valid at every pixel of R; a donor
+  (fellow eye, other visit) counts only if it is in the same set. Every pixel of R then averages the same people.
+  The JSON reports |R| and the number of images kept. Applies to the fundus maps from this amendment on; the cube
+  ladder (patch rows) is unaffected.
+- **Kate's review of the P7 analysis images (6 Nov 2026):** the black outside and the dark border add nothing and
+  must leave the analysis; the GRAPE camera notch (the "ear" on the field border) must go as well. The P7
+  field-of-view mask is a brightness threshold, so it keeps the notch and the dark transition rim, where the
+  background division leaves bright or dark rings.
+- **P8** (recorded before it runs): P7 landmarks and frames unchanged; the analysis mask in the frame becomes:
+  threshold (red > 0.1) -> largest connected component -> morphological opening with a disc of 0.12 of the field
+  radius (removes the notch and other protrusions) -> erosion by 0.03 of the field radius (removes the dark rim).
+  This mask is used for the background estimate, the z-scoring and every validity rule (patches, maps).

@@ -424,3 +424,32 @@ def landmarks_p7(rgb, side, image_path=None, dataset="GRAPE"):
         return landmarks_p4(rgb, side)
     finally:
         disc_p4 = saved
+
+
+# ---------- P8 (Amendment 9.2): clean analysis mask (no notch, no dark rim); landmarks and frames as P7 ----------
+
+def clean_fov(c):
+    """Threshold -> largest component -> opening (disc 0.12 r) -> erosion (0.03 r)."""
+    m = field_of_view(c)
+    lab, n = ndimage.label(m)
+    if n == 0:
+        return m
+    m = lab == (np.argmax(np.bincount(lab.ravel())[1:]) + 1)
+    r = np.sqrt(m.sum() / np.pi)
+    k = int(round(0.12 * r))
+    yy, xx = np.mgrid[-k:k + 1, -k:k + 1]
+    m = ndimage.binary_opening(m, structure=(xx ** 2 + yy ** 2) <= k * k)
+    return ndimage.binary_erosion(m, iterations=max(int(round(0.03 * r)), 1))
+
+
+def analysis_image_p8(rgb, lm, side, frame):
+    if not frame_ok_p3(lm, frame):
+        return None
+    c, scale = canonical_p3(rgb, lm, side, frame)
+    fov512 = clean_fov(c)
+    g = c[..., 1].astype(np.float32)
+    flat = np.where(fov512, g / background(g, fov512, DISC_R, 2 / 1.5 * lm["radius"] * scale), 0)
+    img = flat.reshape(G, 2, G, 2).mean(axis=(1, 3))
+    fov = fov512.reshape(G, 2, G, 2).all(axis=(1, 3))
+    v = img[fov]
+    return np.where(fov, (img - v.mean()) / (v.std() + 1e-6), 0.0).astype(np.float32), fov

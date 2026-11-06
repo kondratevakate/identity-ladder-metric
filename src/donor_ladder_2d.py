@@ -288,11 +288,12 @@ def maps(name, setup_out, suffix=""):
     persons = np.unique(person)
     half_of = dict(zip(np.random.default_rng(SEED).permutation(persons), np.arange(len(persons)) % 2))
     half = np.array([half_of[p] for p in person])
-    support = okw.mean(0) >= 0.9
-    out = {}
-    for tag, members in (("all", np.ones(len(u), bool)), ("h0", half == 0), ("h1", half == 1)):
+    region = okw.mean(0) >= 0.95                     # Amendment 9.3: fixed region and fixed set of images
+    keep = okw[:, region].all(1)
+    out, info = {}, {"region_px": int(region.sum()), "images_kept": int(keep.sum()), "images": int(len(u))}
+    for part, members in (("all", keep.copy()), ("h0", keep & (half == 0)), ("h1", keep & (half == 1))):
         acc = {d: [np.zeros((G, G)), np.zeros((G, G))] for d in ("fellow_eye", "other_visit", "stranger", "cohort")}
-        vsum, vn = np.zeros((G, G)), np.zeros((G, G))
+        vsum, vn = np.zeros((G, G)), 0
         for i in np.flatnonzero(members):
             p = np.flatnonzero(members & (person != person[i]) & (side == side[i]))
             if p.size < 10:
@@ -300,35 +301,33 @@ def maps(name, setup_out, suffix=""):
             P = img[idx[p]]
             mu = P.mean(0)
             v = box((img[idx[i]] - mu) ** 2)
-            ok = okw[i] & support
-            vsum += np.where(ok, v, 0)
-            vn += ok
+            vsum += v
+            vn += 1
             fills = {"stranger": v + box(((P - mu) ** 2).mean(0))}
             coh = p[(sex[p] == sex[i]) & (np.abs(age[p] - age[i]) <= 5) & ((dev[p] == dev[i]) if name == "GRAPE" else True)]
             if coh.size >= 10:
                 fills["cohort"] = box((img[idx[i]] - img[idx[coh]].mean(0)) ** 2)
             j = fellow[i]
-            if j >= 0:
-                fills["fellow_eye"] = np.where(okw[j], box((img[idx[i]] - img[idx[j]]) ** 2), np.nan)
-            if other[i] >= 0:
-                oo = box(fov[other[i]]) >= 1 - 1e-4
-                fills["other_visit"] = np.where(oo, box((img[idx[i]] - img[other[i]]) ** 2), np.nan)
+            if j >= 0 and members[j]:
+                fills["fellow_eye"] = box((img[idx[i]] - img[idx[j]]) ** 2)
+            if other[i] >= 0 and (box(fov[other[i]]) >= 1 - 1e-4)[region].all():
+                fills["other_visit"] = box((img[idx[i]] - img[other[i]]) ** 2)
             for d, e in fills.items():
-                g = ok & np.isfinite(e)
-                acc[d][0] += np.where(g, e, 0)
-                acc[d][1] += np.where(g, v, 0)
+                acc[d][0] += e
+                acc[d][1] += v
         with np.errstate(invalid="ignore", divide="ignore"):
-            out[tag] = {d: np.where(a[1] > 0, a[0] / a[1], np.nan) for d, a in acc.items()}
-            out[tag]["V"] = np.where(vn > 0, vsum / vn, np.nan)
+            out[part] = {d: np.where(region & (a[1] > 0), a[0] / a[1], np.nan) for d, a in acc.items()}
+            out[part]["V"] = np.where(region, vsum / max(vn, 1), np.nan)
     rel = {}
     for d in ("fellow_eye", "other_visit", "stranger", "cohort"):
         a, b = out["h0"][d], out["h1"][d]
         ok = np.isfinite(a) & np.isfinite(b)
         rel[d] = float(np.corrcoef(a[ok], b[ok])[0, 1]) if ok.sum() > 10 else None
     np.savez_compressed(os.path.join(PRIVATE, f"{name}_maps{suffix}.npz"),
-                        **{f"{tag}_{d}": m.astype(np.float32) for tag, mm in out.items() for d, m in mm.items()})
-    return {d: {"median_ratio": (float(np.nanmedian(out["all"][d])) if np.isfinite(out["all"][d]).any() else None),
-                "split_half_r": rel[d]} for d in rel}
+                        **{f"{part}_{d}": m.astype(np.float32) for part, mm in out.items() for d, m in mm.items()})
+    res = {d: {"median_ratio": (float(np.nanmedian(out["all"][d])) if np.isfinite(out["all"][d]).any() else None),
+               "split_half_r": rel[d]} for d in rel}
+    return {**res, "composition": info}
 
 
 def summary(r, keep=None, **counts):
@@ -354,8 +353,15 @@ def main():
            "block_search_halfwindow_px": W, "datasets": {}}
     if os.path.exists(out_json):
         out["datasets"] = json.load(open(out_json, encoding="utf-8"))["datasets"]
+    maps_only = "--maps-only" in sys.argv          # recompute maps into an existing result (Amendment 9.3)
     for name in names:
         so = setup(name, arm)
+        if maps_only:
+            out["datasets"][name]["maps"] = maps(name, so, tag)
+            with open(out_json, "w", encoding="utf-8") as fh:
+                json.dump(finite(out), fh, indent=1, allow_nan=False)
+            print(name, "maps", out["datasets"][name]["maps"]["composition"], flush=True)
+            continue
         u, fellow, other = so[3], so[6], so[7]
         counts = dict(n_units=len(u), n_fellow=int((fellow >= 0).sum()), n_other=int((other >= 0).sum()),
                       n_images=len(so[0]), n_frame_ok=int(load_arm(so[0], name, arm)[2].sum()))
