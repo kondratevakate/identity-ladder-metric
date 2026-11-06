@@ -258,3 +258,16 @@ set of targets (and of pool donors) jumps along lines. The pattern is a change o
   threshold (red > 0.1) -> largest connected component -> morphological opening with a disc of 0.12 of the field
   radius (removes the notch and other protrusions) -> erosion by 0.03 of the field radius (removes the dark rim).
   This mask is used for the background estimate, the z-scoring and every validity rule (patches, maps).
+
+### Amendment 9.4 (6 Nov 2026, outside the field of view is missing in the block search)
+
+Found by Kate's review of single PAPILA cases: pixels outside the field of view are stored as 0, which in z units is
+a real value (the mean), not a gap. The maps (9.3) and the fixed-rule and kNN donors already required full validity.
+The block search (`fellow_block`, `stranger_block` and their oracles) did not: the shell of the target and of the
+candidate could reach outside the field of view and enter the distance as zeros. From now on the target's matched
+pixels must all lie inside its field of view (else no block donor for that patch), and a candidate needs its patch
+and its matched pixels inside its own. Regression test:
+`tests/test_donor_ladder_2d.py::test_search_treats_outside_the_field_of_view_as_missing_not_zero` (fails on the old
+code). Block-search rows in `results/donor_ladder_2d.json` and `results/donor_ladder_2d_p7.json` predate the fix and
+are superseded by the next rerun. The brain block search encodes the outside of the brain mask the same way; not
+changed here, flagged for the brain protocol.

@@ -47,6 +47,25 @@ def test_search_needs_the_patch_inside_the_field_of_view():
     assert D.search(win, other, np.zeros(other.shape, bool), size, ring) is None
 
 
+def test_search_treats_outside_the_field_of_view_as_missing_not_zero():
+    # Target ring is all zeros (the z-score mean). A candidate whose ring lies outside the field of view (stored
+    # as 0) would match it perfectly if outside counted as zero; it must be skipped instead.
+    rng = np.random.default_rng(2)
+    size, ring = 6, 3
+    other, win = planted(rng, size, ring, (0, 0))
+    win[:] = 0
+    ok = np.ones(other.shape, bool)
+    oy, ox = D.W - 5 + ring, D.W - 5 + ring                     # top-left of the fake candidate's ring
+    other[oy - ring:oy + size + ring, ox - ring:ox + size + ring] = 0
+    ok[oy - ring:oy + size + ring, ox - ring:ox + size + ring] = False
+    ok[oy:oy + size, ox:ox + size] = True                         # its patch is inside, its ring is not
+    got = D.search(win, other, ok, size, ring)
+    assert got is not None and not np.array_equal(got, other[oy:oy + size, ox:ox + size])
+    win_ok = np.ones(win.shape, bool)
+    win_ok[0, 0] = False                                          # target ring pixel outside its own field of view
+    assert D.search(win, other, ok, size, ring, win_ok=win_ok) is None
+
+
 def test_views_split_sides_and_pool_both():
     r = pd.DataFrame({"region": ["random_patches"] * 3, "side": ["R", "L", "R"], "x": [1, 2, 3]})
     v = D.views(r)

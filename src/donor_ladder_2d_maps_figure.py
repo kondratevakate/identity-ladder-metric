@@ -43,7 +43,7 @@ def draw(mode, res, dest, tag=""):
     fig, axes = plt.subplots(len(names), len(COLUMNS), figsize=(7.2, h), squeeze=False,
                              gridspec_kw={"wspace": 0.05, "hspace": 0.9})
     fig.subplots_adjust(top=1 - 0.42 / h, bottom=0.62 / h + 0.06, left=0.06, right=0.995)
-    common = TwoSlopeNorm(vmin=0, vcenter=1, vmax=2.4)
+    common = plt.Normalize(0, 2.4)
     for r, name in enumerate(names):
         z = np.load(os.path.join(D.PRIVATE, f"{name}_maps{tag}.npz"))
         under = mean_image(name, tag)
@@ -70,19 +70,20 @@ def draw(mode, res, dest, tag=""):
             if fin.size == 0:
                 ax.set_xlabel("not available", fontsize=5.4, color=MUTED, labelpad=2)
                 continue
+            cmap = "Reds"                                        # one sequential red scale (Kate, 2026-11-06)
             if key == "V":
                 lo, hi = np.percentile(fin, [2, 98])
-                norm, cmap = plt.Normalize(lo, hi), "viridis"
+                norm = plt.Normalize(lo, hi)
             elif mode == "common":
-                norm, cmap = common, "RdBu_r"
+                norm = common
             else:
                 lo, med, hi = np.percentile(fin, [2, 50, 98])
                 if hi - lo < 1e-3:                               # near-constant map (stranger): no fake contrast
                     lo, hi = med - 0.05, med + 0.05
-                norm = (TwoSlopeNorm(vmin=lo, vcenter=med, vmax=hi) if lo < med < hi else
-                        plt.Normalize(lo, max(hi, lo + 1e-6)))
-                cmap = "PuOr_r"
+                norm = plt.Normalize(lo, max(hi, lo + 1e-6))
             mm = np.ma.masked_invalid(m)
+            ax.imshow(np.ma.masked_invalid(np.where(np.isfinite(m), 1.0, np.nan)), cmap="gray", vmin=0, vmax=1,
+                      interpolation="nearest")                   # white base: faded pixels stay light, not grey
             if mode == "contrast" and key != "V":
                 med = float(np.median(fin))
                 agree = np.sign(z[f"h0_{key}"][crop] - med) == np.sign(z[f"h1_{key}"][crop] - med)
@@ -106,8 +107,9 @@ def draw(mode, res, dest, tag=""):
                         "split-half r n/a" if sh is None else f"split-half r {sh:.2f}")
                 ax.text(0.5, -0.32, f"median {rr['median_ratio']:.2f} × mean\n{note}", transform=ax.transAxes,
                         ha="center", va="top", fontsize=5.2, color=INK)
-    scale = ("One scale: 1 = dataset mean (white), 2 = stranger; blue beats the mean." if mode == "common" else
-             "Own range per map around its median (white); faded where two independent person halves disagree.")
+    scale = ("One red scale 0 to 2.4: darker = larger error; 1 = dataset mean, 2 = stranger." if mode == "common" else
+             "Own red range per map (2nd-98th percentile), darker = larger error; faded where two independent "
+             "person halves disagree about the side of the median.")
     prep = ("P7: PAPILA expert-disc translation frame, GRAPE disc-fovea frame; green / background, z-scored"
             if tag == "_p7" else "P0: disc-fovea frame (fovea unreliable); green z-scored")
     fig.text(0.5, 0.03, f"{scale} {prep} in the field of view, 48 px window on the "

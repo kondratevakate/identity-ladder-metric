@@ -50,17 +50,21 @@ def region(img, fov, y, x, size, pad):
     return out, ok
 
 
-def search(win, other, other_ok, size, ring, oracle=False):
+def search(win, other, other_ok, size, ring, oracle=False, win_ok=None):
     """Best match of the target window (size + 2 ring) inside `other` (size + 2 ring + 2 W): on the ring, or on
-    the true patch with `oracle`. Candidates need their whole patch inside the field of view. Returns the patch
-    there, or None."""
+    the true patch with `oracle`. Outside the field of view is missing, never zero: the target's matched pixels
+    must all be inside its field of view (`win_ok`), and a candidate needs its patch and its matched pixels inside
+    its own. Returns the patch there, or None."""
     m = ~ring_mask(size, ring) if oracle else ring_mask(size, ring)
+    if win_ok is not None and not win_ok[m].all():
+        return None
     o2 = signal.correlate(other.astype(np.float64) ** 2, m.astype(np.float64), mode="valid", method="fft")
     cross = signal.correlate(other.astype(np.float64), np.where(m, win, 0).astype(np.float64), mode="valid",
                              method="fft")
     k = np.zeros(m.shape)
     k[ring:ring + size, ring:ring + size] = 1
-    full = signal.correlate(other_ok.astype(np.float64), k, mode="valid", method="fft") >= size * size - 0.5
+    k = np.maximum(k, m)                                 # patch and matched ring both inside the field of view
+    full = signal.correlate(other_ok.astype(np.float64), k, mode="valid", method="fft") >= k.sum() - 0.5
     if not full.any():
         return None
     d = np.where(full, o2 - 2 * cross, np.inf)
@@ -244,7 +248,7 @@ def run_config(name, setup_out, size, ring, ks, primary):
             win = reg[i][0]
             if j >= 0:
                 for c, orc in (("fellow_block", False), ("fellow_block_oracle", True)):
-                    f = search(win, big[j][0], big[j][1], s, ring, orc)
+                    f = search(win, big[j][0], big[j][1], s, ring, orc, reg[i][1])
                     if f is not None:
                         add(c, 1, f.ravel())
             strangers = [q for q in draws["population"][i] if fellow[q] >= 0]
@@ -253,7 +257,7 @@ def run_config(name, setup_out, size, ring, ks, primary):
                 if valid[fellow[q]]:
                     add("stranger_other_side", 1, X[fellow[q]])
                 for c, orc in (("stranger_block", False), ("stranger_block_oracle", True)):
-                    f = search(win, big[fellow[q]][0], big[fellow[q]][1], s, ring, orc)
+                    f = search(win, big[fellow[q]][0], big[fellow[q]][1], s, ring, orc, reg[i][1])
                     if f is not None:
                         add(c, 1, f.ravel())
             if other[i] >= 0:
