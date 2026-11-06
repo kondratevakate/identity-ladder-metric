@@ -215,3 +215,23 @@ After a review of the exploratory maps (Kate agreed with it except on contrast):
   appendix.
 - The 8 mm look-alike grid of Amendment 7 used shared pools for its halves; an independent-half rerun is listed
   as pending until it is done.
+
+## Amendment 9 (6 Nov 2026, outside the brain mask is stored as 0; flagged, not yet changed)
+
+Found while fixing the same issue in the fundus block search (general protocol, Amendment 9.4). Volumes are
+z-scored inside the brain mask and 0 outside, and 0 is a real value (the mean intensity), not a gap. Three places let
+those zeros into an error or a distance:
+- Block search (`search_terms`, `block_search` in `src/donor_ladder_brain_bilateral.py`, also used by the
+  hemisphere, size and oracle runs): a candidate needs only its cube to be valid (`VALID` = 0.95 of voxels inside
+  the mask); the shell used for matching, of the candidate and of the target, may reach outside the mask with no
+  limit and enters the distance as zeros.
+- Cubes in every ladder run: up to 5% of the cube may lie outside the mask, and those voxels count as 0 in the
+  error of every donor.
+- Maps (`src/donor_ladder_brain_maps.py`, Amendments 5-8) and the 8 mm grid: a window counts when 95% of it is
+  inside the mask, so the same up-to-5% applies.
+Near the cortex the outside of the brain is a real boundary (brain shape is individual), but encoding it as the mean
+intensity is arbitrary; the shell term is the likely part of the Amendment 4 finding that thin shells favour boundary
+smoothness. All brain numbers so far keep this behaviour and stay pre-QC. Planned change, with the nonlinear
+registration rerun: matched and scored voxels must be inside the mask of both target and donor, the cube and
+window rule becomes 100% inside (or a masked mean over the shared voxels, decided before rerunning), plus a
+regression test like the fundus one.

@@ -270,4 +270,6 @@ and its matched pixels inside its own. Regression test:
 `tests/test_donor_ladder_2d.py::test_search_treats_outside_the_field_of_view_as_missing_not_zero` (fails on the old
 code). Block-search rows in `results/donor_ladder_2d.json` and `results/donor_ladder_2d_p7.json` predate the fix and
 are superseded by the next rerun. The brain block search encodes the outside of the brain mask the same way; not
-changed here, flagged for the brain protocol.
+changed here; recorded in the brain protocol as Amendment 9. The same review caught one display-only
+slip that never reached a result file: a private case sheet averaged the dataset mean over images including
+their zeros outside the field of view; it now averages only images valid at each pixel.
