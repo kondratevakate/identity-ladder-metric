@@ -105,6 +105,15 @@ and the visit. Report the repeat interval and device change.
   directions partition the targets; within an image: each direction covers every target); a stranger rung exists.
   Soft: stranger ratio in [1.85, 2.15] (theory 2); the two directions of a mirror rung within |ln(a/b)| <= 0.15
   (else: check orientation and reflection before reading the result). Brain results adopt the spec at their rerun.
+- Registration stop rule (added 6 Nov 2026, Kate; all modalities). The papers are not about registration;
+  alignment is good enough for the ladder when (1) one procedure is applied to every rung and every dataset of a
+  modality (template-level alignment: face landmarks, brain affine to MNI, fundus disc frame); no pairwise
+  target-donor optimisation, which favours some rungs (shown by the stranger control in Amendment 9.12); (2) the
+  controls show the ladder's range: the positive control (another photo or scan of the same eye or person) is clearly
+  below 1 x mean and the stranger is ~2; (3) a sensitivity arm with a different reasonable alignment does not change
+  the order of the rungs; (4) residual misalignment is named among the limitations. Intensity is normalised per
+  image (z-score in its own mask); no donor-to-target intensity fit, since a regression fit (gain < 1) shrinks the
+  donor toward the mean and lowers any donor's error.
 - Keep the acquired field (added 6 Nov 2026). Do not crop away part of the field of view for convenience (a centre
   square, a fixed ROI); embed the whole field in a larger canvas with the outside marked missing. Any crop that
   drops acquired tissue is a design change: an amendment that states how much is lost and why.
@@ -475,3 +484,14 @@ matching buy for any image is visible next to what the person adds.
   estimated on vessels: high-pass images (subtract a masked Gaussian of sigma 6 px, 128 frame), with a disc zone of
   12 px radius around the frame's disc target excluded from both masks; the transform is then applied to the
   original donor and its mask, followed by the intensity match and gain check. The same for the stranger control.
+
+### Amendment 9.13 (6 Nov 2026, fundus: frame-only donors under the registration stop rule; before the rerun)
+
+Following the stop rule (section 8), the fundus ladder uses the frame of Amendment 9.2 for every rung (GRAPE P8,
+PAPILA P9), with no pairwise registration and no intensity fit. Findings recorded from Amendment 9.12's QC: SyN to
+a target pulled strangers to ~1 x mean; rigid on raw intensity was driven by the disc; rigid by vessels helped GRAPE
+slightly and worsened PAPILA in 3 of 4 cases (its disc frame from expert contours is already tight); the regression
+intensity fit (gain 0.5-0.9) is a shrinkage toward the mean and is not used. Controls on the frame-only setup:
+GRAPE another photo 0.49 x mean (positive), strangers 1.99 and 2.01 (negative). The rigid-by-vessels arm is kept as a
+possible sensitivity analysis (order of rungs), not run here. Figure: Amendments 9.10-9.11 (GRAPE first, one disc
+scale, fellow eye as the mirror rung, colour keys).

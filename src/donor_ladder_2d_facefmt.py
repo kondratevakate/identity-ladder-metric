@@ -365,13 +365,13 @@ def figure():
              "is missing. GRAPE P8, PAPILA P9 (Amendment 9.2); persons left out of their own pools. Both rows at one scale, set by the disc "
              f"on each mean (radius GRAPE {radius['GRAPE']:.1f} px, PAPILA {radius['PAPILA']:.1f} px), discs aligned.",
              ha="center", fontsize=8.5, color="#52514e")
-    fig.tight_layout(rect=(0, 0.08, 0.985, 0.95))
+    fig.tight_layout(rect=(0, 0.16, 0.985, 0.95))
     # colour keys (Kate): ratio columns share one diverging scale; the last column is V itself, its own scale per row
     first, last = ax[-1, 1].get_position(), ax[-1, -2].get_position()
-    cax = fig.add_axes([first.x0, 0.075, last.x1 - first.x0, 0.012])
+    cax = fig.add_axes([first.x0, 0.135, last.x1 - first.x0, 0.012])
     cb = fig.colorbar(ratio_im, cax=cax, orientation="horizontal", ticks=[0, 0.5, 1, 1.5, 2])
     cb.ax.tick_params(labelsize=8)
-    cb.set_label("columns 2 to 9: error of the donor / error of the dataset mean (1 = as good as the mean, white; "
+    cb.set_label(f"columns 2 to {len(cols) - 1}: error of the donor / error of the dataset mean (1 = as good as the mean, white; "
                  "2 = stranger; blue beats the mean)", fontsize=8.5)
     for r, im in v_ims.items():
         pos = ax[r, -1].get_position()
