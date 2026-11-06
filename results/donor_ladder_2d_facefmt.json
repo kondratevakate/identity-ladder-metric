@@ -1,0 +1,114 @@
+{
+ "protocol": "docs/PROTOCOL_donor_ladder_general.md, Amendment 9.5",
+ "status": "pre-QC",
+ "scale": "1 = dataset mean, 2 = stranger (squared error, z units, 128 px frame)",
+ "window_px": 16,
+ "lookalike": {
+  "step": 4,
+  "ring": 8,
+  "k": 16
+ },
+ "strangers": 8,
+ "results": {
+  "PAPILA": {
+   "arm": "p9",
+   "mirror": {
+    "ratio": 1.467,
+    "ci95": [
+     1.422,
+     1.512
+    ],
+    "targets": 488,
+    "persons": 244,
+    "split_half_r": 0.98
+   },
+   "stranger": {
+    "ratio": 1.992,
+    "ci95": [
+     1.941,
+     2.049
+    ],
+    "targets": 488,
+    "persons": 244,
+    "split_half_r": -0.22
+   },
+   "lookalike": {
+    "ratio": 0.935,
+    "ci95": [
+     0.914,
+     0.955
+    ],
+    "targets": 488,
+    "persons": 244,
+    "split_half_r": 0.97
+   },
+   "sexage": {
+    "ratio": 1.024,
+    "ci95": [
+     1.016,
+     1.033
+    ],
+    "targets": 454,
+    "persons": 227,
+    "split_half_r": 0.61
+   },
+   "valid_px": 4467,
+   "units": 488
+  },
+  "GRAPE": {
+   "arm": "p8",
+   "repeat": {
+    "ratio": 0.489,
+    "ci95": [
+     0.404,
+     0.585
+    ],
+    "targets": 171,
+    "persons": 97,
+    "split_half_r": 0.89
+   },
+   "mirror": {
+    "ratio": 1.33,
+    "ci95": [
+     1.224,
+     1.437
+    ],
+    "targets": 210,
+    "persons": 105,
+    "split_half_r": 0.68
+   },
+   "stranger": {
+    "ratio": 2.012,
+    "ci95": [
+     1.897,
+     2.14
+    ],
+    "targets": 239,
+    "persons": 134,
+    "split_half_r": -0.07
+   },
+   "lookalike": {
+    "ratio": 0.856,
+    "ci95": [
+     0.832,
+     0.88
+    ],
+    "targets": 239,
+    "persons": 134,
+    "split_half_r": 0.94
+   },
+   "sexage": {
+    "ratio": 1.051,
+    "ci95": [
+     1.025,
+     1.08
+    ],
+    "targets": 37,
+    "persons": 21,
+    "split_half_r": null
+   },
+   "valid_px": 5920,
+   "units": 239
+  }
+ }
+}

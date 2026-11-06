@@ -297,3 +297,27 @@ are superseded by the next rerun. The brain block search encodes the outside of 
 changed here; recorded in the brain protocol as Amendment 9. The same review caught one display-only
 slip that never reached a result file: a private case sheet averaged the dataset mean over images including
 their zeros outside the field of view; it now averages only images valid at each pixel.
+
+### Amendment 9.5 (6 Nov 2026, fundus ladder maps in the face-figure format; recorded before these results)
+
+Kate asked for the fundus results in the same form as the face figure (`src/donor_ladder_face.py`, frame v6):
+one row per dataset (PAPILA, then GRAPE), columns Mean fundus / Another photo / Mirror side / Sibling / Stranger /
+16 look-alikes / Same sex and age / Dataset mean, one scale (1 = dataset mean, 2 = stranger), and under each map
+MSE = ratio x mean [95% CI], split-half r, n. Definitions follow the face script, adapted only where fundus differs:
+- Inputs: PAPILA P9, GRAPE P8 (Amendment 9.2), downsampled 2x to the face frame size (128 px; a pixel is valid only
+  if its 4 source pixels are). Window 16 px, look-alikes on a 4 px grid by the 8 px ring, k = 16, 8 strangers, as
+  for faces. On PAPILA P9 the 16 px window spans 390 raw px, on GRAPE P8 the same share of the frame.
+- Targets: one image per eye (earliest valid visit). Pools per side, leave-person-out (the target's own person,
+  both eyes, never enters a pool, a mean or a look-alike search).
+- Donors: Another photo = the same eye's closest other visit (GRAPE; PAPILA has one visit: not available).
+  Mirror side = the fellow eye (already reflected into the same orientation). Sibling: not available in either
+  dataset. Stranger = mean error over 8 random same-side people. 16 look-alikes = the face `lookalike_fill` with
+  masks (ring distance over pixels valid in both, candidates sharing < half of the ring ineligible, a window pixel
+  needs >= 8 contributing neighbours), plus a person-exclusion matrix. Same sex and age = mean of same-side people of
+  the same sex within 5 years (GRAPE: same device too), >= 10 people. Dataset mean = leave-person-out mean.
+- Missing is never zero (section 8): every error uses the joint mask target x donor x valid region; the reference
+  (dataset mean) error is summed over the same pixels. Valid region = pixels valid in >= 90% of the side's pool.
+- Numbers: ratio = sum over targets of rung error / sum of mean error on the same pixels; 95% CI by 2000 bootstrap
+  resamples of persons; split-half r between maps from two independent person halves (pools inside each half);
+  n = targets with that donor. Local maps: masked box mean, a pixel needs >= half of its window valid.
+Pre-QC: the camera spot, the dark-area threshold and the window scale (P10 candidates) are not fixed yet.
