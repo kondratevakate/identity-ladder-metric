@@ -235,3 +235,12 @@ smoothness. All brain numbers so far keep this behaviour and stay pre-QC. Planne
 registration rerun: matched and scored voxels must be inside the mask of both target and donor, the cube and
 window rule becomes 100% inside (or a masked mean over the shared voxels, decided before rerunning), plus a
 regression test like the fundus one.
+
+## Amendment 10 (6 Nov 2026, square windows in the brain maps; flagged, not yet changed)
+
+The 2 mm maps (`src/donor_ladder_brain_maps.py`, `box`) and the 8 mm grid (`src/donor_ladder_brain_map_grid.py`)
+compute local errors with a square box (uniform filter), which draws cube-shaped blocks; Kate found the same artifact
+in the face maps and the fundus maps. Project rule (general protocol, section 8): maps use a masked Gaussian window
+with the box's standard deviation. The brain maps keep the box until they are rerun with the nonlinear registration
+(Amendment 9); that rerun switches to the Gaussian and adds a test. The 8 mm grid keeps cubes as ladder patches (a
+design unit, not a drawn window). Existing brain maps stay pre-QC.

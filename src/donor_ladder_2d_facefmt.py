@@ -19,11 +19,15 @@ ROOT = os.path.join(HERE, "..")
 sys.path.insert(0, HERE)
 import donor_ladder_2d as D  # noqa: E402
 import donor_ladder_fundus as F  # noqa: E402
+import result_spec  # noqa: E402
 
 SIZE, WIN, STEP, RING, K_LOOK, N_STRANGER, MIN_HAVE = 128, 16, 4, 8, 16, 8, 8
 SETS = (("PAPILA", "p9"), ("GRAPE", "p8"))
 OUT_JSON = os.path.join(ROOT, "results", "donor_ladder_2d_facefmt.json")
-COLS = ("repeat", "mirror", "stranger", "lookalike", "sexage")
+COLS = ("repeat", "mirror", "fellow", "fellow_mirror", "stranger", "lookalike", "sexage")
+MIRRORS = {"mirror": "halves", "fellow": "sides", "fellow_mirror": "sides"}   # result spec: direction kinds
+AXIS_Y = {"PAPILA": (247.0 + 0.5) / 4 - 0.5, "GRAPE": (256.0 + 0.5) / 4 - 0.5}  # 512-grid row -> 128 frame (9.6)
+STRIP = 2.5                                            # excluded either side of the axis, as the face midline
 
 
 def down2(img, fov):
@@ -39,9 +43,31 @@ def box(x, w=WIN):
 
 
 def local_error(a, b, m):
-    """Masked local mean of the squared difference; NaN where < half of the window is inside the mask."""
-    num, den = box(((a - b) ** 2) * m), box(m.astype(np.float64))
+    """Masked local mean of the squared difference in a Gaussian window of the 16 px box's standard deviation (as
+    the face script from its v3, face Amendment 4.7; Amendment 9.6 here); NaN where < half of the window weight is
+    inside the mask."""
+    sd = WIN / np.sqrt(12)
+    m = m.astype(np.float64)
+    num = ndimage.gaussian_filter(((a - b) ** 2) * m, sd, mode="constant")
+    den = ndimage.gaussian_filter(m, sd, mode="constant")
     return np.where(den >= 0.5, num / np.maximum(den, 1e-12), np.nan)
+
+
+def flip_rows(x, y0):
+    """Reflect an image about the horizontal line y = y0 (row centres at integers), linear interpolation; for a
+    boolean mask a pixel stays valid only if the interpolated mask is 1 (all contributing pixels valid)."""
+    from scipy.ndimage import map_coordinates
+    yy, xx = np.mgrid[:x.shape[0], :x.shape[1]].astype(np.float64)
+    src = np.stack([2 * y0 - yy, xx])
+    if x.dtype == bool:
+        return map_coordinates(x.astype(np.float64), src, order=1, mode="constant", cval=0.0) > 1 - 1e-6
+    return map_coordinates(x.astype(np.float64), src, order=1, mode="constant", cval=0.0).astype(np.float32)
+
+
+def mirror_fill(xt, mt, y0):
+    """Same eye reflected about the disc-fovea axis; the strip of STRIP px either side of the axis is excluded."""
+    rows = np.abs(np.arange(xt.shape[0]) - y0) >= STRIP
+    return flip_rows(xt, y0), flip_rows(mt, y0) & rows[:, None]
 
 
 def masked_mean(X, M):
@@ -113,7 +139,7 @@ def run_dataset(name, arm):
     persons = np.unique(person)
     half_of = dict(zip(rng.permutation(persons), np.arange(len(persons)) % 2))
     half = np.array([half_of[p] for p in person])
-    out, totals = {}, {}
+    out, totals, dir_all = {}, {}, {}
     for h in ("all", 0, 1):
         members = np.ones(len(u), bool) if h == "all" else half == h
         cov_all = M[idx[members]].sum(0)
@@ -122,6 +148,9 @@ def run_dataset(name, arm):
         vsum, vcnt = np.zeros((SIZE, SIZE)), np.zeros((SIZE, SIZE))
         tot = {c: {} for c in COLS}
         n_t = {c: 0 for c in COLS}
+        dirs = {c: {} for c in MIRRORS}                    # direction -> [num, den, targets]
+        y0 = AXIS_Y[name]
+        upper = (np.arange(SIZE) < y0)[:, None] & np.ones((1, SIZE), bool)
         for s in ("R", "L"):
             S = np.flatnonzero(members & (side == s))
             if len(S) < 20:
@@ -129,6 +158,8 @@ def run_dataset(name, arm):
             Xs, Ms = X[idx[S]], M[idx[S]]
             ssum, scnt = (Xs * Ms).sum(0), Ms.sum(0)
             excl = person[S][:, None] == person[S][None, :]
+            if not excl.diagonal().all():
+                raise result_spec.SpecError("exclusion matrix must exclude each target's own person")
             LF = lookalike_fill(Xs, Ms, Xs, Ms, valid, excl)
             for ti, i in enumerate(S):
                 xt, mt = X[idx[i]], M[idx[i]]
@@ -139,10 +170,13 @@ def run_dataset(name, arm):
                 fills = {}
                 if other[i] >= 0:
                     fills["repeat"] = [(X[other[i]], M[other[i]])]
+                fills["mirror"] = [mirror_fill(xt, mt, AXIS_Y[name])]
                 j = fellow[i]
                 if j >= 0 and members[j]:
-                    fills["mirror"] = [(X[idx[j]], M[idx[j]])]
+                    fills["fellow"] = [(X[idx[j]], M[idx[j]])]
+                    fills["fellow_mirror"] = [mirror_fill(X[idx[j]], M[idx[j]], y0)]
                 pool = S[person[S] != person[i]]
+                result_spec.assert_leave_person_out(person[i], person[pool])
                 strangers = np.random.default_rng([D.SEED, int(i)]).choice(pool, N_STRANGER, replace=False)
                 fills["stranger"] = [(X[idx[q]], M[idx[q]]) for q in strangers]
                 fills["lookalike"] = [(np.nan_to_num(LF[ti]), np.isfinite(LF[ti]))]
@@ -162,6 +196,16 @@ def run_dataset(name, arm):
                     ok = np.isfinite(e) & np.isfinite(eV)
                     sums[c][0] += np.where(ok, e, 0)
                     sums[c][1] += np.where(ok, eV, 0)
+                    if c in MIRRORS:                       # both directions, reported separately
+                        f, mf = fl[0]
+                        jm = vt & mf.astype(bool)
+                        parts = ({"upper vs reflected lower": jm & upper, "lower vs reflected upper": jm & ~upper}
+                                 if MIRRORS[c] == "halves" else {f"{side[i]} eye as target": jm})
+                        for dn, pm in parts.items():
+                            acc = dirs[c].setdefault(dn, [0.0, 0.0, 0])
+                            acc[0] += float((((xt - f) ** 2) * pm).sum())
+                            acc[1] += float((((xt - mean) ** 2) * pm).sum())
+                            acc[2] += 1
                     a, b = tot[c].get(person[i], (0.0, 0.0))
                     tot[c][person[i]] = (a + float(np.mean(nums)), b + float(np.mean(dens)))
                     n_t[c] += 1
@@ -177,6 +221,7 @@ def run_dataset(name, arm):
             maps["meanfundus"] = np.where(valid, mean_all, np.nan)
             maps["valid"] = valid
             totals = {c: (tot[c], n_t[c]) for c in COLS}
+            dir_all = dirs
     res = {}
     for c, (pp, n) in totals.items():
         if n < 10:
@@ -189,6 +234,9 @@ def run_dataset(name, arm):
             r = round(float(np.corrcoef(a[ok], b[ok])[0, 1]), 2) if ok.sum() > 10 else None
         res[c] = {"ratio": round(ratio, 3), "ci95": [round(x, 3) for x in ci], "targets": n, "persons": len(pp),
                   "split_half_r": r}
+        if c in MIRRORS:
+            res[c]["directions"] = {dn: {"ratio": round(v[0] / v[1], 3), "targets": v[2]}
+                                    for dn, v in dir_all[c].items() if v[1] > 0}
     res["valid_px"] = int(out["all"]["valid"].sum())
     res["units"] = int(len(u))
     np.savez_compressed(os.path.join(D.PRIVATE, f"facefmt_{name}_{arm}.npz"),
@@ -205,10 +253,15 @@ def run():
     for name, arm in SETS:
         results[name] = {"arm": arm, **run_dataset(name, arm)}
         print(name, json.dumps(results[name]), flush=True)
-    meta = {"protocol": "docs/PROTOCOL_donor_ladder_general.md, Amendment 9.5", "status": "pre-QC",
+    meta = {"protocol": "docs/PROTOCOL_donor_ladder_general.md, Amendments 9.5-9.7", "status": "pre-QC",
+            "spec": result_spec.SPEC,
+            "spec_meta": {"bootstrap_unit": "person", "pools": "leave-person-out", "stranger_rung": "stranger",
+                          "mirror_rungs": MIRRORS},
             "scale": "1 = dataset mean, 2 = stranger (squared error, z units, 128 px frame)",
             "window_px": WIN, "lookalike": {"step": STEP, "ring": RING, "k": K_LOOK}, "strangers": N_STRANGER,
             "results": results}
+    for flag in result_spec.enforce(meta):              # hard violations stop here, before anything is written
+        print("SPEC (soft):", flag, flush=True)
     with open(OUT_JSON, "w", encoding="utf-8") as fh:
         json.dump(meta, fh, indent=1)
 
@@ -218,17 +271,20 @@ def figure():
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     res = json.load(open(OUT_JSON, encoding="utf-8"))["results"]
-    cols = [("meanfundus", "Mean fundus"), ("repeat", "Another photo"), ("mirror", "Mirror side"),
-            ("sibling", "Sibling"), ("stranger", "Stranger"), ("lookalike", "16 look-alikes*"),
+    cols = [("meanfundus", "Mean fundus"), ("repeat", "Another photo"), ("mirror", "Mirror side**"),
+            ("fellow", "Fellow eye"), ("fellow_mirror", "Fellow eye mirrored**"), ("sibling", "Sibling"), ("stranger", "Stranger"), ("lookalike", "16 look-alikes*"),
             ("sexage", "Same sex and age"), ("V", "Dataset mean")]
     plt.rcParams["font.family"] = "serif"
     fig, ax = plt.subplots(len(SETS), len(cols), figsize=(2.1 * len(cols), 2.6 * len(SETS) + 0.9))
     for r, (name, arm) in enumerate(SETS):
         z = np.load(os.path.join(D.PRIVATE, f"facefmt_{name}_{arm}.npz"))
         valid = z["valid"] > 0.5
+        for key, _ in cols:                               # common display mask: a pixel shown in every panel of the
+            if key in z.files and key not in ("meanfundus", "valid"):   # row only if every map is defined there
+                valid &= np.isfinite(z[key])
         ys, xs = np.flatnonzero(valid.any(1)), np.flatnonzero(valid.any(0))
         crop = (slice(max(ys[0] - 4, 0), ys[-1] + 5), slice(max(xs[0] - 4, 0), xs[-1] + 5))
-        under = z["meanfundus"][crop]
+        under = np.where(valid, z["meanfundus"], np.nan)[crop]
         for c, (key, title) in enumerate(cols):
             a = ax[r, c]
             a.axis("off")
@@ -243,7 +299,7 @@ def figure():
                 a.text(0.5, 0.5, "not available", ha="center", va="center", transform=a.transAxes, fontsize=9,
                        bbox=dict(fc="white", ec="none", alpha=0.8))
                 continue
-            m = z[key][crop]
+            m = np.where(valid, z[key], np.nan)[crop]
             if key == "V":
                 a.imshow(m, cmap="viridis")
                 a.text(0.5, -0.08, "MSE = 1 x mean\n(shown: V, z units)", ha="center", va="top",
@@ -257,7 +313,9 @@ def figure():
                    ha="center", va="top", transform=a.transAxes, fontsize=8.5)
     fig.suptitle("Fundus, every location: pixel error against the dataset mean (pre-QC)", fontsize=13)
     fig.text(0.5, 0.01, "One scale: 1 = dataset mean (white), 2 = stranger; blue beats the mean. * neighbours chosen on "
-             "a 4 px grid by the 8 px ring around the 16 px window.\n128 px frame, 16 px window; outside the field "
+             "a 4 px grid by the 8 px ring around the 16 px window. ** the same eye reflected top-bottom about the "
+             "disc-fovea line (2.5 px strip excluded);\nPAPILA: line through the disc, fovea outside the field. "
+             "128 px frame, 16 px window; outside the field "
              "is missing. PAPILA P9, GRAPE P8 (Amendment 9.2); persons left out of their own pools.",
              ha="center", fontsize=8.5, color="#52514e")
     fig.tight_layout(rect=(0, 0.06, 1, 0.95))

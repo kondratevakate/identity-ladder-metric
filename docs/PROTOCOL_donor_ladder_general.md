@@ -87,6 +87,24 @@ and the visit. Report the repeat interval and device change.
   touches (target, donor, every pool member), or leaves that location out. Never let a filler value (0, the
   z-score mean, padding) enter a statistic. Each new dataset gets a regression test in which a filler-valued region
   outside the mask would win or shift the result if it were counted.
+- No square windows in maps (added 6 Nov 2026; Kate found the same square blocks in the face maps earlier and again
+  in the fundus maps). Local errors and every other map statistic use a Gaussian window with the standard deviation
+  of the intended box (window / sqrt(12)), masked (weight / weight of valid pixels). A square box draws squares.
+  Square windows are allowed only for validity checks (share of a window inside a mask) and for patch definitions
+  of the ladder itself (cubes, squares), never for what is drawn as a map. Known square-window maps: the old fundus
+  maps (`donor_ladder_2d.maps`, superseded by Amendment 9.5-9.6) and the brain maps (brain protocol, Amendment 10).
+- Result spec (added 6 Nov 2026, Kate: "a checkable spec that triggers on every result computed on data").
+  Every runner that computes ladder results declares `"spec": "ladder-result-spec/1"` in its JSON and calls
+  `src/result_spec.py` before writing; `tests/test_result_spec.py` re-checks every declaring file in `results/`
+  on each test run (tests run before every commit). Hard rules stop the run; soft rules are written into the JSON
+  (`spec_checks`) and printed. Hard: every rung has ratio, a 95% CI containing it, n targets >= 10, persons <= targets
+  and a named bootstrap unit (person or family; never images or eyes); the pools are leave-person-out (asserted at
+  run time: a target's own person, all eyes or sides, is never in its pool, mean or look-alike search); every
+  mirror-type rung reports both directions separately (left-right sides: target on the left vs on the right; within
+  one image: each half against the reflected other half), and direction counts add up (between sides: the two
+  directions partition the targets; within an image: each direction covers every target); a stranger rung exists.
+  Soft: stranger ratio in [1.85, 2.15] (theory 2); the two directions of a mirror rung within |ln(a/b)| <= 0.15
+  (else: check orientation and reflection before reading the result). Brain results adopt the spec at their rerun.
 - Keep the acquired field (added 6 Nov 2026). Do not crop away part of the field of view for convenience (a centre
   square, a fixed ROI); embed the whole field in a larger canvas with the outside marked missing. Any crop that
   drops acquired tissue is a design change: an amendment that states how much is lost and why.
@@ -321,3 +339,33 @@ MSE = ratio x mean [95% CI], split-half r, n. Definitions follow the face script
   resamples of persons; split-half r between maps from two independent person halves (pools inside each half);
   n = targets with that donor. Local maps: masked box mean, a pixel needs >= half of its window valid.
 Pre-QC: the camera spot, the dark-area threshold and the window scale (P10 candidates) are not fixed yet.
+
+### Amendment 9.6 (6 Nov 2026, two mirror rungs for eyes; recorded before these results)
+
+Kate: within one eye the symmetry axis is horizontal (the disc-fovea line, the horizontal raphe; the upper and
+lower vascular arcades roughly mirror each other), not vertical as in faces and brains; and because eyes come in
+pairs, the fellow eye is an extra rung of the ladder. In Amendment 9.5 "Mirror side" was the fellow eye. From now on:
+- Mirror side = the same eye reflected about the horizontal line through the disc-fovea axis (the analogue of the
+  face and brain mirror). A strip of 2.5 px either side of the axis (128 px frame) is excluded, as the face midline.
+  GRAPE P8: the frame puts disc and fovea on one row (y = 63.625 on the 128 frame), so the axis is exact. PAPILA P9: the
+  fovea is not located (it is mostly outside the 30 deg field), so the axis is the horizontal line through the disc
+  (y = 61.375); each eye's real disc-fovea tilt is not removed, which can only make this mirror worse (stated in the
+  figure).
+- Fellow eye = the other eye of the same person, reflected into the same orientation (the former "Mirror side").
+- Figure columns: Mean fundus / Another photo / Mirror side / Fellow eye / Sibling / Stranger / 16 look-alikes /
+  Same sex and age / Dataset mean. Everything else as in Amendment 9.5.
+- Correction recorded with 9.6 (before the rerun): Amendment 9.5 said "masked box mean", which deviates from the face
+  figure (frame v6 uses a Gaussian window with the box's standard deviation, 16 / sqrt(12) px, face Amendment 4.7);
+  the square box produced square blocks in the maps (Kate). Local errors now use that Gaussian. Display: in each row
+  every panel shows only pixels where all its maps are defined (no grey margin where one rung is unfilled).
+
+### Amendment 9.7 (6 Nov 2026, eye mirror combinations, directions, result spec; recorded before these results)
+
+Two eyes give three mirror-type rungs, each reported with both directions (section 8, result spec):
+- Mirror side (within one eye, top-bottom about the disc-fovea line): directions = upper half vs the reflected lower
+  half, and lower half vs the reflected upper half (pixels split at the axis).
+- Fellow eye: directions = right eye as target (left eye as donor) and left eye as target (right eye as donor).
+- Fellow eye mirrored (new rung, the "diagonal"): the fellow eye also reflected top-bottom about the axis (2.5 px strip
+  excluded), so the upper arcade of one eye meets the lower arcade of the other; directions as for the fellow eye.
+Figure columns: Mean fundus / Another photo / Mirror side / Fellow eye / Fellow eye mirrored / Sibling / Stranger /
+16 look-alikes / Same sex and age / Dataset mean. The JSON declares the spec and carries its checks.

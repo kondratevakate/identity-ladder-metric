@@ -58,3 +58,23 @@ def test_boot_ratio_is_the_ratio_of_sums():
     pp = {"a": (1.0, 2.0), "b": (3.0, 2.0)}
     r, ci = FF.boot_ratio(pp, np.random.default_rng(0), n=200)
     assert r == 1.0 and ci[0] <= r <= ci[1]
+
+
+def test_mirror_reflects_about_the_horizontal_axis_and_drops_the_strip():
+    x = np.zeros((FF.SIZE, FF.SIZE), np.float32)
+    x[50, 30] = 1.0                                       # 10 rows above an axis at y0 = 60
+    m = np.ones(x.shape, bool)
+    f, fm = FF.mirror_fill(x, m, 60.0)
+    assert f[70, 30] == 1.0 and f[50, 30] == 0.0          # lands 10 rows below, same column
+    assert not fm[58:63].any() and fm[57].all() and fm[63].all()   # |y - 60| < 2.5 excluded
+    assert not fm[121:].any()                             # reflected from outside the frame: missing, not zero
+
+
+def test_mirror_of_a_symmetric_eye_is_exact():
+    rng = np.random.default_rng(3)
+    top = rng.normal(size=(60, FF.SIZE)).astype(np.float32)
+    x = np.zeros((FF.SIZE, FF.SIZE), np.float32)
+    x[:60] = top
+    x[61:121] = top[::-1]                                 # symmetric about y0 = 60.0
+    f, fm = FF.mirror_fill(x, np.ones(x.shape, bool), 60.0)
+    assert np.allclose(f[fm], x[fm])
