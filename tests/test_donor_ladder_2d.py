@@ -52,3 +52,17 @@ def test_views_split_sides_and_pool_both():
     v = D.views(r)
     assert (v.region == "random_patches/R").sum() == 2 and (v.region == "random_patches/L").sum() == 1
     assert (v.region == "random_patches/LR").sum() == 3
+
+
+def test_flatten_removes_smooth_illumination_and_keeps_fine_structure():
+    n = 256
+    yy, xx = np.mgrid[0:n, 0:n]
+    illum = 0.5 + 0.4 * (xx / n) + 0.3 * np.exp(-((yy - 128) ** 2 + (xx - 128) ** 2) / (2 * 60.0 ** 2))
+    fine = 1 + 0.2 * ((xx // 4 + yy // 4) % 2)          # 4 px checkerboard: structure finer than the window
+    fov = (yy - 128) ** 2 + (xx - 128) ** 2 < 120 ** 2
+    out = D.flatten((illum * fine).astype(np.float32), fov)
+    inner = (yy - 128) ** 2 + (xx - 128) ** 2 < 80 ** 2
+    ratio = out[inner] / fine[inner]
+    assert ratio.std() / ratio.mean() < 0.05            # illumination gone
+    assert np.corrcoef(out[inner], fine[inner])[0, 1] > 0.9   # checkerboard kept
+    assert np.all(out[~fov] == 0)

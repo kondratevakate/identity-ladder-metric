@@ -68,9 +68,65 @@ def search(win, other, other_ok, size, ring, oracle=False):
     return other[oy + ring:oy + ring + size, ox + ring:ox + ring + size]
 
 
-def setup(name):
+def flatten(g, fov, factor=4, size=13):
+    """Divide by a background estimate (Amendment 9.1): median over size * factor px, computed at 1/factor
+    resolution with the outside of the field of view filled from the nearest inside pixel."""
+    n = g.shape[0] // factor
+    gs = g[:n * factor, :n * factor].reshape(n, factor, n, factor)
+    fs = fov[:n * factor, :n * factor].reshape(n, factor, n, factor)
+    cnt = fs.sum(axis=(1, 3))
+    small = np.where(cnt > 0, (gs * fs).sum(axis=(1, 3)) / np.maximum(cnt, 1), 0)
+    inside = cnt > 0
+    if not inside.any():
+        return np.zeros_like(g)
+    _, (iy, ix) = ndimage.distance_transform_edt(~inside, return_indices=True)
+    bg = ndimage.median_filter(small[iy, ix], size=size, mode="nearest")
+    bg = ndimage.zoom(bg, g.shape[0] / n, order=1)[:g.shape[0], :g.shape[1]]
+    return np.where(fov, g / np.maximum(bg, 1e-3), 0).astype(np.float32)
+
+
+def load_flat(path):
+    """F.load with the background division before downsampling and z-scoring."""
+    rgb = F.L.load_base(path, 512, True)
+    lm = F.R.fundus_landmarks(rgb)
+    if lm is None:
+        return None
+    c = F.R.fundus_canonical(rgb)
+    disc_right = lm[0][0] > lm[1][0]
+    if not disc_right:
+        c = c[:, ::-1]
+    fov512 = c[..., 0] > 0.1
+    g = flatten(c[..., 1].astype(np.float32), fov512).reshape(G, 2, G, 2).mean(axis=(1, 3))
+    fov = fov512.reshape(G, 2, G, 2).all(axis=(1, 3))
+    v = g[fov]
+    g = np.where(fov, (g - v.mean()) / (v.std() + 1e-6), 0.0).astype(np.float32)
+    return g, fov, disc_right
+
+
+def load_arm(t, name, arm):
+    if arm == "z":
+        return F.load_all(t, os.path.join(F.PRIVATE, f"{name}_canonical.npz"))
+    cache = os.path.join(PRIVATE, f"{name}_canonical_{arm}.npz")
+    if os.path.exists(cache):
+        z = np.load(cache, allow_pickle=False)
+        return z["img"], z["fov"], z["ok"], z["disc_right"]
+    n = len(t)
+    img, fov = np.zeros((n, G, G), np.float32), np.zeros((n, G, G), bool)
+    ok, dr = np.zeros(n, bool), np.zeros(n, bool)
+    for i, p in enumerate(t.path):
+        r = load_flat(p)
+        if r is not None:
+            img[i], fov[i], dr[i] = r
+            ok[i] = True
+        if i % 50 == 0:
+            print(f"{name} flat load {i + 1}/{n}", flush=True)
+    np.savez_compressed(cache, img=img, fov=fov, ok=ok, disc_right=dr)
+    return img, fov, ok, dr
+
+
+def setup(name, arm="z"):
     t = F.papila_table() if name == "PAPILA" else F.grape_table()
-    img, fov, ok, dr = F.load_all(t, os.path.join(F.PRIVATE, f"{name}_canonical.npz"))
+    img, fov, ok, dr = load_arm(t, name, arm)
     u = F.units(t, ok, dr)
     full = t.assign(idx=np.arange(len(t)), ok=ok, side_conflict=ok & (dr != (t.side == "R")))
     patches, n_cand = F.patch_positions(fov[u.idx.to_numpy()], np.random.default_rng(SEED))
@@ -207,7 +263,7 @@ def box(x):
     return ndimage.uniform_filter(x.astype(np.float32), MAP_WIN, mode="constant")
 
 
-def maps(name, setup_out):
+def maps(name, setup_out, tag=""):
     """Local-error maps on the canonical frame for fixed-rule donors; pools per side without the target's person;
     independent person halves (pools inside each half). Returns aggregate arrays only."""
     t, img, fov, u, _, _, fellow, other = setup_out
@@ -255,7 +311,7 @@ def maps(name, setup_out):
         a, b = out["h0"][d], out["h1"][d]
         ok = np.isfinite(a) & np.isfinite(b)
         rel[d] = float(np.corrcoef(a[ok], b[ok])[0, 1]) if ok.sum() > 10 else None
-    np.savez_compressed(os.path.join(PRIVATE, f"{name}_maps.npz"),
+    np.savez_compressed(os.path.join(PRIVATE, f"{name}_maps{tag}.npz"),
                         **{f"{tag}_{d}": m.astype(np.float32) for tag, mm in out.items() for d, m in mm.items()})
     return {d: {"median_ratio": (float(np.nanmedian(out["all"][d])) if np.isfinite(out["all"][d]).any() else None),
                 "split_half_r": rel[d]} for d in rel}
@@ -275,28 +331,32 @@ def main():
         F.S.GRAPE_META = os.path.join(ext, *os.path.relpath(F.S.GRAPE_META, os.path.join(
             os.path.dirname(F.S.__file__), "..", "external")).split(os.sep))
     names = next((a.split("=", 1)[1].split(",") for a in sys.argv if a.startswith("--datasets=")), ["PAPILA", "GRAPE"])
-    out = {"status": "pre-QC: disc-fovea landmarks not visually accepted",
+    arm = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--arm=")), "z")   # z or flat (9.1)
+    primary_only = "--primary-only" in sys.argv
+    tag = "" if arm == "z" else f"_{arm}"
+    out_json = OUT_JSON.replace(".json", f"{tag}.json")
+    out = {"status": "pre-QC: disc-fovea landmarks not visually accepted", "arm": arm,
            "protocol": "docs/PROTOCOL_donor_ladder_general.md (section 9)", "seed": SEED, "grid": G,
            "block_search_halfwindow_px": W, "datasets": {}}
-    if os.path.exists(OUT_JSON):
-        out["datasets"] = json.load(open(OUT_JSON, encoding="utf-8"))["datasets"]
+    if os.path.exists(out_json):
+        out["datasets"] = json.load(open(out_json, encoding="utf-8"))["datasets"]
     for name in names:
-        so = setup(name)
+        so = setup(name, arm)
         u, fellow, other = so[3], so[6], so[7]
         counts = dict(n_units=len(u), n_fellow=int((fellow >= 0).sum()), n_other=int((other >= 0).sum()))
         d = {"counts": counts, "configs": {}}
         r = run_config(name, so, 48, 16, F.KS, True)
-        r.to_csv(os.path.join(PRIVATE, f"{name}_rows_p48_r16.csv.gz"), index=False)
+        r.to_csv(os.path.join(PRIVATE, f"{name}_rows_p48_r16{tag}.csv.gz"), index=False)
         d["primary"] = summary(r, **counts)
-        for p in PATCHES:
+        for p in () if primary_only else PATCHES:
             for ring in RINGS:
                 key = f"p{p}_r{ring}"
                 rr = r if (p, ring) == (48, 16) else run_config(name, so, p, ring, (1, 16), False)
                 d["configs"][key] = summary(rr, KEEP)["regions"]
                 print(f"{name} {key} done, {round((time.time() - t0) / 60, 1)} min", flush=True)
-        d["maps"] = maps(name, so)
+        d["maps"] = maps(name, so, tag)
         out["datasets"][name] = d
-        with open(OUT_JSON, "w", encoding="utf-8") as fh:
+        with open(out_json, "w", encoding="utf-8") as fh:
             json.dump(finite(out), fh, indent=1, allow_nan=False)
     print("done", round((time.time() - t0) / 60, 1), "min")
 
