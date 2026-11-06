@@ -102,3 +102,18 @@ def test_rigid_pair_never_scales():
     s, sm = scene((2.0, -1.0))
     out = R.register_pair((t, tm, s, sm))
     assert out[0] is not None and abs(out[4] - 1.0) < 1e-3     # rigid: |det| = 1
+
+
+def test_rigid_by_vessels_recovers_a_shift_without_scaling():
+    """Shifted vessels with a fixed bright spot excluded from the estimate: the rigid fit still recovers the shift and
+    keeps scale 1. (This synthetic scene does not isolate the benefit of excluding the disc; the QC sheets do.)"""
+    t, tm = scene()
+    s, sm = scene((0.0, 4.0))
+    yy, xx = np.mgrid[:96, :96]
+    spot = np.hypot(xx - 60, yy - 48) < 6
+    s = np.where(spot, 3.0, s).astype(np.float32)
+    t = np.where(spot, 3.0, t).astype(np.float32)
+    w, wm, scale = R.rigid_by_vessels(t, tm, s, sm, np.hypot(xx - 60, yy - 48) < 9)
+    ring = tm & wm & ~(np.hypot(xx - 60, yy - 48) < 9) & (ndimage.distance_transform_edt(tm) > 8)
+    assert abs(scale - 1) < 1e-3
+    assert np.mean((w - t)[ring] ** 2) < 0.5 * np.mean((s - t)[ring & sm] ** 2)

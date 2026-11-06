@@ -62,7 +62,10 @@ def main():
             others = (side == "R") & (person != person[i])
             mean, n = FF.masked_mean(X[idx[others]], M[idx[others]])
             cases.append((i, j, q, mean, n >= 0.9 * others.sum()))
-            jobs += [(X[idx[i]], M[idx[i]], X[idx[j]], M[idx[j]]), (X[idx[i]], M[idx[i]], X[idx[q]], M[idx[q]])]
+            yy, xx = np.mgrid[:FF.SIZE, :FF.SIZE]
+            disc = np.hypot(xx - FF.DISC_XY[name][0], yy - FF.DISC_XY[name][1]) <= 12   # disc zone (9.12)
+            jobs += [(X[idx[i]], M[idx[i]], X[idx[j]], M[idx[j]], disc),
+                     (X[idx[i]], M[idx[i]], X[idx[q]], M[idx[q]], disc)]
         with Pool(8) as p:
             out = p.map(R.register_pair, jobs)
         fig, ax = plt.subplots(2 * N_PERSONS, 6, figsize=(16, 5.6 * N_PERSONS))
@@ -79,8 +82,8 @@ def main():
             show(top[2], xt, mt)
             top[2].set_title("target: right eye, frame", fontsize=9)
             donors = [("fellow, frame only", X[idx[j]], M[idx[j]], None),
-                      ("fellow, rigid + matched", *(fr[:2] if fr else (None, None)), fr),
-                      ("stranger, rigid + matched", *(sr[:2] if sr else (None, None)), sr)]
+                      ("fellow, rigid (vessels) + matched", *(fr[:2] if fr else (None, None)), fr),
+                      ("stranger, rigid (vessels) + matched", *(sr[:2] if sr else (None, None)), sr)]
             show(bot[2], mean, mm)
             bot[2].set_title("leave-person-out mean", fontsize=9)
             for k, (lab, f, fm, o) in enumerate(donors, start=3):
@@ -97,7 +100,7 @@ def main():
                 a.axis("off")
         for a in ax.ravel():
             a.set(xticks=[], yticks=[])
-        fig.suptitle(f"{name}: fellow eye laid over the target - frame only vs rigid (rotation + shift) + intensity-matched "
+        fig.suptitle(f"{name}: fellow eye laid over the target - frame only vs rigid by vessels (disc excluded) + intensity-matched "
                      "(stranger = control). Pre-QC, private.", fontsize=12)
         fig.tight_layout()
         outp = os.path.join(D.PRIVATE, f"qc_pair_{name}.png")

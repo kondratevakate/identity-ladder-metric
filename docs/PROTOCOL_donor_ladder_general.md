@@ -470,3 +470,8 @@ matching buy for any image is visible next to what the person adds.
   aligned rigidly to the target (rotation + translation only, ANTs "Rigid"); within a dataset the resolution is one,
   so scale and shear are not estimated. Intensity match (gain, offset) and the gain check stay; the scale check is
   moot for a rigid transform. The affine variant above is not used.
+- Revision (Kate, 6 Nov 2026, before any ladder result): rigid on raw intensity was driven by the bright disc and cup
+  (PAPILA fellow eye worse in 2 of 4 QC cases, e.g. 1.82 -> 2.63, rotated ~10 deg). The rigid transform is now
+  estimated on vessels: high-pass images (subtract a masked Gaussian of sigma 6 px, 128 frame), with a disc zone of
+  12 px radius around the frame's disc target excluded from both masks; the transform is then applied to the
+  original donor and its mask, followed by the intensity match and gain check. The same for the stranger control.

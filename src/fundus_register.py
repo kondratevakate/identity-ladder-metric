@@ -168,18 +168,37 @@ def intensity_match(target, tmask, donor, dmask, min_px=50):
     return np.where(dmask, g * donor + b, 0.0).astype(np.float32), (float(g), float(b))
 
 
+def rigid_by_vessels(target, tmask, donor, dmask, exclude):
+    """Rigid transform estimated on the high-pass (vessel) images with `exclude` (the disc zone) removed from both
+    masks, applied to the original donor and its mask (Amendment 9.12). Returns (warped, warped mask, scale)."""
+    import ants
+    f = ants.from_numpy(highpass(target, tmask).astype(np.float32))
+    m = ants.from_numpy(highpass(donor, dmask).astype(np.float32))
+    fm = ants.from_numpy((tmask & ~exclude).astype(np.float32))
+    mm = ants.from_numpy((dmask & ~exclude).astype(np.float32))
+    reg = ants.registration(f, m, type_of_transform="Rigid", initial_transform="identity", aff_metric="mattes",
+                            mask=fm, moving_mask=mm, mask_all_stages=True)
+    p = np.asarray(ants.read_transform(reg["fwdtransforms"][-1]).parameters, float)
+    fixed = ants.from_numpy(target.astype(np.float32))
+    w = ants.apply_transforms(fixed, ants.from_numpy(donor.astype(np.float32)), reg["fwdtransforms"],
+                              interpolator="linear").numpy()
+    wm = ants.apply_transforms(fixed, ants.from_numpy(dmask.astype(np.float32)), reg["fwdtransforms"],
+                               interpolator="linear").numpy() > 0.99
+    return np.where(wm, w, 0.0).astype(np.float32), wm, float(np.sqrt(abs(p[0] * p[3] - p[1] * p[2])))
+
+
 SCALE_OK, GAIN_OK = (0.8, 1.25), (0.5, 2.0)
 
 
 def register_pair(args):
-    """Pairwise donor -> target (Amendment 9.12): rigid registration (rotation + translation), then intensity match, with sanity checks.
-    args = (target, tmask, donor, dmask[, kind]). Returns (matched donor, warped mask, bending, (gain, offset),
+    """Pairwise donor -> target (Amendment 9.12): rigid registration (rotation + translation) estimated on vessels, then intensity match, with sanity checks.
+    args = (target, tmask, donor, dmask[, exclude]). Returns (matched donor, warped mask, bending, (gain, offset),
     affine scale) or (None, reason) on failure, counted by the caller."""
     target, tmask, donor, dmask, *rest = args
-    kind = rest[0] if rest else "Rigid"                # Kate: rotate and align only, no stretching
-    info = {}
-    try:
-        w, wm, bend = register_to(target, tmask, donor, dmask, kind, info)
+    exclude = rest[0] if rest else np.zeros_like(tmask)   # disc zone, left out of the vessel-driven estimate
+    info, bend = {}, 0.0
+    try:                                               # Kate: rotate and align only, by vessels, no stretching
+        w, wm, info["affine_scale"] = rigid_by_vessels(target, tmask, donor, dmask, exclude)
     except RuntimeError:
         return None, "registration_error"
     if not SCALE_OK[0] <= info["affine_scale"] <= SCALE_OK[1]:
