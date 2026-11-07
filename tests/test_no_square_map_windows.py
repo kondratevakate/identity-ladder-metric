@@ -10,7 +10,7 @@ import subprocess
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-BOX = re.compile(r"uniform_filter|box_filter|boxcar")
+BOX = re.compile(r"uniform_filter|box_filter|boxcar")  # box-ok: detector pattern
 OK = re.compile(r"#\s*box-ok:\s*\S")
 KNOWN = {"src/donor_ladder_brain_maps.py": "brain session (brain protocol Amendment 10); not fixed here"}
 
@@ -33,7 +33,7 @@ def tracked_sources():
 
 
 def test_detector_catches_an_unmarked_box_and_accepts_a_marked_one():
-    src = {"a.py": ["e = ndimage.uniform_filter(d ** 2, 16)",
+    src = {"a.py": ["e = ndimage.uniform_filter(d ** 2, 16)",  # box-ok: test fixture
                     "frac = ndimage.uniform_filter(m, 16)  # box-ok: validity fraction"]}
     hits = offenders(src)
     assert list(hits) == ["a.py"] and len(hits["a.py"]) == 1 and ":1:" in hits["a.py"][0]
