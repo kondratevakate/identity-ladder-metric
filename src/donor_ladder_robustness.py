@@ -234,7 +234,7 @@ def brain_positions(rng, patch=B.PATCH, tsupport=0.9):
     m = load_mni152_brain_mask(resolution=1)
     mask = m.get_fdata() > 0
     w = patch + 2 * B.SHELL
-    frac = ndimage.uniform_filter(mask.astype(np.float32), size=w, mode="constant")
+    frac = ndimage.uniform_filter(mask.astype(np.float32), size=w, mode="constant")  # box-ok: validity fraction
     half = w // 2
     ok = np.zeros_like(mask)
     ok[half:-half, half:-half, half:-half] = frac[half:-half, half:-half, half:-half] >= tsupport

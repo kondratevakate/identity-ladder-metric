@@ -27,7 +27,7 @@ OUT_JSON = os.path.join(B.ROOT, "results", "donor_ladder_brain_map_grid.json")
 
 def centres(template_mask, a):
     """Grid voxels (x through the midline index a / 2, step STEP) whose WINDOW cube is >= SUPPORT in the template."""
-    frac = ndimage.uniform_filter(template_mask.astype(np.float32), WINDOW, mode="constant")
+    frac = ndimage.uniform_filter(template_mask.astype(np.float32), WINDOW, mode="constant")  # box-ok: validity fraction
     axes = [np.arange((a // 2) % STEP, template_mask.shape[0], STEP)] + \
            [np.arange(0, n, STEP) for n in template_mask.shape[1:]]
     return np.array([(x, y, z) for x in axes[0] for y in axes[1] for z in axes[2] if frac[x, y, z] >= SUPPORT])
@@ -64,7 +64,7 @@ def cache(t, affine, cs, V, M):
     for k in range(n):
         v, m = np.asarray(V[k]), np.asarray(M[k]).astype(np.float32)
         vm = v[mi]
-        f, fm = (ndimage.uniform_filter(x, CUBE, mode="constant") for x in (m, m[mi]))
+        f, fm = (ndimage.uniform_filter(x, CUBE, mode="constant") for x in (m, m[mi]))  # box-ok: validity fraction
         for ci, c in enumerate(cs):
             out["win"][ci, k] = window_at(v, c, WINDOW)
             out["mcube"][ci, k] = window_at(vm, c, CUBE)

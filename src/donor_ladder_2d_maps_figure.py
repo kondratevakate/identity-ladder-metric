@@ -114,7 +114,7 @@ def draw(mode, res, dest, tag=""):
              "person halves disagree about the side of the median.")
     prep = ("P7: PAPILA expert-disc translation frame, GRAPE disc-fovea frame; green / background, z-scored"
             if tag == "_p7" else "P0: disc-fovea frame (fovea unreliable); green z-scored")
-    fig.text(0.5, 0.03, f"{scale} {prep} in the field of view, 48 px window on the "
+    fig.text(0.5, 0.03, f"{scale} {prep} in the field of view, masked Gaussian window (sd = 48/sqrt(12) px) on the "
              "256 grid. Pre-QC.", ha="center", fontsize=5.0, color=MUTED)
     fig.suptitle(f"Fundus{(' ' + tag[1:].upper()) if tag else ''}, every location: error of each donor in units of the dataset mean"
                  + ("" if mode == "common" else " (contrast per map)"), fontsize=8.2, y=0.99)

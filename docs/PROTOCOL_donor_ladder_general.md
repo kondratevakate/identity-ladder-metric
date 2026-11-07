@@ -91,8 +91,11 @@ and the visit. Report the repeat interval and device change.
   in the fundus maps). Local errors and every other map statistic use a Gaussian window with the standard deviation
   of the intended box (window / sqrt(12)), masked (weight / weight of valid pixels). A square box draws squares.
   Square windows are allowed only for validity checks (share of a window inside a mask) and for patch definitions
-  of the ladder itself (cubes, squares), never for what is drawn as a map. Known square-window maps: the old fundus
-  maps (`donor_ladder_2d.maps`, superseded by Amendment 9.5-9.6) and the brain maps (brain protocol, Amendment 10).
+  of the ladder itself (cubes, squares), never for what is drawn as a map. Known square-window maps: the brain maps
+  (brain protocol, Amendment 10; owned by the brain session). The old fundus maps (`donor_ladder_2d.maps`) were
+  switched to the masked Gaussian on 7 Nov 2026 and the P7 maps regenerated (medians unchanged to two decimals; the P0
+  maps, an invalid preprocessing, were not regenerated). `tests/test_no_square_map_windows.py` fails on any unmarked box
+  filter; validity fractions carry `# box-ok: <reason>`.
 - Result spec (added 6 Nov 2026, Kate: "a checkable spec that triggers on every result computed on data").
   Every runner that computes ladder results declares `"spec": "ladder-result-spec/1"` in its JSON and calls
   `src/result_spec.py` before writing; `tests/test_result_spec.py` re-checks every declaring file in `results/`

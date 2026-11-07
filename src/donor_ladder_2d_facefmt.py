@@ -38,10 +38,6 @@ def down2(img, fov):
     return np.where(m, x, 0).astype(np.float32), m
 
 
-def box(x, w=WIN):
-    return ndimage.uniform_filter(x.astype(np.float64), w, mode="constant")
-
-
 def local_error(a, b, m):
     """Masked local mean of the squared difference in a Gaussian window of the 16 px box's standard deviation (as
     the face script from its v3, face Amendment 4.7; Amendment 9.6 here); NaN where < half of the window weight is

@@ -61,7 +61,7 @@ def positions(rng):
     m = load_mni152_brain_mask(resolution=1)
     mask = m.get_fdata() > 0
     w = PATCH + 2 * SHELL
-    frac = ndimage.uniform_filter(mask.astype(np.float32), size=w, mode="constant")
+    frac = ndimage.uniform_filter(mask.astype(np.float32), size=w, mode="constant")  # box-ok: validity fraction
     half = w // 2
     ok = np.zeros_like(mask)
     ok[half:-half, half:-half, half:-half] = frac[half:-half, half:-half, half:-half] >= 0.9

@@ -286,8 +286,19 @@ def views(r):
                       r.assign(region=r.region + "/LR")], ignore_index=True)
 
 
-def box(x):
-    return ndimage.uniform_filter(x.astype(np.float32), MAP_WIN, mode="constant")
+def box_valid(m):
+    """Share of the MAP_WIN box inside a mask: a validity check only, never a drawn statistic."""
+    return ndimage.uniform_filter(m.astype(np.float32), MAP_WIN, mode="constant")  # box-ok: validity fraction
+
+
+def gauss(x, m):
+    """Masked local mean in a Gaussian window with the MAP_WIN box's standard deviation (MAP_WIN / sqrt(12));
+    only pixels in m enter (general protocol section 8: no square windows in maps, missing is never zero)."""
+    sd = MAP_WIN / np.sqrt(12)
+    m = m.astype(np.float64)
+    num = ndimage.gaussian_filter(np.where(m > 0, x, 0.0).astype(np.float64) * m, sd, mode="constant")
+    den = ndimage.gaussian_filter(m, sd, mode="constant")
+    return np.where(den > 1e-6, num / np.maximum(den, 1e-12), np.nan)
 
 
 def maps(name, setup_out, suffix=""):
@@ -297,7 +308,7 @@ def maps(name, setup_out, suffix=""):
     idx = u.idx.to_numpy()
     person, side = u.person.to_numpy(), u.side.to_numpy()
     age, sex, dev = u.age.to_numpy(float), u.sex.astype(str).to_numpy(), u.device.to_numpy()
-    okw = np.stack([box(fov[k]) >= 1 - 1e-4 for k in idx])
+    okw = np.stack([box_valid(fov[k]) >= 1 - 1e-4 for k in idx])
     persons = np.unique(person)
     half_of = dict(zip(np.random.default_rng(SEED).permutation(persons), np.arange(len(persons)) % 2))
     half = np.array([half_of[p] for p in person])
@@ -313,21 +324,23 @@ def maps(name, setup_out, suffix=""):
                 continue
             P = img[idx[p]]
             mu = P.mean(0)
-            v = box((img[idx[i]] - mu) ** 2)
-            vsum += v
+            mt = fov[idx[i]] & fov[idx[p]].all(0)          # target and every pool member valid
+            v = gauss((img[idx[i]] - mu) ** 2, mt)
+            vsum += np.where(np.isfinite(v), v, 0)
             vn += 1
-            fills = {"stranger": v + box(((P - mu) ** 2).mean(0))}
+            fills = {"stranger": v + gauss(((P - mu) ** 2).mean(0), mt)}
             coh = p[(sex[p] == sex[i]) & (np.abs(age[p] - age[i]) <= 5) & ((dev[p] == dev[i]) if name == "GRAPE" else True)]
             if coh.size >= 10:
-                fills["cohort"] = box((img[idx[i]] - img[idx[coh]].mean(0)) ** 2)
+                fills["cohort"] = gauss((img[idx[i]] - img[idx[coh]].mean(0)) ** 2, mt)
             j = fellow[i]
             if j >= 0 and members[j]:
-                fills["fellow_eye"] = box((img[idx[i]] - img[idx[j]]) ** 2)
-            if other[i] >= 0 and (box(fov[other[i]]) >= 1 - 1e-4)[region].all():
-                fills["other_visit"] = box((img[idx[i]] - img[other[i]]) ** 2)
+                fills["fellow_eye"] = gauss((img[idx[i]] - img[idx[j]]) ** 2, mt & fov[idx[j]])
+            if other[i] >= 0 and (box_valid(fov[other[i]]) >= 1 - 1e-4)[region].all():
+                fills["other_visit"] = gauss((img[idx[i]] - img[other[i]]) ** 2, mt & fov[other[i]])
             for d, e in fills.items():
-                acc[d][0] += e
-                acc[d][1] += v
+                ok = np.isfinite(e) & np.isfinite(v)
+                acc[d][0] += np.where(ok, e, 0)
+                acc[d][1] += np.where(ok, v, 0)
         with np.errstate(invalid="ignore", divide="ignore"):
             out[part] = {d: np.where(region & (a[1] > 0), a[0] / a[1], np.nan) for d, a in acc.items()}
             out[part]["V"] = np.where(region, vsum / max(vn, 1), np.nan)
