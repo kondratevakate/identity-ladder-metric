@@ -191,3 +191,59 @@ def test_twenty_six_confirmatory_metrics_and_cohort_unavailable():
     assert c["acc_matched"][1] is None and c["amplitude_matched"][1] is None
     assert {k for k, v in c.items() if v[1]} == {"mse", "rmse", "psnr", "mae", "ssim", "ms_ssim", "acc_dataset",
                                                   "amplitude_dataset", "lddt", "intensity_persistence"}
+
+
+# ---------------------------------------------------------------- donor curve and maps (iris_ladder_metrics_ladder)
+
+def _toy_set(n_people=12, seed=0):
+    """Toy strips: each person has an own texture; the repeat is the same texture plus small noise."""
+    rng = np.random.default_rng(seed)
+    H, W = IF.H, IF.W
+    X, M, person, side, rep_img = [], [], [], [], []
+    for p in range(n_people):
+        for s in ("R", "L"):
+            base = rng.normal(size=(H, W))
+            X.append(base)
+            X.append(base + 0.01 * rng.normal(size=(H, W)))
+            M += [np.ones((H, W), bool)] * 2
+    X, M = np.array(X), np.array(M)
+    idx = np.arange(0, len(X), 2)
+    person = np.repeat([f"p{p}" for p in range(n_people)], 2)
+    side = np.tile(["R", "L"], n_people)
+    fellow = np.arange(len(idx)) ^ 1
+    import iris_ladder_metrics as IM
+    valid = np.ones((H, W), bool)
+    return {"X": X, "M": M, "XF": IF.mirror(X), "MF": IF.mirror(M), "idx": idx, "valid": valid, "person": person,
+            "side": side, "repeat": idx + 1, "fellow": fellow, "pos": IM.positions(valid)[:4], "ratio": 0.45}
+
+
+def test_local_map_ignores_missing_and_wraps_in_angle():
+    import iris_ladder_metrics_ladder as LD
+    x = np.full((IF.H, IF.W), 1.0)
+    m = np.ones_like(x, bool)
+    m[:, 100:110] = False
+    x[:, 100:110] = 0.0                      # filler under the mask must not pull the mean down
+    out = LD.local(x, m)
+    assert np.allclose(out[np.isfinite(out)], 1.0)
+    y = np.zeros((IF.H, IF.W))
+    y[:, 0] = 1.0
+    sm = LD.local(y, np.ones_like(y, bool))
+    assert abs(sm[30, 2] - sm[30, IF.W - 2]) < 1e-9 and sm[30, IF.W - 2] > 0.01   # 0 deg seam is not an edge
+
+
+def test_curve_stranger_about_two_repeat_near_zero():
+    import iris_ladder_metrics_ladder as LD
+    st = _toy_set()
+    c = LD.summarise_curve(LD.curve_rows(st))
+    assert abs(c["population"]["all"]["err_over_V"] - 1.0) < 1e-9
+    assert 1.7 < c["population"]["1"]["err_over_V"] < 2.3
+    assert c["other_photo"]["1"]["err_over_V"] < 0.01
+    assert "16" not in c["population"]       # pool of 11 people: k = 16 is not drawn, not padded
+    assert c["population"]["8"]["err_over_V"] < c["population"]["2"]["err_over_V"]
+
+
+def test_maps_repeat_low_stranger_two():
+    import iris_ladder_metrics_ladder as LD
+    out, res = LD.maps(_toy_set())
+    assert res["other_photo"]["median_ratio"] < 0.01
+    assert 1.8 < res["stranger"]["median_ratio"] < 2.2

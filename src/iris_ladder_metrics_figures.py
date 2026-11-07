@@ -164,6 +164,139 @@ def ratio_figure(d, out):
     save(fig, out)
 
 
+CURVE = [("population", "population, same side", "#2a78d6", "o", "-"),
+         ("population_both", "population, both sides (other side mirrored)", "#eb6834", "s", "-"),
+         ("knn", "kNN by context (ring around the window)", "#e8a200", "v", "-")]
+KS = ("1", "2", "4", "8", "16", "32", "64")
+
+
+def distance_figure(d, out):
+    """Fundus-format donor curve: error / V and spread / V against the number of donors averaged."""
+    names = [v for v in VIEWS if v[0] in d.get("donor_curve", {})]
+    fig, axes = plt.subplots(len(names), 2, figsize=(9, 3.3 * len(names) + 0.8), facecolor=BF.SURFACE, squeeze=False)
+    for row, (vk, vlab, *_rest) in enumerate(names):
+        c = d["donor_curve"][vk]
+        n = c["counts"]
+        for col, (key, cik, ylab) in enumerate((("err_over_V", "ci95", "error / V"),
+                                                ("spread_over_V", "spread_ci95", "spread from mean / V"))):
+            ax = axes[row, col]
+            ax.set_facecolor(BF.SURFACE)
+            for arm, lab, colr, mk, ls in CURVE:
+                a = c.get(arm, {})
+                ks = [k for k in KS if k in a]
+                xs = np.log2([float(k) for k in ks])
+                ax.plot(xs, [a[k][key] for k in ks], ls, color=colr, marker=mk, ms=4, lw=1.4, label=lab, zorder=3)
+                for x, k in zip(xs, ks):
+                    ax.plot([x, x], a[k][cik], color=colr, lw=0.8, zorder=3)
+                if col == 0 and "fit" in a:
+                    xx = np.linspace(0, 6, 50)
+                    ax.plot(xx, a["fit"]["one_minus_R2"] * (1 + 1 / 2 ** xx), "--", color=colr, lw=0.7, zorder=2)
+            for arm, lab, colr, mk in (("fellow_eye", "own other eye (mirrored)", "#d9568f", "D"),
+                                       ("other_photo", "own eye, other photo", "#1a8a3a", "P")):
+                e = c.get(arm, {}).get("1")
+                if e:
+                    ax.plot([0, 0], e[cik], color=colr, lw=0.9, zorder=4)
+                    ax.scatter(0, e[key], s=26, marker=mk, color=colr, zorder=5, label=lab)
+            if col == 0:
+                ax.axhline(2, color=BF.INK, lw=0.7)
+                ax.text(6, 2.02, "theory: one stranger = 2", fontsize=6.5, color=BF.MUTED, va="bottom", ha="right")
+            ax.axhline(1 if col == 0 else 0, color="#2a78d6", lw=0.7, ls=":", label="all donors (dataset mean)")
+            ax.set_xticks(range(7))
+            ax.set_xticklabels(KS, fontsize=7)
+            ax.set_xlabel("donors averaged, k", fontsize=7.5)
+            ax.set_ylabel(ylab, fontsize=7.5)
+            ax.tick_params(labelsize=7, colors=BF.MUTED)
+            for s in ("top", "right"):
+                ax.spines[s].set_visible(False)
+            ax.grid(color="#e6e6e6", lw=0.5)
+            what = "error of the fill" if col == 0 else "spread of the fill"
+            ax.set_title(f"{vlab.split(' (')[0]} ({n['eyes']} eyes, {n['people']} people): {what}", fontsize=8,
+                         loc="left", color=BF.INK)
+    h, lab = axes[0, 0].get_legend_handles_labels()
+    h.append(plt.Line2D([], [], color=BF.MUTED, ls="--", lw=0.8))
+    lab.append("fit (1 - R²)(1 + 1/k)")
+    fig.legend(h, lab, loc="lower center", ncol=3, fontsize=7, frameon=False, bbox_to_anchor=(0.5, 0.01))
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
+    save(fig, out)
+
+
+def to_ring(strip, rho, n=241):
+    """Strip (radial share T0..T1 from pupil to limbus, angle counter-clockwise from 3 o'clock) on the iris ring."""
+    import iris_ladder_metrics_frame as IF
+    hh, ww = strip.shape
+    yy, xx = np.mgrid[-1:1:n * 1j, -1:1:n * 1j]
+    r = np.hypot(xx, yy)
+    t = (r - rho) / (1 - rho)
+    row = np.rint((t - IF.T0) / (IF.T1 - IF.T0) * (hh - 1)).astype(int)
+    col = np.rint((np.arctan2(-yy, xx) % (2 * np.pi)) / (2 * np.pi) * ww).astype(int) % ww
+    inside = (row >= 0) & (row < hh)
+    out = np.full(r.shape, np.nan)
+    out[inside] = strip[row[inside], col[inside]]
+    return out
+
+
+MAP_COLS = [("anatomy", "Target"), ("other_photo", "Repeat (other photo)"), ("fellow_eye", "Mirror side (fellow eye)"),
+            ("stranger", "Stranger"), ("cohort", "Same sex and age"), ("V", "Dataset mean")]
+
+
+def maps_figure(d, private, version, out):
+    """Fundus-format error maps on the iris ring: each donor's local error in units of the dataset mean's."""
+    from matplotlib.colors import Normalize
+    names = [v for v in VIEWS if v[0] in d.get("maps", {})
+             and os.path.isfile(os.path.join(private, f"maps_{v[0]}_{version}.npz"))]
+    fig, axes = plt.subplots(len(names), len(MAP_COLS), figsize=(15, 3.1 * len(names) + 1.0), facecolor=BF.SURFACE,
+                             squeeze=False)
+    cmap = plt.get_cmap("Reds").copy()
+    cmap.set_bad("#2b2b2b")
+    grey = plt.get_cmap("gray").copy()
+    grey.set_bad(BF.SURFACE)
+    for row, (vk, vlab, *_r) in enumerate(names):
+        z = np.load(os.path.join(private, f"maps_{vk}_{version}.npz"))
+        res = d["maps"][vk]
+        rho = res.get("pupil_to_iris_ratio_median", 0.45)
+        anat = to_ring(z["all_anatomy"], rho)
+        for col, (key, title) in enumerate(MAP_COLS):
+            ax = axes[row, col]
+            ax.set_axis_off()
+            if row == 0:
+                ax.set_title(title, fontsize=9, color=BF.INK)
+            if key == "anatomy":
+                ax.imshow(anat, cmap=grey, vmin=-1.5, vmax=1.5)
+                ax.text(0.5, -0.06, "mean iris strip\n(anatomy, z units)", transform=ax.transAxes, ha="center",
+                        va="top", fontsize=7, color=BF.INK)
+                ax.text(-0.08, 0.5, vlab.split(" (")[0], transform=ax.transAxes, rotation=90, ha="right",
+                        va="center", fontsize=9, color=BF.INK)
+                continue
+            if key == "cohort":
+                ax.text(0.5, 0.5, "not available\n(no sex or age\nin the dataset)", transform=ax.transAxes,
+                        ha="center", va="center", fontsize=7.5, color=BF.MUTED)
+                continue
+            m = to_ring(z[f"all_{key}"], rho)
+            vmax = 2.4 if key != "V" else float(np.nanpercentile(z["all_V"], 98))
+            ax.imshow(m, cmap=cmap, norm=Normalize(0, vmax))
+            if key == "V":
+                sub = "MSE = 1 x mean\n(shown: V, z units, 0 to %.1f)" % vmax
+            else:
+                e = res.get(key, {})
+                r = e.get("split_half_r")
+                sub = f"median {e.get('median_ratio', float('nan')):.2f} x mean\n" + (
+                    "~ 2 by construction" if key == "stranger" else f"split-half r {r:.2f}" if r is not None else
+                    "split-half r n/a")
+            ax.text(0.5, -0.06, sub, transform=ax.transAxes, ha="center", va="top", fontsize=7, color=BF.INK)
+    sm = plt.cm.ScalarMappable(norm=Normalize(0, 2.4), cmap=cmap)
+    cax = fig.add_axes([0.35, 0.075, 0.3, 0.012])
+    cb = fig.colorbar(sm, cax=cax, orientation="horizontal", ticks=[0, 1, 2])
+    cb.ax.tick_params(labelsize=7)
+    fig.suptitle("Iris, every location: error of each donor in units of the dataset mean", fontsize=11, color=BF.INK)
+    fig.text(0.5, 0.012, "One red scale 0 to 2.4 (dataset mean column: own scale): darker = larger error; 1 = dataset "
+             "mean, 2 = stranger. Pupil in the centre, limbus outside; dark grey = outside the region valid in 90% of "
+             "eyes (eyelids).\nMasked Gaussian window sd 16/sqrt(12) px on the 64 x 256 strip, wrapped in angle; "
+             "each donor's error is divided by the dataset mean's on the same pixels. " + d.get("status", ""),
+             ha="center", fontsize=6.2, color=BF.MUTED, wrap=True)
+    fig.subplots_adjust(left=0.04, right=0.99, top=0.9, bottom=0.17, wspace=0.08, hspace=0.45)
+    save(fig, out)
+
+
 def save(fig, out):
     for ext in ("png", "pdf"):
         fig.savefig(os.path.join(ROOT, f"{out}.{ext}"), dpi=200, facecolor=BF.SURFACE)
@@ -174,12 +307,20 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", default="results/iris_ladder_metrics.json")
     ap.add_argument("--prefix", default="results/figures/fig_iris_metrics")
+    ap.add_argument("--preprocessing", required=True, help="frame version of the private map arrays (no default)")
     a = ap.parse_args()
     d = json.load(open(a.json if os.path.isabs(a.json) else os.path.join(ROOT, a.json), encoding="utf-8"))
     blocks_figure(d, a.prefix + "_blocks", full=False)
     blocks_figure(d, a.prefix + "_blocks_full", full=True)
     ratio_figure(d, a.prefix + "_ratio")
     print("written", a.prefix + "_{blocks,blocks_full,ratio}.{png,pdf}")
+    if "donor_curve" in d:
+        distance_figure(d, "results/figures/fig_iris_donor_ladder")
+        print("written results/figures/fig_iris_donor_ladder.{png,pdf}")
+    if "maps" in d:
+        import iris_ladder_metrics_frame as IF
+        maps_figure(d, IF.PRIVATE, a.preprocessing, "results/figures/fig_iris_maps_common")
+        print("written results/figures/fig_iris_maps_common.{png,pdf}")
 
 
 if __name__ == "__main__":
