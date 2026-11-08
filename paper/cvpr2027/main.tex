@@ -1,0 +1,54 @@
+% CVPR 2027 paper, built on the official author kit (cvpr-org/author-kit, release CVPR2027-v1, commit a236934).
+% Follow-up to the ISBI 2027 submission (paper/isbi2027/, do not edit).
+% Writing rules: one sentence per line, English, no em dashes, subject first, one claim per sentence,
+% define every term before its first use, every number cites its results file.
+
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+%%%%%%%%% PAPER TYPE  - PLEASE UPDATE FOR FINAL VERSION
+% \usepackage{cvpr}              % To produce the CAMERA-READY version
+\usepackage[review]{cvpr}      % To produce the REVIEW version
+% \usepackage[pagenumbers]{cvpr} % To force page numbers, e.g. for an arXiv version
+
+% Import additional packages in the preamble file, before hyperref
+\input{preamble}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{amsmath}
+
+% Status markers for every reported number (see sec/3_methods.tex, "Result status").
+\newcommand{\statusfinal}{\textsuperscript{F}}
+\newcommand{\statuspre}{\textsuperscript{P}}
+\newcommand{\notrun}{\textit{not run}}
+% Points to the results file a table was read from.
+\newcommand{\src}[1]{\texttt{\detokenize{#1}}}
+
+\definecolor{cvprblue}{rgb}{0.21,0.49,0.74}
+\usepackage[pagebackref,breaklinks,colorlinks,allcolors=cvprblue]{hyperref}
+
+\def\confName{CVPR}
+\def\confYear{2027}
+
+%%%%%%%%% TITLE - PLEASE UPDATE
+\title{Which evaluations miss the loss of individual detail? \\ A donor-ladder audit of averaged fills}
+
+%%%%%%%%% AUTHORS - anonymous in review mode
+\author{Anonymous \confName~submission}
+
+\begin{document}
+\maketitle
+\input{sec/0_abstract}
+\input{sec/1_intro}
+\input{sec/3_methods}
+\input{sec/4_results}
+\input{sec/5_synthesis}
+{
+    \small
+    \bibliographystyle{ieeenat_fullname}
+    \bibliography{main}
+}
+
+% WARNING: do not forget to delete the supplementary pages from your submission
+% \input{sec/X_suppl}
+
+\end{document}
