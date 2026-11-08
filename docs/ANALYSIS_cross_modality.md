@@ -59,9 +59,16 @@ metrics. Metrics: rho for each dataset, mean over datasets. ArcFace left out (5 
   LPIPS AlexNet and VGG, Betti matching matched / unmatched, persistence, iris code distance (R_self per rung) and
   set-level FID and FWD (per-rung set value), from fundus Amendment 9.15 and iris Amendment P3. LPIPS AlexNet also puts
   the repeat shrunk to the mean first (T2 fails); FID and FWD put the dataset mean last and agree with pixel metrics
-  near rho 0. Limitation: brain (Amendment 20 run restarted after the 8 Nov reboot; Betti 3D needs a C++ build) and
-  faces (F2 run restarted) are "not run" rows; fundus set-level bootstrap intervals do not always contain the point
-  value (small-sample FID bias), so set-level ranks are descriptive only.
+  near rho 0. Fundus set-level bootstrap intervals do not always contain the point value (small-sample FID bias), so
+  set-level ranks are descriptive only.
+- 9 Nov update: faces F2 (`face_ladder_metrics.json` `panel_f2`, commit 85d5a02; LPIPS AlexNet only, Betti matching,
+  persistence, FID, FWD) and brain Amendment 20 (`donor_ladder_brain_metrics_t23.json`, deep box, both sides; LPIPS
+  AlexNet on central slices, persistence W1; pre-QC) added. Face "retest" = repeat, face rung "self" (R = 0 anchor)
+  dropped; brain R is repeat-anchored (an affine map of the per-rung mean, so the rank order is unchanged); relative =
+  sibling and co-twin pooled, weighted by targets. Still not run: brain Betti 3D (C++ build) and brain FID / FWD (own
+  amendment), LPIPS VGG on faces and brain. Descriptive: faces under LPIPS put the mirror first and the repeat 4th,
+  the shrunk repeat 5th (T2 holds); under Betti and persistence the shrunk repeat beats the repeat on faces and brain
+  persistence (T2 fails); face FID and FWD put the repeat first and the dataset mean near last.
 
 ## 5. Window size follows the object (Kate, 8 Nov 2026: "да переделай честно")
 One pixel window covers a different share of each object (brain about 1/10 of its length, faces 0.4 inter-ocular

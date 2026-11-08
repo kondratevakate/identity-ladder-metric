@@ -1,9 +1,15 @@
 {
- "method": "Generative, perceptual and topology block for the cross-modality tiles (aggregates only).\n\nSources, read only: fundus `results/fundus_ladder_metrics_a915.json` (Amendment 9.15, identity-ladder-bilateral),\niris `results/iris_ladder_metrics.json` key `amendment_p3`. Brain (Amendment 20, LPIPS 2.5D) and faces (F2) are listed\nas \"not run\" until their summary JSONs carry these metrics; that is a stated limitation, not a zero.\nPer-target metrics (LPIPS AlexNet, LPIPS VGG, Betti matching matched / unmatched, intensity persistence, iris-code\nHamming distance) use R_self per rung (target 0, mean of 16 strangers 1, lower = closer). Set-level metrics (FID,\nFWD) use the per-rung set value (lower = closer). The tile rank is the rung's place among the rungs present.\nWrites `ranks_generative.json`, `generative_status.json` and `generative_tiles.png`.\n\nUsage: python -I src/cross_modality/generative_block.py results/cross_modality <bilateral_worktree>",
+ "method": "Generative, perceptual and topology block for the cross-modality tiles (aggregates only).\n\nSources, read only: fundus `results/fundus_ladder_metrics_a915.json` (Amendment 9.15, identity-ladder-bilateral),\niris `results/iris_ladder_metrics.json` key `amendment_p3`, faces `results/face_ladder_metrics.json` key `panel_f2`\n(LPIPS is AlexNet there), brain `results/donor_ladder_brain_metrics_t23.json` view `deep/LR` (Amendment 20, LPIPS\nAlexNet on central orthogonal slices, persistence W1 over H0-H2; pre-QC). Brain R is anchored on the repeat scan\n(repeat 0, strangers 1); it is an affine map of the per-rung mean distance, so the rank order is the same as on the\nself scale. Relative = sibling and co-twin pooled, weighted by targets. Metrics a summary does not carry (brain Betti\n3D, FID, FWD) are \"not run\" with the reason from that JSON; never a zero.\nPer-target metrics (LPIPS AlexNet, LPIPS VGG, Betti matching matched / unmatched, intensity persistence, iris-code\nHamming distance) use R_self per rung (target 0, mean of 16 strangers 1, lower = closer). Set-level metrics (FID,\nFWD) use the per-rung set value (lower = closer). The tile rank is the rung's place among the rungs present.\nWrites `ranks_generative.json`, `generative_status.json` and `generative_tiles.png`.\n\nUsage: python -I src/cross_modality/generative_block.py results/cross_modality <bilateral_worktree>",
  "not_run": {
-  "QTIM": "brain: Amendment 20 run restarted after the 8 Nov reboot; Betti 3D needs a C++ build",
-  "CelebA": "faces: F2 panel run restarted after the 8 Nov reboot; summary not yet in the JSON",
-  "IMDb-WIKI": "faces: F2 panel run restarted after the 8 Nov reboot; summary not yet in the JSON"
+  "QTIM": "brain: betti_matching_3d: needs a C++ build of Betti-Matching-3D (no compiler here; Linux VM); fid_fwd_topology_distance: set-level, own amendment"
+ },
+ "not_run_metrics": {
+  "QTIM": [
+   "betti_matched",
+   "betti_unmatched",
+   "fid",
+   "fwd"
+  ]
  },
  "present": {
   "GRAPE": [
@@ -50,6 +56,26 @@
    "iriscode_hd",
    "fid",
    "fwd"
+  ],
+  "CelebA": [
+   "lpips_alex",
+   "betti_matched",
+   "betti_unmatched",
+   "persistence",
+   "fid",
+   "fwd"
+  ],
+  "IMDb-WIKI": [
+   "lpips_alex",
+   "betti_matched",
+   "betti_unmatched",
+   "persistence",
+   "fid",
+   "fwd"
+  ],
+  "QTIM": [
+   "lpips_alex",
+   "persistence"
   ]
  }
 }

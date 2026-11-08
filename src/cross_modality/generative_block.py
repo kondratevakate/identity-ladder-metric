@@ -1,8 +1,12 @@
 """Generative, perceptual and topology block for the cross-modality tiles (aggregates only).
 
 Sources, read only: fundus `results/fundus_ladder_metrics_a915.json` (Amendment 9.15, identity-ladder-bilateral),
-iris `results/iris_ladder_metrics.json` key `amendment_p3`. Brain (Amendment 20, LPIPS 2.5D) and faces (F2) are listed
-as "not run" until their summary JSONs carry these metrics; that is a stated limitation, not a zero.
+iris `results/iris_ladder_metrics.json` key `amendment_p3`, faces `results/face_ladder_metrics.json` key `panel_f2`
+(LPIPS is AlexNet there), brain `results/donor_ladder_brain_metrics_t23.json` view `deep/LR` (Amendment 20, LPIPS
+AlexNet on central orthogonal slices, persistence W1 over H0-H2; pre-QC). Brain R is anchored on the repeat scan
+(repeat 0, strangers 1); it is an affine map of the per-rung mean distance, so the rank order is the same as on the
+self scale. Relative = sibling and co-twin pooled, weighted by targets. Metrics a summary does not carry (brain Betti
+3D, FID, FWD) are "not run" with the reason from that JSON; never a zero.
 Per-target metrics (LPIPS AlexNet, LPIPS VGG, Betti matching matched / unmatched, intensity persistence, iris-code
 Hamming distance) use R_self per rung (target 0, mean of 16 strangers 1, lower = closer). Set-level metrics (FID,
 FWD) use the per-rung set value (lower = closer). The tile rank is the rung's place among the rungs present.
@@ -32,13 +36,12 @@ MET = [("lpips_alex", "LPIPS (AlexNet)", "per target"), ("lpips_vgg", "LPIPS (VG
        ("betti_matched", "Betti matching, matched", "per target"), ("betti_unmatched", "Betti matching, unmatched", "per target"),
        ("persistence", "intensity persistence", "per target"), ("iriscode_hd", "iris code Hamming distance", "per target"),
        ("fid", "FID (set level)", "set"), ("fwd", "FWD (set level)", "set")]
-NOT_RUN = {"QTIM": "brain: Amendment 20 run restarted after the 8 Nov reboot; Betti 3D needs a C++ build",
-           "CelebA": "faces: F2 panel run restarted after the 8 Nov reboot; summary not yet in the JSON",
-           "IMDb-WIKI": "faces: F2 panel run restarted after the 8 Nov reboot; summary not yet in the JSON"}
+NOT_RUN = {}
+NOT_RUN_METRICS = {"QTIM": ("betti_matched", "betti_unmatched", "fid", "fwd")}
 
 
 def ren(f, has_repeat):
-    f = {"fellow": "other_side", "sexage": "cohort_mean"}.get(f, f)
+    f = {"fellow": "other_side", "mirror": "other_side", "sexage": "cohort_mean"}.get(f, f)
     if f == ("shrink_repeat" if has_repeat else "shrink_fellow"):
         return "shrink_ref"
     return f
@@ -69,7 +72,38 @@ for d in ("UTIRIS_NIR", "UTIRIS_VIS", "UPOL"):
     s = iris[d]
     src[d.replace("_", " ")] = (s["R_self"], s["set_level"])
 
-ranks, status = {}, {"method": __doc__.strip(), "not_run": NOT_RUN, "present": {}}
+
+
+def pool_relative(blk):
+    """Sibling and co-twin into one 'relative' entry, mean R weighted by targets (aggregates only)."""
+    out = {k: v for k, v in blk.items() if k not in ("sibling", "cotwin")}
+    parts = [blk[k] for k in ("sibling", "cotwin") if isinstance(blk.get(k), dict) and blk[k].get("R") is not None]
+    if parts:
+        n = sum(p["n_targets"] for p in parts)
+        out["relative"] = {"R": sum(p["R"] * p["n_targets"] for p in parts) / n, "n_targets": n}
+    return out
+
+
+def from_ladder(L, names):
+    """Faces call the repeat image 'retest' and keep the target itself as rung 'self' (R = 0); both renamed / dropped."""
+    fix = lambda blk: {("repeat" if k == "retest" else k): v for k, v in blk.items() if k != "self"}
+    return {new: pool_relative(fix(L[old])) for old, new in names.items() if old in L}
+
+
+face = json.load(open(os.path.join(HERE, "results", "face_ladder_metrics.json")))["panel_f2"]
+for key, d in (("celeba", "CelebA"), ("imdb", "IMDb-WIKI")):
+    R = from_ladder(face["views"][key]["ladder_R"], {"lpips": "lpips_alex", "betti_matched": "betti_matched",
+                                                    "betti_unmatched": "betti_unmatched", "persistence": "persistence"})
+    sl = {r: e for r, e in face["set_level"][key].items() if not r.startswith("_") and r != "target"}
+    S = {m: pool_relative({r: {"value": e[m], "R": e[m], "n_targets": e.get("n_cells", 1)} for r, e in sl.items()
+                           if e.get(m) is not None}) for m in ("fid", "fwd")}
+    S = {m: {r: {"value": e["R"]} for r, e in b.items()} for m, b in S.items()}
+    src[d] = (R, S)
+brain = json.load(open(os.path.join(HERE, "results", "donor_ladder_brain_metrics_t23.json")))
+src["QTIM"] = (from_ladder(brain["views"]["deep/LR"]["ladder_R"], {"lpips": "lpips_alex", "persistence_w1": "persistence"}), {})
+NOT_RUN["QTIM"] = "brain: " + "; ".join(f"{k}: {v}" for k, v in brain["not_run"].items() if k in ("betti_matching_3d", "fid_fwd_topology_distance"))
+
+ranks, status = {}, {"method": __doc__.strip(), "not_run": NOT_RUN, "not_run_metrics": NOT_RUN_METRICS, "present": {}}
 for d, (R, S) in src.items():
     status["present"][d] = []
     for m, _, _ in MET:
@@ -93,7 +127,7 @@ for m, name, kind in MET:
     if not any(r for _, r in blk):
         continue
     rows.append(("m", f"{name}  ({'lower = closer' if kind == 'per target' else 'set level, lower = closer'})"))
-    rows += [("r", (d, r)) for d, r in blk]
+    rows += [("r", (d, r, m)) for d, r in blk]
     rows.append(("g", None))
 H = sum(1 if k != "g" else 0.4 for k, _ in rows) + 7
 fig, ax = plt.subplots(figsize=(11.5, 0.24 * H + 0.6))
@@ -109,12 +143,13 @@ for k, b in rows:
         ax.text(-0.2, y + 0.5, b, fontsize=8, fontweight="bold", ha="right", va="center")
         y += 1
         continue
-    d, rank = b
+    d, rank, m = b
     ax.text(-0.2, y + 0.46, d, fontsize=7.5, ha="right", va="center", color="#1f6f3a" if d in ("CelebA", "IMDb-WIKI") else "#8a6400")
     if not rank:
         ax.add_patch(Rectangle((0, y), len(COLS) - 0.05, 0.92, facecolor="#f4f4f4", edgecolor="#dddddd", linewidth=0.5))
-        why = NOT_RUN.get(d, "metric not defined or not computed for this dataset")
-        ax.text(0.15, y + 0.46, "not run: " + why if d in NOT_RUN else why, fontsize=6.3, va="center", color="#888888")
+        why = NOT_RUN.get(d) if m in NOT_RUN_METRICS.get(d, ()) else None
+        ax.text(0.15, y + 0.46, "not run: " + why if why else "metric not defined or not computed for this dataset",
+                fontsize=6.3, va="center", color="#888888")
         y += 1
         continue
     n = len(rank)
@@ -127,11 +162,12 @@ for k, b in rows:
         ax.text(j + 0.475, y + 0.46, str(rank[r]), fontsize=7, ha="center", va="center",
                 color="white" if (t < 0.25 or t > 0.8) else "#222")
     y += 1
-ax.text(0, y + 1.2, "Same columns and colours as the main rank tiles (1 = what the metric calls closest). Per-target metrics are "
-        "ranked by R_self, set-level FID and FWD\nby their per-rung set value. Fundus Amendment 9.15 and iris Amendment P3; brain "
-        "and faces not run tonight (grey rows, reason given). All pre-QC except faces.", fontsize=7, color="#333", va="center")
+ax.text(-7.0, y + 1.8, "Same columns and colours as the main rank tiles (1 = what the metric calls closest). Per-target metrics are "
+        "ranked by R_self,\nset-level FID and FWD by their per-rung set value. Fundus 9.15, iris P3, faces F2 (LPIPS AlexNet only), "
+        "brain Amendment 20\n(deep box, both sides; repeat-anchored R). Grey rows: not computed, reason given. All pre-QC except faces.",
+        fontsize=7, color="#333", va="center")
 ax.set_xlim(-7.2, len(COLS) + 0.2)
-ax.set_ylim(y + 2.2, -5.2)
+ax.set_ylim(y + 3.2, -5.2)
 ax.axis("off")
 plt.tight_layout()
 plt.savefig(os.path.join(OUT, "generative_tiles.png"), dpi=170, facecolor="white")

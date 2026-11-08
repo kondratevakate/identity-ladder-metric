@@ -45,7 +45,16 @@ def test_generative_ranks_are_permutations_and_not_run_is_absent():
     status = load("generative_status.json")
     for key, rank in ranks.items():
         assert sorted(rank.values()) == list(range(1, len(rank) + 1)), key
-        assert key.split("|")[1] not in status["not_run"], key
+        metric, dataset = key.split("|")
+        assert metric not in status["not_run_metrics"].get(dataset, ()), key
+        assert "self" not in rank and "retest" not in rank, key   # the target itself is the 0 anchor, not a rung
+
+
+def test_generative_brain_and_faces_present():
+    status = load("generative_status.json")
+    for d in ("QTIM", "CelebA", "IMDb-WIKI"):
+        assert "lpips_alex" in status["present"][d], d
+    assert "fid" not in status["present"]["QTIM"]   # brain set level is its own amendment: not run, never a value
 
 
 def test_tile_ranks_are_permutations():
