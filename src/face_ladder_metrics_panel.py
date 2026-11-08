@@ -492,6 +492,15 @@ def score_position(args):
     return rows, {(src, pk, n, ti): p for (n, ti), p in patches.items()}, worst
 
 
+CHUNK = 50                                             # targets per saved job: a crash loses one chunk only
+
+
+def target_chunks(sel, size):
+    """Consecutive chunks of at most `size` targets covering `sel` once, in order."""
+    sel = [int(t) for t in sel]
+    return [sel[k:k + size] for k in range(0, len(sel), size)]
+
+
 def run_rows(version, limit, workers):
     state = {"cache": os.path.join(V1, f"cache{version}"), "fundus": need_env("FUNDUS_METRICS_SRC"),
              "betti": need_env("BETTI_SRC"), "torch_home": need_env("TORCH_HOME"),
@@ -506,6 +515,7 @@ def run_rows(version, limit, workers):
     meta = {"version": version, "sources": {}, "sha256": {"fundus_metrics_source": sha(state["fundus"]),
                                                           "betti_matching": sha(os.path.join(state["betti"], "BettiMatching.py")),
                                                           "face_ladder_metrics": sha(FM.__file__)}}
+    names = []
     for src, d in desc.items():
         valid = np.load(os.path.join(state["cache"], f"{src}_valid.npy"))
         pos = FM.positions(valid)
@@ -522,8 +532,11 @@ def run_rows(version, limit, workers):
         for pk, yx in enumerate(pos):
             vp = vs[vs.patch == pk]
             vm = {(int(a), b): float(c) for a, b, c in zip(vp.target, vp.fill, vp.mse)}
-            jobs.append((src, pk, tuple(yx), [(int(ti), T[ti]) for ti in sel], lam[src], tuple(d["pool"]), n_sub,
-                         d["shift_px"], bsel, cells, vm, 512))
+            for c, ch in enumerate(target_chunks(sel, CHUNK)):
+                vmc = {k: v for k, v in vm.items() if k[0] in set(ch)}
+                jobs.append((src, pk, tuple(yx), [(int(ti), T[ti]) for ti in ch], lam[src], tuple(d["pool"]), n_sub,
+                             d["shift_px"], bsel, cells, vmc, 512))
+                names.append(f"{src}_p{pk:02d}_c{c:02d}")
         meta["sources"][src] = {"n_targets_scored": int(len(sel)), "n_betti_targets": len(bsel & set(sel.tolist())),
                                 "n_set_cells": len(cells), "n_positions": len(pos)}
     print(json.dumps(meta["sources"]), flush=True)
@@ -531,7 +544,8 @@ def run_rows(version, limit, workers):
     # resumable: every (source, position) job is saved on its own, so a crash loses one position only
     parts = os.path.join(PRIVATE, f"parts{tag}")
     os.makedirs(parts, exist_ok=True)
-    part = lambda k: os.path.join(parts, f"job{k:03d}.pkl")  # noqa: E731
+    # pickles written by this function into the private folder only (never untrusted input)
+    part = lambda k: os.path.join(parts, f"{names[k]}.pkl")  # noqa: E731
     todo = [k for k in range(len(jobs)) if not os.path.exists(part(k))]
     print(f"jobs done {len(jobs) - len(todo)}/{len(jobs)}, to run {len(todo)}", flush=True)
     with ProcessPoolExecutor(workers, initializer=_init, initargs=(state,)) as ex:
@@ -541,7 +555,7 @@ def run_rows(version, limit, workers):
             os.replace(part(k) + ".tmp", part(k))
             el = time.time() - t0
             eta = el / (n + 1) * (len(todo) - n - 1)
-            print(f"job {n + 1}/{len(todo)} ({jobs[k][0]} position {jobs[k][1]}): rows {len(res[0])} repro {res[2]:.2e}, "
+            print(f"job {n + 1}/{len(todo)} ({names[k]}): rows {len(res[0])} repro {res[2]:.2e}, "
                   f"{el / 60:.0f} min, ETA {eta / 60:.0f} min ({time.strftime('%H:%M', time.localtime(time.time() + eta))})",
                   flush=True)
     rows, patches, worst = [], {}, 0.0

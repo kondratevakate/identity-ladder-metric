@@ -103,3 +103,11 @@ def test_betti_parts_identical_zero_sum_equals_loss_and_ignores_outside_e():
 def test_self_values_cover_new_metrics():
     assert P.SELF_ZERO | set(P.SELF_PER_ROW) == P.LOWER | {"id_plda"}
     assert set(P.NEW_ROW) - P.LOWER == {"ms_ssim", "id_plda"}
+
+
+def test_target_chunks_cover_each_target_once_in_order():
+    sel = list(range(0, 921))
+    ch = P.target_chunks(sel, P.CHUNK)
+    assert all(0 < len(c) <= P.CHUNK for c in ch)
+    assert [t for c in ch for t in c] == sel
+    assert P.target_chunks([3, 7], 50) == [[3, 7]] and P.target_chunks([], 50) == []
