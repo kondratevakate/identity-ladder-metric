@@ -1,7 +1,7 @@
 # Handoff: face metric panel (Amendments F2, F3), 8 Nov 2026, after the forced reboot
 
-Protocol: `docs/PROTOCOL_face_metrics.md` (F2 and F3 written before any of their results). Code and tests are in git
-(they landed in commit ab10b46, made by the iris session from the shared index; content is identical).
+Protocol: `docs/PROTOCOL_face_metrics.md` (F2 and F3 written before any of their results). Code, tests, the tier-1 JSON
+and figures are in git, commit f2ed748.
 Private data: `C:\Projects\data\projects\identity-ladder-metric\`.
 
 ## Done
