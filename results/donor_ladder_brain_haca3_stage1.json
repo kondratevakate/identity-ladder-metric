@@ -1,0 +1,237 @@
+{
+ "status": "pre-QC sensitivity (Amendment 17, stage 1); Kate's visual verdict pending",
+ "target": {
+  "theta": [
+   -33.49359130859375,
+   106.63736724853516
+  ],
+  "eta": [
+   -0.8371410369873047,
+   0.43874382972717285
+  ],
+  "norm": 40.578415870666504,
+  "n_scans": 221,
+  "iqr": {
+   "theta": [
+    3.675434112548828,
+    6.67913818359375
+   ],
+   "eta": [
+    0.2057531476020813,
+    0.11987584829330444
+   ],
+   "norm": 16.685346603393555
+  }
+ },
+ "n_pairs": 23,
+ "n_done": 23,
+ "session_shift_z": {
+  "deep_before": {
+   "mean": -0.008986541576197615,
+   "mean_abs": 0.12095938815289865,
+   "n": 23
+  },
+  "deep_after": {
+   "mean": 0.0014700567268806956,
+   "mean_abs": 0.016367893868490406,
+   "n": 23
+  },
+  "parietal_before": {
+   "mean": -0.028785334920267695,
+   "mean_abs": 0.059131148777416216,
+   "n": 23
+  },
+  "parietal_after": {
+   "mean": -0.005099635530749093,
+   "mean_abs": 0.03316626134935929,
+   "n": 23
+  }
+ },
+ "pairs": [
+  {
+   "pair": 0,
+   "status": "ok",
+   "deep_before": -0.46851542592048645,
+   "deep_after": -0.03870128095149994,
+   "parietal_before": -0.11732513457536697,
+   "parietal_after": -0.02041878178715706
+  },
+  {
+   "pair": 1,
+   "status": "ok",
+   "deep_before": 0.014247268438339233,
+   "deep_after": -0.005315084476023912,
+   "parietal_before": 0.05119295418262482,
+   "parietal_after": -0.017953621223568916
+  },
+  {
+   "pair": 2,
+   "status": "ok",
+   "deep_before": -0.1276131123304367,
+   "deep_after": -0.0009645565296523273,
+   "parietal_before": -0.10479389131069183,
+   "parietal_after": -0.05892348662018776
+  },
+  {
+   "pair": 3,
+   "status": "ok",
+   "deep_before": -0.011849738657474518,
+   "deep_after": -0.024813324213027954,
+   "parietal_before": -0.16339315474033356,
+   "parietal_after": -0.05138451233506203
+  },
+  {
+   "pair": 4,
+   "status": "ok",
+   "deep_before": 0.03916652873158455,
+   "deep_after": 0.0028567276895046234,
+   "parietal_before": 0.0451483391225338,
+   "parietal_after": 0.026836000382900238
+  },
+  {
+   "pair": 5,
+   "status": "ok",
+   "deep_before": 0.013172276318073273,
+   "deep_after": 0.01924717240035534,
+   "parietal_before": 0.02711232379078865,
+   "parietal_after": -0.028114480897784233
+  },
+  {
+   "pair": 6,
+   "status": "ok",
+   "deep_before": -0.3913622200489044,
+   "deep_after": -0.04010939225554466,
+   "parietal_before": -0.032109878957271576,
+   "parietal_after": 0.09970735758543015
+  },
+  {
+   "pair": 7,
+   "status": "ok",
+   "deep_before": -0.0796796903014183,
+   "deep_after": -0.015087555162608624,
+   "parietal_before": -0.009214666672050953,
+   "parietal_after": -0.009583243168890476
+  },
+  {
+   "pair": 8,
+   "status": "ok",
+   "deep_before": 0.0482909269630909,
+   "deep_after": 0.010732690803706646,
+   "parietal_before": 0.015811365097761154,
+   "parietal_after": 0.002074531279504299
+  },
+  {
+   "pair": 9,
+   "status": "ok",
+   "deep_before": -0.06132956221699715,
+   "deep_after": -0.00630388455465436,
+   "parietal_before": 0.05647928640246391,
+   "parietal_after": 0.006485357414931059
+  },
+  {
+   "pair": 10,
+   "status": "ok",
+   "deep_before": 0.5231918692588806,
+   "deep_after": 0.0851384699344635,
+   "parietal_before": -0.08161453157663345,
+   "parietal_after": -0.05788861960172653
+  },
+  {
+   "pair": 11,
+   "status": "ok",
+   "deep_before": -0.13880008459091187,
+   "deep_after": 0.01786200888454914,
+   "parietal_before": 0.006871412042528391,
+   "parietal_after": 0.06197703257203102
+  },
+  {
+   "pair": 12,
+   "status": "ok",
+   "deep_before": -0.007565928157418966,
+   "deep_after": -0.008231304585933685,
+   "parietal_before": -0.07874228060245514,
+   "parietal_after": -0.020108893513679504
+  },
+  {
+   "pair": 13,
+   "status": "ok",
+   "deep_before": 0.01393488422036171,
+   "deep_after": 0.00759202241897583,
+   "parietal_before": -0.09106456488370895,
+   "parietal_after": -0.05009759962558746
+  },
+  {
+   "pair": 14,
+   "status": "ok",
+   "deep_before": 0.026272205635905266,
+   "deep_after": 0.000701815530192107,
+   "parietal_before": -0.11715810000896454,
+   "parietal_after": -0.043019335716962814
+  },
+  {
+   "pair": 15,
+   "status": "ok",
+   "deep_before": -0.08366167545318604,
+   "deep_after": -0.00434091268107295,
+   "parietal_before": -0.010310987941920757,
+   "parietal_after": -0.012446698732674122
+  },
+  {
+   "pair": 16,
+   "status": "ok",
+   "deep_before": -0.04364888742566109,
+   "deep_after": 0.0004932273295708001,
+   "parietal_before": 0.04687362536787987,
+   "parietal_after": 0.04037925601005554
+  },
+  {
+   "pair": 17,
+   "status": "ok",
+   "deep_before": 0.3803492486476898,
+   "deep_after": 0.03227109834551811,
+   "parietal_before": 0.08448215574026108,
+   "parietal_after": -0.034687239676713943
+  },
+  {
+   "pair": 18,
+   "status": "ok",
+   "deep_before": -0.08035186678171158,
+   "deep_after": -0.011112771928310394,
+   "parietal_before": -0.03226086124777794,
+   "parietal_after": 0.05569816008210182
+  },
+  {
+   "pair": 19,
+   "status": "ok",
+   "deep_before": 0.0284483190625906,
+   "deep_after": -0.0009736449574120343,
+   "parietal_before": -0.07633603364229202,
+   "parietal_after": -0.02527490071952343
+  },
+  {
+   "pair": 20,
+   "status": "ok",
+   "deep_before": 0.09826948493719101,
+   "deep_after": -0.015371414832770824,
+   "parietal_before": -0.03352174535393715,
+   "parietal_after": -0.010156400501728058
+  },
+  {
+   "pair": 21,
+   "status": "ok",
+   "deep_before": 0.07784245163202286,
+   "deep_after": 0.01823444850742817,
+   "parietal_before": -0.06319373100996017,
+   "parietal_after": 0.006376801524311304
+  },
+  {
+   "pair": 22,
+   "status": "ok",
+   "deep_before": 0.02450227178633213,
+   "deep_after": 0.010006750002503395,
+   "parietal_before": 0.015005397610366344,
+   "parietal_after": 0.02323170006275177
+  }
+ ],
+ "definition": "mean over box voxels inside both brain masks of z(ses-02) - z(ses-01), z in each scan's own brain mask; before = N4 + affine, after = HACA3+ to the cohort-median contrast"
+}
