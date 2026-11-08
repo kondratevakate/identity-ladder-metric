@@ -1,4 +1,66 @@
-# Handoff: identity-ladder-metric (updated 2026-11-02)
+# Handoff: identity-ladder-metric (updated 2026-11-08)
+
+## Status 8 Nov 2026 (after the forced reboot; start here for the papers)
+
+Everything here is from the session reports of 7-8 Nov and the repository; numbers live in the result JSONs, not here.
+The registration gate below (2 Nov) still applies to brain claims: brain results are affine-only and pre-QC.
+
+Common to all modalities
+- One metric code (`src/donor_ladder_brain_metrics.py`), imported unchanged by the face, fundus and iris pipelines.
+- 26-metric confirmatory panel: group A fidelity and anomaly (11), group B structure, identity, latent (11), group C
+  set-level (4); plus supplementary (PSNR fixed, Pearson, TM-like, GDT-like, lDDT_rep, RMSE_rep), calibrations
+  (z, EVT, posterior, c) and reference tests T1-T3b.
+- Cross-modality analysis (exploratory, post hoc): `docs/ANALYSIS_cross_modality.md`, code `src/cross_modality/`,
+  aggregates `results/cross_modality/`. It has one R_self and one test rule for every dataset (validated against
+  each modality file), face calibrations, brain c, rank tiles, calibrated-c tiles and dataset/metric agreement.
+  Private explorer page: https://claude.ai/artifact/QgmFBjfjMJAKxjmDoQU1tj.
+- Kate, 7 Nov: compute every planned metric; weights and libraries approved. Shared copy in
+  `C:\Projects\data\projects\identity-ladder-metric\models-20261107\` (LPIPS, FID Inception, Betti matching 2D and
+  3D source, RETFound). CPU-only machine: latent metrics (pullback, Fisher-Rao, LDDMM) need a GPU.
+- Kate, 8 Nov: window size in object units, w = f x L, f in {1/16, 1/8, 1/4}, the same f for every modality; old
+  results kept, the sweep written as new versions.
+
+Per modality (current state as reported)
+- Brain (QTIM, owner session "Brain ladder: run all metrics"; committed 22ddf70 on cvpr2027-paper, 8 Nov):
+  - Done: tier-1 panel at 16 mm (`results/donor_ladder_brain_metrics.json`); 8 mm look-alike grid with Gaussian
+    weights (Amendment 18, maps redrawn).
+  - Tier 2/3 (Amendment 20): deep box complete (6/6 chunks, 221 targets, files intact after the reboot); parietal box
+    0/6. Restart (resumes at the first missing chunk; about 3 h with 2 free cores):
+    `python -u src/donor_ladder_brain_metrics_t23.py --workers 2`. No summary yet: it is written after both boxes.
+  - Window sweep (Amendment 21): L = 127.0 mm, so 16 mm = f 0.126 is the f = 1/8 reference; 8 mm (1/16) and
+    32 mm (1/4) still to run. Shell w/4, +-8 mm search, boxes not rescaled. 32 mm keeps 20 of 32 centres, 8 mm keeps
+    32. Code and tests are done (`src/donor_ladder_brain_metrics_size.py`); QC sheet drawn (private:
+    `donor-ladder-brain-metrics-size-20261108-v1\qc_window_sizes.png`, target/repeat/mirror/stranger/mean at 3 sizes;
+    looks right to me); no run yet. Next: Kate's verdict on the
+    sheet, then a 3-target smoke run at 32 mm, then
+    `python -u src/donor_ladder_brain_metrics_size.py --cube 8 --workers 2`, then `--cube 32`
+    (32 mm is heavy, many hours; keep at most 2 region files on disk, about 1.3 GB each), then `--cube 32 --stability`.
+  - FastSurfer (owner: GCP/FastSurfer session): 79 of 224 volumes intact; 145 left; the laptop batch is stopped,
+    and a GCP spot VM is being priced (Kate decides).
+  - Not done: Betti matching 3D (C++ build, Linux VM), Brain-ID identity, set-level FID/FWD/TD, latent (GPU); IXI
+    (Amendment 19) blocked on SynthStrip (Docker broken; ask Kate before pulling `freesurfer/synthstrip:1.8`, 389 MB).
+  - Kate's brain decisions: CPU order after iris and fundus; verdict on the Amendment 21 QC sheet; SynthStrip download.
+- Faces (CelebA, IMDb-WIKI; frame v6f, QC approved; owner session "Faces: compute the rest"): F2 panel full run
+  started in the background (16-18 h, 3 workers); F3 window sweep written. Identity via ArcFace (cosine; norm, PLDA
+  being prepared).
+- Fundus (GRAPE P8, PAPILA P9; pre-QC; worktree identity-ladder-bilateral; owner session "Fundus: compute the
+  rest"): 13 of 26 computed; Amendment 9.15 (LPIPS, Betti matching, FID, FWD) coded, smoke run done, QC sheets in
+  `fundus-ladder-metrics-20261108-v2`; RETFound downloaded, identity metrics need their own amendment.
+- Iris (UTIRIS NIR/VIS, UPOL; frame P2 accepted 7 Nov, lid-shadow sheets not yet re-shown; owner session "Iris
+  ladder"): 10 of 26 computed; extra metrics in progress (`src/iris_ladder_metrics_extra.py`); window amendment pending.
+
+Kate's open decisions
+1. Fundus: verdict on the new-metric QC sheets (`qc_extra_GRAPE_p8.png`, `qc_extra_PAPILA_p9.png`) and which LPIPS
+   variant is primary.
+2. Iris: re-look at the lid-shadow mask sheets (frame P2 status).
+3. GPU for the latent metrics and the Betti matching 3D build (GCP VM, cheapest region first), or leave them blocked.
+4. Visual QC of one window size per modality before each sweep.
+5. Paper scope: which results enter as confirmatory (per-modality protocols) and which as exploratory (cross-modality
+   analysis, post hoc).
+
+Uncommitted work: about 100 files in this worktree belong to the brain, face, iris, 2D-ladder and paper sessions;
+each owner commits its own paths (several brain files are already staged: commit with an explicit pathspec).
+`paper/cvpr2027/` is untracked.
 
 ## PRIORITY: registration and visual QC gate (Kate, 2026-11-02)
 - Stop further metric experiments. Registration and exact crop correspondence, including mirrored same-person comparisons, must be solved and visual QC must pass at least 90% of the predefined review set before other metrics resume. No such passing QC has been established here.
