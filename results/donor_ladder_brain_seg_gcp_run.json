@@ -1,0 +1,17 @@
+{
+ "n_total": 224,
+ "n_done": 79,
+ "n_failed": 0,
+ "n_left": 145,
+ "seconds_per_volume": {
+  "n": 79,
+  "median": 1500.0,
+  "p10": 969.4,
+  "p90": 2784.0
+ },
+ "targets": 17,
+ "device": "cpu (Kate's laptop, WSL Ubuntu-24.04), 2 runners x 4 threads",
+ "fastsurfer": "v2.5.3 native, torch 2.7.1+cpu, --seg_only --no_cereb --no_hypothal --no_biasfield",
+ "input": "clipped to [0, c_t], Amendment 15 'Input clip'",
+ "note": "seconds include volumes timed while other jobs shared the CPU and the last ones before the 8 Nov 2026 crash (disk full); not a clean D8 runtime"
+}
