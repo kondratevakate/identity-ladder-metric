@@ -112,9 +112,53 @@ def fundus_rows():
     return rows
 
 
+IRIS_VERSION = "P2"                        # iris frame accepted by Kate on 7 Nov 2026 (docs/PROTOCOL_iris_metrics.md)
+IRIS_JSON = os.environ.get("IRIS_JSON", os.path.normpath(os.path.join(ROOT, "..", "identity-ladder-cvpr2027", "results",
+                                                                     "iris_ladder_metrics.json")))
+IRIS_PRIVATE = os.path.join(PROJ, "iris-ladder-metrics-20261107-v1")
+IRIS_T0, IRIS_T1 = 0.05, 0.95              # radial share of the iris strip (pupil to limbus)
+
+
+def iris_ring(strip, rho, n=161):
+    """Iris strip (rows pupil -> limbus, columns angle counter-clockwise from 3 o'clock) drawn on the iris ring."""
+    hh, ww = strip.shape
+    yy, xx = np.mgrid[-1:1:n * 1j, -1:1:n * 1j]
+    t = (np.hypot(xx, yy) - rho) / (1 - rho)
+    row = np.rint((t - IRIS_T0) / (IRIS_T1 - IRIS_T0) * (hh - 1)).astype(int)
+    col = np.rint((np.arctan2(-yy, xx) % (2 * np.pi)) / (2 * np.pi) * ww).astype(int) % ww
+    inside = (row >= 0) & (row < hh)
+    out = np.full(t.shape, np.nan)
+    out[inside] = strip[row[inside], col[inside]]
+    return out
+
+
+def iris_rows():
+    """Iris (UTIRIS near-infrared, UPOL, UTIRIS visible light): maps of src/iris_ladder_metrics_ladder.py (cvpr2027
+    worktree) and the spec ratios of results/iris_ladder_metrics.json there. No sibling, no sex or age."""
+    d = json.load(open(IRIS_JSON, encoding="utf-8"))
+    rows = []
+    for name, label in (("UTIRIS_NIR", "UTIRIS near-infrared"), ("UPOL", "UPOL visible light"),
+                        ("UTIRIS_VIS", "UTIRIS visible light")):
+        z = np.load(os.path.join(IRIS_PRIVATE, f"maps_{name}_{IRIS_VERSION}.npz"))
+        rho = d["maps"][name].get("pupil_to_iris_ratio_median", 0.45)
+        src = {"repeat": "other_photo", "mirror": "fellow_eye", "stranger": "stranger", "lookalike": "lookalike16",
+               "V": "V"}
+        m = {k: iris_ring(z[f"all_{v}"], rho) for k, v in src.items() if f"all_{v}" in z.files}
+        valid = np.ones(m["V"].shape, bool)
+        for v in m.values():
+            valid &= np.isfinite(v)
+        r = d["results"][name]
+        spec = {"repeat": "repeat", "mirror": "fellow", "stranger": "stranger", "lookalike": "lookalike16"}
+        stats = {k: (r[s]["ratio"], r[s]["ci95"], r[s]["targets"]) for k, s in spec.items() if s in r}
+        rows.append({"group": "Iris", "name": f"{label}\n({IRIS_VERSION}, ring view)",
+                     "under": iris_ring(z["all_anatomy"], rho), "maps": m, "valid": valid, "stats": stats,
+                     "origin": "upper"})
+    return rows
+
+
 def main():
     plt.rcParams.update({"font.family": "serif", "font.size": 8})
-    rows = face_rows() + [brain_row()] + fundus_rows()
+    rows = face_rows() + [brain_row()] + fundus_rows() + iris_rows()
     nr, nc = len(rows), len(COLS)
     fig = plt.figure(figsize=(1.32 * nc + 1.3, 1.62 * nr + 1.5))
     gs = fig.add_gridspec(nr, nc, left=0.105, right=0.995, top=0.875, bottom=0.12, wspace=0.06, hspace=0.42)
@@ -178,8 +222,9 @@ def main():
                  "red: 2 = stranger)", fontsize=7.2, color=INK)
     fig.text(0.5, 0.012, "Pre-QC. Faces v6f, 16 px Gaussian window; brain QTIM session 1, affine to MNI, 16 mm box "
              "window (brain maps not yet switched to the Gaussian), look-alikes on an 8 mm grid; fundus frame only "
-             "(Amendment 9.13), 16 px Gaussian window. Persons left out of their own pools. Mirror side: the other "
-             "face half, hemisphere or eye.", ha="center", fontsize=6.0, color=MUTED, wrap=True)
+             "(Amendment 9.13), 16 px Gaussian window; iris P2 rubber-sheet strip drawn on the ring, 16 px Gaussian "
+             "window wrapped in angle, look-alikes per 8 px block, upper lid region not shown (valid in < 90% of "
+             "eyes). Persons left out of their own pools. Mirror side: the other face half, hemisphere or eye.", ha="center", fontsize=6.0, color=MUTED, wrap=True)
     fig.suptitle("Every location, every modality: pixel error of each donor in units of the dataset mean",
                  fontsize=11, y=0.985, color=INK)
     fig.savefig(OUT + ".png", dpi=220)
