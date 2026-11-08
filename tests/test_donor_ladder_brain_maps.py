@@ -9,23 +9,38 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 import donor_ladder_brain_maps as P  # noqa: E402
 
 
-def test_box_is_the_cube_mean_on_the_step_grid():
-    rng = np.random.default_rng(0)
-    x = rng.normal(size=(40, 36, 34)).astype(np.float32)
-    b = P.box(x)
-    c = (20, 18, 16)                                   # a grid voxel (even indices)
-    lo = [ci - P.WIN // 2 for ci in c]                 # scipy's even-size window: [c - 8, c + 7]
-    want = x[tuple(slice(l0, l0 + P.WIN) for l0 in lo)].mean()
-    assert np.isclose(b[tuple(ci // P.STEP for ci in c)], want, atol=1e-5)
-    assert b.shape == tuple((n + 1) // P.STEP for n in x.shape)
+def test_frac_is_the_cube_fraction_on_the_step_grid():
+    m = np.zeros((40, 36, 34), bool)
+    m[:20] = True
+    f = P.frac(m)
+    c = (20, 18, 16)                                   # cube rows [12, 27]: 8 of 16 inside
+    assert np.isclose(f[tuple(ci // P.STEP for ci in c)], 0.5, atol=1e-5)
+    assert f.shape == tuple((n + 1) // P.STEP for n in m.shape)
 
 
-def test_local_mse_of_two_volumes_matches_brute_force():
+def test_local_is_a_round_masked_gaussian_mean():
+    x = np.zeros((41, 41, 41), np.float32)
+    x[20, 20, 20] = 1.0                                # a point: the window shape itself
+    m = np.ones_like(x, bool)
+    g = P.local(x, m)
+    c = 10                                             # grid index of voxel 20
+    # isotropic: the response at the same distance along an axis and along a diagonal (Gaussian, not a cube)
+    on_axis = g[c + 3, c, c]                           # offset (6, 0, 0) voxels
+    diagonal = g[c + 2, c + 2, c + 1]                  # offset (4, 4, 2): also 6 voxels away
+    assert np.isclose(on_axis, diagonal, rtol=1e-3)
+    # a box would be flat inside the cube and 0 outside; the Gaussian decays smoothly
+    assert g[c, c, c] > g[c + 2, c, c] > g[c + 4, c, c] > 0
+
+
+def test_local_ignores_voxels_outside_the_mask():
     rng = np.random.default_rng(1)
-    a, b = rng.normal(size=(2, 40, 36, 34)).astype(np.float32)
-    c = (18, 20, 14)
-    sl = tuple(slice(ci - P.WIN // 2, ci - P.WIN // 2 + P.WIN) for ci in c)
-    assert np.isclose(P.box((a - b) ** 2)[tuple(ci // 2 for ci in c)], np.mean((a[sl] - b[sl]) ** 2), atol=1e-4)
+    x = rng.normal(size=(30, 30, 30)).astype(np.float32) ** 2
+    m = np.zeros_like(x, bool)
+    m[:, :15] = True
+    y = x.copy()
+    y[:, 15:] = 1e6                                    # garbage outside the mask must not leak in
+    assert np.allclose(P.local(x, m), P.local(y, m), equal_nan=True)
+    assert np.isclose(P.local(np.full_like(x, 2.0), m)[7, 3, 7], 2.0, atol=1e-5)   # constant stays constant
 
 
 def test_leave_family_out_excludes_the_family():
@@ -87,8 +102,9 @@ def test_half_run_uses_only_its_own_families():
     mine = [i for i, f in enumerate(t.family) if half_of[f] == 0]
     i = mine[0]
     mu = V[[j for j in mine if j != i]].mean(0)
-    want = P.box((V[i] - mu) ** 2)
+    m1 = np.ones(shape, bool)
+    want = P.local((V[i] - mu) ** 2, m1)
     got_total = acc.a[("stranger", 0, "V")]
-    assert np.allclose(sum(P.box((V[k] - V[[j for j in mine if j != k]].mean(0)) ** 2) for k in mine)[support],
+    assert np.allclose(sum(P.local((V[k] - V[[j for j in mine if j != k]].mean(0)) ** 2, m1) for k in mine)[support],
                        got_total[support], rtol=1e-4, atol=1e-4)
     assert want.shape == got_total.shape

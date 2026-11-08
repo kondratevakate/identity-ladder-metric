@@ -1,7 +1,8 @@
 """Brain-wide variability maps of the QTIM donor ladder (PROTOCOL_donor_ladder_brain.md, Amendment 5). Pre-QC.
 
-Local MSE in a 16 mm window around every voxel is a box filter of the voxel-wise squared difference, kept on a 2 mm
-grid. Donors follow fixed rules, never a selection on the images: the person's repeat scan, own mirror at the same
+Local MSE around every voxel is a masked Gaussian average of the voxel-wise squared difference (sd = 16 mm / sqrt(12),
+the sd of a 16 mm box; only voxels valid in both scans count), kept on a 2 mm grid. Validity is still the fraction of
+the 16 mm cube inside the masks (lesson L8: drawn maps never use a square window). Donors follow fixed rules, never a selection on the images: the person's repeat scan, own mirror at the same
 place, the mean over all different-age siblings, and the exact expectation over every stranger. The unit V is the
 error of the mean of all session-1 scans outside the target's family. Families are split into two halves for a
 split-half reliability of each map. Aggregate maps stay private; the JSON holds whole-map summaries only.
@@ -26,9 +27,22 @@ PRIVATE = os.path.join(B.PROJ, "donor-ladder-brain-maps-20261104-v1")
 OUT_JSON = os.path.join(B.ROOT, "results", "donor_ladder_brain_maps.json")
 
 
-def box(x):
-    """Mean of x in the WIN-voxel cube around every voxel (zero outside the grid), sampled on the STEP grid."""
-    return ndimage.uniform_filter(x.astype(np.float32), WIN, mode="constant")[::STEP, ::STEP, ::STEP]
+SD = WIN / np.sqrt(12)                                  # Gaussian with the variance of the WIN-voxel box
+
+
+def frac(m):
+    """Fraction of the WIN-voxel cube around every voxel inside mask m, on the STEP grid (validity only)."""
+    return ndimage.uniform_filter(np.asarray(m, np.float32), WIN, mode="constant")[::STEP, ::STEP, ::STEP]  # box-ok: validity fraction
+
+
+def local(x, m):
+    """Masked Gaussian mean of x around every voxel, counting only voxels in mask m; on the STEP grid.
+    NaN where the mask carries almost no weight (those voxels also fail the frac validity gate)."""
+    m = np.asarray(m, bool)
+    num = ndimage.gaussian_filter(np.where(m, x, 0).astype(np.float32), SD, mode="constant")[::STEP, ::STEP, ::STEP]
+    den = ndimage.gaussian_filter(m.astype(np.float32), SD, mode="constant")[::STEP, ::STEP, ::STEP]
+    with np.errstate(invalid="ignore", divide="ignore"):
+        return np.where(den > 1e-3, num / den, np.nan).astype(np.float32)
 
 
 def leave_family_out(total_s, total_q, n_total, fam_s, fam_q, n_fam):
@@ -93,7 +107,7 @@ def run(t, affine, V, M, pool_half=None):
     groups = {}                                         # (sex, age) -> [sum of volumes (float32), count]
     support = 0
     for n_done, k in enumerate(ix):
-        support = support + (box(np.asarray(M[k])) >= VALID)
+        support = support + (frac(M[k]) >= VALID)
         if not in_pool[n_done]:
             continue
         v = np.asarray(V[k], dtype=np.float64)
@@ -112,32 +126,33 @@ def run(t, affine, V, M, pool_half=None):
             continue
         members = np.flatnonzero(fam == f)
         vols = {i: np.asarray(V[ix[i]], dtype=np.float32) for i in members}
-        oks = {i: box(np.asarray(M[ix[i]])) >= VALID for i in members}
+        masks = {i: np.asarray(M[ix[i]]) > 0 for i in members}
+        oks = {i: frac(masks[i]) >= VALID for i in members}
         fs = sum(vols[i].astype(np.float64) for i in members)
         fq = sum(vols[i].astype(np.float64) ** 2 for i in members)
         mu, pvar = leave_family_out(tot_s, tot_q, n_pool, fs, fq, len(members))
-        bp = box(pvar)
         h = half_of[f]
         for i in members:
-            vi, ok = vols[i], oks[i] & support
-            Vi = box((vi - mu) ** 2)
-            acc.add("stranger", h, Vi + bp, Vi, ok)
-            okm = ok & (box(np.asarray(M[ix[i]])[mi]) >= VALID)
-            acc.add("mirror", h, box((vi - vi[mi]) ** 2), Vi, okm)
+            vi, mk, ok = vols[i], masks[i], oks[i] & support
+            Vi = local((vi - mu) ** 2, mk)
+            acc.add("stranger", h, Vi + local(pvar, mk), Vi, ok)
+            okm = ok & (frac(mk[mi]) >= VALID)
+            acc.add("mirror", h, local((vi - vi[mi]) ** 2, mk & mk[mi]), Vi, okm)
             sibs = [j for j in members if j != i and tg.age.iloc[j] != tg.age.iloc[i]]
             if sibs:
-                e = sum(np.where(oks[j], box((vi - vols[j]) ** 2), 0) for j in sibs)
+                e = sum(np.where(oks[j], local((vi - vols[j]) ** 2, mk & masks[j]), 0) for j in sibs)
                 n_ok = sum(oks[j].astype(np.float32) for j in sibs)
                 with np.errstate(invalid="ignore", divide="ignore"):
                     acc.add("sibling", h, np.where(n_ok > 0, e / np.maximum(n_ok, 1), 0), Vi, ok & (n_ok > 0))
             cm = cohort_mean(groups, tg.sex.iloc[i], tg.age.iloc[i],
                              [(tg.sex.iloc[j], tg.age.iloc[j], vols[j]) for j in members])
             if cm is not None:
-                acc.add("cohort", h, box((vi - cm) ** 2), Vi, ok)
+                acc.add("cohort", h, local((vi - cm) ** 2, mk), Vi, ok)
             r = rep.get(tg.person.iloc[i])
             if r is not None:
-                okr = ok & (box(np.asarray(M[r])) >= VALID)
-                acc.add("repeat", h, box((vi - np.asarray(V[r], dtype=np.float32)) ** 2), Vi, okr)
+                mr = np.asarray(M[r]) > 0
+                okr = ok & (frac(mr) >= VALID)
+                acc.add("repeat", h, local((vi - np.asarray(V[r], dtype=np.float32)) ** 2, mk & mr), Vi, okr)
         if n_f % 20 == 0:
             print(f"family {n_f + 1}/{len(fams)}", flush=True)
     x_mm = affine[0, 0] * np.arange(0, V.shape[1], STEP) + affine[0, 3]
@@ -161,7 +176,7 @@ def main():
     aff2 = affine.copy()
     aff2[:3, :3] *= STEP
     out = {"status": "pre-QC: affine registration only, MRI registration QC not met; exploratory maps",
-           "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendments 5, 6, 8)", "window_mm": WIN, "grid_mm": STEP,
+           "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendments 5, 6, 8, 16)", "window_mm": WIN, "window": "masked Gaussian, sd = WIN/sqrt(12)", "grid_mm": STEP,
            "support_voxels": int(support.sum()), "maps": {}}
     v_mean = acc.a[("stranger", 0, "V")] + acc.a[("stranger", 1, "V")]
     n_str = acc.count("stranger")
