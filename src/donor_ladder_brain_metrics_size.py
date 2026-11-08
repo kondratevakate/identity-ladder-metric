@@ -203,7 +203,7 @@ def main():
         print(json.dumps(rep, indent=1))
         raise SystemExit("mse_allvox does not reproduce the Amendment 4 rows; no summary written")
     r.to_csv(os.path.join(PRIVATE, f"{tag}rows.csv.gz"), index=False)
-    cdf = M.calibrated_c(r)
+    cdf = M.calibrated_c(r, M.METRICS)
     r = M.calibrate_rows(r)
     out["sizes"][str(a.cube)] = {**g, "positions_kept": len(kept), "positions_dropped": dropped,
                                  "lambda_shrink": lam, "lambda_note": "shrink lambdas from the 16 mm reference",

@@ -8,7 +8,7 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-BOX = re.compile(r"uniform_filter|box_filter|boxcar")
+BOX = re.compile(r"uniform_filter|box_filter|boxcar")  # box-ok: the pattern this regression test searches for
 BOX_OK = re.compile(r"#\s*box-ok:|\b\w*(frac|valid)\w*\s*(,\s*\w+\s*)*=")
 
 
@@ -17,7 +17,7 @@ def box_windows(lines):
 
 
 def test_rule_catches_a_box_map_and_spares_validity_fractions():
-    assert box_windows(["err = ndimage.uniform_filter(e, 16)"])
+    assert box_windows(["err = ndimage.uniform_filter(e, 16)"])  # box-ok: a deliberate offender to test the detector
     assert not box_windows(["frac = ndimage.uniform_filter(m, 16)", "x = uniform_filter(m, 16)  # box-ok: validity"])
 
 

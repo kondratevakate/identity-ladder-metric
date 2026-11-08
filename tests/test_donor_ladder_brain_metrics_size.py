@@ -63,3 +63,11 @@ def test_reference_entry_point_passes_the_amendment_10_geometry_explicitly(monke
     M.run_position((5, None, None, None, None, None, False, None))
     geom = seen["args"][-1]
     assert geom == {"shell": BL.SHELL, "W": BL.W, "paths": BL.region_paths(5)}
+
+
+def test_size_figure_leaves_out_a_size_without_a_result():
+    import donor_ladder_brain_metrics_size_figure as FIG
+    v = lambda r: {"ladder_R": {"mse": {"mirror": {"R": r, "ci95": [r - 0.1, r + 0.1]}}}}  # noqa: E731
+    views = {8: v(0.7), 16: v(0.72), 32: {"ladder_R": {"mse": None}}}
+    assert [w for w, *_ in FIG.series(views, "mse", "mirror")] == [8, 16]
+    assert FIG.series(views, "ssim", "mirror") == []

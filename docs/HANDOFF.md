@@ -12,8 +12,8 @@ QC sheet on a few targets, look at it, then the full run), exactly as done with 
 |---|---|---|---|
 | Faces F2 panel, 16 px | Faces | chunked resumable run, summary JSON, METRICS_STATUS | restarted 8 Nov night |
 | Faces F3 window sweep | Faces | smoke + own QC sheet; full sweep only if the sheet looks right | pending |
-| Brain tier 2/3 parietal box | Brain | 6/6 chunks, summary with deep box | restarted 8 Nov night |
-| Brain window sweep (Amendment 21) | Brain | own look at qc_window_sizes.png, 3-target smoke at 32 mm, then 8 mm | pending |
+| Brain tier 2/3 parietal box | Brain | 6/6 chunks, summary with deep box | done 8 Nov 22:30 |
+| Brain window sweep (Amendment 21) | Brain | own look at qc_window_sizes.png, 3-target smoke at 32 mm, then 8 mm | 8 mm done; 32 mm running |
 | Fundus full panel | Fundus | full run done 15:04 8 Nov; checks, summary, commit | wrap-up |
 | Iris full P3 | Iris | aggregates into results/, figures without real eyes, commit | wrap-up |
 | All-modality map figure | this session | brain numbers from Gaussian JSONs, footer fixed, test | done 8 Nov night |
@@ -62,25 +62,27 @@ checkpoints (bilateral commits fcabf46, f62d66c; 6-10 h estimate). Brain committ
 faces in f2ed748 (handoff 1d71861), iris in 29e38c4 and 4ec08c2. Lines below give the plan as reported before the reboot.
 
 Per modality (current state as reported)
-- Brain (QTIM, owner session "Brain ladder: run all metrics"; committed 22ddf70 on cvpr2027-paper, 8 Nov):
-  - Done: tier-1 panel at 16 mm (`results/donor_ladder_brain_metrics.json`); 8 mm look-alike grid with Gaussian
-    weights (Amendment 18, maps redrawn).
-  - Tier 2/3 (Amendment 20): deep box complete (6/6 chunks, 221 targets, files intact after the reboot); parietal box
-    0/6. Restart (resumes at the first missing chunk; about 3 h with 2 free cores):
-    `python -u src/donor_ladder_brain_metrics_t23.py --workers 2`. No summary yet: it is written after both boxes.
-  - Window sweep (Amendment 21): L = 127.0 mm, so 16 mm = f 0.126 is the f = 1/8 reference; 8 mm (1/16) and
-    32 mm (1/4) still to run. Shell w/4, +-8 mm search, boxes not rescaled. 32 mm keeps 20 of 32 centres, 8 mm keeps
-    32. Code and tests are done (`src/donor_ladder_brain_metrics_size.py`); QC sheet drawn (private:
-    `donor-ladder-brain-metrics-size-20261108-v1\qc_window_sizes.png`, target/repeat/mirror/stranger/mean at 3 sizes;
-    looks right to me); no run yet. Next: Kate's verdict on the
-    sheet, then a 3-target smoke run at 32 mm, then
-    `python -u src/donor_ladder_brain_metrics_size.py --cube 8 --workers 2`, then `--cube 32`
-    (32 mm is heavy, many hours; keep at most 2 region files on disk, about 1.3 GB each), then `--cube 32 --stability`.
-  - FastSurfer (owner: GCP/FastSurfer session): 79 of 224 volumes intact; 145 left; the laptop batch is stopped,
-    and a GCP spot VM is being priced (Kate decides).
-  - Not done: Betti matching 3D (C++ build, Linux VM), Brain-ID identity, set-level FID/FWD/TD, latent (GPU); IXI
-    (Amendment 19) blocked on SynthStrip (Docker broken; ask Kate before pulling `freesurfer/synthstrip:1.8`, 389 MB).
-  - Kate's brain decisions: CPU order after iris and fundus; verdict on the Amendment 21 QC sheet; SynthStrip download.
+- Brain (QTIM, owner session "Brain ladder: run all metrics"; branch cvpr2027-paper; state 8 Nov night):
+  - Done: tier-1 panel at 16 mm (`results/donor_ladder_brain_metrics.json`, regenerated from its rows on 8 Nov with
+    the current code: identical except the runtime field); 8 mm look-alike grid with Gaussian weights (Amendment 18).
+  - Done: tier 2/3 (Amendment 20), 221 targets, both boxes: `results/donor_ladder_brain_metrics_t23.json`, figure
+    `fig_brain_metrics_t23`, result paragraph in the protocol. T1, T3a, T3b pass for MS-SSIM, LPIPS, persistence in
+    both boxes (Holm over 24); parietal LPIPS missing for 59% of rows (counted, not filled).
+  - Window sweep (Amendment 21, L = 127.0 mm): QC sheet looked at by me (correct cube, shell and fills at 3 sizes);
+    3-target smoke at 32 mm checked by eye and exact against Amendment 4; 8 mm done (32 cubes, exact reproduction,
+    `results/donor_ladder_brain_metrics_size.json`, figure `fig_brain_window_sizes`). 32 mm (20 of 32 cubes) running
+    overnight; restart resumes per position: `python -u src/donor_ladder_brain_metrics_size.py --cube 32 --workers 2`,
+    then `--cube 32 --stability` and `python src/donor_ladder_brain_metrics_size_figure.py`. If it did not finish,
+    32 mm is a limitation: it is reported for 8 and 16 mm only.
+  - Integrity (8 Nov): all 10 committed brain JSONs have their writing script committed; none differs from HEAD.
+    Gaps: the metrics board (`src/metrics_board.py`, METRICS_STATUS) reads only 2D and CARE aggregates and still says
+    "QTIM: no checked numbers"; brain numbers live in the JSONs above and the cross-modality explorer. The fundus
+    branch (donor-ladder-bilateral, c040e37) holds the Gaussian `donor_ladder_brain_map_grid.json` without the
+    matching script; the canonical pair is on cvpr2027-paper.
+  - Limitations (not tonight): FastSurfer 79 of 224 volumes (rest needs a GCP VM, Kate decides); Betti matching 3D
+    (C++ build, Linux VM); Brain-ID identity; set-level FID/FWD/TD; latent metrics (GPU); IXI (Amendment 19) blocked
+    on SynthStrip (ask Kate before pulling `freesurfer/synthstrip:1.8`, 389 MB). Persistence in the deep box puts the
+    own other side closer than the repeat (R -0.55): reported, not repaired.
 - Faces (CelebA, IMDb-WIKI; frame v6f, QC approved; owner session "Faces: compute the rest"): F2 panel full run
   started in the background (16-18 h, 3 workers); F3 window sweep written. Identity via ArcFace (cosine; norm, PLDA
   being prepared).

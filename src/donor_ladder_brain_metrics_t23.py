@@ -137,6 +137,51 @@ def extra(x, f, e, mu_c, dx=None):
 
 PRIVATE = os.path.join(M.B.PROJ, "donor-ladder-brain-metrics-20261107-v4")
 CHUNK = 40                                             # targets per saved chunk
+OUT_JSON = os.path.join(M.B.ROOT, "results", "donor_ladder_brain_metrics_t23.json")
+NOT_RUN = {"betti_matching_3d": "needs a C++ build of Betti-Matching-3D (no compiler here; Linux VM)",
+           "brain_id_identity": "own amendment; after FastSurfer frees the CPU",
+           "fid_fwd_topology_distance": "set-level, own amendment",
+           "plausibility_latent": "needs a generative brain model and a GPU"}
+
+
+def summarise(r, tg, pos):
+    """Amendment 20 summary per box view: raw means and c (family bootstrap), R with intervals, the Amendment 13
+    expectations, and T1-T3 on the L+R view of each box with one Holm family over both boxes."""
+    fam = tg.family.to_numpy()
+    cdf = M.calibrated_c(r, T23)
+    rv, cv = M.views(r, pos), M.views(cdf, pos)
+    out, ps = {}, []
+    for view, rr in rv.groupby("view"):
+        per = rr.groupby(["target", "fill"])[list(T23) + list(T23_DESCRIPTIVE)].mean().reset_index()
+        per["family"] = fam[per.target]
+        cc = cv[cv.view == view].groupby(["target", "fill", "metric"])["c"].mean().reset_index()
+        cc["family"] = fam[cc.target]
+        fills = sorted(f for f in per.fill.unique() if not M.is_reference_stranger(f))
+        v = {"n_rows": int(len(rr)),
+             "missing": {m: int(rr[m].isna().sum()) for m in T23},
+             "fills": {f: {m: {"raw": M.boot_mean(per[per.fill == f], m),
+                               "c": M.boot_mean(cc[(cc.fill == f) & (cc.metric == m)], "c") if m in T23 else None}
+                           for m in list(T23) + list(T23_DESCRIPTIVE)} for f in fills},
+             "ladder_R": {}, "expectations": {}, "expectations_realityA": {}}
+        for m in T23:
+            if per[m].notna().sum() == 0:             # every value missing in this view: no scale, never zero
+                v["ladder_R"][m] = None
+                continue
+            R, arr = M.ladder_R(per, m)
+            if R is None:
+                continue
+            v["ladder_R"][m] = R
+            v["expectations"][m] = M.expectations(R, arr)
+            v["expectations_realityA"][m] = M.expectations(R, arr, M.EXPECT_A)
+        if view.endswith("/LR"):
+            v["tests"] = M.tests(per, T23)
+            ps += [(view, m, t, e["p_one_sided"]) for m, d in v["tests"]["per_metric"].items() for t, e in d.items()
+                   if "p_one_sided" in e]
+        out[view] = v
+    for (view, m, t, _), pa in zip(ps, M.holm([p for *_, p in ps]) if ps else []):   # one family over both boxes
+        e = out[view]["tests"]["per_metric"][m][t]
+        e["p_holm_run"], e["pass_holm_run_0.05"] = float(pa), bool(pa < 0.05)
+    return out, len(ps)
 
 
 def main():
@@ -150,6 +195,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--workers", type=int, required=True)
     ap.add_argument("--smoke", type=int, default=0, help="score only the first N targets that have a repeat scan")
+    ap.add_argument("--summary-only", action="store_true", help="summarise the saved chunks; run nothing")
     a = ap.parse_args()
     os.makedirs(os.path.join(PRIVATE, "parts"), exist_ok=True)
     t0 = time.time()
@@ -174,6 +220,30 @@ def main():
             if not os.path.exists(path(pi, c))]
     n_all = len(FROZEN) * len(chunks)
     print(f"chunks done {n_all - len(jobs)}/{n_all}, to run {len(jobs)}", flush=True)
+    if a.summary_only:
+        if jobs or a.smoke:
+            raise SystemExit(f"{len(jobs)} chunks missing (or --smoke given): no summary written")
+        r = pd.concat([pd.read_csv(path(pi, c)) for pi in FROZEN for c in range(len(chunks))], ignore_index=True)
+        if r.duplicated(["target", "patch", "side", "fill"]).any():
+            raise SystemExit("duplicate rows across chunks: no summary written")
+        views, n_hyp = summarise(r, tg, pos)
+        out = {"status": "pre-QC: affine registration only, MRI registration gate not met (results/registration/status.md)",
+               "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendment 20)", "tier": "2/3 (CPU part)",
+               "seed": M.SEED, "boxes": [pos[p][0] for p in FROZEN], "metrics": list(T23),
+               "lower_is_better": sorted(T23_LOWER), "descriptive": list(T23_DESCRIPTIVE),
+               "ms_ssim_weights": MS_WEIGHTS.tolist(), "lpips": {"net": "alex", "version": "0.1",
+               "short_side_px": LPIPS_SIDE, "z_scale": LPIPS_Z, "slices": "central orthogonal, fully inside E"},
+               "persistence": "cubical sublevel (gudhi), outside E at +inf, W1 (internal p = 2) summed over H0-H2",
+               "missing_rule": "missing is NaN, never zero; counts per view under 'missing'",
+               "n_hypotheses_holm_run": n_hyp, "not_run": NOT_RUN,
+               "counts": {"n_targets": int(r.target.nunique()), "n_rows": int(len(r)), "n_chunks": n_all},
+               "views": views}
+        out["counts"]["run"] = ("deep box: 7-8 Nov, 2 workers on a CPU shared with other jobs; parietal box: resumed "
+                                "8 Nov after a reboot, 6 chunks in 72 min with 2 workers")
+        with open(OUT_JSON, "w", encoding="utf-8") as fh:
+            json.dump(M.finite(out), fh, indent=1, allow_nan=False)
+        print(f"saved {OUT_JSON}", flush=True)
+        return
     with ProcessPoolExecutor(a.workers, initializer=M._init, initargs=(affine,)) as ex:
         for k, ((_, pi, c), part) in enumerate(zip(jobs, ex.map(M.run_position, [j[0] for j in jobs]))):
             pd.DataFrame(part).to_csv(path(pi, c) + ".tmp", index=False, compression="gzip")
@@ -183,8 +253,7 @@ def main():
             print(f"chunk {k + 1}/{len(jobs)} (box {pi}, targets {c * CHUNK}-{c * CHUNK + CHUNK - 1}): rows {len(part)}, "
                   f"{el / 60:.0f} min, ETA {eta / 60:.0f} min ({time.strftime('%H:%M', time.localtime(time.time() + eta))})",
                   flush=True)
-    timing = {"minutes": round((time.time() - t0) / 60, 2), "workers": a.workers, "smoke_targets": a.smoke,
-              "cpu_shared_with": "FastSurfer CPU batch (2 runners x 4 threads)"}
+    timing = {"minutes": round((time.time() - t0) / 60, 2), "workers": a.workers, "smoke_targets": a.smoke}
     with open(os.path.join(PRIVATE, f"{tag}timing.json"), "w", encoding="utf-8") as fh:
         json.dump(timing, fh, indent=1)
     print(json.dumps(timing))

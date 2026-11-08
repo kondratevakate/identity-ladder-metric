@@ -40,7 +40,7 @@ PROTEIN = ("tm_like", "gdt_like", "lddt_rep", "rmse_rep")   # Amendment 12, grou
 REP_MULT = (0.5, 1.0, 2.0, 4.0)                              # multiples of the repeat-scan tolerance
 MIN_REP_PAIRS = 5
 METRICS = ("mse", "rmse", "mae", "psnr", "psnr_fixed", "ssim", "pearson", "acc_dataset", "acc_cohort", "lddt") + PROTEIN
-LOWER_BETTER = {"mse", "rmse", "mae", "rmse_rep"}
+LOWER_BETTER = {"mse", "rmse", "mae", "rmse_rep", "lpips", "persistence_w1"}   # lpips, persistence_w1: Amendment 20
 DESCRIPTIVE = ("amplitude", "mse_allvox", "n_vox")
 TESTS = {"T1": ("repeat", "dataset_mean"), "T2": ("repeat", "shrink_repeat"),
          "T3a": ("repeat", "wrong_detail"), "T3b": ("repeat", "noise")}
@@ -417,12 +417,13 @@ def boot_position(per, m, fill, reps=2000, seed=SEED):
             "n_targets": int(len(w)), "n_families": int(len(g))}
 
 
-def calibrated_c(r):
-    """c per (target, patch, side, fill, metric): P(stranger worse) + P(tie) / 2 over the 16 strangers."""
+def calibrated_c(r, metrics):
+    """c per (target, patch, side, fill, metric): P(stranger worse) + P(tie) / 2 over the 16 strangers.
+    metrics: the panel scored (METRICS for tier 1, T23 metrics for Amendment 20), passed explicitly."""
     strs = r[r.fill.str.match(r"str\d\d$")]
     keys = ["target", "patch", "side"]
     out = []
-    for m in METRICS:
+    for m in metrics:
         sv = strs.assign(v=oriented(m, strs[m])).groupby(keys)["v"].apply(np.asarray)
         fr = r[~r.fill.str.match(r"str\d\d$")][keys + ["fill", m]].copy()
         fr["v"] = oriented(m, fr[m])
@@ -444,10 +445,11 @@ def holm(p):
     return adj
 
 
-def tests(per):
-    """T1-T3 per metric on family means of the paired, oriented difference (repeat minus control)."""
+def tests(per, metrics):
+    """T1-T3 per metric on family means of the paired, oriented difference (repeat minus control); Holm over the
+    metric x test hypotheses of this call. metrics passed explicitly (tier 1 or Amendment 20)."""
     res, ps = {}, []
-    for m in METRICS:
+    for m in metrics:
         for tname, (a, b) in TESTS.items():
             w = per[per.fill.isin([a, b])].pivot_table(index=["target", "family"], columns="fill", values=m).dropna()
             if a not in w or b not in w:
@@ -729,7 +731,7 @@ def summarise(r, cdf, tg, pos):
             v["expectations"][m] = expectations(R, arr)
             v.setdefault("expectations_realityA", {})[m] = expectations(R, arr, EXPECT_A)
         if view.startswith("random_patches/LR"):
-            v["tests"] = tests(per)
+            v["tests"] = tests(per, METRICS)
         out[view] = v
     return out
 
@@ -789,7 +791,7 @@ def main():
     if not ok:
         print(json.dumps(rep, indent=1))
         raise SystemExit("mse_allvox does not reproduce the bilateral rows; no summary written")
-    cdf = calibrated_c(r)
+    cdf = calibrated_c(r, METRICS)
     r = calibrate_rows(r)
     out = {"status": "pre-QC: affine registration only, MRI registration gate not met (results/registration/status.md)",
            "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendments 10 to 13)", "tier": 1, "seed": SEED,

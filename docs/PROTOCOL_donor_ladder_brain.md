@@ -610,6 +610,17 @@ shift of Amendment 17) is farther from the target (173.7) than the dataset mean 
 features; over the 3 targets the deep-box means are repeat 96.7, mirror 51.1, dataset mean 112.0. Persistence may
 fail T1 in the deep box for this reason; that will be reported, not repaired after the fact.
 
+Result (8 Nov 2026, full run, 221 targets, both boxes, L+R; pre-QC). `results/donor_ladder_brain_metrics_t23.json`,
+figure `results/figures/fig_brain_metrics_t23.{png,pdf}`; summary added to `src/donor_ladder_brain_metrics_t23.py`
+(`--summary-only`) after the run, with the definitions above unchanged. Holm over 24 hypotheses (3 metrics x 4 tests x
+2 boxes). T1 (repeat beats the dataset mean), T3a (wrong detail) and T3b (noise) pass for all three metrics in both
+boxes; T2 (repeat beats the repeat shrunk to the mean) fails in the deep box for all three and passes in the parietal
+box. R (0 = repeat, 1 = stranger), deep box: dataset mean 0.50 (MS-SSIM), 3.31 (LPIPS), 1.06 (persistence); noise
+0.79, 5.67, 28.3. Expectations as stated: LPIPS ranks the dataset mean far worse than SSIM-type metrics; MS-SSIM rates
+noise closer than a stranger (E6B fails). Not as expected: persistence puts the own other side and the look-alikes
+closer than the repeat in the deep box (R -0.55 and -0.2 to -0.3; possibly the session intensity offset of observation (2) above, not tested), and
+does not pass E2 there; parietal LPIPS is missing for 7013 of 11923 rows (59%), counted, never filled.
+
 ## Amendment 21 (8 Nov 2026, window size in object units; recorded before any result at the new sizes)
 
 Kate, 8 Nov 2026, metrics-explorer session: "да переделай честно". One window in mm covers a different share of each
