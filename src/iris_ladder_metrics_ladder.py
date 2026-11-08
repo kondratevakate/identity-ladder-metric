@@ -192,7 +192,40 @@ def local(x, m):
         return np.where(den > 1e-3, num / den, np.nan)
 
 
-MAP_FILLS = ("other_photo", "fellow_eye", "stranger")
+MAP_FILLS = ("other_photo", "fellow_eye", "stranger", "lookalike16")
+BLOCK = 8                                       # look-alike map: one donor search per 8 x 8 block
+PADW = WIN // 2 + RING                          # angular wrap padding for the block windows
+
+
+def lookalike_fill(xt, mt, Ps, Ms, k=16):
+    """Fill made of the k donors closest on the context ring around a WIN window centred on every BLOCK x BLOCK
+    block (masked squared distance; ring >= MIN_RING_VALID observed in both). The window is wrapped in angle and
+    clipped at the pupil and limbus edges. A block pixel is filled where at least k/2 of the k donors are valid."""
+    wrap = lambda a: np.concatenate([a[..., -PADW:], a, a[..., :PADW]], axis=-1)  # noqa: E731
+    xw, mw, Pw, Mw = wrap(xt), wrap(mt), wrap(Ps), wrap(Ms)
+    F, Fok = np.zeros((H, W)), np.zeros((H, W), bool)
+    half = (WIN - BLOCK) // 2
+    for y0 in range(0, H, BLOCK):
+        for x0 in range(0, W, BLOCK):
+            wy, wx = y0 - half, x0 - half + PADW
+            ry, rx = slice(max(wy - RING, 0), min(wy + WIN + RING, H)), slice(wx - RING, wx + WIN + RING)
+            ring = np.zeros((H, W + 2 * PADW), bool)
+            ring[ry, rx] = True
+            ring[max(wy, 0):wy + WIN, wx:wx + WIN] = False
+            ring = (ring & mw)[ry, rx]
+            if ring.sum() < 20:
+                continue
+            Mr = Mw[:, ry, rx] & ring
+            ov = Mr.sum((1, 2))
+            d = (((Pw[:, ry, rx] - xw[ry, rx]) ** 2) * Mr).sum((1, 2)) / np.maximum(ov, 1)
+            d[ov < IM.MIN_RING_VALID * ring.sum()] = np.inf
+            o = np.argsort(d, kind="stable")[:k]
+            if not np.isfinite(d[o]).all() or o.size < k:
+                continue
+            bs = (slice(y0, y0 + BLOCK), slice(x0, x0 + BLOCK))
+            f, ok = masked_mean(Ps[o][:, bs[0], bs[1]], Ms[o][:, bs[0], bs[1]], need=k // 2)
+            F[bs], Fok[bs] = f, ok
+    return F, Fok
 
 
 def maps(st):
@@ -205,7 +238,13 @@ def maps(st):
         num = {d: np.zeros((H, W)) for d in MAP_FILLS}
         den = {d: np.zeros((H, W)) for d in MAP_FILLS}
         vsum, vn = np.zeros((H, W)), np.zeros((H, W))
-        for ti in np.flatnonzero(members):
+        t0 = time.time()
+        targets = np.flatnonzero(members)
+        for n_done, ti in enumerate(targets, 1):
+            if n_done % 40 == 0:
+                el = time.time() - t0
+                print(f"  {st.get('name', '')} maps {part}: {n_done}/{len(targets)}, {el:.0f}s, "
+                      f"ETA {el / n_done * (len(targets) - n_done):.0f}s", flush=True)
             same, _ = pools(st, ti)
             same = same[members[same]]
             if same.size < 10:
@@ -227,6 +266,10 @@ def maps(st):
                 r = st["repeat"][ti]
                 e = mt & M[r]
                 fills["other_photo"] = (local((xt - X[r]) ** 2, e), local((xt - mu) ** 2, e))
+            if same.size >= 16:
+                F, Fok = lookalike_fill(xt, mt, Ps, Ms)
+                e = mt & Fok
+                fills["lookalike16"] = (local((xt - F) ** 2, e), local((xt - mu) ** 2, e))
             for d, (a, b) in fills.items():
                 ok = np.isfinite(a) & np.isfinite(b)
                 num[d][ok] += a[ok]

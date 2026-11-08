@@ -3,6 +3,10 @@ masks, ladder units. The preprocessing version is an explicit argument everywher
   P2 (current): learned segmentation (Worldcoin open-iris UNet++, `iris_ladder_metrics_models`): pupil and limbus
      circles fitted to the predicted pupil boundary and to the iris boundary where it meets the sclera; strip mask =
      predicted iris AND NOT pupil AND NOT eyelashes, minus specular reflections (robust z > 4 against the iris);
+  P2e (Amendment P2e, 8 Nov 2026; REJECTED by Kate, removes little of the lid shadow): P2 with an edge margin. A valid sample is kept only if it lies more than
+     EDGE_MARGIN_P2E (3) strip samples (Euclidean, wrapped in angle) from every missing sample and from the pupil end
+     of the strip; the grey level is then z-scored again inside the kept samples. Same images, same QC, same units
+     as P2 (eligibility unchanged); derived from the P2 frames, never rebuilt separately;
   P1 (rejected by Kate on 7 Nov 2026: crooked limbus and pupil on reflections): classical, described below.
 
 P1 steps per image:
@@ -37,8 +41,11 @@ sys.path.insert(0, HERE)
 from iris_calibration import upol_table, utiris_table  # noqa: E402
 from iris_codes import WORK_WIDTH, circle_means, integro_differential, load_grey  # noqa: E402
 
-VERSIONS = ("P1", "P2")
-REJECTED = {"P1": "Kate 7 Nov 2026: crooked limbus circles, pupil found on reflections"}
+VERSIONS = ("P1", "P2", "P2e")
+DERIVED = {"P2e": "P2"}            # version -> the version whose frames it is computed from
+EDGE_MARGIN_P2E = 3                  # strip samples: kept samples lie further than this from any missing sample
+REJECTED = {"P1": "Kate 7 Nov 2026: crooked limbus circles, pupil found on reflections",
+            "P2e": "Kate 8 Nov 2026: keep the lid shadow; a 3-sample edge margin removes little of it"}
 QC_RATIO_P2, QC_OFFSET_P2, QC_LIMBUS_COVER = (0.10, 0.80), 0.25, 0.20
 LID_EDGE_P2 = 3                      # strip samples masked around predicted lid / lash regions (outer 3/4 of radius)
 Z_SHADOW_P2 = 4.0                    # robust z below which a sample connected to the lid is lid shadow
@@ -419,6 +426,37 @@ def strip_p2(path: str, seg: dict) -> tuple[np.ndarray, np.ndarray, dict]:
     return x, valid, shares
 
 
+def edge_margin(m: np.ndarray, margin: int) -> np.ndarray:
+    """Valid samples further than `margin` strip samples (Euclidean) from every missing sample and from the pupil end
+    of the strip (row -1 counts as missing). Wrapped in angle; the limbus end is not an edge (it is the frame end at
+    T1, not a mask boundary). Never adds samples."""
+    if margin < 1:
+        raise ValueError("edge margin must be a positive number of samples")
+    pw = W // 2
+    pad = np.concatenate([m[:, -pw:], m, m[:, :pw]], axis=1)
+    pad = np.vstack([np.zeros((1, pad.shape[1]), bool), pad, pad[-1:]])
+    d = ndimage.distance_transform_edt(pad)[1:-1, pw:-pw]
+    return m & (d > margin)
+
+
+def with_edge_margin(fr: dict, margin: int) -> dict:
+    """P2e frames from P2 frames: masks shrunk by `edge_margin`, grey level z-scored again inside the kept samples
+    (exact, since a z-score of a z-score on a subset equals the z-score of the raw values on that subset)."""
+    X, M = fr["X"].copy(), fr["M"].copy()
+    tab = fr["table"].copy()
+    kept = np.full(len(tab), np.nan)
+    for i in np.flatnonzero(tab.ok.to_numpy()):
+        m = edge_margin(M[i], margin)
+        if m.sum() < 2:
+            raise ValueError("edge margin removed almost the whole strip")
+        v = X[i][m]
+        X[i] = np.where(m, (X[i] - v.mean()) / v.std(), np.nan)
+        M[i] = m
+        kept[i] = m.mean()
+    tab["valid_after_margin"] = kept
+    return {"table": tab, "X": X.astype(np.float32), "M": M}
+
+
 def mirror(a: np.ndarray) -> np.ndarray:
     """Strip of the horizontally flipped image: column j -> (W/2 - j) mod W (theta -> 180 deg - theta)."""
     return a[..., (W // 2 - np.arange(W)) % W]
@@ -434,6 +472,8 @@ def check_version(version: str) -> None:
 def process(name: str, t: pd.DataFrame, version: str, log_every: int = 50) -> dict:
     """Segment and unwrap every image of a set. Failures are kept as rows with ok = False and a reason."""
     check_version(version)
+    if version in DERIVED:
+        raise ValueError(f"{version} is derived from {DERIVED[version]} frames; use load_or_build")
     return _process_p2(name, t, log_every) if version == "P2" else _process_p1(name, t, log_every)
 
 
@@ -530,6 +570,11 @@ def cache_path(name: str, version: str) -> str:
 
 def load_or_build(name: str, version: str) -> dict:
     path = cache_path(name, version)
+    if version == "P2e" and not os.path.isfile(path):
+        out = with_edge_margin(load_or_build(name, DERIVED[version]), EDGE_MARGIN_P2E)
+        np.savez_compressed(path, X=out["X"], M=out["M"])
+        out["table"].to_csv(path.replace(".npz", "_table.csv.gz"), index=False)
+        return out
     if os.path.isfile(path):
         z = np.load(path, allow_pickle=False)
         tab = pd.read_csv(path.replace(".npz", "_table.csv.gz"), dtype={"person": str})
@@ -563,7 +608,7 @@ def qc_sheet(name: str, fr: dict, n_rows: int, path: str, version: str) -> None:
     fig, ax = plt.subplots(n_rows, 4, figsize=(16, 2.6 * n_rows + 0.5), gridspec_kw={"width_ratios": [1.1, 2.4, 2.4, 2.4]})
     for r_, i in enumerate(rows):
         row = tab.iloc[i]
-        img = load_full(row.path) if version == "P2" else load_grey(row.path)
+        img = load_full(row.path) if version in ("P2", "P2e") else load_grey(row.path)
         a = ax[r_, 0]
         a.imshow(img, cmap="gray")
         if np.isfinite(row.get("rp", np.nan)):
@@ -639,7 +684,7 @@ def main():
         tab = fr["table"]
         u = units(tab)
         print(name, "images", len(tab), "pass", int(tab.ok.sum()), f"({tab.ok.mean():.1%})",
-              "fail reasons", tab.loc[~tab.ok, "reason"].str.split(":").str[0].value_counts().to_dict(),
+              "fail reasons", tab.loc[~tab.ok, "reason"].fillna("").astype(str).str.split(":").str[0].value_counts().to_dict(),
               "eyes", len(u), "with repeat", int((u.repeat_idx >= 0).sum()), "with fellow", int((u.fellow >= 0).sum()),
               "persons", u.person.nunique(), flush=True)
         qc_sheet(name, fr, a.qc_rows, os.path.join(PRIVATE, f"qc_frame_{name}_{a.preprocessing}.png"), a.preprocessing)

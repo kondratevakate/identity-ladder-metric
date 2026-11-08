@@ -247,3 +247,92 @@ def test_maps_repeat_low_stranger_two():
     out, res = LD.maps(_toy_set())
     assert res["other_photo"]["median_ratio"] < 0.01
     assert 1.8 < res["stranger"]["median_ratio"] < 2.2
+
+
+def test_lookalike_map_between_repeat_and_stranger():
+    import iris_ladder_metrics_ladder as LD
+    out, res = LD.maps(_toy_set(n_people=20))
+    r = res["lookalike16"]["median_ratio"]
+    assert r is not None and 0.9 < r < 1.3          # 16 unrelated textures: about 1 + 1/16 of the mean
+
+
+# ---------------------------------------------------------------- Amendment P3 metrics (iris_ladder_metrics_extra)
+
+BETTI = os.path.join(r"C:\Projects\data", "projects", "identity-ladder-metric", "models-20261107", "betti-matching-2d")
+
+
+def test_impute_keeps_valid_pixels_and_fills_only_outside():
+    import iris_ladder_metrics_extra as EX
+    rng = np.random.default_rng(1)
+    x = rng.normal(size=(IF.H, IF.W))
+    m = np.ones_like(x, bool)
+    m[10:20, 30:40] = False
+    out = EX.impute(x, m)
+    assert np.array_equal(out[m], x[m]) and np.isfinite(out).all()
+
+
+def test_iriscode_hd_zero_for_identical_and_high_for_noise():
+    import iris_ladder_metrics_extra as EX
+    import iris_codes as IC
+    rng = np.random.default_rng(2)
+    x = ndimage.gaussian_filter(rng.normal(size=(IF.H, IF.W)), 2, mode="wrap")
+    m = np.ones_like(x, bool)
+    code, valid = IC.log_gabor_code(x)
+    e = np.zeros_like(m)
+    e[16:32, 96:112] = True
+    assert EX.code_hd(code, valid, x.copy(), m, e, 16, 96) == 0.0
+    comp = x.copy()
+    comp[16:32, 96:112] = rng.normal(size=(16, 16))
+    assert EX.code_hd(code, valid, comp, m, e, 16, 96) > 0.2
+
+
+def test_betti_parts_zero_for_identical_window():
+    if not os.path.isdir(BETTI):
+        pytest.skip("Betti-matching code not found")
+    sys.path.insert(0, BETTI)
+    import iris_ladder_metrics_extra as EX
+    rng = np.random.default_rng(3)
+    a = EX.to_unit(rng.normal(size=(16, 16)))
+    assert EX.betti_parts(a, a.copy()) == (0.0, 0.0)
+    m, u = EX.betti_parts(a, EX.to_unit(rng.normal(size=(16, 16))))
+    assert m + u > 0
+
+
+def test_edge_margin_drops_samples_near_missing_and_pupil_end_and_wraps():
+    """P2e: kept samples are more than 3 samples from any missing sample and from the pupil end (row 0 side), the
+    limbus end is not an edge, the angle wraps, and a dark rim along a mask edge is removed while the z-score is
+    redone inside the kept samples (Kate 8 Nov 2026: margin from the dark mask edge, as for the brain)."""
+    m = np.ones((IF.H, IF.W), bool)
+    m[:, 0:10] = False                                   # a lid gap at the angle seam
+    k = IF.edge_margin(m, 3)
+    assert not k[:3].any() and k[3:, 20].all()          # rows 0..2 dropped (row -1 counts as missing)
+    assert k[-1, 20]                                      # limbus end kept
+    assert not k[:, 10:13].any() and k[10:, 13].all()    # right of the gap
+    assert not k[:, 253:].any() and k[10:, 252].all()    # left of the gap, through the wrap
+    assert not (k & ~m).any()
+    x = np.where(m, 0.0, np.nan)
+    x[:, 10:12] = -5.0                                    # dark rim along the gap
+    rng = np.random.default_rng(0)
+    x = np.where(m, x + rng.normal(0, 1, x.shape), np.nan).astype(np.float32)
+    tab = __import__("pandas").DataFrame({"ok": [True]})
+    out = IF.with_edge_margin({"table": tab, "X": x[None], "M": m[None]}, 3)
+    xm, mm = out["X"][0], out["M"][0]
+    assert np.nanmin(xm) > -5.0 and np.isnan(xm[~mm]).all()
+    assert abs(np.nanmean(xm)) < 1e-5 and abs(np.nanstd(xm) - 1) < 1e-4
+    with pytest.raises(ValueError):
+        IF.process("UPOL", None, "P2e")
+
+
+def test_shards_cover_every_target_once_and_patches_round_trip(tmp_path):
+    import iris_ladder_metrics_extra as IX
+    n = 157
+    parts = [IX.shard_targets(n, i, 6) for i in range(6)]
+    assert sorted(np.concatenate(parts).tolist()) == list(range(n))
+    with pytest.raises(ValueError):
+        IX.parse_shard("6/6")
+    rng = np.random.default_rng(0)
+    pp = [("stranger", (3, 7), True, rng.random((16, 16))), ("repeat", (5, 0), False, rng.random((16, 16)))]
+    IX.save_patches(tmp_path / "p.npz", pp)
+    back = IX.load_patches(tmp_path / "p.npz")
+    assert [(r, u, s) for r, u, s, _ in back] == [(r, u, s) for r, u, s, _ in pp]
+    assert all(np.allclose(a, b[3], atol=1e-6) for (*_x, a), b in zip(back, pp))

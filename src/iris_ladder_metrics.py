@@ -468,7 +468,12 @@ def main():
 BLOCK_ID_IRIS = ("no deep iris encoder weights on this machine; the classical iris code (Hamming distance) is not an "
                  "embedding and has no angle, norm, PFE or PLDA form")
 BLOCK_COHORT = "no sex or age metadata in UTIRIS or UPOL (protocol: matched mean unavailable)"
-BLOCK_LATENT_IRIS = "no generative iris model; LDDMM between 16 px windows is a pairwise registration (stop rule)"
+_P3 = "computed by src/iris_ladder_metrics_extra.py (Amendment P3), reported in its own block, not in this panel run"
+IRIS_P3 = {"lpips": _P3, "betti_matching_matched": _P3, "betti_matching_unmatched": _P3,
+           "fid": _P3 + " (set level)", "fwd": _P3 + " (set level)",
+           "topology_distance": "no definition fixed in the project (Amendment P3); not invented here",
+           "plausibility": "needs a trained density model of iris strips (Amendment P3)"}
+BLOCK_LATENT_IRIS ="no generative iris model; LDDMM between 16 px windows is a pairwise registration (stop rule)"
 
 
 def confirmatory():
@@ -482,6 +487,9 @@ def confirmatory():
                                  "; PLDA also needs a fitted model" if k == "id_plda" else "")
         elif k.startswith("latent_"):
             b = BLOCK_LATENT_IRIS
+        elif k in IRIS_P3:
+            # Iris status is set here, never inherited from the fundus module (which computes these itself).
+            c, b = None, IRIS_P3[k]
         out[k] = (g, c, b)
     assert len(out) == 26
     return out

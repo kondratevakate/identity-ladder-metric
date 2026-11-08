@@ -104,6 +104,49 @@ P2 frame (`src/iris_ladder_metrics_frame.py`, version passed explicitly; weights
 5. z-score inside the mask, fellow mirroring, units and everything below unchanged.
 P1 code stays in the module for the record and refuses to run the panel (`REJECTED`).
 
+## Amendment P2e (8 Nov 2026): margin from the mask edge. REJECTED by Kate on 8 Nov 2026 ("Keep the shadow"); not used for any result
+
+Why. The P3 smoke QC sheets showed dark valid samples along the mask edge (NIR, VIS). Kate (8 Nov 2026) asked for a
+margin from that edge, as for the brain. Written after the P2 panel, donor curve and maps and after the P3 smoke
+run, so it is not blind to those numbers. It was chosen only from frame statistics, never from a metric value.
+
+Code. `src/iris_ladder_metrics_frame.py`, version `P2e`, `EDGE_MARGIN_P2E = 3`:
+- A P2 valid sample is kept only if it lies more than 3 strip samples (Euclidean, wrapped in angle) from every missing
+  sample and from the pupil end.
+- The grey level is z-scored again inside the kept samples.
+- Images, QC, units and eligibility are those of P2.
+
+Measured on all NIR target strips. Mean z against the angular distance from the lid gap (in limbus radii):
+
+| Distance (limbus radii) | 0-0.05 | 0.05-0.10 | 0.10-0.15 | 0.15-0.20 | 0.20-0.25 | 0.25-0.30 | 0.30-0.35 | beyond |
+|---|---|---|---|---|---|---|---|---|
+| P2 | -2.13 | -1.79 | -1.40 | -1.03 | -0.74 | -0.48 | -0.26 | +0.24 |
+| P2e | -1.97 | -1.61 | -1.20 | -0.84 | -0.58 | -0.33 | -0.15 | +0.24 |
+
+The dark band is a smooth lid shadow about 0.35 limbus radii wide, not a thin rim of mis-segmented lid. One angular
+sample is about 2.2 radial samples in NIR and VIS (1.5 in UPOL), so 3 isotropic samples are about 0.03 limbus radii.
+
+Margins in physical units, after z-scoring again (dark = z < -2.5):
+
+| Margin (limbus radii) | NIR valid kept | NIR eyes over 2% dark | VIS eyes over 2% dark |
+|---|---|---|---|
+| 0 | 100% | 110/156 | 15/158 |
+| 0.03 | 91% | 107 | 22 |
+| 0.05 | 84% | 94 | 22 |
+| 0.08 | 74% | 68 | 20 |
+| 0.12 | 62% | 32 | 16 |
+
+A first count without z-scoring again gave 110 → 1 eyes for 3 samples. That count was wrong: after z-scoring again,
+the same relative threshold finds new dark samples.
+
+Status. No margin removes the shadow without cutting about 40% of the visible iris. The choice is Kate's:
+- keep the shadow as an acquisition effect (as P2 decided; it recurs in the repeat image);
+- use a wide margin;
+- correct the slow shading inside the mask.
+
+Decision (Kate, 8 Nov 2026): keep the shadow. P2 stays the frame for every iris result. P2e stays in the code for
+the record and refuses to run (`REJECTED`).
+
 ## Units, rungs and fills
 
 - Unit = one eye of one person in one set. Target = its first image in path order that passes segmentation QC;
@@ -187,6 +230,98 @@ Identity reference (ArcFace for faces): not run in v1; the 1 Nov iris-code media
    remains.
 7. 16 px windows on a 64-row strip cover a quarter of the iris radius: windows are local texture patches, not
    whole-iris identity.
+
+## Amendment P3 (8 Nov 2026, before any result of these metrics): metrics unblocked by new weights and libraries
+
+Approval: Kate, 7 Nov 2026 in the metrics-explorer session ("скачивай веса конечно считай все что запланировали",
+"библиотеку ставь"), and 8 Nov 2026 in this session ("Да, пиши поправку"). Shared weights and libraries are listed in
+the session notes file `metric-panel-resources-20261107.md` (TORCH_HOME =
+`C:\Projects\data\projects\identity-ladder-metric\models-20261107\torch`). No iris number of these metrics exists
+when this is written. Frame, units, windows, positions, fills, pools, seeds and the 10 computed metrics are unchanged
+(P2). New code: `src/iris_ladder_metrics_extra.py` (owner: this session); rows stay private.
+
+Common rules for the new metrics:
+- Same targets, positions and fills as the panel; a metric is scored only where it is defined below, and every
+  exclusion is counted per set, rung and reason. Missing is never zero: no filler enters a score. Where a network
+  needs a full rectangle (LPIPS), pixels outside the target mask are set to the target's own masked Gaussian local
+  mean (sd 4 px, wrapped in angle) identically in the reference and the composite, and only pixels in E are scored;
+  the share of such pixels in the network input is stored per window, and the result is also reported on windows
+  with at most 5% of them (sensitivity).
+- Grey strips enter networks as three equal channels. Intensity mapping is fixed, not adaptive: z is clipped to
+  [-3, 3] and mapped linearly to [-1, 1] (LPIPS) or [0, 1] (Betti matching, FID input before ImageNet scaling).
+- Orientation: lower is closer for all new metrics; the target itself scores 0 (d_self = 0). R_self, tests T1 to T3b
+  with Holm over 26 x 4, expectations and calibration follow the panel rules for per-window metrics.
+
+Metrics (status after this amendment):
+1. **LPIPS** (computed): `lpips` 0.1.4, AlexNet backbone with the package's v0.1 linear layers (primary); VGG
+   (sensitivity, reported in a separate block). Input: the 64 x 64 context centred on the window (rows clipped to
+   the 64-row strip, columns wrapped in angle): reference = target, composite = target with the fill inside E.
+   Score = mean of the spatial LPIPS map (`spatial=True`, upsampled to input size) over E.
+2. **Betti matching, matched and unmatched parts** (computed, 2 metrics): Betti-matching 2D
+   (github.com/nstucki/Betti-matching at commit 3e7eca26; Stucki et al., arXiv:2211.15272), sublevel filtration,
+   construction V, comparison union, relative = False, dimensions 0 and 1, on the 16 x 16 window of target and fill
+   mapped to [0, 1]. Matched part = the sum over matched pairs of 2((a0 - a1)^2 + (b0 - b1)^2); unmatched part = the
+   sum over unmatched intervals of (a - b)^2 (the two terms of the library's `loss`). Only windows where E covers
+   the whole window (no missing pixel in target or fill) are scored; the eligible share is reported.
+3. **FID** (computed per rung, set level): pytorch-fid 0.3.0 InceptionV3 pool features (weights
+   pt_inception-2015-12-05), on the same full-window set as Betti matching. Reference set = the target windows;
+   compared set = the fill windows of one rung on the same windows. 16 x 16 windows are upsampled bilinearly to
+   299 x 299. No per-target value: no R_self per person and no Wilcoxon tests. Reported per rung: FID, its value
+   over the stranger rung's (stranger = 1), and a person-bootstrap interval with 200 resamples (seed as the panel).
+   With about 4,000 windows the 2048-dimensional covariance is barely determined; this is a known weakness.
+4. **FWD** (computed per rung, set level, same sets and reporting as FID): Fréchet Wavelet Distance (Veeramacheneni
+   et al., arXiv:2312.15289, ICLR 2025) from the authors' package `pytorchfwd` (to be installed; Kate approved
+   libraries), Haar wavelet. The published setting is level 4 on 256 x 256 images; on 16 x 16 windows level 2 is
+   used (packets of 4 x 4), fixed now. Windows enter as one grey channel in [0, 1]. The package pins
+   scipy==1.11.1, which would downgrade the shared environment; the shared copy installed without dependencies in
+   `models-20261107/pytorchfwd-lib` (pytorchfwd 1.0.1, ptwt 0.1.8, PyWavelets 1.9.0; the same folder the fundus
+   panel uses) is put on the path, and its `forward_wavelet_packet_transform` is called on the window tensors; the
+   per-packet Fréchet distances are averaged as the package does.
+   FID and FWD are computed for the named rungs only (not for the 15 extra stranger anchors str01 to str15).
+
+Topology subset S (added 8 Nov 2026 before any result, because of CPU cost on this shared machine without a GPU;
+the same rule as the fundus panel, general protocol Amendment 9.15): per target eye, 2 positions drawn with the
+seeded generator [SEED, unit, 11] among the positions where the target window lies wholly inside the target's mask
+and `valid` (256 of 256 pixels); eyes with no such position are counted. Betti matching, FID and LPIPS-VGG use S;
+LPIPS-AlexNet and the iris-code Hamming distance use every scored window; FWD uses every scored window whose E
+covers the whole window. Measured cost on the loaded machine (8 Nov): AlexNet 27 ms, VGG 216 ms per window pair,
+Betti matching 0.2 s per call. FID point estimates and bootstrap use the exact nuclear-norm form of the Fréchet
+distance (Tr sqrt(C1 C2) = nuclear norm of A1 A2^T, the formula of the fundus bootstrap; identical at full rank,
+checked 4.19973 vs 4.19973): the package's sqrtm of the rank-deficient 2048 x 2048 covariance took 54 min for the
+12 UPOL smoke rungs (UPOL smoke values were computed with the package form and are kept as such).
+5. **Topology Distance**: stays blocked. No definition is fixed in the project and none is invented here.
+6. **Plausibility**: stays blocked (needs a trained density model of iris strips).
+7. **Identity x4** (embedding angle, norm, PFE, PLDA): stay blocked; no deep iris encoder with open weights is on
+   this machine. Supplementary, not a replacement: **iris-code Hamming distance** (`src/iris_codes.log_gabor_code`
+   on the P2 strip, unchanged parameters): fractional Hamming distance between the codes of the target strip and of
+   the composite strip, over code bits valid in both whose rows lie in the window and whose columns lie within the
+   window +- 8 columns, no rotation shift. The filter runs along the whole angle, so pixels outside the target mask
+   are set as for LPIPS (identically in both strips), and a bit counts only where the target mask holds at that
+   sample (inside the window: where E holds).
+8. **Latent x3**: stay blocked (no generative iris model, CPU only).
+
+Hypotheses for the new metrics, fixed now:
+- H4: LPIPS and both Betti-matching parts do not reward shrinkage: the repeat scores better than the repeat pulled
+  to the mean (T2 passes in UTIRIS_NIR), unlike MSE (H2).
+- H5: FID and FWD rank the dataset mean and the mean of 2 as worse than or equal to one stranger (ratio to the
+  stranger >= 0.9), since averaged windows lose texture.
+- H6: LPIPS keeps the panel's order repeat < lookalike < stranger with R_repeat upper bound below 1 in UTIRIS_NIR.
+Precision: as the panel (differences below 0.1 on R not interpreted); set-level ratios are read only where the
+bootstrap interval excludes the comparison value.
+
+Additional weaknesses: networks trained on natural photos see a 16 px texture patch upsampled (FID) or a small
+context (LPIPS); Betti matching was designed for segmentation likelihoods, here applied to intensities; the
+full-window restriction keeps cleaner windows (eligible shares are reported per rung). The lid shadow (Amendment
+P2e) stays in the valid samples: within about 0.35 limbus radii of a lid gap the NIR grey level is lower (mean z
+-2.1 next to the gap, +0.24 beyond 0.35). It recurs in the repeat image of the same eye; for other people it
+depends on their lid position, so window-level metrics may partly measure lid geometry. This is not corrected.
+
+Gate: a smoke run (every 8th eye per side, all three sets) writes `qc_extra_<set>_P2.png` (for evenly spaced
+targets: reference and composite contexts per rung with LPIPS, the window pair with Betti-matching parts, and the
+eligible shares). Kate's verdict on that sheet is required before the full run. Status label until then: pre-QC.
+Verdict (Kate, 8 Nov 2026): run on P2 with the lid shadow kept (Amendment P2e rejected). The full run is sharded
+over targets (`--shard i/n`, each target in exactly one shard, same seeds per target); set-level FID and FWD are
+computed once on the merged windows (`merge`).
 
 ## Gates and outputs
 

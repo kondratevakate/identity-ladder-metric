@@ -236,7 +236,8 @@ def to_ring(strip, rho, n=241):
 
 
 MAP_COLS = [("anatomy", "Target"), ("other_photo", "Repeat (other photo)"), ("fellow_eye", "Mirror side (fellow eye)"),
-            ("stranger", "Stranger"), ("cohort", "Same sex and age"), ("V", "Dataset mean")]
+            ("stranger", "Stranger"), ("lookalike16", "16 look-alikes"),
+            ("cohort", "Same sex and age"), ("V", "Dataset mean")]
 
 
 def maps_figure(d, private, version, out):
