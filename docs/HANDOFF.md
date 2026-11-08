@@ -1,5 +1,41 @@
 # Handoff: identity-ladder-metric (updated 2026-11-08)
 
+## Night plan 8-9 Nov 2026 (Kate's goal and stop rule; read before any run)
+
+Goal (Kate, 8 Nov evening): finish the CVPR paper's experiments overnight; results intact, reproducible and clear.
+Stop rule (Kate): stop when every planned result is either checkable (code + committed aggregate + test + figure) or
+its limitation is written down (what failed, why, what it would take). A minimal result per plan item is enough:
+Pareto, not exhaustive. Every experiment is checked by eye by the agent itself on a small portion first (smoke run,
+QC sheet on a few targets, look at it, then the full run), exactly as done with Kate so far; tests on every change.
+
+| Item | Owner session | Minimal result | Status |
+|---|---|---|---|
+| Faces F2 panel, 16 px | Faces | chunked resumable run, summary JSON, METRICS_STATUS | restarted 8 Nov night |
+| Faces F3 window sweep | Faces | smoke + own QC sheet; full sweep only if the sheet looks right | pending |
+| Brain tier 2/3 parietal box | Brain | 6/6 chunks, summary with deep box | restarted 8 Nov night |
+| Brain window sweep (Amendment 21) | Brain | own look at qc_window_sizes.png, 3-target smoke at 32 mm, then 8 mm | pending |
+| Fundus full panel | Fundus | full run done 15:04 8 Nov; checks, summary, commit | wrap-up |
+| Iris full P3 | Iris | aggregates into results/, figures without real eyes, commit | wrap-up |
+| All-modality map figure | this session | brain numbers from Gaussian JSONs, footer fixed, test | done 8 Nov night |
+| Integrity | this session | every committed result JSON has its generating script in git; tests pass | pending |
+| Generative/latent block in cross-modality tiles | Explorer | LPIPS, FID/FWD, Betti matching rows added to `results/cross_modality/` from tonight's JSONs | after modality wrap-ups |
+| Dataset card table | Explorer | one row per dataset: persons, images, rungs available, V, repeat / look-alike / stranger ratios | pending |
+| Not tonight (limitation) | | Brain-ID, latent metrics (no GPU), Betti 3D, FastSurfer rest, IXI | written as limitations |
+
+Paper scope (Kate, 8 Nov night; descriptive result is enough, minimal additions only):
+1. How metric families behave for the inpainting task across datasets: classic BraTS (MSE, PSNR, SSIM), protein-structure
+   style (lDDT, TM-like, GDT-like, RMSE after superposition) with their way of correcting a score (size-normalised
+   distance scale, comparison to a reference distribution, per-location confidence), generative and latent (LPIPS,
+   FID/FWD, ArcFace, Betti/persistence). Where it lives: `results/cross_modality/` rank tiles, calibrated c tiles,
+   agreement matrices.
+2. The identity ladder as the concept: the way the dataset is built (repeat, mirror, relative, stranger, look-alikes,
+   sex-age mean, dataset mean) becomes the unit of the metric. Where: all-modality map figure
+   (`fig_ladder_maps_all_modalities`, donor-ladder-bilateral 088453c), per-modality ladder ratios.
+3. Three descriptive results: (a) human images through data distributions (ladder maps, ratios per rung);
+   (b) metrics through these experiments (rank order, agreement, calibration); (c) datasets through these experiments
+   (rank tiles by dataset, dataset agreement, dataset card table).
+Citations for the protein-structure approach go through bib-verify before any text uses them.
+
 ## Status 8 Nov 2026 (after the forced reboot; start here for the papers)
 
 Everything here is from the session reports of 7-8 Nov and the repository; numbers live in the result JSONs, not here.
