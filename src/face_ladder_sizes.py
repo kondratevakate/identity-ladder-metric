@@ -170,6 +170,16 @@ def qc(version, denom, limit):
         plt.close(fig)
         print(out, flush=True)
 
+# plain rung names, as in the paper figure (src/face_ladder_metrics_figures.py)
+PLAIN = {"self": "target itself", "aug_light": "same photo, retest light", "aug_shift": "same photo, shifted",
+         "retest": "another photo", "mirror": "own mirror half", "sibling": "sibling",
+         "lookalike": "most similar person", "lookalike_p219": "most similar, pool 219",
+         "lookalike_oracle": "best person (oracle)", "lookalike_oracle_p219": "oracle, pool 219",
+         "stranger": "unrelated person", "mean_k2": "average of 2 people", "cohort_mean": "sex-age mean",
+         "dataset_mean": "average of all people", "shrink_repeat": "another photo, blended to mean",
+         "shrink_mirror": "mirror half, blended to mean", "wrong_detail": "wrong detail",
+         "noise": "white noise, same amplitude"}
+SRC_NAME = {"celeba": "CelebA", "imdb": "IMDb-WIKI"}
 STAB_METRICS = ("mse", "mae", "ssim", "pearson", "lddt", "tm_like", "gdt_like")   # window-dependent tier-1 metrics
 OUT_JSON = os.path.join(FM.ROOT, "results", "face_ladder_sizes.json")
 OUT_FIG = os.path.join(FM.ROOT, "results", "figures", "fig_face_window_sizes")
@@ -257,9 +267,9 @@ def figure(out, sizes):
             ax.axhline(0, c="grey", lw=0.5)
             ax.axhline(1, c="grey", lw=0.5, ls=":")
             ax.set_xticks(range(len(order)))
-            ax.set_xticklabels(order, rotation=70, fontsize=5.5)
+            ax.set_xticklabels([PLAIN.get(k, k) for k in order], rotation=70, ha="right", fontsize=5.5)
             rs = out["rank_stability"][src][m]
-            ax.set_title(f"{src}: {m}, rung order Spearman min {rs['min_over_object_unit_sizes']:.2f} "
+            ax.set_title(f"{SRC_NAME.get(src, src)}: {m.upper() if m == 'mse' else m}, rung order Spearman min {rs['min_over_object_unit_sizes']:.2f} "
                          f"(5, 10, 20 px)", fontsize=7)
             ax.set_ylabel("R (0 = target itself, 1 = stranger mean)", fontsize=6)
             if i == 0 and j == 0:

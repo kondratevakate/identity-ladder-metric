@@ -2,6 +2,7 @@
 import os
 import sys
 
+import pytest
 import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
@@ -47,3 +48,13 @@ def test_spearman_and_rung_R_skip_missing():
     assert np.isnan(S.spearman([1, 2], [1, 2]))
     view = {"ladder_R": {"mse": {"a": {"R": 0.1}, "b": {"R": None}, "c": {"R": float("nan")}, "d": {"R": 1.2}}}}
     assert S.rung_R(view, "mse") == {"a": 0.1, "d": 1.2}          # missing rungs are left out, never zero
+
+
+def test_every_rung_in_the_size_results_has_a_plain_label():
+    import json
+    path = os.path.join(os.path.dirname(__file__), "..", "results", "face_ladder_sizes.json")
+    if not os.path.exists(path):
+        pytest.skip("size results not computed")
+    out = json.load(open(path, encoding="utf-8"))
+    rungs = {k for src in out["views"].values() for w in src.values() for k in w["ladder_R"]["mse"] if not k.startswith("_")}
+    assert rungs and rungs <= set(S.PLAIN), sorted(rungs - set(S.PLAIN))

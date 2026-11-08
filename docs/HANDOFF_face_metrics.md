@@ -13,24 +13,18 @@ Private data: `C:\Projects\data\projects\identity-ladder-metric\`.
 - F3 geometry: L = 79.55 px (CelebA), 79.47 px (IMDb-WIKI); the 16 px window is f = 0.20; sizes w = 5, 10, 20 px
   (ring 3, 5, 10), positions 215/214, 47/45, 8/8. Code `src/face_ladder_sizes.py`, tests `tests/test_face_ladder_sizes.py`.
 
-## Not done
-- F2 full run: stopped by the reboot with 0 of 36 jobs saved (one job = one position x all targets, about 40+ min each,
-  so nothing reached disk). `parts_v6f/` is empty; nothing to recover.
-- F3 smoke at w = 10: 20 of 94 parts saved and readable (`face-ladder-sizes-20261108-v3/parts_v6f_w10_n4/`); no rows,
-  no QC sheet yet. F3 code for the F2 panel at other sizes (densities per size, LPIPS rule) is not written.
-- `results/face_ladder_metrics.json` still holds tier-1 only; no F2/F3 numbers; metrics board not updated with them.
+## Night 8-9 Nov (done)
+- F2 full: 869972 rows reproduce v1 exactly; set level (FID, FWD, topology) on 1000 cells per source; aggregates in
+  `results/face_ladder_metrics.json` (commit 85d5a02). Rows stay private in `face-ladder-metrics-20261108-v2/`.
+- F3 smoke at w = 10 passed my visual QC (`face-ladder-sizes-20261108-v3/qc_fills_*_v6f_w10_private.png`); minimal F3
+  (F3.1, 100 targets per source, 5/10/20 px): rung order Spearman >= 0.93 for MSE, MAE, SSIM, Pearson, TM/GDT-like on
+  both sources, lDDT 0.80 (CelebA) / 0.87 (IMDb-WIKI); `results/face_ladder_sizes.json`, `fig_face_window_sizes.*`.
+  Small windows pull the look-alike and oracle rungs closer to the target; noise drops below stranger at 5 px.
 
-## Restart (only when Kate gives faces the CPU; iris and fundus go first)
-Environment for the panel: `FUNDUS_METRICS_SRC=.../identity-ladder-bilateral/src/fundus_ladder_metrics.py`,
-`BETTI_SRC=.../models-20261107/betti-matching-2d`, `TORCH_HOME=.../models-20261107/torch`.
-1. Before restarting F2, split jobs into chunks of about 50 targets per position (as the brain t23 runner), so a crash
-   loses minutes, not hours. Then `python src/face_ladder_metrics_panel.py rows --version _v6f --workers 3`
-   (resumes from `parts_v6f/`), then `set` and `summary` (same flags). Estimate 10 to 17 h.
-2. F3 smoke: `python src/face_ladder_sizes.py rows --version _v6f --denom 8 --limit 4 --workers 1` (resumes), then
-   `qc --denom 8 --limit 4`; show the sheet to Kate before the sweep.
-3. Disk: C: had 52 GB free after the reboot; F2 rows are about 1 GB.
-
-## Kate's open decisions
-- When faces get CPU again, and whether F2 (16 px) or the F3 sweep goes first.
-- F3 cost: the F2 panel at three sizes runs on 100 targets per source (about 8 h), tier-1 on all targets
-  (about 7.5 h). Accept as written in the amendment or cut?
+## Open
+- Limitation (F3.1): the F2 panel (LPIPS, PLDA, topology, set level) runs only at 16 px; not at 5/10/20 px.
+- `src/metrics_board.py` (not mine) does not read `results/face_ladder_metrics.json`; face F2/F3 are not on the board.
+- Master checkout files the face code reads but git does not track (commit there by Kate or the master owner):
+  `src/donor_ladder_face.py` (sha256 f134561c...0fe103), `results/donor_ladder_face_v6f.json` (b550a0d2...518e543),
+  `results/donor_ladder_face_v6.json`. `FACE_SRC` in `src/face_ladder_metrics.py` points at the master copy.
+- Plausibility (Gaussian) rates the mean fills as most plausible (a mode property); report it as a limitation.
