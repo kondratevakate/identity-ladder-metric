@@ -326,3 +326,13 @@ def test_run_rows_resumes_from_checkpoints(monkeypatch, tmp_path):
     assert calls == [0, 1]
     r2, _, s2 = FL.run_rows("X", "p0", targets=[0, 1], checkpoint=True)
     assert calls == [0, 1] and sorted(r2.unit) == [0, 1] and len(s2) == 2
+
+
+def test_set_level_marks_bootstrap_interval_invalid(monkeypatch):
+    """Amendment 9.15 outcome: every set-level entry carries the status of its (biased) bootstrap interval."""
+    monkeypatch.setattr(EX, "fwd_from_packets", lambda P1, P2: 1.0)
+    monkeypatch.setattr(EX, "wavelet_packets", lambda w: np.zeros((1, len(w), 1)))
+    recs = [{"unit": u_, "person": f"p{u_}", "patch": 0, "fill": f, "win": np.zeros((16, 16)), "feat": None}
+            for u_ in range(60) for f in ("_target", "stranger")]
+    out = EX.set_level(recs, {f"p{u_}" for u_ in range(60)}, 1, reps=3)["fwd"]["stranger"]
+    assert out["ci95_status"].startswith("invalid")

@@ -198,6 +198,12 @@ def fwd_from_packets(P1, P2):
     return float(np.mean(d))
 
 
+# Amendment 9.15 outcome (8 Nov 2026): resampling persons with replacement duplicates windows, lowers the effective
+# n and raises the finite-sample bias of a Frechet distance (GRAPE stranger FID: point 26.5, bootstrap mean 39.0).
+# The percentile intervals therefore do not cover the point value and are kept only as a record.
+CI_STATUS = "invalid: person-bootstrap percentile interval of a biased set statistic; do not read as an interval"
+
+
 def set_level(recs, persons_all, seed, reps=FID_BOOT):
     """FID (topology subset S) and FWD (all full-window cells) per rung against the target windows of the same
     cells, with the ratio to the stranger rung and a person bootstrap. recs: list of dicts with unit, person, patch,
@@ -251,7 +257,7 @@ def set_level(recs, persons_all, seed, reps=FID_BOOT):
             neg = {"point": int(vals[f] < 0), "bootstrap": int(np.sum(boots[f] < 0))}
             vals[f] = max(vals[f], 0.0)
             boots[f] = np.where(boots[f] < 0, 0.0, boots[f])
-            out[metric][f] = {"negative_set_to_zero": neg, "value": vals[f], "ci95": [float(np.nanpercentile(boots[f], 2.5)),
+            out[metric][f] = {"negative_set_to_zero": neg, "ci95_status": CI_STATUS, "value": vals[f], "ci95": [float(np.nanpercentile(boots[f], 2.5)),
                                                           float(np.nanpercentile(boots[f], 97.5))],
                               "n_windows": int(len(fi)), "n_persons": int(len(np.unique(pp)))}
         if "stranger" in vals and vals["stranger"] > 0:

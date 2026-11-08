@@ -658,3 +658,21 @@ full run. Status until then: pre-QC.
 QC verdict (8 Nov 2026): Kate looked at `qc_extra_GRAPE_p8.png` and `qc_extra_PAPILA_p9.png`, asked whether the blue
 (outside-field) zone is treated as missing (it is: never scored; filled only as network input), and chose "Keep current":
 LPIPS on all cells stays primary, the cells with <= 5% set pixels stay the sensitivity block. Full run follows.
+
+Outcome of the full run (8 Nov 2026, run started after the QC verdict; checkpoints in the v2 private folder):
+- Reproduction: all 24 v1 columns equal the v1 rows cell by cell (PAPILA 155,593 rows, GRAPE 103,385; same keys).
+- Eligibility: LPIPS AlexNet on every row; VGG and Betti only in S (Betti: full windows of S, 25,238 PAPILA and
+  12,786 GRAPE rows); no zero values; outside-field pixels never scored.
+- LPIPS sensitivity block (<= 5% set pixels): PAPILA has no such cell (minimum set share 0.11), so it is not run
+  there; GRAPE has it. This block cannot check PAPILA; reported, not replaced.
+- H7 (no reward for shrinkage, T2 after Holm): LPIPS passes in PAPILA, fails in GRAPE; Betti matched and
+  unmatched fail in both datasets (shrunk donors score closer than unshrunk). H7 is not supported for Betti.
+- H8 (FID, FWD: dataset mean and mean of 2 ratio to stranger >= 0.9): holds on point values in both datasets.
+- H9 (GRAPE LPIPS repeat < look-alike < stranger, R_self(repeat) upper bound < 1): holds (0.30 < 0.56 < 0.99;
+  repeat CI 0.26-0.34).
+- Deviation found after the run: the person-bootstrap percentile intervals of FID and FWD do not cover their point
+  values (resampling duplicates windows and raises the finite-sample bias). In `results/fundus_ladder_metrics_a915.json` the FID
+  and FWD `ci95` and `ratio_ci95` fields are invalid by this note (later runs write `ci95_status`) and are not read; a valid interval for set-level metrics needs its own amendment. FWD of the
+  fellow rung is negative before clamping in both datasets (counted in `negative_set_to_zero`).
+- Results file: `results/fundus_ladder_metrics_a915.json` (new version; `results/fundus_ladder_metrics.json` of
+  Amendment 9.14 is kept unchanged, per Kate 8 Nov 2026).

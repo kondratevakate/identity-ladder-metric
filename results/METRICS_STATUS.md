@@ -2,7 +2,7 @@
 
 **СТОП: сначала регистрация и визуальный QC ≥90%, включая зеркальные сравнения. Другие метрические эксперименты приостановлены. Приведённые ниже 2D-числа получены БЕЗ регистрации и пока не годятся для выводов о качестве метрик. QTIM также не прошёл необходимый QC.**
 
-Обновлено (UTC): 2026-11-06T18:51:21.891441+00:00. Генерируется из сохранённых агрегатов; исходные результаты не перезаписываются.
+Обновлено (UTC): 2026-11-08T17:27:21.228921+00:00. Генерируется из сохранённых агрегатов; исходные результаты не перезаписываются.
 
 ## Что сейчас проверяется
 
@@ -83,6 +83,41 @@ RMSE/MSE и варианты PSNR могут давать одинаковые �
 | V_branches | primary | 0.649 / 0.369 | не применялось | не применялось |
 
 Все ступени, lambda=0/0.25/0.5/0.75/1, интервалы и чувствительности сохранены в [ladder2d.json](ladder2d.json). Отсутствующая lambda не достраивается.
+
+## Фундус, донорская лестница: панель 26 метрик (Amendment 9.15, статус pre-QC)
+
+GRAPE P8 и PAPILA P9, окно 16 px. Предыдущая версия (Amendment 9.14) сохранена без изменений в [fundus_ladder_metrics.json](fundus_ladder_metrics.json). Заблокированная метрика не равна нулю.
+
+| Метрика | Группа | Статус | Причина |
+|---|---|---|---|
+| mse | A fidelity | computed |  |
+| rmse | A fidelity | computed |  |
+| psnr | A fidelity | computed |  |
+| mae | A fidelity | computed |  |
+| ssim | A fidelity | computed |  |
+| ms_ssim | A fidelity | computed |  |
+| lpips | A fidelity | computed |  |
+| acc_dataset | A anomaly | computed |  |
+| acc_matched | A anomaly | computed |  |
+| amplitude_dataset | A anomaly | computed |  |
+| amplitude_matched | A anomaly | computed |  |
+| lddt | B structure | computed |  |
+| intensity_persistence | B structure | computed |  |
+| betti_matching_matched | B structure | computed |  |
+| betti_matching_unmatched | B structure | computed |  |
+| id_angle | B identity | blocked | RETFound (YukunZhou/RETFound_mae_natureCFP) is gated on Hugging Face; access needs Kate's form; the identity definition and its cost get their own amendment before any result (Amendment 9.15, item 7) |
+| id_norm | B identity | blocked | RETFound (YukunZhou/RETFound_mae_natureCFP) is gated on Hugging Face; access needs Kate's form; the identity definition and its cost get their own amendment before any result (Amendment 9.15, item 7) |
+| id_pfe | B identity | blocked | RETFound (YukunZhou/RETFound_mae_natureCFP) is gated on Hugging Face; access needs Kate's form; the identity definition and its cost get their own amendment before any result (Amendment 9.15, item 7); PFE also needs an uncertainty head, which RETFound has not |
+| id_plda | B identity | blocked | RETFound (YukunZhou/RETFound_mae_natureCFP) is gated on Hugging Face; access needs Kate's form; the identity definition and its cost get their own amendment before any result (Amendment 9.15, item 7); PLDA also needs a fitted model |
+| latent_pullback | B latent | blocked | no generative fundus model and no GPU on this machine; LDDMM between 16 px windows would be a pairwise registration (stop rule); plan and cost reported, not run (Amendment 9.15, item 8) |
+| latent_fisher_rao | B latent | blocked | no generative fundus model and no GPU on this machine; LDDMM between 16 px windows would be a pairwise registration (stop rule); plan and cost reported, not run (Amendment 9.15, item 8) |
+| latent_lddmm | B latent | blocked | no generative fundus model and no GPU on this machine; LDDMM between 16 px windows would be a pairwise registration (stop rule); plan and cost reported, not run (Amendment 9.15, item 8) |
+| plausibility | C reference-free | blocked | needs a trained density model of fundus images (Amendment 9.15, item 6) |
+| fid | C reference-free | computed (set level, per rung; no per-target value, Holm p = 1) |  |
+| fwd | C reference-free | computed (set level, per rung; no per-target value, Holm p = 1) |  |
+| topology_distance | C reference-free | blocked | no definition of Topology Distance is fixed in the project; none is invented (Amendment 9.15, item 5) |
+
+Интервалы bootstrap для FID и FWD недействительны (Amendment 9.15; поле `ci95_status` в следующих прогонах): смещены, точечные значения не покрывают. Итоги H7-H9 и воспроизведение v1 записаны в Amendment 9.15.
 
 ## Полные исходные шкалы и интервалы: девять BraTS-выходов
 

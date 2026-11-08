@@ -1,12 +1,13 @@
 {
-  "generated_at_utc": "2026-11-06T18:51:21.891441+00:00",
+  "generated_at_utc": "2026-11-08T17:27:21.228921+00:00",
   "source_sha256": {
     "ladder2d_brats_baseline.json": "ec027dc6e51af2a0b166bfe5e373913b62e06d54b5d3d3546bccebeeab34f3b6",
     "ladder2d.json": "f996f34ec15334cfa66d443db156da616cf9e14ed2d583d0ccebe1ffb79be836",
     "care_reproduction.json": "60da156c1f2eda27489375bee629c54fbb92ab463906ea2b00c8715393bbbf7c",
     "care_reproduction_all_phases_posthoc.json": "cdc56f6c0fd6b9f6a2d6d760277ed24fd11e0d26172976609403f5ebc5df9822",
     "care_iteration2.json": "be3cff62a444fb068c5336d1eb456ec7ead0c22b774775195a93034ccaae870a",
-    "care_iteration2_state.json": "bc37b3afea520674a99adcbcba8b733cace4782695e5bf9d2aae9bacb56a6529"
+    "care_iteration2_state.json": "bc37b3afea520674a99adcbcba8b733cace4782695e5bf9d2aae9bacb56a6529",
+    "fundus_ladder_metrics_a915.json": "ae20cba13457bc8e86257778f92d25fddc02a970e338e7979aca1d37f29ded3f"
   },
   "brats_rows": [
     {

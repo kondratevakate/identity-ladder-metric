@@ -109,6 +109,17 @@ def build():
                 cells.append("не применялось" if not entry else f"{entry['lambda=1']['mean']:.3f} / " + (f"{entry['lambda=0']['mean']:.3f}" if "lambda=0" in entry else "нет mean"))
             lines.append(f"| {method} | " + " | ".join(cells) + " |")
         lines += ["", "Все ступени, lambda=0/0.25/0.5/0.75/1, интервалы и чувствительности сохранены в [ladder2d.json](ladder2d.json). Отсутствующая lambda не достраивается."]
+    fundus = load("fundus_ladder_metrics_a915.json")
+    if fundus:
+        sources.append("fundus_ladder_metrics_a915.json")
+        lines += ["", "## Фундус, донорская лестница: панель 26 метрик (Amendment 9.15, статус " + fundus["status"] + ")", "",
+                  "GRAPE P8 и PAPILA P9, окно 16 px. Предыдущая версия (Amendment 9.14) сохранена без изменений в "
+                  "[fundus_ladder_metrics.json](fundus_ladder_metrics.json). Заблокированная метрика не равна нулю.", "",
+                  "| Метрика | Группа | Статус | Причина |", "|---|---|---|---|"]
+        for k, v in fundus["metrics_confirmatory"].items():
+            lines.append(f"| {k} | {v['group']} | {v['status']} | {v.get('reason', '')} |")
+        lines += ["", "Интервалы bootstrap для FID и FWD недействительны (Amendment 9.15; поле `ci95_status` в следующих прогонах): смещены, точечные "
+                  "значения не покрывают. Итоги H7-H9 и воспроизведение v1 записаны в Amendment 9.15."]
     lines += ["", "## Полные исходные шкалы и интервалы: девять BraTS-выходов", "",
               "c: среднее и 95% bootstrap-интервал с группировкой по людям; исходная шкала: медиана [Q1, Q3]. Источник: [сохранённый агрегат](ladder2d_brats_baseline.json).", "",
               "| Набор | Ступень | Метрика | Исходная медиана [Q1, Q3] | c [95% интервал] | Пар / людей |", "|---|---|---|---|---|---|"]
