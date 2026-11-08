@@ -358,3 +358,33 @@ def test_p3_aggregates_r_scale_tests_and_holm_on_toy_rows():
     adj = P3.holm([0.01, 0.04, 1.0])
     assert np.allclose(adj, [0.03, 0.08, 1.0])
     assert "str00" not in P3.raw_means(r, "m", persons, bidx)
+
+
+def test_window_is_explicit_and_10px_grid_keeps_validity_rules():
+    import iris_ladder_metrics as IL
+
+    old = (IL.WIN, IL.RING)
+    try:
+        with pytest.raises(SystemExit):
+            IL.set_window(12)
+        assert IL.set_window(10) == (10, 5)
+        valid = np.ones((IL.H, IL.W), bool)
+        valid[:, :40] = False
+        pos = IL.positions(valid)
+        assert pos and all(y % 10 == 0 and x % 10 == 0 for y, x in pos)
+        assert all(valid[y:y + 10, x:x + 10].mean() >= IL.MIN_POS_VALID for y, x in pos)
+        ring = IL.ring_mask(20, 100)
+        assert ring.sum() == (10 + 2 * 5) ** 2 - 100
+    finally:
+        IL.WIN, IL.RING = old
+
+
+def test_window_comparison_flags_order_changes_beyond_tolerance():
+    import iris_ladder_metrics_window as WC
+
+    R16 = {"mse": {"repeat": {"R": 0.2}, "lookalike": {"R": 0.5}, "stranger": {"R": 1.0}, "dataset_mean": {"R": 0.5}}}
+    R10 = {"mse": {"repeat": {"R": 0.25, "ci95": [0.2, 0.3]}, "lookalike": {"R": 0.55, "ci95": [0.5, 0.6]},
+                   "stranger": {"R": 1.0, "ci95": [1, 1]}, "dataset_mean": {"R": 1.3, "ci95": [1.2, 1.4]}}}
+    c = WC.compare(R16, R10)["mse"]
+    assert [x["pair"] for x in c["order_changes_beyond_0.1"]] == ["dataset_mean vs stranger"]
+    assert c["spearman_rung_order"] > 0.5

@@ -323,6 +323,27 @@ Verdict (Kate, 8 Nov 2026): run on P2 with the lid shadow kept (Amendment P2e re
 over targets (`--shard i/n`, each target in exactly one shard, same seeds per target); set-level FID and FWD are
 computed once on the merged windows (`merge`).
 
+## Amendment P4 (8 Nov 2026 night, window in object units; recorded before any result at this size)
+
+Rule: cross-modality note `window-in-object-units-20261108.md` (Kate, 8 Nov 2026, "да переделай честно"); minimal
+form per Kate's night plan of 8-9 Nov ("one size f = 1/8 next to the current one", one CPU process).
+- Object extent L = iris outer diameter in strip columns: D = W / pi = 256 / pi = 81.5 angular samples. The current
+  16 px window is f = 16 / 81.5 = 0.196 (about 1/5); it stays the reference result and is not rerun.
+- New size: f = 1/8, w = round(81.5 / 8) = 10 px (both axes of the strip, as now), context ring ceil(w / 2) = 5 px.
+  Positions on a 10 px grid with the validity thresholds unchanged (95% of the window, 50% of the ring, 50% in the
+  target mask); the number of positions is reported, never filled. Everything else as the panel (frame P2, fills,
+  pools, seeds, 10 computed metrics, R_self, T1-T3b with Holm 26 x 4).
+- Scope (CPU budget of one process): UTIRIS_NIR only (primary set). Not run tonight, written as limitations: f = 1/16
+  (5 px) and f = 1/4 (20 px), VIS and UPOL at 10 px, and the Amendment P3 metrics (LPIPS, Betti matching, FID, FWD,
+  iris code) at 10 px.
+- Report: `results/iris_ladder_metrics_w10.json` (same structure as the panel JSON; 16 px results untouched) and a
+  figure of R_self per rung at 16 px against 10 px with the Spearman correlation of rung order per metric. A rung-
+  order claim made at 16 px is stated with its scale unless it also holds at 10 px.
+- Gate: smoke run (every 8th eye per side) with the fills QC sheet at 10 px, checked by eye by the agent before the
+  full run (Kate's night rule); the window is a required argument (`--window`, no default).
+- Weakness: one angular sample is about 2.2 radial samples in NIR, so a square 10 x 10 px window is about 10 x 4.5
+  in isotropic units, as the 16 px window was (16 x 7); the anisotropy is unchanged, not corrected.
+
 ## Gates and outputs
 
 - Tests: `tests/test_iris_ladder_metrics.py` (pupil through a ring reflex; mirror = strip of the flipped image;

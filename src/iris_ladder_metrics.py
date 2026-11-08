@@ -32,7 +32,8 @@ sys.path.insert(0, HERE)
 import iris_ladder_metrics_frame as IF  # noqa: E402
 
 H, W = IF.H, IF.W
-WIN, RING = 16, 8
+WIN, RING = 16, 8                          # reference size of the committed results; the panel run sets it explicitly
+WINDOWS = (16, 10)                         # 16 px = reference (f = 0.196 of D = 256 / pi); 10 px = f 1/8 (Amendment P4)
 MIN_POS_VALID, MIN_RING_VALID, MIN_IN_MASK = 0.95, 0.5, 0.5
 MIN_FILL_SHARE = 0.5
 COVER = 0.9
@@ -148,8 +149,21 @@ def score(x, mx, f, e, ws, mu_d, sigma):
 S_ = {}
 
 
+def set_window(w):
+    """Window side and context ring (ring = ceil(w / 2)) for this process and for the fundus helper it calls
+    (repeat_sigma reads the fundus module's WIN). Required in every panel run; no silent default."""
+    global WIN, RING
+    if w not in WINDOWS:
+        raise SystemExit(f"window {w} px is not in the protocol ({WINDOWS})")
+    WIN, RING = int(w), int(-(-w // 2))
+    if FL is not None:
+        FL.WIN, FL.RING = WIN, RING
+    return WIN, RING
+
+
 def _init(state):
     load_shared(state.pop("fundus_path"), state.pop("brain_path"))
+    set_window(state.pop("window"))
     S_.update(state)
 
 
@@ -324,6 +338,7 @@ def run_rows(st, targets, workers):
     state = {k: v for k, v in st.items() if k in ("X", "M", "XF", "MF", "idx", "valid", "person", "side", "repeat",
                                                      "fellow", "pos", "side_units", "lam", "sigma", "name")}
     state["fundus_path"], state["brain_path"] = os.environ["FUNDUS_METRICS_SRC"], os.environ["BRAIN_METRICS_SRC"]
+    state["window"] = WIN
     rows, t0, done = [], time.time(), 0
     with ProcessPoolExecutor(workers, initializer=_init, initargs=(state,)) as ex:
         for r in ex.map(run_target, targets, chunksize=2):
@@ -419,10 +434,13 @@ def main():
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--sets", nargs="+", default=list(IF.SETS))
     ap.add_argument("--preprocessing", required=True, choices=IF.VERSIONS)
+    ap.add_argument("--window", type=int, required=True, choices=WINDOWS, help="window side in px (no default)")
     a = ap.parse_args()
     if a.preprocessing in IF.REJECTED:
         raise SystemExit(f"preprocessing {a.preprocessing} was rejected: {IF.REJECTED[a.preprocessing]}")
     load_shared()
+    set_window(a.window)
+    sfx = "" if WIN == 16 else f"_w{WIN}"
     os.makedirs(IF.PRIVATE, exist_ok=True)
     t0 = time.time()
     results, panel = {}, {}
@@ -435,15 +453,17 @@ def main():
               f"lambda {({k: round(v, 3) for k, v in st['lam'].items()})}, targets {len(targets)}", flush=True)
         r = run_rows(st, targets, a.workers)
         tag = "smoke" if a.mode == "smoke" else "full"
-        r.to_csv(os.path.join(IF.PRIVATE, f"rows_{name}_{a.preprocessing}_{tag}.csv.gz"), index=False)
+        r.to_csv(os.path.join(IF.PRIVATE, f"rows_{name}_{a.preprocessing}_{tag}{sfx}.csv.gz"), index=False)
         if a.mode == "smoke":
             qc_sheet(st, list(np.linspace(0, n - 1, 12).round().astype(int)),
-                     os.path.join(IF.PRIVATE, f"qc_fills_{name}_{a.preprocessing}.png"))
+                     os.path.join(IF.PRIVATE, f"qc_fills_{name}_{a.preprocessing}{sfx}.png"))
         s = summarise(st, r)
         panel[name] = {"frame": a.preprocessing, **s}
         results[name] = {"frame": a.preprocessing, **s["mse_ratio"]}
         print(f"{name} done, rows {len(r)}, {time.time() - t0:.0f}s", flush=True)
-    doc = {"protocol": "docs/PROTOCOL_iris_metrics.md", "status": STATUS, "mode": a.mode,
+    status = STATUS if WIN == 16 else (f"Amendment P4: window {WIN} px (f = 1/8 of D = 256 / pi), frame "
+                                       f"{a.preprocessing}, sets {', '.join(a.sets)}; 16 px results are the reference")
+    doc = {"protocol": "docs/PROTOCOL_iris_metrics.md", "status": status, "mode": a.mode,
            "spec": FL.result_spec.SPEC,
            "spec_meta": {"bootstrap_unit": "person", "pools": "leave-person-out", "stranger_rung": "stranger",
                          "mirror_rungs": {"fellow": "sides"}},
@@ -459,7 +479,8 @@ def main():
     doc = FL.finite(doc)
     for flag in FL.result_spec.enforce(doc):
         print("SPEC (soft):", flag, flush=True)
-    out = OUT_JSON if a.mode == "run" else os.path.join(IF.PRIVATE, "iris_ladder_metrics_smoke.json")
+    out = (OUT_JSON.replace(".json", f"{sfx}.json") if a.mode == "run"
+           else os.path.join(IF.PRIVATE, f"iris_ladder_metrics_smoke{sfx}.json"))
     with open(out, "w", encoding="utf-8") as fh:
         json.dump(doc, fh, indent=1)
     print("written", out, flush=True)

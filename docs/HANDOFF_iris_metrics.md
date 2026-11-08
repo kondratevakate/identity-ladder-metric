@@ -37,6 +37,10 @@ Private outputs (UTIRIS redistribution is not granted, so nothing per-image or p
   stranger) but several set-level bootstrap intervals exclude their own point (flagged). H6 holds (LPIPS R 0.19 < 0.32 < 1.0).
 - Left: Kate's verdict on these metrics; window amendment and frame P2 unchanged (wait for Kate's lid-shadow sheets);
   14 blocked metrics; `src/metrics_board.py` has no iris section (not this session's file); QC sheet title says "smoke".
+- Amendment P4 (window in object units, minimal): NIR panel at 10 px (f = 1/8 of D = 256 / pi) next to the 16 px
+  reference; `results/iris_ladder_metrics_w10.json` (block `window_comparison`), `fig_iris_window_f8`. Rung order is
+  stable (Spearman 0.97 to 1.00 over 13 metrics); the repeat-lookalike gap drops below 0.1 for MAE, RMSE, RMSE_rep and
+  persistence (look-alike moves closer at 10 px). Not run (limitations): 5 and 20 px, VIS and UPOL, P3 metrics at 10 px.
 
 ## Not done (before the full run)
 
