@@ -10,15 +10,15 @@ QC sheet on a few targets, look at it, then the full run), exactly as done with 
 
 | Item | Owner session | Minimal result | Status |
 |---|---|---|---|
-| Faces F2 panel, 16 px | Faces | chunked resumable run, summary JSON, METRICS_STATUS | restarted 8 Nov night |
-| Faces F3 window sweep | Faces | smoke + own QC sheet; full sweep only if the sheet looks right | pending |
-| Brain tier 2/3 parietal box | Brain | 6/6 chunks, summary with deep box | done 8 Nov 22:30 |
-| Brain window sweep (Amendment 21) | Brain | own look at qc_window_sizes.png, 3-target smoke at 32 mm, then 8 mm | 8 mm done; 32 mm running |
-| Fundus full panel | Fundus | full run done 15:04 8 Nov; checks, summary, commit | wrap-up |
-| Iris full P3 | Iris | aggregates into results/, figures without real eyes, commit | wrap-up |
+| Faces F2 panel, 16 px | Faces | chunked resumable run, summary JSON, METRICS_STATUS | done 85d5a02: CelebA and IMDb-WIKI aggregates (v6f) |
+| Faces F3 window sweep | Faces | smoke + own QC sheet; full sweep only if the sheet looks right | done 79b151a: 5/10/20 px (f 1/16, 1/8, 1/4) on 100 targets; rung order Spearman min 0.93 (MSE, SSIM), 0.80-0.87 (lDDT); figure `fig_face_window_sizes` checked by eye |
+| Brain tier 2/3 parietal box | Brain | 6/6 chunks, summary with deep box | done eaed1e4 (both boxes) |
+| Brain window sweep (Amendment 21) | Brain | own look at qc_window_sizes.png, 3-target smoke at 32 mm, then 8 mm | 8 mm done eaed1e4; 32 mm full run in progress 9 Nov 00:20 (~17 min per position, 2 workers); if it does not finish, the 32 mm smoke (3 targets) is the result and the rest is a limitation |
+| Fundus full panel | Fundus | full run done 15:04 8 Nov; checks, summary, commit | done on donor-ladder-bilateral c040e37, 599d5a6 (A9.15 full run and figure) |
+| Iris full P3 | Iris | aggregates into results/, figures without real eyes, commit | done e2df476 (P3), 6461725 (P4, 10 px; rung order Spearman 0.97-1.00) |
 | All-modality map figure | this session | brain numbers from Gaussian JSONs, footer fixed, test | done 8 Nov night |
-| Integrity | this session | every committed result JSON has its generating script in git; tests pass | pending |
-| Generative/latent block in cross-modality tiles | Explorer | LPIPS, FID/FWD, Betti matching rows added to `results/cross_modality/` from tonight's JSONs | done 4c58f32: fundus 9.15 + iris P3 in `generative_tiles.png` and agreement; brain, faces drawn "not run" (limitation in `docs/ANALYSIS_cross_modality.md` 4b); rerun `generative_block.py` once their JSONs land |
+| Integrity | this session | every committed result JSON has its generating script in git; tests pass | done: paper-core JSONs trace to committed scripts; 371 tests pass. Limitation: the face v6f pipeline (`src/donor_ladder_face.py`, its protocol) is uncommitted on master and `src/face_ladder_metrics.py` hardcodes FACE_SRC to the master path; needs Kate's decision on who commits it and a repo-relative path |
+| Generative/latent block in cross-modality tiles | Explorer | LPIPS, FID/FWD, Betti matching rows added to `results/cross_modality/` from tonight's JSONs | done 4c58f32: fundus 9.15 + iris P3 in `generative_tiles.png` and agreement; brain, faces drawn "not run" (limitation in `docs/ANALYSIS_cross_modality.md` 4b); faces F2 and brain Amendment 20 added in cdbb4d7; still "not run" with reason: brain Betti 3D, brain FID/FWD, LPIPS VGG on faces and brain |
 | Dataset card table | Explorer | one row per dataset: persons, images, rungs available, V, repeat / look-alike / stranger ratios | done 4c58f32: `results/cross_modality/dataset_card.{json,png}`, n/a never 0, test `tests/test_cross_modality.py`; explorer page v16 |
 | Not tonight (limitation) | | Brain-ID, latent metrics (no GPU), Betti 3D, FastSurfer rest, IXI | written as limitations |
 
