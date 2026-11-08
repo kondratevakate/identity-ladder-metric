@@ -12,7 +12,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 BOX = re.compile(r"uniform_filter|box_filter|boxcar")  # box-ok: detector pattern
 OK = re.compile(r"#\s*box-ok:\s*\S")
-KNOWN = {"src/donor_ladder_brain_maps.py": "brain session (brain protocol Amendment 10); not fixed here"}
+KNOWN = {}  # donor_ladder_brain_maps.py synced to the Gaussian version of cvpr2027-paper on 2026-11-08
 
 
 def offenders(lines_by_file):

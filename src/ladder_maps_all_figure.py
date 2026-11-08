@@ -27,6 +27,18 @@ DATA = os.environ.get("DATA_ROOT", r"C:\Projects\data")
 PROJ = os.path.join(DATA, "projects", "identity-ladder-metric")
 MAIN = os.environ.get("LADDER_MAIN", os.path.normpath(os.path.join(ROOT, "..", "..", "identity-ladder-metric")))
 FACE_VERSION = "_v6f"                      # face result approved by Kate (face protocol Amendment 10)
+# Brain JSONs live on cvpr2027-paper (Gaussian windows, Amendments 16 and 18); the private NIfTI maps drawn here were
+# written by those same runs. The copies on this branch are the older box-window results and must not be used.
+BRAIN_RESULTS = os.environ.get("BRAIN_RESULTS", os.path.normpath(os.path.join(ROOT, "..", "identity-ladder-cvpr2027",
+                                                                             "results")))
+
+
+def load_brain_json(name):
+    """Brain map JSON from BRAIN_RESULTS; refuses any result whose window is not Gaussian."""
+    d = json.load(open(os.path.join(BRAIN_RESULTS, name), encoding="utf-8"))
+    if "gaussian" not in str(d.get("window", "")).lower():
+        raise ValueError(f"{name} in {BRAIN_RESULTS} is not a Gaussian-window result (window={d.get('window')!r})")
+    return d
 OUT = os.path.join(ROOT, "results", "figures", "fig_ladder_maps_all_modalities")
 
 COLS = [("anatomy", "Mean anatomy"), ("repeat", "Another photo\nor scan"), ("mirror", "Mirror side"),
@@ -83,8 +95,8 @@ def brain_row():
     valid = np.ones(under.shape, bool)
     for v in m.values():
         valid &= np.isfinite(v)
-    fine = json.load(open(os.path.join(ROOT, "results", "donor_ladder_brain_maps.json"), encoding="utf-8"))["maps"]
-    grid = json.load(open(os.path.join(ROOT, "results", "donor_ladder_brain_map_grid.json"), encoding="utf-8"))["maps"]
+    fine = load_brain_json("donor_ladder_brain_maps.json")["maps"]
+    grid = load_brain_json("donor_ladder_brain_map_grid.json")["maps"]
     key = {"repeat": fine["repeat"], "mirror": fine["mirror"], "sibling": fine["sibling"],
            "stranger": fine["stranger"], "sexage": fine["cohort"], "lookalike": grid["knn16_s4"]}
     stats = {k: (v["pooled_ratio"], None, None) for k, v in key.items()}
@@ -220,8 +232,8 @@ def main():
     cb.outline.set_linewidth(0.4)
     cb.set_label("error of the donor / error of the dataset mean   (blue: beats the mean, white: = mean, "
                  "red: 2 = stranger)", fontsize=7.2, color=INK)
-    fig.text(0.5, 0.012, "Pre-QC. Faces v6f, 16 px Gaussian window; brain QTIM session 1, affine to MNI, 16 mm box "
-             "window (brain maps not yet switched to the Gaussian), look-alikes on an 8 mm grid; fundus frame only "
+    fig.text(0.5, 0.012, "Pre-QC. Faces v6f, 16 px Gaussian window; brain QTIM session 1, affine to MNI, 16 mm Gaussian "
+             "window, look-alikes on an 8 mm grid with Gaussian weights; fundus frame only "
              "(Amendment 9.13), 16 px Gaussian window; iris P2 rubber-sheet strip drawn on the ring, 16 px Gaussian "
              "window wrapped in angle, look-alikes per 8 px block, upper lid region not shown (valid in < 90% of "
              "eyes). Persons left out of their own pools. Mirror side: the other face half, hemisphere or eye.", ha="center", fontsize=6.0, color=MUTED, wrap=True)
