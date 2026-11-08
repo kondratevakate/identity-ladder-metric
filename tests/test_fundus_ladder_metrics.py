@@ -298,3 +298,31 @@ def test_set_level_negative_frechet_is_set_to_zero_and_counted(monkeypatch):
     assert out["value"] == 0.0
     assert out["negative_set_to_zero"] == {"point": 1, "bootstrap": 5}
     assert out["ci95"] == [0.0, 0.0]
+
+
+def test_run_rows_resumes_from_checkpoints(monkeypatch, tmp_path):
+    """A killed full run resumes: finished targets are read from their checkpoint files, not recomputed."""
+    import fundus_ladder_metrics as FL
+    calls = []
+
+    class Pool:
+        def __init__(self, *a, **k):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def map(self, fn, todo, chunksize=1):
+            calls.extend(todo)
+            return [([{"unit": t}], [{"unit": t}]) for t in todo]
+
+    monkeypatch.setattr(FL, "PRIVATE", str(tmp_path))
+    monkeypatch.setattr(FL, "build", lambda name, arm: {"idx": np.arange(4)})
+    monkeypatch.setattr(FL, "ProcessPoolExecutor", Pool)
+    r1, _, _ = FL.run_rows("X", "p0", targets=[0, 1], checkpoint=True)
+    assert calls == [0, 1]
+    r2, _, s2 = FL.run_rows("X", "p0", targets=[0, 1], checkpoint=True)
+    assert calls == [0, 1] and sorted(r2.unit) == [0, 1] and len(s2) == 2

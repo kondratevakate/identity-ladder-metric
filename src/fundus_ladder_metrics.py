@@ -14,10 +14,12 @@ Usage:
 LADDER_EXTERNAL must point to a checkout's external/ (GRAPE metadata), as for donor_ladder_2d_facefmt.
 """
 import argparse
+import gzip
 import hashlib
 import importlib.util
 import json
 import os
+import pickle
 import sys
 import time
 from concurrent.futures import ProcessPoolExecutor
@@ -504,7 +506,7 @@ def build(name, arm):
     return st
 
 
-def run_rows(name, arm, targets=None, workers=6):
+def run_rows(name, arm, targets=None, workers=6, checkpoint=False):
     st = build(name, arm)
     n = len(st["idx"])
     targets = list(range(n)) if targets is None else list(targets)
@@ -512,16 +514,35 @@ def run_rows(name, arm, targets=None, workers=6):
     st["models_path"] = EX.MODELS
     st["extra"] = EX.MODELS is not None
     rows, sets = [], []
-    t0, done = time.time(), 0
-    with ProcessPoolExecutor(workers, initializer=_init, initargs=(st,)) as ex:
-        for r, sr in ex.map(run_target_sets, targets, chunksize=1):
+    # Checkpoints (private folder): one file per finished target, so a killed run resumes where it stopped. Only
+    # this pipeline's own outputs are unpickled.
+    ck = os.path.join(PRIVATE, f"partial_{name}_{arm}_{len(targets)}") if checkpoint else None
+    todo = targets
+    if ck:
+        os.makedirs(ck, exist_ok=True)
+        have = {int(f[:-7]) for f in os.listdir(ck) if f.endswith(".pkl.gz")}
+        for ti in sorted(have & set(targets)):
+            with gzip.open(os.path.join(ck, f"{ti}.pkl.gz"), "rb") as fh:
+                r, sr = pickle.load(fh)
             rows.extend(r)
             sets.extend(sr)
+        todo = [ti for ti in targets if ti not in have]
+        print(f"  {name}: resumed {len(targets) - len(todo)} targets from checkpoints", flush=True)
+    t0, done = time.time(), 0
+    with ProcessPoolExecutor(workers, initializer=_init, initargs=(st,)) as ex:
+        for ti, (r, sr) in zip(todo, ex.map(run_target_sets, todo, chunksize=1)):
+            rows.extend(r)
+            sets.extend(sr)
+            if ck:
+                tmp = os.path.join(ck, f"{ti}.tmp")
+                with gzip.open(tmp, "wb") as fh:
+                    pickle.dump((r, sr), fh)
+                os.replace(tmp, os.path.join(ck, f"{ti}.pkl.gz"))
             done += 1
-            if done % 10 == 0 or done == len(targets):
+            if done % 10 == 0 or done == len(todo):
                 el = time.time() - t0
-                print(f"  {name}: {done}/{len(targets)} targets, {el / 60:.1f} min, ETA "
-                      f"{el / done * (len(targets) - done) / 60:.1f} min", flush=True)
+                print(f"  {name}: {done}/{len(todo)} targets, {el / 60:.1f} min, ETA "
+                      f"{el / done * (len(todo) - done) / 60:.1f} min", flush=True)
     st.pop("bm_path", None)
     st.pop("models_path", None)
     return pd.DataFrame(rows), st, sets
@@ -1055,7 +1076,7 @@ def main():
         n, side = len(units), units.side.to_numpy()
         targets = (sorted(np.concatenate([np.flatnonzero(side == s_)[::a.every] for s_ in ("R", "L")]).tolist())
                    if a.mode == "smoke" else None)
-        r, st, sets = run_rows(name, arm, targets, a.workers)
+        r, st, sets = run_rows(name, arm, targets, a.workers, checkpoint=a.mode == "run")
         tag = "smoke" if a.mode == "smoke" else "full"
         r.to_csv(os.path.join(PRIVATE, f"rows_{name}_{arm}_{tag}.csv.gz"), index=False)
         print(name, "rows", len(r), "targets", r.unit.nunique(), "positions", len(st["pos"]),
