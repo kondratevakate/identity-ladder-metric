@@ -164,6 +164,106 @@ def ratio_figure(d, out):
     save(fig, out)
 
 
+P3_LABEL = {"lpips_alex": "LPIPS (AlexNet)", "lpips_vgg": "LPIPS (VGG, sensitivity)",
+            "betti_matched": "Betti matching, matched part", "betti_unmatched": "Betti matching, unmatched part",
+            "iriscode_hd": "iris-code Hamming distance\n(supplementary)"}
+
+
+def p3_blocks_figure(d, out):
+    """Amendment P3 per-window metrics: R per rung by block, same layout as the panel figure (no images)."""
+    p3 = d["amendment_p3"]
+    view = {"panel": {vk: {"R_self": p3["sets"][vk]["R_self"]} for vk, *_ in VIEWS if vk in p3["sets"]},
+            "status": "Amendment P3, full run on frame " + p3["frame"] + ". All metrics: lower = closer."}
+    xs, fills, labels, spans = layout(True)
+    metrics = list(P3_LABEL)
+    ncol = 3
+    nrow = int(np.ceil(len(metrics) / ncol))
+    fig = plt.figure(figsize=(6.4 * ncol, 4.2 * nrow + 0.6), facecolor=BF.SURFACE)
+    gs = fig.add_gridspec(nrow, ncol)
+    for p, m in enumerate(metrics):
+        ax = fig.add_subplot(gs[p // ncol, p % ncol])
+        ax.set_facecolor(BF.SURFACE)
+        for (name, a, b) in spans:
+            ax.axvspan(a - 0.45, b + 0.45, color="#f4f3f0", zorder=0)
+            ax.text((a + b) / 2, YLIM[0] + 0.03, SHORT.get(name, name), ha="center", va="bottom", fontsize=5.2,
+                    color=BF.MUTED, zorder=5)
+        for h in (0, 1):
+            ax.axhline(h, color=BF.MUTED, lw=0.7, ls=(0, (2, 2)), zorder=2)
+        for vi, (vk, vlab, col, mk) in enumerate(VIEWS):
+            R = view["panel"].get(vk, {}).get("R_self", {}).get(m)
+            if not R:
+                continue
+            off = (vi - 1) * 0.22
+            for x, f in zip(xs, fills):
+                e = R.get(f)
+                if not e or e.get("R") is None:
+                    continue
+                lo, hi = np.clip(e["ci95"], YLIM[0] + 0.02, YLIM[1] - 0.02)
+                ax.plot([x + off] * 2, [lo, hi], color=col, lw=1.0, zorder=3)
+                yv = float(np.clip(e["R"], YLIM[0] + 0.12, YLIM[1] - 0.12))
+                ax.scatter(x + off, yv, s=20, marker=mk, color=col, edgecolor=BF.SURFACE, linewidth=0.7, zorder=4,
+                           label=vlab if (p == 0 and f == fills[0]) else None)
+                if yv != e["R"]:
+                    ax.annotate(f"{e['R']:.1f}", (x + off, yv), ha="center", va="bottom", fontsize=5, color=col,
+                                xytext=(0, 3), textcoords="offset points")
+        ax.set_title(LABEL.get(m, P3_LABEL[m]), fontsize=7.5, color=BF.INK, loc="left")
+        style(ax, xs, labels, YLIM)
+    ax = fig.add_subplot(gs[nrow - 1, ncol - 1])
+    ax.axis("off")
+    hy = p3["hypotheses"]
+    ax.text(0, 0.95, "Frozen hypotheses, UTIRIS near-infrared (measured):\n"
+            f"H4 repeat beats repeat pulled to the mean (LPIPS, Betti): {'holds' if hy['H4']['holds'] else 'fails'}\n"
+            f"H5 FID/FWD rank averages at or above a stranger: {'holds' if hy['H5']['holds_point'] else 'fails'}"
+            " (point values)\n"
+            f"H6 LPIPS order repeat < most similar < stranger: {'holds' if hy['H6']['holds'] else 'fails'}",
+            va="top", fontsize=7, color=BF.INK)
+    h, lab = fig.axes[0].get_legend_handles_labels()
+    fig.legend(h, lab, loc="lower center", ncol=3, fontsize=8, frameon=False, bbox_to_anchor=(0.5, 0.035),
+               title="iris, 16 px windows on the unwrapped strip", title_fontsize=8)
+    fig.text(0.5, 0.003, "R = d / d_stranger: 0 = the target itself, 1 = unrelated person (mean of 16). "
+             "Bars: 95% interval, bootstrap over people.\n" + view["status"], ha="center", fontsize=6.5,
+             color=BF.MUTED)
+    fig.tight_layout(rect=(0, 0.1, 1, 1))
+    save(fig, out)
+
+
+def p3_setlevel_figure(d, out):
+    """Amendment P3 set-level FID and FWD per rung over the stranger's value (log scale; no images)."""
+    p3 = d["amendment_p3"]
+    xs, fills, labels, spans = layout(True)
+    fig, axes = plt.subplots(1, 2, figsize=(13, 4.4), facecolor=BF.SURFACE)
+    for ax, m, title in zip(axes, ("fid", "fwd"), ("FID (Inception features)", "FWD (Haar wavelet packets)")):
+        ax.set_facecolor(BF.SURFACE)
+        ax.set_yscale("log")
+        for (name, a, b) in spans:
+            ax.axvspan(a - 0.45, b + 0.45, color="#f4f3f0", zorder=0)
+        ax.axhline(1, color=BF.MUTED, lw=0.7, ls=(0, (2, 2)), zorder=2)
+        for vi, (vk, vlab, col, mk) in enumerate(VIEWS):
+            sl = p3["sets"].get(vk, {}).get("set_level", {}).get(m, {})
+            off = (vi - 1) * 0.22
+            first = True
+            for x, f in zip(xs, fills):
+                e = sl.get(f)
+                if not e or e.get("over_stranger") is None:
+                    continue
+                if e.get("over_stranger_ci95"):
+                    ax.plot([x + off] * 2, e["over_stranger_ci95"], color=col, lw=1.0, zorder=3,
+                            ls="-" if e.get("ratio_ci_contains_point") else ":")
+                ax.scatter(x + off, e["over_stranger"], s=22, marker=mk, color=col, edgecolor=BF.SURFACE,
+                           linewidth=0.7, zorder=4, label=vlab if first else None)
+                first = False
+        ax.set_ylim(0.1, 2000)
+        style(ax, xs, labels, (0.1, 2000))
+        ax.set_title(title + ": value over the unrelated person's (1)", fontsize=7.5, color=BF.INK, loc="left")
+    axes[0].legend(fontsize=7, frameon=False, loc="upper left")
+    fig.text(0.5, 0.005, "Set level: one value per step over all windows of the set. Bars: 95% interval, 200 resamples "
+             "of people; dotted where the interval does not contain the value (resampling duplicates windows and "
+             "biases Fréchet distances upward).\nAmendment P3, full run on frame " + p3["frame"] + ".",
+             ha="center", fontsize=6, color=BF.MUTED)
+    fig.tight_layout(rect=(0, 0.06, 1, 1))
+    save(fig, out)
+
+
 CURVE = [("population", "population, same side", "#2a78d6", "o", "-"),
          ("population_both", "population, both sides (other side mirrored)", "#eb6834", "s", "-"),
          ("knn", "kNN by context (ring around the window)", "#e8a200", "v", "-")]
@@ -309,8 +409,15 @@ def main():
     ap.add_argument("--json", default="results/iris_ladder_metrics.json")
     ap.add_argument("--prefix", default="results/figures/fig_iris_metrics")
     ap.add_argument("--preprocessing", required=True, help="frame version of the private map arrays (no default)")
+    ap.add_argument("--only", choices=("all", "p3"), default="all", help="p3: only the Amendment P3 figures")
     a = ap.parse_args()
     d = json.load(open(a.json if os.path.isabs(a.json) else os.path.join(ROOT, a.json), encoding="utf-8"))
+    if "amendment_p3" in d:
+        p3_blocks_figure(d, "results/figures/fig_iris_p3_blocks")
+        p3_setlevel_figure(d, "results/figures/fig_iris_p3_setlevel")
+        print("written results/figures/fig_iris_p3_{blocks,setlevel}.{png,pdf}")
+    if a.only == "p3":
+        return
     blocks_figure(d, a.prefix + "_blocks", full=False)
     blocks_figure(d, a.prefix + "_blocks_full", full=True)
     ratio_figure(d, a.prefix + "_ratio")

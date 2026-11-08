@@ -336,3 +336,25 @@ def test_shards_cover_every_target_once_and_patches_round_trip(tmp_path):
     back = IX.load_patches(tmp_path / "p.npz")
     assert [(r, u, s) for r, u, s, _ in back] == [(r, u, s) for r, u, s, _ in pp]
     assert all(np.allclose(a, b[3], atol=1e-6) for (*_x, a), b in zip(back, pp))
+
+
+def test_p3_aggregates_r_scale_tests_and_holm_on_toy_rows():
+    import pandas as pd
+
+    import iris_ladder_metrics_p3 as P3
+    rows = []
+    for p in range(12):
+        for f, d in [("repeat", 0.2), ("shrink_repeat", 0.3), ("dataset_mean", 0.5), ("wrong_detail", 0.9),
+                     ("noise", 1.2), ("stranger", 1.0)] + [(f"str{k:02d}", 1.0) for k in range(16)]:
+            rows.append({"unit": p, "person": f"{p:03d}", "patch": 0, "fill": f, "m": d + 0.01 * p})
+    r = pd.DataFrame(rows)
+    persons = np.array(sorted(r.person.unique()))
+    bidx = P3.boot_idx(len(persons), reps=50)
+    R = P3.r_scale(r, "m", persons, bidx, "self")
+    assert abs(R["stranger"]["R"] - 1.0) < 1e-9
+    assert R["repeat"]["R"] < R["dataset_mean"]["R"] < 1
+    t = P3.paired_tests(r, "m")
+    assert t["T2"]["share_targets_pass"] == 1.0 and t["T2"]["p_one_sided"] < 0.01
+    adj = P3.holm([0.01, 0.04, 1.0])
+    assert np.allclose(adj, [0.03, 0.08, 1.0])
+    assert "str00" not in P3.raw_means(r, "m", persons, bidx)

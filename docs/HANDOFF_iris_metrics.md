@@ -26,10 +26,20 @@ Private outputs (UTIRIS redistribution is not granted, so nothing per-image or p
   The lid shadow is about 0.35 limbus radii wide. It is recorded as a weakness in Amendment P3, and P2 stays the
   frame.
 
-## Not done
+## Update 8 Nov 2026 evening: full P3 done
 
-- Full P3 run: not started before the reboot.
-- Merging P3 aggregates into `results/iris_ladder_metrics.json` (a separate block) and P3 figures.
+- Full P3 run and merge finished for NIR, VIS and UPOL (all exit 0). Aggregates only are in the `amendment_p3` block of
+  `results/iris_ladder_metrics.json` (`python -I src/iris_ladder_metrics_p3.py --preprocessing P2 --tag full`; input and
+  code hashes stored); figures `results/figures/fig_iris_p3_blocks` and `fig_iris_p3_setlevel` (charts only, no eyes).
+- Measured: H4 fails (T2, Holm 26 x 4, NIR: LPIPS, Betti matched and unmatched all p_holm = 1). Descriptively the
+  dataset mean scores closer than a stranger on every per-window P3 metric except LPIPS-VGG (NIR R_self: Betti matched
+  0.39, LPIPS-AlexNet 0.68, Betti unmatched 0.75, iris code 0.89). H5 holds on point values (FID mean 19.7x, FWD 416x the
+  stranger) but several set-level bootstrap intervals exclude their own point (flagged). H6 holds (LPIPS R 0.19 < 0.32 < 1.0).
+- Left: Kate's verdict on these metrics; window amendment and frame P2 unchanged (wait for Kate's lid-shadow sheets);
+  14 blocked metrics; `src/metrics_board.py` has no iris section (not this session's file); QC sheet title says "smoke".
+
+## Not done (before the full run)
+
 - Still blocked, with no definition or model: Topology Distance, plausibility, identity x4, latent x3. This is part of
   the 14 metrics.
 
