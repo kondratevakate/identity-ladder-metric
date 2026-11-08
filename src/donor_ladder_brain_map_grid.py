@@ -4,7 +4,8 @@ On an 8 mm grid of centres through the midline, every scan's 24 mm window and it
 once (float16, centre-major memmaps). Each centre then runs the cube-ladder rules: repeat, own mirror, all
 siblings, the exact stranger expectation, the same-sex-and-age mean and 16 look-alikes chosen on the 2 or 4 mm
 shell, in units of the error of the leave-family-out mean. Sums are kept per family half for a split-half
-reliability. Window cache and maps stay private; the JSON holds whole-map summaries only.
+reliability. Every error is a Gaussian-weighted mean over the cube (sd = CUBE / sqrt(12), truncated at the cube,
+Amendment 18), never a uniform cube mean. Window cache and maps stay private; the JSON holds whole-map summaries only.
 """
 import json
 import os
@@ -23,6 +24,17 @@ import donor_ladder_brain_size as S  # noqa: E402
 STEP, CUBE, WINDOW, SUPPORT, VALID, MIN_DONORS, K = 8, 16, 24, 0.9, 0.95, 10, 16
 FILLS = ("repeat", "mirror", "sibling", "stranger", "cohort", "knn16_s4", "knn16_s2")
 OUT_JSON = os.path.join(B.ROOT, "results", "donor_ladder_brain_map_grid.json")
+
+
+def cube_weights(size=CUBE):
+    """Gaussian weights over a size^3 cube (sd = size / sqrt(12), the sd of the box), flattened C-order, sum 1."""
+    r = np.arange(size) - (size - 1) / 2
+    g = np.exp(-0.5 * (r / (size / np.sqrt(12))) ** 2)
+    w = g[:, None, None] * g[None, :, None] * g[None, None, :]
+    return (w / w.sum()).ravel()
+
+
+W = cube_weights()
 
 
 def centres(template_mask, a):
@@ -64,7 +76,7 @@ def cache(t, affine, cs, V, M):
     for k in range(n):
         v, m = np.asarray(V[k]), np.asarray(M[k]).astype(np.float32)
         vm = v[mi]
-        f, fm = (ndimage.uniform_filter(x, CUBE, mode="constant") for x in (m, m[mi]))
+        f, fm = (ndimage.uniform_filter(x, CUBE, mode="constant") for x in (m, m[mi]))  # box-ok: validity fraction
         for ci, c in enumerate(cs):
             out["win"][ci, k] = window_at(v, c, WINDOW)
             out["mcube"][ci, k] = window_at(vm, c, CUBE)
@@ -78,16 +90,18 @@ def cache(t, affine, cs, V, M):
     return {k: np.load(p, mmap_mode="r") for k, p in paths.items()}
 
 
-def knn_error(xi, X, shells, i, donors, k=K):
-    """Error of the mean of the k donors whose shell is closest to the target's (selection on context only)."""
+def knn_error(xi, X, shells, i, donors, w, k=K):
+    """Weighted error of the mean of the k donors whose shell is closest to the target's (selection on context
+    only; the weights `w` act inside the cube, never on the shell)."""
     d = ((shells[donors] - shells[i]) ** 2).sum(1)
     nn = donors[np.argsort(d, kind="stable")[:k]]
-    return float(np.mean((xi - X[nn].mean(0)) ** 2))
+    return float((xi - X[nn].mean(0)) ** 2 @ w)
 
 
-def centre_rows(X, Mc, sh2, sh4, valid, mvalid, fam, sex, age, rep_cube, rep_valid, mirror_ok, pool=None):
-    """Per target at one centre: dict fill -> (error, V) under the cube-ladder rules. With `pool` (bool per
-    target), only those scans are targets and donors (independent half maps, Amendment 8)."""
+def centre_rows(X, Mc, sh2, sh4, valid, mvalid, fam, sex, age, rep_cube, rep_valid, mirror_ok, w, pool=None):
+    """Per target at one centre: dict fill -> (error, V) under the cube-ladder rules, each a mean over the cube
+    weighted by `w` (sum 1; Amendment 18). With `pool` (bool per target), only those scans are targets and donors
+    (independent half maps, Amendment 8)."""
     pool = np.ones(len(X), bool) if pool is None else pool
     out = []
     for i in np.flatnonzero(valid & pool):
@@ -96,21 +110,21 @@ def centre_rows(X, Mc, sh2, sh4, valid, mvalid, fam, sex, age, rep_cube, rep_val
             continue
         xi = X[i]
         mu = X[others].mean(0)
-        v = float(np.mean((xi - mu) ** 2))
-        r = {"stranger": v + float(np.mean((X[others] - mu) ** 2))}
+        v = float((xi - mu) ** 2 @ w)
+        r = {"stranger": v + float(((X[others] - mu) ** 2).mean(0) @ w)}
         coh = others[(sex[others] == sex[i]) & (np.abs(age[others] - age[i]) <= 2)]
         if coh.size >= MIN_DONORS:
-            r["cohort"] = float(np.mean((xi - X[coh].mean(0)) ** 2))
+            r["cohort"] = float((xi - X[coh].mean(0)) ** 2 @ w)
         if mirror_ok and mvalid[i]:
-            r["mirror"] = float(np.mean((xi - Mc[i]) ** 2))
+            r["mirror"] = float((xi - Mc[i]) ** 2 @ w)
         sibs = [j for j in np.flatnonzero((fam == fam[i]) & valid) if j != i and age[j] != age[i]]
         if sibs:
-            r["sibling"] = float(np.mean([np.mean((xi - X[j]) ** 2) for j in sibs]))
+            r["sibling"] = float(np.mean([(xi - X[j]) ** 2 @ w for j in sibs]))
         if rep_cube[i] is not None and rep_valid[i]:
-            r["repeat"] = float(np.mean((xi - rep_cube[i]) ** 2))
+            r["repeat"] = float((xi - rep_cube[i]) ** 2 @ w)
         if others.size >= K:
-            r["knn16_s4"] = knn_error(xi, X, sh4, i, others)
-            r["knn16_s2"] = knn_error(xi, X, sh2, i, others)
+            r["knn16_s4"] = knn_error(xi, X, sh4, i, others, w)
+            r["knn16_s2"] = knn_error(xi, X, sh2, i, others, w)
         out.append((i, v, r))
     return out
 
@@ -148,7 +162,7 @@ def main():
         rep_cube = [Xall[j] if j is not None else None for j in rep_ix]
         rep_valid = [bool(G["valid"][ci, j]) if j is not None else False for j in rep_ix]
         for i, v, r in centre_rows(X, Mc, sh2, sh4, valid, mvalid, fam, sex, age, rep_cube, rep_valid,
-                                   abs(x_mm[ci]) >= P.MIDLINE_MM):
+                                   abs(x_mm[ci]) >= P.MIDLINE_MM, W):
             vsum[ci] += v
             vn[ci] += 1
             for f, e in r.items():
@@ -157,7 +171,7 @@ def main():
                 acc[(f, half[i], "n")][ci] += 1
         for h in (0, 1):
             for i, v, r in centre_rows(X, Mc, sh2, sh4, valid, mvalid, fam, sex, age, rep_cube, rep_valid,
-                                       abs(x_mm[ci]) >= P.MIDLINE_MM, half == h):
+                                       abs(x_mm[ci]) >= P.MIDLINE_MM, W, half == h):
                 for f, e in r.items():
                     ind[(f, h, "err")][ci] += e
                     ind[(f, h, "V")][ci] += v
@@ -169,7 +183,8 @@ def main():
     aff8[:3, :3] *= STEP
     aff8[0, 3] += affine[0, 0] * ((a // 2) % STEP)
     out = {"status": "pre-QC: affine registration only, MRI registration QC not met; exploratory maps",
-           "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendments 7, 8)", "grid_mm": STEP, "cube_mm": CUBE,
+           "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendments 7, 8, 18)", "grid_mm": STEP, "cube_mm": CUBE,
+           "window": "Gaussian weights inside the cube, sd = CUBE/sqrt(12), truncated, sum 1",
            "n_centres": int(len(cs)), "maps": {}}
     vol = np.full(shape, np.nan, np.float32)
     vol[grid_idx] = np.where(vn > 0, vsum / np.maximum(vn, 1), np.nan)

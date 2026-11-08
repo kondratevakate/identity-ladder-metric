@@ -235,3 +235,422 @@ smoothness. All brain numbers so far keep this behaviour and stay pre-QC. Planne
 registration rerun: matched and scored voxels must be inside the mask of both target and donor, the cube and
 window rule becomes 100% inside (or a masked mean over the shared voxels, decided before rerunning), plus a
 regression test like the fundus one.
+
+## Amendment 10 (6 Nov 2026, metric panel tier 1 on the cubes; recorded before these results)
+
+Kate: compute the CVPR metric panel on the brain ladder first, look at the result, then add the remaining 117
+ses-02 scans. Data as Amendment 2 (221 targets, 23 repeats, the bilateral region arrays of
+`donor-ladder-brain-bilateral-20261103-v1`, 32 random cubes + deep + parietal, sides L and R, view LR primary).
+Pre-QC: affine only; the registration gate is not met (`results/registration/status.md`). Script
+`src/donor_ladder_brain_metrics.py`, output `results/donor_ladder_brain_metrics.json`.
+
+- Tier 1 = metrics defined on a 16 mm cube without a network or whole-brain context. Tiers 2 (persistence /
+  Betti matching, Topology Distance; new library) and 3 (MS-SSIM, LPIPS, Brain-ID embeddings, FID / FWD,
+  plausibility, latent geometry; need the fill inserted into the whole scan and pretrained weights) are not run here.
+- Missing is never zero (general protocol section 8, closes the cube part of Amendment 9 for this run). Scored voxels
+  E = target mask AND donor mask; a mean fill averages, at each voxel, only the pool members valid there (a voxel with
+  no valid member is not in E). Squared error is also reported over all cube voxels (`mse_allvox`), which must
+  reproduce `donor_ladder_brain_bilateral.json` (same donors, same seeds) before any other number is read.
+- Metrics, each on E: MSE, RMSE, MAE, PSNR (range = target max - min on E), PSNR_fixed (range 8 z), SSIM (3D,
+  Gaussian sigma 1.5 voxels, normalised convolution with E as weights so no outside voxel enters, constants for an
+  8 z range), Pearson r of fill and target, ACC_dataset = Pearson r of (f - mu) and (x - mu) with mu the dataset mean,
+  ACC_cohort (mu = same-sex, age +-2 y mean), amplitude ratio ||f - mu|| / ||x - mu|| (descriptive, not a closeness
+  score), and lDDT-like local agreement: over voxel pairs within 2 voxels, the share with |delta f - delta x| below
+  0.25, 0.5, 1 and 2 z, averaged over the four thresholds.
+- Fills: repeat; mirror (other hemisphere, same place); sibling; co-twin; stranger (first of the population draw);
+  16 strangers (for c); random means k = 2, 4, 8, 16; dataset mean; same-sex-and-age mean; 16 look-alikes by shell;
+  16 oracle look-alikes (true cube; upper bound). Block searches are left out (Amendment 9).
+- Controls (fills built from the truth, `PROTOCOL_real_cases.md` C7): shrink(d, lambda) = mu + lambda (d - mu) of the
+  repeat and the mirror with lambda = r of that rung (r = 1 - mse_allvox ratio / 2, from the bilateral JSON, LR,
+  random cubes), the MSE-optimal shrink; wrong detail = mu + the first stranger's residual made orthogonal to
+  (x - mu) and scaled to ||x - mu||; noise = mu + Gaussian noise (seeded) with the SD of (x - mu) on E.
+- Per metric the sign is set so that higher = closer to the target. Calibrated c = P(stranger worse) + P(tie) / 2
+  against the 16 strangers. Position on the 0 = dataset mean, 1 = repeat scale = (m - m_mean) / (m_repeat - m_mean),
+  ratio of means over targets with a repeat.
+- Tests per metric, paired per target and side, averaged per family, one-sided Wilcoxon signed-rank on family
+  means: T1 repeat beats the dataset mean; T2 the repeat beats its shrink with lambda = r (a metric that prefers the
+  shrink rewards averaging); T3a the repeat beats wrong detail; T3b the repeat beats noise. Holm over all metric x
+  test hypotheses of the dataset. Fewer than 10 families: descriptive only.
+- Intervals: bootstrap over families, 2000 resamples, seed 20261102. Every value with its target and family counts.
+
+## Amendment 11 (6 Nov 2026, ladder by blocks, expectations and the R scale; recorded before these results)
+
+Kate's review of the Amendment 10 figures: the x axis must not presuppose the order it tests, magic numbers (k = 16)
+go, and the expectations of an identity-faithful metric are written down before the numbers are read. Same data
+and status as Amendment 10 (pre-QC, affine only, 221 targets, 23 repeats). Output replaces
+`results/donor_ladder_brain_metrics.json` (Amendment 10 numbers stay in git history).
+
+- Scale. For every metric, d = distance (lower = closer; similarities are negated). R(rung) = (mean d(rung) -
+  mean d(repeat)) / (mean d(stranger) - mean d(repeat)); repeat = 0 (measurement noise only), stranger = 1 (no shared
+  individuality). The stranger anchor is the per-target mean over the 16 seeded strangers. Means over targets per
+  rung; anchors over all targets that have them; 95% intervals by bootstrap over families (2000, one resample set
+  shared by all rungs so contrasts have intervals).
+- Blocks on the x axis (order inside a block is by design, not by expected score):
+  1. same person: repeat, own mirror (other hemisphere, same place);
+  2. relatives: co-twin (descriptive, few), sibling;
+  3. scaffold-selected (achievable by an inpainter): look-alike = the single stranger with the nearest scaffold
+     (k = 1); mirror block search (own contralateral side, offset within +-8 mm chosen by the scaffold);
+     stranger block search (the same search in the first stranger: control for the search itself);
+  4. averages with no selection: stranger (k = 1), mean of 2, sex-and-age mean, dataset mean;
+  5. oracle bounds (not achievable): oracle look-alike (single stranger nearest on the true cube), oracle mirror
+     and oracle stranger block search;
+  6. controls: repeat shrunk, mirror shrunk (lambda = r, Amendment 10), wrong detail, white noise.
+  k = 4, 8, 16 and the 16-look-alike mean are dropped: the 1 + 1/k shape is known, and averaging belongs to block 4.
+- Scaffold rule (closes Amendment 9 for this run). The scaffold distance uses only voxels inside the brain mask of
+  both the target and the candidate: d = mean of (x - y)^2 over those voxels; a candidate (or a block-search
+  offset) needs at least 50% of the scaffold shared and its cube >= 95% inside its own mask. The oracle distance uses
+  the cube voxels inside both masks in the same way. Block search: x offsets restricted as in Amendment 2; the
+  search is computed by FFT correlation of masked terms. Regression tests with known geometry, including a filler
+  region outside the mask that would win if counted.
+- Pool size. Look-alikes and oracles depend on the pool size (here 218 to 220 people from other families); it is
+  reported with every result. For comparisons across datasets the pool will be subsampled (seeded) to the smallest
+  dataset's pool; recorded when the second dataset is added.
+- Expectations of an identity-faithful metric (pass / fail per metric, random cubes, LR view; boxes descriptive):
+  E1 own mirror closer than a stranger: upper 95% bound of R(mirror) < 1.
+  E2 sibling closer than a stranger: upper bound of R(sibling) < 1.
+  E3 no reward for averaging: lower bound of R(mean of 2) >= 0.9 and of R(dataset mean) >= 0.9 (tolerance 0.1;
+     the stranger level within 10%). Also reported: the slope R(dataset mean) - R(stranger).
+  E4 no reward for shrinkage: lower bound of R(shrunk) - R(original) >= -0.1, for the repeat and the mirror.
+  E5 wrong detail and white noise not closer than a stranger: lower bound of R >= 0.9.
+  Measurements only (no expectation): own mirror against sibling; the scaffold block; the oracle block.
+  Kate's answer "да" (6 Nov 2026) to the proposed defaults: mirror against sibling stays a measurement; tolerance 0.9.
+- Reproduction: mse_allvox of repeat, mirror, sibling, co-twin, stranger, mean of 2, sex-age mean and dataset mean
+  must equal the bilateral rows; the look-alike changes by design (new scaffold rule) and its agreement with the old
+  k = 1 choice is reported.
+
+## Amendment 12 (6 Nov 2026, protein-style metrics and two-way intervals; recorded before these results)
+
+Kate (6 Nov 2026): add the protein-structure metrics (docs/REPRODUCTION_BACKLOG.md theme 7) in two groups, and
+resample both families and positions. Same data and status as Amendment 11.
+
+- Tolerance from repeat scans, no magic numbers. sigma_rep(position, side, target) = root mean squared voxel
+  difference between session 1 and session 2 over voxels valid in both, pooled over the repeat pairs of the other
+  families (leave-family-out; at least 5 pairs, else the metric is not computed for that cell).
+- Group 1, new base metrics (scored on E like every metric; a rerun of the fills):
+  tm_like = mean over E of 1 / (1 + (|f - x| / sigma_rep)^2) (TM-score idea: all voxels, a continuous kernel instead
+  of cutoffs, the scale from a reference not from the metric); gdt_like = mean over thresholds t in sigma_rep x
+  {0.5, 1, 2, 4} of the share of E with |f - x| < t (GDT idea); lddt_rep = lDDT-like with thresholds sigma_rep x
+  {0.5, 1, 2, 4} (lDDT tolerance from an ensemble of reference scans); rmse_rep = RMSE / sigma_rep (noise-normalised,
+  comparable across positions and mask sizes; the size-normalised RMSD idea).
+- Group 2, calibrations on the saved rows, for every base metric (no rerun):
+  Tnorm z = (s - mean of the 16 strangers) / SD of the 16 strangers, per target, position and side (impostor-cohort
+  normalisation); EVT P-value = upper tail probability of z under a generalised extreme value distribution fitted to
+  the pooled stranger z of the same position and side (TM-score significance against random pairs); P(same | z) =
+  posterior that the fill is the same person, from Gaussian densities of repeat z and stranger z per position, prior
+  0.5 (posterior of the same fold given the score). Reported per rung as means over targets; c and R stay.
+- Intervals: for the random cubes, two-way bootstrap, families and positions resampled independently (2000, seed
+  20261102); the family-only interval is also reported. Boxes: families only (one position each). Expectations
+  E1-E5 are read from the two-way intervals.
+- Later, not in this amendment: a reduced panel of weakly correlated metrics for the main figure (Kate, 6 Nov 2026).
+
+## Amendment 13 (6 Nov 2026, the reference reality is "do not lie"; shrinkage is a separate experiment)
+
+Kate chose (6 Nov 2026), after the two options were laid out: the reference is reality B, "do not lie": correct
+individual detail is good, wrong detail is worse than none. Consequences, recorded before the summary is redrawn:
+
+- Target ladder (R, repeat = 0, stranger = 1): a fill with no individual information (a mean) sits between them,
+  closer for more averaging (the squared-error shape 1 + 1/k is the reference: mean of 2 above the dataset mean);
+  a stranger's wrong detail sits at 1; wrong detail of the same amplitude at 1; white noise, which is wrong and not
+  anatomy, above 1. Relatives and the own mirror below 1.
+- Expectations replacing E3-E5 of Amendment 11 (E1, E2 unchanged):
+  E3B averages better than a stranger and ordered by k: upper 95% bound of R(dataset mean) < 1 and of
+      R(mean of 2) < 1, and R(dataset mean) < R(mean of 2) < R(stranger) (point estimates);
+  E5B wrong detail not better than a stranger: lower bound of R(wrong detail) >= 0.9;
+  E6B white noise worse than a stranger: lower bound of R(white noise) > 1.
+  The Amendment 11 E3 and E4 stay in the JSON as descriptive numbers.
+- In reality B the line between honest hedging and lost detail is not a pass / fail property of the ladder, so the
+  blends with the mean (repeat and own mirror, lambda = r) leave the ladder figure and get their own table: per
+  metric, R of the donor, R of the blend, their difference with its interval, and whether the metric prefers the
+  blend ("rewards fading the right detail"). An oracle blend (best single person, lambda = its r) is added to that
+  table in the next rerun.
+- Reading the audit under B: squared error follows the target ladder except that it cannot tell white noise from a
+  stranger; this is the main pixel-metric failure B exposes. The Amendment 11 statement that averages "should" sit at
+  the stranger level belongs to reality A and is not used.
+
+## Amendment 14 (6 Nov 2026, an independent reality-B target; recorded before it is scored)
+
+Problem found in Amendment 13: its target ladder took each single rung's shared fraction r from the measured squared
+error, so squared error matched the target by construction. Kate: build an independent target. The target now
+follows from the axioms of reality B alone and uses no measured metric value:
+
+- Scale: repeat = 0 (measurement noise counts as no error), unrelated person = 1 (full wrong detail).
+- A1 "no information is half way": a fill with no individual detail, neither right nor wrong (the population
+  mean), sits at 0.5.
+- A2 "wrong detail scales with its amount": the mean of k unrelated people carries wrong detail whose variance is
+  1/k of one person's (independent deviations average), so R(mean of k) = 0.5 + 0.5 / k: k = 1 gives 1, k = 2 gives
+  0.75, all people give 0.5. This is a property of averaging, not of a metric.
+- A3 wrong detail of the same amplitude as a person's (stranger residual, orthogonal to the target's) sits at 1.
+- A4 white noise is wrong and not anatomy: strictly above 1 (no value is set; only the side).
+- Rungs that carry an unknown amount of correct detail (own mirror, sibling, co-twin, look-alike, oracle) get no
+  value, only order: each below 1; oracle look-alike not above the look-alike; repeat below all of them.
+- Sex-and-age mean: treated as a population mean (0.5); its small cohort-specific part is ignored.
+
+Score per metric (random cubes, both hemispheres, two-way intervals of Amendment 12):
+- value fit: root mean square of R - target over the rungs with a value (dataset mean, mean of 2, sex-age mean,
+  wrong detail), and each rung's deviation with its interval;
+- side constraints: white noise above 1 (lower bound > 1); each partly-correct rung below 1 (upper bound < 1);
+  oracle look-alike <= look-alike (point estimates).
+The Amendment 13 target (squared-error model) stays in the JSON history as "MSE-derived target", not used for
+scoring.
+
+## Amendment 15 (6 Nov 2026, segmentation-based metrics on the boxes; recorded before any fill is segmented)
+
+Approved by Kate on 6 Nov 2026 ("можно считать сегментации"), after the draft below was written and before any
+volume was built or segmented. At most 2 segmentations in parallel (memory shared with other jobs).
+Local Docker Desktop failed to start (6 Nov 2026); Kate gave an explicit yes (6 Nov 2026) to running this step with
+the QTIM volumes on the project's GCP machine (the MRI avatar audit VM), if it has room.
+Kate chose FastSurfer segmentation with DKT parcellation on the GPU (6 Nov 2026), replacing the D8 timing choice
+below, for the oracle, every core-rung volume and the blur sweep volumes. No FreeSurfer surface reconstruction
+(recon-surf) in this paper (Kate, 6 Nov 2026): it runs on CPU only, about an hour per volume, and an honest
+within-subject comparison would need the longitudinal stream; that is parked for a separate paper. Meshes, when
+used here, are derived from the FastSurfer labels (marching cubes, locally in each box), so they are fixed by the
+labels and add no run-to-run noise. Time per volume is measured on one scan first and sets the number of targets
+(budget written here before the run). Mesh-based scores (surface Euler characteristic and components, BrainPrint,
+varifold or vertex distance to the oracle mesh, label-based thickness) are defined in a later amendment before they
+are computed; this amendment scores labels only (aseg Dice, DKT Dice, accuracy).
+Input clip (6 Nov 2026, found at the timing step, before any score): 9 of 17 targets carry a few extreme intensity
+outliers (max over the 99.9th percentile of nonzero voxels above 10 000), and FastSurfer's conform step then maps the
+whole brain to one uint8 bin and returns an empty segmentation. Fix, applied by the segmentation runner and not to
+the built volumes (which stay identical to the metric rows): every volume of target t is clipped to [0, c_t], with
+c_t the 99.9th percentile of the nonzero voxels of t's oracle, one c_t per target, float32 kept. Oracle and rungs
+get the same transform, so labels stay comparable. The runner logs c_t and, per box and rung, the number of scored
+fill voxels above c_t; if that share exceeds 1% of a box's scored voxels the rung is reported and flagged.
+Distance metrics (Amendments 11 to 14) are unaffected; they were computed on the unclipped volumes.
+Clip result (6 Nov 2026): 0 scored fill voxels above c_t in every target, box and rung; no rung flagged.
+Number of targets, fixed before the run (Kate, 6 Nov 2026, "All 17 targets"): N = 17, all eligible targets, no
+subset. Basis: 75 to 77 s per volume measured on the L4 (two clipped oracles, 2 CPU threads under load), about 221
+volumes, about 2.5 h with 2 containers in parallel (3.6 GB GPU each). The run starts after Kate's verdict on the
+visual QC of one target.
+Visual QC of one target (7 Nov 2026; Kate delegated the verdict to the analysis session before going offline): all 13
+volumes segmented, labels placed correctly, outside-box Dice 0.98 to 1.00, no label band along the box faces, blur
+sweep monotone in both boxes. Passed; the 17-target run was released. Observation recorded before any group score:
+in the deep box FastSurfer reconstructs the basal ganglia and thalamus from the surrounding context, so noise and
+dataset-mean fills keep near-oracle shapes (aseg Dice about 0.65 on this target against 0.96 for the repeat); the
+parietal box has the wider range (0.94 against 0.55).
+
+Device (7 Nov 2026, before any rung is scored): no L4 GPU was available in the allowed EU regions, and Kate chose her free local CPU first. All 224 volumes run on CPU, one device for all: native FastSurfer v2.5.3 (the pinned image's tag) in WSL, CPU torch 2.7.1, the same flags and the same clipped inputs. Device check on the t009 oracle: CPU and GPU labels differ in 722 of 1.46 M labelled voxels, mean per-label Dice 0.9994 (min 0.9957). About 23 min per volume at 4 threads; timing.json records device and threads. Per-volume times are not a clean D8 runtime figure while other local jobs share the CPU.
+
+Kate: add segmentation metrics, kept simple. Same data and status as Amendment 11 (pre-QC, affine only).
+Script `src/donor_ladder_brain_seg.py`; private volumes and labels in
+`donor-ladder-brain-seg-20261106-v1`; public aggregates `results/donor_ladder_brain_seg.json`.
+
+- Where: the deep and parietal boxes only, as drawn (left hemisphere, scan frame). The two boxes do not overlap and
+  lie about 25 mm apart (14 mm in y, 21 mm in z), so one volume per (target, fill) carries the fill in both boxes; each box is scored on
+  its own.
+- Fills: the core rungs of the main figure only, built exactly as in `run_position` (same donors, same seeds):
+  repeat, own mirror, sibling, stranger, look-alike, oracle look-alike, mean of 2, dataset mean, white noise.
+  The fill (z units) is put back into intensity with the target's own brain mean and SD, on box voxels inside the
+  target brain mask where the fill is valid; box voxels inside the target mask where the fill is missing get the
+  dataset mean (counted, never scored); everything outside the boxes is the target's own scan.
+- Targets: targets with a valid repeat in both boxes, one per family, sorted by participant id; an evenly spaced
+  subset (np.linspace over that list) whose size follows from the measured time per volume and a 4 hour budget,
+  minimum 5. The size is written here before segmentation starts.
+- Segmenter (DECISION_TREES D8): FastSurfer (`--seg_only`, CPU, pinned digest in `src/real_cases.py`) if one
+  volume takes 5 minutes or less on this machine, otherwise SynthSeg (`--keepgeom`). Timed on one target's
+  unaltered scan before any fill; timing is not a result. Labels are resampled to the template grid with nearest
+  neighbour. Oracle = the same segmenter on the unaltered target.
+- Scores per box, on S = box AND target mask AND fill valid: Dice per label with at least 50 oracle voxels in S,
+  their mean (dice_mean), and voxel accuracy. Topology (Euler number, components) is not run here.
+- Blur sweep first (D8 branch test): the unaltered target blurred with a Gaussian of sigma 1, 2, 3, 4 mm, inserted in
+  both boxes inside the target mask, segmented, Dice against the oracle. The fill results are read only if the
+  bootstrap 95% interval of the Dice drop at 3 mm lies above 0 in that box; otherwise that box is reported as
+  uninformative for this segmenter.
+- Scale: d = 1 - dice_mean (and 1 - accuracy); R as Amendment 11 with repeat = 0 and the single stranger
+  (k = 1, the first population draw) = 1, since the 16-stranger anchor would cost 16 more volumes per target.
+  Intervals: bootstrap over targets (one per family), 2000, seed 20261102. With so few targets the numbers are
+  descriptive; no pass / fail against the Amendment 14 target is claimed, the deviations are only shown.
+- Reproduction: for every inserted fill, the squared error on E against the target must equal `mse` of the same
+  (target, position, side, fill) in the Amendment 12 rows; otherwise nothing is segmented.
+- A failed segmentation is retried once, then counted as failed for its rung (D8); more than 10% failed switches the
+  segmenter.
+
+## Amendment 16 (6 Nov 2026, drawn maps use a masked Gaussian window, not a cube; recorded before the rerun)
+
+Kate caught square local-error maps again (brain lesson L8, rule STUDIES-019). The brain-wide variability maps of
+Amendments 5, 6 and 8 averaged the squared difference over a 16 mm cube, which draws squares around any focal error.
+Change in `src/donor_ladder_brain_maps.py`: the local error is a masked Gaussian average, sd = 16 mm / sqrt(12) (the sd
+of the 16 mm box, about 4.6 mm), counting only voxels inside both scans' brain masks (target mask alone for the
+stranger and cohort terms); the 2 mm output grid stays. Validity stays a box: a voxel is kept when at least 95% of the
+16 mm cube around it lies inside the masks (a fraction, not a drawn value). Everything else is unchanged (donors,
+V, halves, support, midline). On one target the change is visible only in shape (a square blob becomes round); the
+mean over kept voxels differs by 3%. Figures from these maps are redrawn after Kate approves the before/after slice.
+`tests/test_no_box_windows.py` fails on any box filter in map code not marked as a validity fraction.
+
+## Amendment 17 (6 Nov 2026, HACA3+ contrast harmonization as a sensitivity analysis; recorded before any output)
+
+Why: repeat scans differ by -0.4 to -0.5 z in the deep box between sessions (Amendment 10 notes), so part of
+d_repeat is scanner/session contrast, not anatomy. The HACA3+ pilot of 4 Nov (one repeat pair, identity-ladder-metric
+`docs/REGISTRATION_QC_HANDOFF.md`) reduced that gap visibly; Kate asked to apply it to the ladder (6 Nov 2026).
+Method: HACA3+ (Hays et al., MIDL 2026), upstream commit 4ec722b8, weights checked against the upstream SHA-256
+pointers. Inputs are the 244 prepared volumes the ladder already uses (221 ses-01, 23 ses-02; N4, ANTs affine to MNI
+2009a symmetric, 1 mm), centred crop/pad to the model grid 192 x 224 x 192 with a check that no brain-mask voxel is
+cropped; settings as in the pilot (background removal off, 56 batches per orientation, fusion output). No extra clip:
+HACA3+ normalises by the 95th percentile of the volume and clips at 5 times it.
+Target contrast (Kate, 6 Nov 2026): one fixed target for every scan, the cohort median. For each ses-01 scan the
+model's own target encoder gives theta (2) and eta (2) exactly as for a target image (axial slices 100-119 of its
+224-grid, mean over slices) and its norm value (95th percentile); the target is the per-component median over the 221
+ses-01 scans, frozen in `haca3_target.json` before any harmonized image is produced. ses-02 scans do not enter it.
+Output: the fused image is put back on the 197 x 233 x 189 grid; the brain masks are unchanged and everything outside
+them stays missing; the ladder z-scores in the mask as before.
+Stage 1 (gate): the 23 repeat pairs (46 scans). QC sheets per pair, deep and parietal box, before and after, one
+shared window per pair; numbers: mean z difference ses-02 minus ses-01 in each box, before and after. Kate's verdict
+before stage 2. Stage 2: all 244 scans, the ladder rerun into a new folder (v4), v3 kept.
+Expectations, stated now: H1 the between-session shift in the deep box shrinks; H2 the order repeat < own mirror <
+stranger is kept; H3 (the risk) harmonization pulls individuals towards the mean: c = P(stranger worse than repeat)
+drops, or d_stranger falls relative to d_repeat. H3 holding would be the regression to the mean inside the
+harmonizer, reported as a finding, not hidden. Results are labelled pre-QC and sensitivity, never replacing v3.
+
+## Amendment 18 (7 Nov 2026, the 8 mm look-alike grid uses Gaussian weights inside the cube; recorded before the rerun)
+
+Kate approved smoothing the last square column ("16 look-alikes*", Amendment 7) after Amendment 16 removed the
+squares from the 2 mm maps. Two sources made it square: each centre averaged the squared error uniformly over its
+16 mm cube (lesson L8), and the 8 mm grid was drawn with nearest-neighbour upsampling.
+Change 1, analysis (`src/donor_ladder_brain_map_grid.py`): at every centre each error, V and the stranger term is a
+weighted mean over the 16 mm cube, with Gaussian weights of sd 16 mm / sqrt(12) (about 4.6 mm, as in Amendment 16),
+truncated at the cube and normalised to sum 1. The look-alikes are still chosen on the 2 or 4 mm shell outside the
+cube, so selection stays on context only and the weights never touch it. The stranger term stays exact (V plus the
+weighted donor variance). Centres, validity (95% of the cube inside the mask), donors, halves, midline and the window
+cache are unchanged. As before, the cube values are taken as cached; voxels outside the brain mask (at most 5% of a
+valid cube) are not separately masked, unlike the 2 mm maps; this is a known difference, unchanged here.
+Change 2, drawing (`src/donor_ladder_brain_ladder_maps_figure.py`): the grid is upsampled to the 2 mm frame by
+normalised trilinear interpolation (values and a validity weight interpolated separately, kept where the weight is at
+least 0.5), not nearest neighbour. This changes no number; split-half r and the whole-map MSE under the column are
+still computed on the grid centres.
+The uniform-cube outputs of 4 Nov are kept: private NIfTIs in `grid_box_20261104/` of the private maps folder and the
+JSON in git (a425727). Expectation, stated now: pooled ratios move by a few per cent (the Gaussian puts more weight
+on the cube centre, where the shell context predicts less), split-half r stays above 0.95 for the look-alikes.
+Result (7 Nov 2026, 558 min on a shared CPU): pooled ratios with Gaussian weights against the uniform cube: repeat
+0.281 to 0.278, mirror 1.527 to 1.535, sibling 1.842 to 1.843, stranger 1.991 (unchanged), cohort 1.007 (unchanged),
+look-alikes on the 4 mm shell 0.735 to 0.753 and on the 2 mm shell 0.696 to 0.719 (+2.4% and +3.3%, as expected).
+Split-half r of the look-alikes 0.983 and 0.982 (above 0.95, as expected). Grid against the 2 mm maps at the grid
+centres: r 0.986 (repeat), 0.996 (mirror), 0.986 (sibling), 0.987 (cohort); the stranger ratio is about 2
+everywhere by construction, so its r is near 0 and carries no information. The column is drawn without squares; the
+independent half maps now exist for the grid, so its contrast panel is faded like the others.
+
+## Amendment 19 (7 Nov 2026, IXI as a second brain cohort for the non-family rungs; recorded before any IXI scan is prepared)
+
+Kate chose IXI (7 Nov 2026, "IXI") as the second brain dataset next to QTIM. Why: QTIM is one site and young adult
+twins; IXI is 3 London centres and adults 20 to 86 years, so it tests whether the ladder order and "the dataset mean
+beats related anatomy" hold in an older, multi-site population. IXI has no repeats and no families: the repeat and
+sibling rungs are not available there, reported as such, never filled.
+Data: registry id `ixi` (CC BY-SA 3.0, verified 2026-10-18), local copy
+`datasets/neuroimaging/ixi/version-unverified/raw`. Aggregates read on 7 Nov 2026: 581 T1 files (Guys 322, HH 185,
+IOP 74); `IXI.xls` has 619 rows for 593 IDs; 563 T1 scans have an ID with an age. Eligible: one T1 per ID with a
+non-missing sex and age; an ID whose duplicate rows disagree on sex or by more than 1 year on age is excluded and
+counted (D7), never resolved by hand. No other selection (STUDIES-025).
+Preparation, identical to QTIM (`src/real_cases.py` strip and prepare): SynthStrip brain mask (model version 1, as in
+the pinned FreeSurfer 8.0.0 image used for QTIM), N4 on a 2 mm copy, ANTs affine registration of the masked scan to
+the nilearn MNI 2009a symmetric template (same iterations, seed 123, template brain mask), 1 mm output, own mask
+carried by nearest neighbour; z-scored in the own mask by the ladder. If SynthStrip runs outside the pinned image,
+its masks are first checked on 5 already prepared QTIM scans: brain-mask Dice against the QTIM masks must be at
+least 0.99 for every scan, else stop and report.
+QC before any ladder number (repository gate and STUDIES-018): the D7 automatic rules (unreadable, box under 95%
+inside its own brain mask, template correlation below median - 3 MAD flagged for review) and a visual sheet of all
+flagged scans plus a random 30 (seed 123), axial, coronal and sagittal through both boxes. Kate's verdict, or the
+analysis session's if she delegates it, before stage 2.
+Stage 2, the cube ladder of Amendments 10 and 11 on the same two frozen boxes and the same random positions, IXI
+only (targets and donors from IXI): own mirror, stranger (exact expectation), 16 look-alikes by the 2 and 4 mm shell
+and by the true box (oracle), same sex and age (within 2 years, at least 10 donors), dataset mean (leave-one-out).
+Site sensitivity: the stranger, same sex and age and dataset-mean rungs also with donors from the target's own
+centre only. Units and metrics as in QTIM; the R scale has no repeat anchor in IXI, so it is reported on the QTIM
+anchors only, flagged as cross-cohort.
+Expectations, stated now: E1 dataset mean below stranger in both boxes (QTIM: about 1 against 2 by construction);
+E2 own mirror between them in the deep box and near the stranger in the parietal box, as in QTIM; E3 same-centre
+donors lower V and every averaged rung by a few per cent, without changing the order; E4 older targets have larger
+V (ventricles, atrophy) but the same order. A reversal of E1 or E2 is reported, not explained away.
+Private outputs in `projects/identity-ladder-metric/ixi-ladder-20261107-v1/`; the repository holds aggregates only.
+Status: pre-QC, affine registration only, like QTIM.
+
+## Amendment 20 (7 Nov 2026, metric panel tiers 2 and 3 on the frozen boxes, CPU part; recorded before any result)
+
+Kate approved computing the whole 26-metric panel for the brain, weights and libraries included (7 Nov 2026, in the
+metrics-explorer session: "скачивай веса конечно считай все что запланировали", "библиотеку ставь"). This amendment
+defines the part that runs on this CPU-only machine; the rest is listed at the end with its blocker.
+Scope: the two frozen boxes (deep, parietal; positions 32 and 33 of Amendment 10), both sides, the same 221 targets,
+donors, fills, controls, seeds and scored voxels E as Amendment 10 and 11 (`src/donor_ladder_brain_metrics.py`,
+the new metrics are added to the same rows). The 32 random cubes are not scored for these tiers: one pass over them
+costs days on this CPU (timed on 7 Nov: persistence plus Wasserstein about 0.25 s per pair on a 16 mm cube of noise,
+LPIPS about 15 ms per slice). Private rows in `donor-ladder-brain-metrics-20261107-v4/`; v3 stays.
+- MS-SSIM (group A): three scales (the box, then twice halved). Downsampling is the mean of the valid voxels of each
+  2 x 2 x 2 block; a coarse voxel is in E when at least half of its 8 children are. At each scale the masked SSIM
+  terms of Amendment 10 (normalised convolution, sigma 1.5 voxels, constants for an 8 z range); contrast-structure at
+  every scale and luminance at the coarsest, each averaged over E and clipped at 0, combined with the first three
+  Wang et al. weights (0.0448, 0.2856, 0.3001, as in piq 0.8.0) renormalised to sum 1. Higher = closer.
+- LPIPS (group A), 2.5D: AlexNet, lpips 0.1.4 (linear layers v0.1). The three central orthogonal slices of the box;
+  z mapped to [-1, 1] by z / 4 and clipped, the grey slice repeated to 3 channels, bilinearly upsampled so the short
+  side is 64 px. A slice is scored only if every voxel of it is in E (no filler enters the network); the value is
+  the mean over the scored slices, NaN when none is scored, and the count of scored slices is kept. Lower = closer.
+- Amplitude against the matched mean (group A, descriptive like `amplitude`): ||f - mu_c|| / ||x - mu_c|| on E,
+  mu_c the same-sex-and-age mean.
+- Intensity persistence (group B): sublevel-set cubical persistence of the box (gudhi 3.13), voxels outside E set to
+  +inf so they never enter; diagrams in dimensions 0, 1 and 2, finite intervals only (essential classes dropped,
+  counted); distance = sum over dimensions of the 1-Wasserstein distance (internal p = 2, POT backend).
+  Lower = closer.
+- Tests, c, scale and intervals as Amendments 10 to 12, Holm over all metric x test hypotheses of this run, reported
+  next to tier 1, never merged into its Holm family after the fact.
+Before the full run: a smoke test on 3 targets with timing, and a visual sheet of one target (target, repeat,
+dataset mean, noise) with the LPIPS slices and the persistence diagrams, looked at before the full run.
+Expectations, stated now: MS-SSIM orders like SSIM; LPIPS ranks the dataset mean worse than SSIM does (a blurred
+mean is perceptually far) but the repeat still best; persistence ranks the dataset mean and the shrink far from the
+target (smoothing removes small features) and noise far as well (it adds features), so it may pass T2 where pixel
+metrics fail. Any of these failing is reported.
+Not in this amendment, each with its blocker: Betti matching in 3D (Betti-Matching-3D needs a C++ build; no compiler
+here, build on the project's Linux VM); identity embeddings (angle, norm, PFE, PLDA) on a brain encoder (Brain-ID
+download approved; needs the fill inside the whole scan, 2 boxes x about 221 volumes, CPU-feasible after FastSurfer
+frees the CPU, defined in its own amendment; PFE needs an uncertainty head the encoder may not have); FID, FWD and
+Topology Distance (set-level, per rung; own amendment); plausibility and latent geometry (pullback, Fisher-Rao,
+LDDMM): need a generative brain model and realistically a GPU.
+Smoke test (7 Nov 2026, 3 targets with a repeat, both boxes, 2 workers on a CPU shared with FastSurfer): 5.9 min,
+so about 7 h for the 221 targets. The QC sheet of one target was looked at: slices and fills are the right ones; in
+the deep box LPIPS orders repeat 0.046 < dataset mean 0.27 < noise 0.48. Two observations, recorded before the full
+run and not acted on (the definitions above stay): (1) in the parietal box the central slices often leave the brain
+mask, so LPIPS is missing for 24 of 64 parietal rows (0 scored slices); (2) persistence W1 is not invariant to an
+intensity offset: on this target the repeat (box mean 0.48 z against 0.95 z for the target, the between-session
+shift of Amendment 17) is farther from the target (173.7) than the dataset mean (125.4), which has few, short-lived
+features; over the 3 targets the deep-box means are repeat 96.7, mirror 51.1, dataset mean 112.0. Persistence may
+fail T1 in the deep box for this reason; that will be reported, not repaired after the fact.
+
+## Amendment 21 (8 Nov 2026, window size in object units; recorded before any result at the new sizes)
+
+Kate, 8 Nov 2026, metrics-explorer session: "да переделай честно". One window in mm covers a different share of each
+modality's object, so the window is now set as a fraction f of the object's own extent, with the same fractions for
+brain, face, fundus and iris (cross-modality rule of the metrics-explorer session, 8 Nov 2026).
+- **Object extent.** L = cbrt(mean brain-mask volume) over the 244 prepared scans (221 ses-01 + 23 ses-02) in the
+  analysis space (MNI 2009a symmetric, 1 mm, affine): mean 2046 ml (sd 67 ml), **L = 127.0 mm**. This is the
+  registered space, not native space (the template mask itself is 1883 ml); the metrics are computed in this space,
+  so this is the L that matters.
+- **Sizes.** Cube edge w = f x L rounded to the voxel: f = 1/16 -> 8 mm, f = 1/8 -> 16 mm, f = 1/4 -> 32 mm. The
+  current 16 mm window is f = 16 / 127.0 = 0.126, i.e. the f = 1/8 point: the tier-1 run (Amendments 10 to 13,
+  `donor-ladder-brain-metrics-20261106-v3`) and the running tier-2/3 run (Amendment 20) are the reference and are
+  not redone.
+- **Shell and search.** The context shell keeps its current ratio to the cube, s = w/4 (2, 4, 8 mm; the 3D analogue
+  of the 2D ring w/2), so f = 1/8 is exactly the reference configuration. The +-8 mm block-search half-window is a
+  tolerance for registration misalignment, not an object fraction, and stays 8 mm at every size (as in Amendment 4).
+  SSIM sigma and the lDDT radius are voxel-scale metric constants and stay unchanged.
+- **Positions.** The same 32 random centres as the 16 mm draw (start = centre - w/2). A centre is kept at size w only
+  if >= 90% of its window (w + 2s) lies inside the template brain mask and the window lies inside the grid (the rule
+  of `donor_ladder_brain.positions`); dropped centres are counted and reported, never replaced or filled. Target and
+  donor validity (>= 95% of the cube inside the scan's brain mask) is unchanged. The frozen `deep` and `parietal`
+  boxes (32 x 32 x 24 mm, f about 0.23) are anatomical regions and are not rescaled: rescaling them would change the
+  anatomy asked about. They appear only in the reference runs.
+- **What runs at the new sizes.** The tier-1 panel exactly as Amendments 10 to 13 (metrics, fills, controls, tests,
+  c, R, two-way intervals) on the random cubes at 8 and 32 mm, in `src/donor_ladder_brain_metrics_size.py`, with the
+  cube size, shell and half-window passed as explicit arguments. Tier 2/3, set-level (FID, FWD, Topology Distance)
+  and model metrics: only at f = 1/8.
+- **Check.** mse_allvox of the shared donors must reproduce the Amendment 4 rows of the same configuration
+  (`rows_p8_s2`, `rows_p32_s8`) on the kept positions, as the 16 mm run reproduces the bilateral rows; if it does
+  not, no summary is written.
+- **Reported.** L; f and w per size; kept positions per size; per metric the rung order and R at each size; rank
+  stability = Spearman correlation of the rung order (family-bootstrap mean of each fill, random cubes, L+R view,
+  fills present at all three sizes, the reference strangers excluded) between each pair of sizes. A claim holds only
+  if it holds at all three sizes; otherwise it is stated with its scale.
+- **Expectations (stated now).** The repeat is best and noise worst at every size and on every metric that passes
+  T1 at 16 mm. The order of the middle rungs (mirror, sibling, look-alike, single stranger) may change with size;
+  the dataset mean is expected to look relatively better at 32 mm (larger cubes average more structure, which a mean
+  keeps) and worse at 8 mm. Spearman between adjacent sizes is expected >= 0.8 for MSE-type metrics; lower values
+  are reported as scale dependence, not repaired.
+- **Order and gates.** Smoke test on 3 targets at 32 mm with timing; a visual QC sheet (kept and dropped centres
+  on the template; for one target at two positions the cube and its fills at 8, 16 and 32 mm) looked at, and Kate's
+  verdict, before the full runs; then 8 mm, then 32 mm, at most 2 workers, started as the CPU allows. Private rows in
+  `donor-ladder-brain-metrics-size-20261108-v1\`; public aggregates only in `results/donor_ladder_brain_metrics_size.json`.
+  Pre-QC (affine only), like every brain result.

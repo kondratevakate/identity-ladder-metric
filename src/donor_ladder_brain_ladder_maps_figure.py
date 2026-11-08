@@ -2,7 +2,7 @@
 
 Columns as in the case figure: Target (anatomy: the MNI template), Repeat scan, Mirror side, Sibling, Stranger,
 16 look-alikes, Same sex and age, Dataset mean. Fixed donors come from the 2 mm maps of Amendments 5-6; 16
-look-alikes (4 mm shell) from the 8 mm grid of Amendment 7, shown with nearest-neighbour upsampling. The dataset
+look-alikes (4 mm shell) from the 8 mm grid of Amendments 7 and 18, drawn with normalised trilinear upsampling. The dataset
 mean has ratio 1 everywhere by definition, so its column shows V itself (z units). `common`: one diverging scale
 (1 = dataset mean, 2 = stranger). `contrast`: each map spans its own 2nd-98th percentile around its median, so
 regional differences inside a map are visible. Under each map: MSE over the whole map in units of the mean, and
@@ -42,6 +42,20 @@ COLUMNS = [("target", "Target", None, None),
 GROUPS = [(1, 4, "Real anatomy from another scan or person"), (5, 7, "Averages of other people")]
 
 
+def upsample(img, ref):
+    """Grid map onto the 2 mm frame by normalised trilinear interpolation (Amendment 18): values (NaN as 0) and a
+    validity weight are interpolated separately and divided; kept where the weight is at least 0.5. Display only."""
+    from nilearn.image import new_img_like, resample_to_img
+    a = np.asanyarray(img.dataobj).astype(np.float32)
+    ok = np.isfinite(a)
+    num, den = (np.asanyarray(resample_to_img(new_img_like(img, x, copy_header=True), ref, interpolation="linear",
+                                              force_resample=True, copy_header=True).dataobj)
+                for x in (np.where(ok, a, 0).astype(np.float32), ok.astype(np.float32)))
+    with np.errstate(invalid="ignore", divide="ignore"):
+        out = np.where(den >= 0.5, num / den, np.nan).astype(np.float32)
+    return nib.Nifti1Image(out, ref.affine, ref.header)
+
+
 def load_maps():
     from nilearn.datasets import load_mni152_template
     from nilearn.image import resample_to_img
@@ -52,14 +66,13 @@ def load_maps():
             continue
         img = nib.load(os.path.join(P.PRIVATE, f))
         if f.startswith("grid_"):
-            img = resample_to_img(img, ref, interpolation="nearest", force_resample=True, copy_header=True)
+            img = upsample(img, ref)
         maps[key] = img
         hf = [os.path.join(P.PRIVATE, f.replace("_ratio.nii.gz", f"_ratio_h{h}.nii.gz")) for h in (0, 1)]
         if key != "V" and all(os.path.exists(x) for x in hf):          # independent half maps (Amendment 8)
             hs = [nib.load(x) for x in hf]
             if f.startswith("grid_"):
-                hs = [resample_to_img(x, ref, interpolation="nearest", force_resample=True, copy_header=True)
-                      for x in hs]
+                hs = [upsample(x, ref) for x in hs]
             maps[key + "_halves"] = hs
     under = resample_to_img(load_mni152_template(resolution=1), ref, interpolation="continuous",
                             force_resample=True, copy_header=True)
@@ -151,10 +164,10 @@ def draw(maps, under, rel, mode, dest):
         fig.text((x0 + x1) / 2, y + 0.006, text, ha="center", va="bottom", fontsize=6.4, color=MUTED)
     scale = ("One scale: 1 = dataset mean (white), 2 = stranger; blue beats the mean." if mode == "common" else
              "Own range per map: 2nd-98th percentile around its median (white); faded where two independent family "
-             "halves fall on opposite sides of the median (look-alikes: not yet, halves pending).")
+             "halves fall on opposite sides of the median.")
     fig.text(0.5, 0.03, scale, ha="center", fontsize=5.0, color=MUTED)
-    fig.text(0.5, 0.008, "* 8 mm grid, neighbours chosen by the 4 mm shell only. QTIM session 1, 16 mm window. "
-             "Pre-QC, affine registration only.", ha="center", fontsize=5.0, color=MUTED)
+    fig.text(0.5, 0.008, "* 8 mm grid, Gaussian-weighted 16 mm cube, neighbours chosen by the 4 mm shell only, drawn with "
+             "trilinear upsampling. QTIM session 1. Pre-QC, affine registration only.", ha="center", fontsize=5.0, color=MUTED)
     fig.suptitle("Real brain, every location: pixel error ranks the dataset mean above related anatomy"
                  + ("" if mode == "common" else " (contrast per map)"), fontsize=8.2, y=0.99)
     fig.savefig(dest + ".png", dpi=250)
