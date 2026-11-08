@@ -17,7 +17,10 @@ Run order (`OUT=results/cross_modality`; Python with `-I`):
 | 6 | `rank_tiles.py OUT` and `rank_tiles.py OUT dataset` | rank tiles by metric and by dataset, `ranks_all.json` |
 | 7 | `cal_tiles.py OUT` | calibrated score c tiles, `cal_c_all.json` |
 | 8 | `agreement.py OUT` | dataset x dataset and metric x metric agreement of rung order |
-| 9 | `build_data.py OUT`, then `build_explorer.py OUT page.html` | explorer page (published privately as a claude.ai artifact) |
+| 9 | `dataset_card.py OUT <bilateral_worktree>` | `dataset_card.json` / `.png`: persons, images, rungs, V, ladder ratios |
+| 10 | `generative_block.py OUT <bilateral_worktree>` | LPIPS, Betti matching, persistence, iris code, FID, FWD ranks and tiles (fundus 9.15, iris P3; brain and faces "not run") |
+| 11 | `agreement.py OUT` again | agreement including the generative block |
+| 12 | `build_data.py OUT`, then `build_explorer.py OUT page.html` | explorer page (published privately as a claude.ai artifact) |
 
 Validation recorded when written: R_self equals the fundus and iris files exactly and the face file within 0.01;
 T1-T3b p values equal the brain, GRAPE, PAPILA and iris files exactly; calibrations equal GRAPE (z, EVT, posterior

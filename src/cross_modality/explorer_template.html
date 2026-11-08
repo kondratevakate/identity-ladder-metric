@@ -143,6 +143,18 @@ details>summary{cursor:pointer;font-weight:600;font-size:15px}
   <div class="panel scroll" style="background:#fff"><img src="data:image/png;base64,__TILESDS__" alt="Rank tiles grouped by dataset" style="width:100%;min-width:900px;max-width:none;display:block"></div>
 </section>
 
+<section id="gen">
+  <div><h2>Generative, perceptual and topology metrics</h2>
+  <p class="lede">LPIPS (AlexNet, VGG), Betti matching, intensity persistence, iris code distance and set-level FID and FWD, in the same columns and colours as the rank tiles. Fundus (Amendment 9.15) and iris (Amendment P3) only; brain and faces were not run tonight (grey rows give the reason).</p></div>
+  <div class="panel scroll" style="background:#fff"><img src="data:image/png;base64,__GEN__" alt="Rank tiles for generative and topology metrics" style="width:100%;min-width:800px;max-width:1000px;display:block"></div>
+</section>
+
+<section id="card">
+  <div><h2>Dataset card</h2>
+  <p class="lede">Who is in each dataset and where its ladder sits: persons, images, windows, rungs, V (error of the dataset mean) and three rungs as multiples of V. n/a means not recorded, never zero.</p></div>
+  <div class="panel scroll" style="background:#fff"><img src="data:image/png;base64,__CARD__" alt="Dataset card table" style="width:100%;min-width:900px;max-width:none;display:block"></div>
+</section>
+
 <section id="agree">
   <div><h2>Agreement</h2>
   <p class="lede">Left: do two datasets put the rungs in the same order? Spearman &rho; of the tile ranks for each metric, averaged over metrics. Right: do two metrics put the rungs in the same order? &rho; for each dataset, averaged over datasets. Only rungs both sides have count, at least 5. MSE, RMSE and PSNR give the same order by construction. ArcFace is left out (5 shared rungs on one dataset).</p></div>

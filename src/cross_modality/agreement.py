@@ -16,12 +16,19 @@ import matplotlib.pyplot as plt
 
 SCR = sys.argv[1]
 R = {tuple(k.split("|")): v for k, v in json.load(open(SCR + "/ranks_all.json")).items()}
+try:  # generative, perceptual and topology block (generative_block.py); absent file = block not built yet
+    R.update({tuple(k.split("|")): v for k, v in json.load(open(SCR + "/ranks_generative.json")).items()
+              if tuple(k.split("|")) not in R})
+except FileNotFoundError:
+    pass
 MET = [m for m in dict.fromkeys(m for m, _ in R) if m != "arcface_cos"];  # ArcFace: 5 rungs on one dataset only, too thin
 DS = list(dict.fromkeys(d for _, d in R))
 MN = {"mse": "MSE", "rmse": "RMSE", "mae": "MAE", "psnr": "PSNR", "psnr_fixed": "PSNR fixed", "ssim": "SSIM", "pearson": "Pearson r",
       "acc_dataset": "ACC vs dataset mean", "acc_cohort": "ACC vs matched mean", "ampdev_dataset": "|1-amp|, dataset",
       "ampdev_cohort": "|1-amp|, matched", "ms_ssim": "MS-SSIM", "lddt": "lDDT", "lddt_rep": "lDDT rep", "tm_like": "TM-like",
-      "gdt_like": "GDT-like", "rmse_rep": "RMSE / rep", "persistence": "persistence", "arcface_cos": "ArcFace"}
+      "gdt_like": "GDT-like", "rmse_rep": "RMSE / rep", "persistence": "persistence", "arcface_cos": "ArcFace",
+      "lpips_alex": "LPIPS Alex", "lpips_vgg": "LPIPS VGG", "betti_matched": "Betti matched", "betti_unmatched": "Betti unmatched",
+      "iriscode_hd": "iris code HD", "fid": "FID (set)", "fwd": "FWD (set)"}
 
 def rho(a, b):
     sh = [r for r in a if r in b]
@@ -66,7 +73,7 @@ for d, v in per_ds.items():
     print(f"  {d:11s}", None if v is None else f"{v[0]:.2f}  min {v[1]:.2f}  n {v[2]}")
 
 cm = matplotlib.colors.LinearSegmentedColormap.from_list("r", ["#b7471a", "#f0a868", "#f7f4ee", "#7cc3bf", "#0b5d63"])
-fig, ax = plt.subplots(1, 2, figsize=(15, 7.6), gridspec_kw={"width_ratios": [len(DS) + 2.5, len(MET) + 1.5]})
+fig, ax = plt.subplots(1, 2, figsize=(17, 8.6), gridspec_kw={"width_ratios": [len(DS) + 2.5, len(MET) + 1.5]})
 for a, M, lab, title, per in ((ax[0], Md, DS, "Do datasets agree?  (rho of rung order, mean over metrics)", per_ds),
                               (ax[1], Mm, [MN[m] for m in MET], "Do metrics agree?  (rho of rung order, mean over datasets)", per_metric)):
     a.imshow(M, cmap=cm, vmin=-1, vmax=1)
@@ -81,6 +88,7 @@ for a, M, lab, title, per in ((ax[0], Md, DS, "Do datasets agree?  (rho of rung 
     for s in a.spines.values():
         s.set_visible(False)
 fig.text(0.01, 0.015, "rho = Spearman correlation of the rung order (the tile ranks) between two datasets or two metrics, over rungs both have (at least 5). "
-         "1 = same order, 0 = unrelated, -1 = reversed.\nMSE, RMSE, PSNR and PSNR fixed give the same order by construction. Brain, fundus and iris pre-QC; faces QC approved.", fontsize=7.5, color="#333")
+         "1 = same order, 0 = unrelated, -1 = reversed. ArcFace left out (5 shared rungs on one dataset); LPIPS, Betti, FID, FWD "
+         "and iris code cover fundus and iris only.\nMSE, RMSE, PSNR and PSNR fixed give the same order by construction. Brain, fundus and iris pre-QC; faces QC approved.", fontsize=7.5, color="#333")
 plt.tight_layout(rect=(0, 0.05, 1, 1))
 plt.savefig(SCR + "/agreement.png", dpi=160, facecolor="white")

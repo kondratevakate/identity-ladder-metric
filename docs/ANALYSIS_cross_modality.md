@@ -50,6 +50,19 @@ metrics. Metrics: rho for each dataset, mean over datasets. ArcFace left out (5 
 - Calibrated c: faces give the repeat 0.70-0.72 under MSE and SSIM, below the dataset mean (0.87); ACC vs matched
   mean drops the mean to 0.50 (stranger level); ArcFace gives the repeat 0.98-0.99; fundus and iris repeats 0.90-0.99.
 
+## 4b. Night 8-9 Nov additions (Kate's paper scope, minimal items)
+- Dataset card (`dataset_card.py`, `dataset_card.json/png`): persons, target images, images in frame (n/a where the
+  JSON does not record it), windows, rungs, V = MSE of the dataset-mean fill, and repeat / other side / look-alike /
+  stranger as multiples of V from one computation (`common_all.json`). Stranger sits at 1.96-2.02 everywhere; the
+  repeat at 0.18-0.57 on brain, fundus and iris but 1.28-1.39 on faces; PAPILA has no repeat (n/a).
+- Generative, perceptual and topology block (`generative_block.py`, `generative_tiles.png`, `ranks_generative.json`):
+  LPIPS AlexNet and VGG, Betti matching matched / unmatched, persistence, iris code distance (R_self per rung) and
+  set-level FID and FWD (per-rung set value), from fundus Amendment 9.15 and iris Amendment P3. LPIPS AlexNet also puts
+  the repeat shrunk to the mean first (T2 fails); FID and FWD put the dataset mean last and agree with pixel metrics
+  near rho 0. Limitation: brain (Amendment 20 run restarted after the 8 Nov reboot; Betti 3D needs a C++ build) and
+  faces (F2 run restarted) are "not run" rows; fundus set-level bootstrap intervals do not always contain the point
+  value (small-sample FID bias), so set-level ranks are descriptive only.
+
 ## 5. Window size follows the object (Kate, 8 Nov 2026: "да переделай честно")
 One pixel window covers a different share of each object (brain about 1/10 of its length, faces 0.4 inter-ocular
 distance, fundus 1/8 of the frame with PAPILA covering 1.6 x more retina than GRAPE, iris 1/4 of the radial band x

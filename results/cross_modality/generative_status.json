@@ -1,0 +1,55 @@
+{
+ "method": "Generative, perceptual and topology block for the cross-modality tiles (aggregates only).\n\nSources, read only: fundus `results/fundus_ladder_metrics_a915.json` (Amendment 9.15, identity-ladder-bilateral),\niris `results/iris_ladder_metrics.json` key `amendment_p3`. Brain (Amendment 20, LPIPS 2.5D) and faces (F2) are listed\nas \"not run\" until their summary JSONs carry these metrics; that is a stated limitation, not a zero.\nPer-target metrics (LPIPS AlexNet, LPIPS VGG, Betti matching matched / unmatched, intensity persistence, iris-code\nHamming distance) use R_self per rung (target 0, mean of 16 strangers 1, lower = closer). Set-level metrics (FID,\nFWD) use the per-rung set value (lower = closer). The tile rank is the rung's place among the rungs present.\nWrites `ranks_generative.json`, `generative_status.json` and `generative_tiles.png`.\n\nUsage: python -I src/cross_modality/generative_block.py results/cross_modality <bilateral_worktree>",
+ "not_run": {
+  "QTIM": "brain: Amendment 20 run restarted after the 8 Nov reboot; Betti 3D needs a C++ build",
+  "CelebA": "faces: F2 panel run restarted after the 8 Nov reboot; summary not yet in the JSON",
+  "IMDb-WIKI": "faces: F2 panel run restarted after the 8 Nov reboot; summary not yet in the JSON"
+ },
+ "present": {
+  "GRAPE": [
+   "lpips_alex",
+   "lpips_vgg",
+   "betti_matched",
+   "betti_unmatched",
+   "persistence",
+   "fid",
+   "fwd"
+  ],
+  "PAPILA": [
+   "lpips_alex",
+   "lpips_vgg",
+   "betti_matched",
+   "betti_unmatched",
+   "persistence",
+   "fid",
+   "fwd"
+  ],
+  "UTIRIS NIR": [
+   "lpips_alex",
+   "lpips_vgg",
+   "betti_matched",
+   "betti_unmatched",
+   "iriscode_hd",
+   "fid",
+   "fwd"
+  ],
+  "UTIRIS VIS": [
+   "lpips_alex",
+   "lpips_vgg",
+   "betti_matched",
+   "betti_unmatched",
+   "iriscode_hd",
+   "fid",
+   "fwd"
+  ],
+  "UPOL": [
+   "lpips_alex",
+   "lpips_vgg",
+   "betti_matched",
+   "betti_unmatched",
+   "iriscode_hd",
+   "fid",
+   "fwd"
+  ]
+ }
+}
