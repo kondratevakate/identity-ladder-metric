@@ -20,6 +20,11 @@ Common to all modalities
 - Kate, 8 Nov: window size in object units, w = f x L, f in {1/16, 1/8, 1/4}, the same f for every modality; old
   results kept, the sweep written as new versions.
 
+Reboot losses (8 Nov, disk full): the face F2 full run is lost (0 of 36 jobs saved; F3 smoke kept 20 of 94 parts),
+not restarted yet, CPU goes to iris and fundus first; the fundus full run is lost and restarted with resumable
+checkpoints (bilateral commits fcabf46, f62d66c; 6-10 h estimate). Brain committed in 22ddf70, faces and iris code in
+ab10b46 and 29e38c4, face handoff in b46d22e. Lines below give the plan as reported before the reboot.
+
 Per modality (current state as reported)
 - Brain (QTIM, owner session "Brain ladder: run all metrics"; committed 22ddf70 on cvpr2027-paper, 8 Nov):
   - Done: tier-1 panel at 16 mm (`results/donor_ladder_brain_metrics.json`); 8 mm look-alike grid with Gaussian
