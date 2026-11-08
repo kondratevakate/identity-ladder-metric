@@ -170,20 +170,126 @@ def qc(version, denom, limit):
         plt.close(fig)
         print(out, flush=True)
 
+STAB_METRICS = ("mse", "mae", "ssim", "pearson", "lddt", "tm_like", "gdt_like")   # window-dependent tier-1 metrics
+OUT_JSON = os.path.join(FM.ROOT, "results", "face_ladder_sizes.json")
+OUT_FIG = os.path.join(FM.ROOT, "results", "figures", "fig_face_window_sizes")
+
+
+def spearman(a, b):
+    """Spearman rank correlation of two equal-length vectors (average ranks for ties); NaN if fewer than 3."""
+    a, b = np.asarray(a, float), np.asarray(b, float)
+    if len(a) < 3:
+        return float("nan")
+    ra, rb = pd.Series(a).rank().to_numpy(), pd.Series(b).rank().to_numpy()
+    return float(np.corrcoef(ra, rb)[0, 1])
+
+
+def rung_R(view, metric):
+    """{rung: R} of one summarise() view and metric; rungs without a finite R are left out (never filled)."""
+    lr = view.get("ladder_R", {}).get(metric, {})
+    return {k: v["R"] for k, v in lr.items() if isinstance(v, dict) and v.get("R") is not None and np.isfinite(v["R"])}
+
+
+def stability(version, limit):
+    """Tier-1 summaries at 5, 10, 16 and 20 px on the same evenly spaced targets, and Spearman rank stability of the
+    rung order (R per rung) between every pair of sizes; aggregates only (public)."""
+    cache = os.path.join(FM.PRIVATE, f"cache{version}")
+    desc = json.load(open(os.path.join(cache, "desc.json")))["data"]
+    geo = geometry(cache, desc)
+    w_of = {f"1/{k}": size_of(geo["celeba"]["L_px"], k)[0] for k in DENOMS}
+    rows = {}
+    for f, w in w_of.items():
+        rows[w] = pd.read_csv(os.path.join(PRIVATE, f"rows{version}_w{w}_n{limit}.csv.gz"))
+    v16 = pd.read_csv(os.path.join(FM.PRIVATE, f"rows{version}.csv.gz"))
+    keep = []
+    for src, d in desc.items():
+        T = d["targets"]
+        sel = set(np.unique(np.linspace(0, len(T) - 1, limit).round().astype(int)).tolist())
+        keep.append(v16[(v16.src == src) & v16.target.isin(sel)])
+    rows[16] = pd.concat(keep)
+    sizes = sorted(rows)
+    out = {"amendment": "F3 / F3.1 (docs/PROTOCOL_face_metrics.md)", "frame": version,
+           "subset": f"{limit} evenly spaced targets per source, the same at every size", "geometry": geo,
+           "window_px_by_f": w_of, "f_of_16px": {s: g["f_of_16px"] for s, g in geo.items()},
+           "metrics": list(STAB_METRICS), "views": {}, "rank_stability": {}, "counts": {}}
+    for src in desc:
+        out["views"][src], out["rank_stability"][src], out["counts"][src] = {}, {}, {}
+        for w in sizes:
+            r = rows[w][rows[w].src == src]
+            v = FM.summarise(r)
+            out["views"][src][str(w)] = {"ladder_R": {m: v["ladder_R"].get(m) for m in STAB_METRICS},
+                                         "expectations": {m: v["expectations"].get(m) for m in STAB_METRICS}}
+            out["counts"][src][str(w)] = {"n_rows": int(len(r)), "n_targets": int(r.target.nunique()),
+                                          "n_positions": int(r.patch.nunique())}
+        for m in STAB_METRICS:
+            Rs = {w: rung_R(out["views"][src][str(w)], m) for w in sizes}
+            common = sorted(set.intersection(*[set(x) for x in Rs.values()]))
+            pairs = {f"{a}-{b}": spearman([Rs[a][k] for k in common], [Rs[b][k] for k in common])
+                     for i, a in enumerate(sizes) for b in sizes[i + 1:]}
+            obj = [w for w in sizes if w != 16]
+            out["rank_stability"][src][m] = {"n_rungs": len(common), "spearman": pairs,
+                                             "min_over_object_unit_sizes": min(pairs[f"{a}-{b}"] for i, a in
+                                                                               enumerate(obj) for b in obj[i + 1:])}
+    with open(OUT_JSON, "w", encoding="utf-8") as fh:
+        json.dump(FM.BM.finite(out), fh, indent=1, allow_nan=False)
+    figure(out, sizes)
+    print(OUT_JSON, flush=True)
+
+
+def figure(out, sizes):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    show = ("mse", "ssim", "lddt")
+    srcs = list(out["views"])
+    fig, axes = plt.subplots(len(srcs), len(show), figsize=(4.2 * len(show), 3.4 * len(srcs)), squeeze=False)
+    cols = {5: "#9ecae1", 10: "#4292c6", 16: "#000000", 20: "#08306b"}
+    for i, src in enumerate(srcs):
+        for j, m in enumerate(show):
+            ax = axes[i, j]
+            ref = rung_R(out["views"][src]["16"], m)
+            order = sorted(ref, key=ref.get)
+            for w in sizes:
+                Rw = rung_R(out["views"][src][str(w)], m)
+                y = [Rw.get(k, np.nan) for k in order]
+                ax.plot(range(len(order)), y, "o-" if w != 16 else "s--", ms=3, lw=1, c=cols.get(w, "grey"),
+                        label=f"{w} px (f = {w / out['geometry'][src]['L_px']:.3f})")
+            ax.axhline(0, c="grey", lw=0.5)
+            ax.axhline(1, c="grey", lw=0.5, ls=":")
+            ax.set_xticks(range(len(order)))
+            ax.set_xticklabels(order, rotation=70, fontsize=5.5)
+            rs = out["rank_stability"][src][m]
+            ax.set_title(f"{src}: {m}, rung order Spearman min {rs['min_over_object_unit_sizes']:.2f} "
+                         f"(5, 10, 20 px)", fontsize=7)
+            ax.set_ylabel("R (0 = target itself, 1 = stranger mean)", fontsize=6)
+            if i == 0 and j == 0:
+                ax.legend(fontsize=5.5)
+    fig.suptitle("Face ladder at window sizes in units of the face extent L (Amendment F3); rungs ordered by R at "
+                 "16 px; same evenly spaced targets at every size", fontsize=8)
+    fig.tight_layout()
+    fig.savefig(OUT_FIG + ".png", dpi=170)
+    fig.savefig(OUT_FIG + ".pdf")
+    plt.close(fig)
+
+
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("stage", choices=["geometry", "rows", "qc"])
+    ap.add_argument("stage", choices=["geometry", "rows", "qc", "stability"])
     ap.add_argument("--version", required=True, help="face frame version, e.g. _v6f (no default)")
     ap.add_argument("--denom", type=int, choices=DENOMS, help="f = 1 / denom (required for rows and qc)")
     ap.add_argument("--limit", type=int, default=0, help="evenly spaced targets per source (smoke)")
     ap.add_argument("--workers", type=int, default=3)
     a = ap.parse_args()
-    if a.stage != "geometry" and a.denom is None:
+    if a.stage not in ("geometry", "stability") and a.denom is None:
         raise SystemExit("--denom is required")
     if a.stage == "geometry":
         cache = os.path.join(FM.PRIVATE, f"cache{a.version}")
         print(json.dumps(geometry(cache, json.load(open(os.path.join(cache, "desc.json")))["data"]), indent=1))
+    elif a.stage == "stability":
+        if not a.limit:
+            raise SystemExit("--limit is required for stability (the sweep's limit)")
+        stability(a.version, a.limit)
     elif a.stage == "rows":
         run_rows(a.version, a.denom, a.limit, a.workers)
     else:

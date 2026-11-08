@@ -39,3 +39,11 @@ def test_positions_satisfy_thresholds_at_every_size():
             assert v[FM.ring_mask(y0, x0, FM.SIZE, w, rw)].sum() >= FM.MIN_RING_VALID * nominal
         ring = FM.ring_mask(pos[0][0], pos[0][1], FM.SIZE, w, rw)
         assert not ring[pos[0][0]:pos[0][0] + w, pos[0][1]:pos[0][1] + w].any()
+
+
+def test_spearman_and_rung_R_skip_missing():
+    assert S.spearman([1, 2, 3, 4], [10, 20, 30, 40]) == 1.0
+    assert S.spearman([1, 2, 3, 4], [4, 3, 2, 1]) == -1.0
+    assert np.isnan(S.spearman([1, 2], [1, 2]))
+    view = {"ladder_R": {"mse": {"a": {"R": 0.1}, "b": {"R": None}, "c": {"R": float("nan")}, "d": {"R": 1.2}}}}
+    assert S.rung_R(view, "mse") == {"a": 0.1, "d": 1.2}          # missing rungs are left out, never zero
