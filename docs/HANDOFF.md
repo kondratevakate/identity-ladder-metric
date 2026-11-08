@@ -18,8 +18,8 @@ QC sheet on a few targets, look at it, then the full run), exactly as done with 
 | Iris full P3 | Iris | aggregates into results/, figures without real eyes, commit | wrap-up |
 | All-modality map figure | this session | brain numbers from Gaussian JSONs, footer fixed, test | done 8 Nov night |
 | Integrity | this session | every committed result JSON has its generating script in git; tests pass | pending |
-| Generative/latent block in cross-modality tiles | Explorer | LPIPS, FID/FWD, Betti matching rows added to `results/cross_modality/` from tonight's JSONs | after modality wrap-ups |
-| Dataset card table | Explorer | one row per dataset: persons, images, rungs available, V, repeat / look-alike / stranger ratios | pending |
+| Generative/latent block in cross-modality tiles | Explorer | LPIPS, FID/FWD, Betti matching rows added to `results/cross_modality/` from tonight's JSONs | done 4c58f32: fundus 9.15 + iris P3 in `generative_tiles.png` and agreement; brain, faces drawn "not run" (limitation in `docs/ANALYSIS_cross_modality.md` 4b); rerun `generative_block.py` once their JSONs land |
+| Dataset card table | Explorer | one row per dataset: persons, images, rungs available, V, repeat / look-alike / stranger ratios | done 4c58f32: `results/cross_modality/dataset_card.{json,png}`, n/a never 0, test `tests/test_cross_modality.py`; explorer page v16 |
 | Not tonight (limitation) | | Brain-ID, latent metrics (no GPU), Betti 3D, FastSurfer rest, IXI | written as limitations |
 
 Paper scope (Kate, 8 Nov night; descriptive result is enough, minimal additions only):
