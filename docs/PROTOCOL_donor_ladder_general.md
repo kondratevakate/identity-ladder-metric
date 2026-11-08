@@ -573,3 +573,88 @@ registration, no intensity fit; GRAPE P8, PAPILA P9).
   the closeness metrics except MS-SSIM against noise in PAPILA and the amplitude ratio (wrong detail and noise have
   amplitude about 1 by construction); T1 passes in GRAPE for every computed metric except the matched-mean ones
   (37 GRAPE targets have a same sex, age and device cohort).
+
+### Amendment 9.15 (8 Nov 2026, fundus: metrics unblocked by new weights and libraries; before any of their results)
+
+Approval: Kate, 7 Nov 2026 in the metrics-explorer session ("скачивай веса конечно считай все что запланировали",
+"библиотеку ставь"), and 8 Nov 2026 in this session ("скачивай retfound"). Shared weights and libraries:
+`C:\Projects\data\projects\identity-ladder-metric\models-20261107\` (TORCH_HOME = `torch/`; Betti matching
+`betti-matching-2d/` at 3e7eca26; `pytorchfwd-lib/` = pytorchfwd 1.0.1, ptwt 0.1.8, PyWavelets 1.9.0 installed with
+`--no-deps --target`, because a normal install would downgrade the shared scipy). No fundus number of these metrics
+exists when this is written. Frame, units, positions, fills, pools, seeds and the 12 computed metrics of Amendment
+9.14 are unchanged; the rerun recomputes them and must reproduce the v1 rows (checked column by column). The rules
+follow the iris Amendment P3 (`PROTOCOL_iris_metrics.md`) so the modalities stay comparable. Rows go to the private
+folder `fundus-ladder-metrics-20261108-v2/`; v1 stays.
+
+Common rules: a new metric is scored only where it is defined below, and exclusions are counted per dataset, rung
+and reason. Missing is never zero. Grey (z-scored green) images enter networks as three equal channels; the
+intensity mapping is fixed: z clipped to [-3, 3], mapped linearly to [-1, 1] (LPIPS) or [0, 1] (Betti matching,
+FID and FWD inputs). Lower is closer for every new metric and the target itself scores 0 (d_self = 0). Per-window
+metrics get R_self, T1-T3b in the Holm family (26 x 4), expectations, TOST and calibration as in 9.14.
+
+Topology subset S (fixed now, because of CPU cost; this machine has no GPU and is shared): per target unit, 2
+positions drawn with the seeded generator [SEED, unit, 11] among the positions where the target window lies wholly
+inside the target's mask and `valid` (256 of 256 pixels). Every person keeps its targets; units with no such
+position are counted. Betti matching and FID use S; LPIPS and FWD use every cell.
+
+1. LPIPS (computed, group A): `lpips` 0.1.4, AlexNet with the package's v0.1 linear layers (primary); VGG as a
+   sensitivity block (supplementary, outside Holm, on the cells of S only because of its cost). Input: the 64 x 64 context around the window (centred, shifted to stay inside
+   the 128 px frame). Reference = target; composite = target with the fill on E (window pixels outside E keep the
+   target). Context pixels outside the target's mask or `valid` are set, identically in both images, to the
+   target's masked Gaussian local mean (sd 4 px; where its weight is below 1e-3, sd 16 px; where still undefined,
+   the target's mean over its valid context pixels). Score = mean of the spatial LPIPS map (`spatial=True`) over E.
+   The share of set pixels in the context is stored per row; LPIPS is also reported on cells with at most 5% of
+   them (sensitivity).
+2. Betti matching, matched and unmatched parts (computed, 2 metrics, group B): Betti-matching 2D (Stucki et al.,
+   arXiv:2211.15272) with sublevel filtration, construction V, comparison union, relative = False, dimensions 0
+   and 1, on the 16 x 16 window of target and fill mapped to [0, 1]. Matched part = sum over matched pairs of
+   2((a0 - a1)^2 + (b0 - b1)^2); unmatched part = sum over the unmatched intervals of both images of (a - b)^2
+   (the two terms of the library's `loss`, infinite deaths set as the library does). Only cells of S where E is
+   the whole window (no missing pixel in target or fill) are scored; the eligible share per rung is reported.
+3. FID (computed per rung, set level, group C): pytorch-fid 0.3.0 InceptionV3 pool features (pt_inception-2015-
+   12-05). For each rung, reference set = the target windows of the cells of S where that rung is scored by Betti
+   matching (full window); compared set = that rung's fill windows on the same cells. 16 px windows are upsampled
+   bilinearly to 299 px (the package's own resize). Reported per rung: FID (pytorch-fid's Frechet distance), its
+   ratio to the stranger rung's FID (stranger = 1), and a person-bootstrap interval (200 resamples, seed as 9.14;
+   in the bootstrap Tr sqrt(C1 C2) is computed exactly as the nuclear norm of A1^T A2 on centred features, which a
+   test checks against the package value). No per-target value: no R_self per person, no Wilcoxon tests; the four
+   Holm slots of a set-level metric stay p = 1. With about 1,000 (PAPILA) and 500 (GRAPE) windows the 2048-
+   dimensional covariance is rank-deficient; FID values are read only as ratios between rungs at the same n.
+4. FWD (computed per rung, set level, group C, same reporting as FID): Frechet Wavelet Distance (Veeramacheneni et
+   al., arXiv:2312.15289) with the package's functions (`forward_wavelet_packet_transform`,
+   `calculate_frechet_distance`, mean over packets), Haar, no log scale. The published level 4 needs 256 px
+   images; on 16 px windows level 2 (16 packets of 4 x 4) is fixed now; one grey channel. Sets: all cells where the
+   rung's E is the whole window (not only S; FWD is cheap).
+4a. Negative Frechet values (added 8 Nov 2026 after the smoke run, before the full run): a Frechet distance is >= 0;
+   a negative FID or FWD value (smoke: PAPILA fellow FWD -0.0003) is numerical error of the matrix square root. It is
+   set to 0, and the number of such point and bootstrap values is reported per rung (`negative_set_to_zero`).
+5. Topology Distance: stays blocked. No definition is fixed in the project and none is invented here.
+6. Plausibility: stays blocked (needs a trained density model of fundus images).
+7. Identity x4 (RETFound): the weights `YukunZhou/RETFound_mae_natureCFP` (CC BY-NC 4.0) are gated; access needs
+   Kate's form on Hugging Face. Definition and cost are fixed in their own amendment before any identity result.
+   PFE stays blocked (RETFound has no uncertainty head).
+8. Latent x3 (pullback, Fisher-Rao, LDDMM): stay blocked (no generative fundus model; CPU only). Plan and cost are
+   reported to Kate, not run.
+
+Hypotheses for the new metrics, fixed now:
+- H7: LPIPS and both Betti-matching parts do not reward shrinkage: the reference rung (GRAPE repeat, PAPILA fellow)
+  scores better than its shrink (T2 passes), unlike MSE (9.14 outcome).
+- H8: FID and FWD rank the dataset mean and the mean of 2 as worse than or equal to one stranger (ratio to the
+  stranger >= 0.9), since averaged windows lose texture.
+- H9: LPIPS keeps the order repeat < look-alike < stranger in GRAPE, with the upper bound of R_self(repeat) below 1.
+Precision: as 9.14 (differences below 0.1 in R are not interpreted); set-level ratios are read only where the
+bootstrap interval excludes the comparison value.
+
+Weaknesses, stated now: networks trained on natural photographs see a 16 px fundus patch upsampled (FID) or a
+64 px context (LPIPS); Betti matching was designed for segmentation likelihoods and is applied to intensities; the
+full-window rule keeps cleaner windows away from the field edge (eligible shares are reported); S holds 2 of about
+12 positions per target, so Betti and FID have less power than the other metrics.
+
+Gate: a smoke run (every 10th unit per side, both datasets) writes `qc_extra_<dataset>_<arm>.png` to the private
+folder: for 12 evenly spaced targets, reference and composite LPIPS contexts per rung with the LPIPS value, the
+window pair with both Betti parts, and the set-pixel share. Kate's verdict on that sheet is required before the
+full run. Status until then: pre-QC.
+
+QC verdict (8 Nov 2026): Kate looked at `qc_extra_GRAPE_p8.png` and `qc_extra_PAPILA_p9.png`, asked whether the blue
+(outside-field) zone is treated as missing (it is: never scored; filled only as network input), and chose "Keep current":
+LPIPS on all cells stays primary, the cells with <= 5% set pixels stay the sensitivity block. Full run follows.

@@ -178,3 +178,123 @@ def test_holm_keeps_blocked_endpoints_in_the_denominator(bm):
     assert n == 104
     assert holm["mse/T1"]["p_holm"] == pytest.approx(min(1.0, 104 * 0.001))
     assert holm["lpips/T1"]["p_holm"] == 1.0 and not holm["lpips/T1"]["computed"]
+
+
+# ---------------------------------------------------------------------------------------------- Amendment 9.15
+
+import fundus_ladder_metrics_extra as EX  # noqa: E402
+
+MODELS = os.environ.get("METRIC_MODELS", r"C:\Projects\data\projects\identity-ladder-metric\models-20261107")
+
+
+@pytest.fixture(scope="module")
+def nets():
+    if not os.path.isdir(MODELS):
+        pytest.skip(f"shared models folder not found at {MODELS} (set METRIC_MODELS)")
+    EX.setup(MODELS)
+    return EX.load_nets()
+
+
+def test_extra_setup_needs_an_explicit_folder(monkeypatch):
+    monkeypatch.delenv("METRIC_MODELS", raising=False)
+    with pytest.raises(SystemExit):
+        EX.setup(None)
+
+
+def test_network_input_ignores_values_outside_the_mask():
+    """Missing is never zero: whatever sits outside the field (0, padding, garbage) must not reach the network."""
+    rng = np.random.default_rng(5)
+    x = rng.normal(size=(32, 32))
+    m = np.ones((32, 32), bool)
+    m[:, :10] = False
+    a, sa = EX.network_input(np.where(m, x, 0.0), m)
+    b, sb = EX.network_input(np.where(m, x, 99.0), m)
+    assert np.allclose(a, b) and (sa == ~m).all()
+    assert np.allclose(a[m], x[m])
+
+
+def test_context_box_stays_inside_the_frame():
+    for y, x in [(0, 0), (112, 112), (48, 0)]:
+        ys, xs = EX.context_box(y, x, 16, 128)
+        assert ys.start >= 0 and ys.stop <= 128 and ys.stop - ys.start == 64
+        assert xs.start <= x and x + 16 <= xs.stop
+
+
+def test_topology_subset_is_seeded_and_within_full_positions():
+    a = EX.topo_cells(3, [1, 4, 7, 9], 20261102)
+    assert a == EX.topo_cells(3, [1, 4, 7, 9], 20261102)
+    assert len(a) == EX.TOPO_PER_UNIT and a <= {1, 4, 7, 9}
+    assert EX.topo_cells(3, [], 20261102) == set()
+
+
+def test_fid_nuclear_norm_equals_the_package_value():
+    rng = np.random.default_rng(6)
+    F1 = rng.normal(size=(300, 8))
+    F2 = rng.normal(loc=0.3, scale=1.2, size=(300, 8))
+    assert EX.fid_nuclear(F1, F2) == pytest.approx(EX.fid_point(F1, F2), rel=1e-6)
+    assert EX.fid_nuclear(F1, F1) == pytest.approx(0.0, abs=1e-8)
+
+
+def test_lpips_and_betti_zero_on_identity(nets):
+    rng = np.random.default_rng(7)
+    a = rng.normal(size=(64, 64))
+    m = np.zeros((64, 64), bool)
+    m[24:40, 24:40] = True
+    assert EX.lpips_batch([a], [a], [m])[0] == pytest.approx(0.0, abs=1e-7)
+    b = a.copy()
+    b[m] = rng.normal(size=m.sum())
+    assert EX.lpips_batch([a], [b], [m])[0] > 0
+    w = a[24:40, 24:40]
+    assert EX.betti_parts(w, w) == (pytest.approx(0.0), pytest.approx(0.0))
+    assert sum(EX.betti_parts(w, b[24:40, 24:40])) > 0
+
+
+def test_fwd_zero_for_identical_sets(nets):
+    rng = np.random.default_rng(8)
+    wins = rng.normal(size=(200, 16, 16))
+    P = EX.wavelet_packets(wins)
+    assert P.shape[:2] == (16, 200)
+    assert EX.fwd_from_packets(P, P) == pytest.approx(0.0, abs=1e-6)
+
+
+def test_extra_rows_score_betti_only_on_full_windows_of_the_subset(bm, nets):
+    """A donor valid on a quarter of the window may enter LPIPS (>= 50% rule fails anyway) but never Betti matching,
+    FID or FWD; Betti rows exist only in the topology subset S."""
+    n, S = 24, FM.SIZE
+    rng = np.random.default_rng(9)
+    X = rng.normal(size=(n, S, S)).astype(np.float32)
+    M = np.ones((n, S, S), bool)
+    M[2, 32:48, 32:40] = False                # unit 2: half of window 0 missing (scored on E, not full)
+    side = np.array(["R"] * n)
+    person = np.array([f"p{i}" for i in range(n)])
+    st = {"X": X, "M": M, "valid": np.ones((S, S), bool), "idx": np.arange(n), "person": person, "side": side,
+          "sex": np.array(["F"] * n), "age": np.full(n, 60.0), "dev": np.array(["d"] * n),
+          "fellow": np.full(n, -1), "other": np.full(n, -1), "pos": [(32, 32), (32, 96), (96, 32)],
+          "name": "PAPILA", "lam": {}, "sigma": {}, "extra": True}
+    st["side_units"] = {"R": np.arange(n), "L": np.zeros(0, int)}
+    FM.W.clear()
+    FM.W.update(st)
+    rows, sets = FM.run_target_sets(0)
+    rows = pd.DataFrame(rows)
+    assert rows.lpips_alex.notna().all()
+    b = rows[rows.betti_matched.notna()]
+    assert len(b) and b.topo_subset.all()
+    assert rows[~rows.topo_subset].betti_matched.isna().all()
+    assert all(r_["fill"] == "_target" or not FM.is_ref_stranger(r_["fill"]) for r_ in sets)
+    assert all((r_["feat"] is not None) == r_["in_s"] for r_ in sets)
+
+
+def test_set_level_negative_frechet_is_set_to_zero_and_counted(monkeypatch):
+    """Amendment 9.15 item 4a: a numerically negative Frechet distance is reported as 0 with its count."""
+    monkeypatch.setattr(EX, "fwd_from_packets", lambda P1, P2: -1e-4)
+    monkeypatch.setattr(EX, "wavelet_packets", lambda w: np.zeros((1, len(w), 1)))
+    rng = np.random.default_rng(3)
+    recs = []
+    for u_ in range(60):
+        for f in ("_target", "stranger"):
+            recs.append({"unit": u_, "person": f"p{u_}", "patch": 0, "fill": f, "win": rng.normal(size=(16, 16)),
+                         "feat": None})
+    out = EX.set_level(recs, {f"p{u_}" for u_ in range(60)}, 1, reps=5)["fwd"]["stranger"]
+    assert out["value"] == 0.0
+    assert out["negative_set_to_zero"] == {"point": 1, "bootstrap": 5}
+    assert out["ci95"] == [0.0, 0.0]
