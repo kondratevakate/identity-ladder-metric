@@ -297,3 +297,12 @@ are superseded by the next rerun. The brain block search encodes the outside of 
 changed here; recorded in the brain protocol as Amendment 9. The same review caught one display-only
 slip that never reached a result file: a private case sheet averaged the dataset mean over images including
 their zeros outside the field of view; it now averages only images valid at each pixel.
+
+### Amendment 9.5 (6 Nov 2026, drawn maps use a masked Gaussian window, not a square; recorded before the rerun)
+
+Brain lesson L8 (rule STUDIES-019): drawn local-error maps never use a square window. The 2D local-error maps of
+Amendment 9.3 (`maps()` in `src/donor_ladder_2d.py`) averaged the squared difference over a 48 px square. They now use
+a masked Gaussian with sd = 48 px / sqrt(12) (the sd of that square, about 13.9 px), counting only pixels inside the
+target's field of view and, for donor terms with a single donor image (fellow eye, other visit), inside the donor's
+too. The fixed region and fixed image set of Amendment 9.3 stay defined by the 48 px square fraction (a validity
+fraction, not a drawn value). Figures from these maps are redrawn after Kate approves a before/after view.

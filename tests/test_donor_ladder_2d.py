@@ -85,3 +85,15 @@ def test_flatten_removes_smooth_illumination_and_keeps_fine_structure():
     assert ratio.std() / ratio.mean() < 0.05            # illumination gone
     assert np.corrcoef(out[inner], fine[inner])[0, 1] > 0.9   # checkerboard kept
     assert np.all(out[~fov] == 0)
+
+
+def test_local_error_map_is_a_round_masked_gaussian():
+    import donor_ladder_2d as D2
+    x = np.zeros((101, 101), np.float32)
+    x[50, 50] = 1.0
+    g = D2.local(x, np.ones_like(x, bool))
+    assert np.isclose(g[50, 60], g[56, 58], rtol=1e-3)          # same distance 10 px: round, not square
+    m = np.zeros_like(x, bool)
+    m[:, :50] = True
+    y = np.where(m, 1.0, 1e6).astype(np.float32)                # garbage outside the mask must not leak in
+    assert np.allclose(D2.local(y, m)[:, 10:40], 1.0, atol=1e-4)

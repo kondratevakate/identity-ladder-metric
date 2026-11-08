@@ -286,8 +286,21 @@ def views(r):
                       r.assign(region=r.region + "/LR")], ignore_index=True)
 
 
-def box(x):
-    return ndimage.uniform_filter(x.astype(np.float32), MAP_WIN, mode="constant")
+MAP_SD = MAP_WIN / np.sqrt(12)                   # Gaussian with the variance of the MAP_WIN box (lesson L8)
+
+
+def frac(m):
+    """Fraction of the MAP_WIN square around every pixel inside mask m (validity only, never drawn)."""
+    return ndimage.uniform_filter(np.asarray(m, np.float32), MAP_WIN, mode="constant")  # box-ok: validity fraction
+
+
+def local(x, m):
+    """Masked Gaussian mean of x around every pixel over the pixels in mask m (Amendment 9.5); NaN without weight."""
+    m = np.asarray(m, bool)
+    num = ndimage.gaussian_filter(np.where(m, x, 0).astype(np.float32), MAP_SD, mode="constant")
+    den = ndimage.gaussian_filter(m.astype(np.float32), MAP_SD, mode="constant")
+    with np.errstate(invalid="ignore", divide="ignore"):
+        return np.where(den > 1e-3, num / den, np.nan).astype(np.float32)
 
 
 def maps(name, setup_out, suffix=""):
@@ -297,7 +310,7 @@ def maps(name, setup_out, suffix=""):
     idx = u.idx.to_numpy()
     person, side = u.person.to_numpy(), u.side.to_numpy()
     age, sex, dev = u.age.to_numpy(float), u.sex.astype(str).to_numpy(), u.device.to_numpy()
-    okw = np.stack([box(fov[k]) >= 1 - 1e-4 for k in idx])
+    okw = np.stack([frac(fov[k]) >= 1 - 1e-4 for k in idx])
     persons = np.unique(person)
     half_of = dict(zip(np.random.default_rng(SEED).permutation(persons), np.arange(len(persons)) % 2))
     half = np.array([half_of[p] for p in person])
@@ -313,18 +326,19 @@ def maps(name, setup_out, suffix=""):
                 continue
             P = img[idx[p]]
             mu = P.mean(0)
-            v = box((img[idx[i]] - mu) ** 2)
+            mi = np.asarray(fov[idx[i]], bool)
+            v = local((img[idx[i]] - mu) ** 2, mi)
             vsum += v
             vn += 1
-            fills = {"stranger": v + box(((P - mu) ** 2).mean(0))}
+            fills = {"stranger": v + local(((P - mu) ** 2).mean(0), mi)}
             coh = p[(sex[p] == sex[i]) & (np.abs(age[p] - age[i]) <= 5) & ((dev[p] == dev[i]) if name == "GRAPE" else True)]
             if coh.size >= 10:
-                fills["cohort"] = box((img[idx[i]] - img[idx[coh]].mean(0)) ** 2)
+                fills["cohort"] = local((img[idx[i]] - img[idx[coh]].mean(0)) ** 2, mi)
             j = fellow[i]
             if j >= 0 and members[j]:
-                fills["fellow_eye"] = box((img[idx[i]] - img[idx[j]]) ** 2)
-            if other[i] >= 0 and (box(fov[other[i]]) >= 1 - 1e-4)[region].all():
-                fills["other_visit"] = box((img[idx[i]] - img[other[i]]) ** 2)
+                fills["fellow_eye"] = local((img[idx[i]] - img[idx[j]]) ** 2, mi & np.asarray(fov[idx[j]], bool))
+            if other[i] >= 0 and (frac(fov[other[i]]) >= 1 - 1e-4)[region].all():
+                fills["other_visit"] = local((img[idx[i]] - img[other[i]]) ** 2, mi & np.asarray(fov[other[i]], bool))
             for d, e in fills.items():
                 acc[d][0] += e
                 acc[d][1] += v
