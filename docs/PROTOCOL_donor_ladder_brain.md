@@ -665,3 +665,21 @@ brain, face, fundus and iris (cross-modality rule of the metrics-explorer sessio
   verdict, before the full runs; then 8 mm, then 32 mm, at most 2 workers, started as the CPU allows. Private rows in
   `donor-ladder-brain-metrics-size-20261108-v1\`; public aggregates only in `results/donor_ladder_brain_metrics_size.json`.
   Pre-QC (affine only), like every brain result.
+
+Result (9 Nov 2026, full runs at 8 and 32 mm; QC sheet and the 3-target 32 mm smoke looked at by the agent before the
+full runs, under Kate's overnight rule of 8 Nov that the agent checks each experiment by eye on a small portion
+first). L = 127.0 mm; 8 mm (f 1/16) keeps 32 of 32 cubes, 32 mm (f 1/4) keeps 20 of 32 (dropped 0, 6, 7, 9, 11, 12,
+15, 17, 20, 21, 23, 28). Check: mse_allvox of every shared donor reproduces `rows_p8_s2` and `rows_p32_s8` on the kept
+positions (max abs difference 0 to 5e-7); look-alikes differ by design. Tests (Holm over 55 per size): T1 13/13,
+T3a 14/14, T3b 14/14 metrics pass and T2 0/14 at both sizes, as at 16 mm. Rank stability (Spearman of the order of 18
+fills): 8 vs 16 mm 0.89 to 0.99, 16 vs 32 mm 0.90 to 0.97 over the 14 metrics (MSE 0.92 and 0.94, SSIM 0.91 and 0.93,
+lDDT-like 0.97 and 0.96); 8 vs 32 mm 0.72 to 0.91. Expectations: adjacent Spearman >= 0.8 holds for every metric. The
+repeat is best at every size except against the control "repeat blended with mean", which beats it on 12 to 13 of 14
+metrics at all three sizes (regression to the mean, as at 16 mm). Noise is not the worst rung on MSE-type metrics at
+any size (it stays below the stranger, R 0.83, 0.92, 0.96 for MSE), as at 16 mm; it is worst on lDDT-like at every
+size. Not as expected: the dataset mean does not move with size (MSE R 0.41, 0.41, 0.42). Scale dependence: the
+fixed rungs (own other side, sibling, means) stay within 0.1 R across sizes, but the search rungs move closer to the
+repeat as the cube shrinks with the search kept at +-8 mm (MSE R at 8, 16, 32 mm: own other side best fit 0.29,
+0.58, 0.62; best look-alike that knows the answer 0.11, 0.35, 0.53; look-alike by context 0.26, 0.52, 0.66). A
+search-based donor is therefore stated with its window size. `results/donor_ladder_brain_metrics_size.json`, figure
+`results/figures/fig_brain_window_sizes`. Pre-QC, affine only.

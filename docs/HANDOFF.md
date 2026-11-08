@@ -13,7 +13,7 @@ QC sheet on a few targets, look at it, then the full run), exactly as done with 
 | Faces F2 panel, 16 px | Faces | chunked resumable run, summary JSON, METRICS_STATUS | done 85d5a02: CelebA and IMDb-WIKI aggregates (v6f) |
 | Faces F3 window sweep | Faces | smoke + own QC sheet; full sweep only if the sheet looks right | done 79b151a: 5/10/20 px (f 1/16, 1/8, 1/4) on 100 targets; rung order Spearman min 0.93 (MSE, SSIM), 0.80-0.87 (lDDT); figure `fig_face_window_sizes` checked by eye |
 | Brain tier 2/3 parietal box | Brain | 6/6 chunks, summary with deep box | done eaed1e4 (both boxes) |
-| Brain window sweep (Amendment 21) | Brain | own look at qc_window_sizes.png, 3-target smoke at 32 mm, then 8 mm | 8 mm done eaed1e4; 32 mm full run in progress 9 Nov 00:20 (~17 min per position, 2 workers); if it does not finish, the 32 mm smoke (3 targets) is the result and the rest is a limitation |
+| Brain window sweep (Amendment 21) | Brain | own look at qc_window_sizes.png, 3-target smoke at 32 mm, then 8 mm | done 9 Nov 02:30: 8 mm (32 cubes) and 32 mm (20 cubes), both exact against Amendment 4, rank stability and figure; result paragraph in the protocol |
 | Fundus full panel | Fundus | full run done 15:04 8 Nov; checks, summary, commit | done on donor-ladder-bilateral c040e37, 599d5a6 (A9.15 full run and figure) |
 | Iris full P3 | Iris | aggregates into results/, figures without real eyes, commit | done e2df476 (P3), 6461725 (P4, 10 px; rung order Spearman 0.97-1.00) |
 | All-modality map figure | this session | brain numbers from Gaussian JSONs, footer fixed, test | done 8 Nov night |
@@ -62,7 +62,7 @@ checkpoints (bilateral commits fcabf46, f62d66c; 6-10 h estimate). Brain committ
 faces in f2ed748 (handoff 1d71861), iris in 29e38c4 and 4ec08c2. Lines below give the plan as reported before the reboot.
 
 Per modality (current state as reported)
-- Brain (QTIM, owner session "Brain ladder: run all metrics"; branch cvpr2027-paper; state 8 Nov night):
+- Brain (QTIM, owner session "Brain ladder: run all metrics"; branch cvpr2027-paper; state 9 Nov morning):
   - Done: tier-1 panel at 16 mm (`results/donor_ladder_brain_metrics.json`, regenerated from its rows on 8 Nov with
     the current code: identical except the runtime field); 8 mm look-alike grid with Gaussian weights (Amendment 18).
   - Done: tier 2/3 (Amendment 20), 221 targets, both boxes: `results/donor_ladder_brain_metrics_t23.json`, figure
@@ -70,10 +70,10 @@ Per modality (current state as reported)
     both boxes (Holm over 24); parietal LPIPS missing for 59% of rows (counted, not filled).
   - Window sweep (Amendment 21, L = 127.0 mm): QC sheet looked at by me (correct cube, shell and fills at 3 sizes);
     3-target smoke at 32 mm checked by eye and exact against Amendment 4; 8 mm done (32 cubes, exact reproduction,
-    `results/donor_ladder_brain_metrics_size.json`, figure `fig_brain_window_sizes`). 32 mm (20 of 32 cubes) running
-    overnight; restart resumes per position: `python -u src/donor_ladder_brain_metrics_size.py --cube 32 --workers 2`,
-    then `--cube 32 --stability` and `python src/donor_ladder_brain_metrics_size_figure.py`. If it did not finish,
-    32 mm is a limitation: it is reported for 8 and 16 mm only.
+    `results/donor_ladder_brain_metrics_size.json`, figure `fig_brain_window_sizes`); 32 mm done 9 Nov (20 of 32
+    cubes, exact reproduction, 215 min with 2 workers). Rank stability between adjacent sizes 0.89 to 0.99; T1, T3a,
+    T3b pass and T2 fails at every size. Search donors (best fit, look-alikes) move closer to the repeat at 8 mm:
+    stated with window size in the paper. Result paragraph at the end of Amendment 21.
   - Integrity (8 Nov): all 10 committed brain JSONs have their writing script committed; none differs from HEAD.
     Gaps: the metrics board (`src/metrics_board.py`, METRICS_STATUS) reads only 2D and CARE aggregates and still says
     "QTIM: no checked numbers"; brain numbers live in the JSONs above and the cross-modality explorer. The fundus
