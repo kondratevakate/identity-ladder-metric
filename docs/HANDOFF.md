@@ -22,8 +22,8 @@ Common to all modalities
 
 Reboot losses (8 Nov, disk full): the face F2 full run is lost (0 of 36 jobs saved; F3 smoke kept 20 of 94 parts),
 not restarted yet, CPU goes to iris and fundus first; the fundus full run is lost and restarted with resumable
-checkpoints (bilateral commits fcabf46, f62d66c; 6-10 h estimate). Brain committed in 22ddf70, faces and iris code in
-ab10b46 and 29e38c4, face handoff in b46d22e. Lines below give the plan as reported before the reboot.
+checkpoints (bilateral commits fcabf46, f62d66c; 6-10 h estimate). Brain committed in 22ddf70 and 3ba463c (FastSurfer),
+faces in f2ed748 (handoff 1d71861), iris in 29e38c4 and 4ec08c2. Lines below give the plan as reported before the reboot.
 
 Per modality (current state as reported)
 - Brain (QTIM, owner session "Brain ladder: run all metrics"; committed 22ddf70 on cvpr2027-paper, 8 Nov):
