@@ -273,3 +273,10 @@ run, with at most 3 workers. Rows go to the private folder
 Gates: a test that the geometry at w = 16, ring 8 reproduces the F1 positions exactly, and that every size's positions
 satisfy the thresholds. A smoke run at w = 10 on 4 evenly spaced targets per source, with a QC sheet (private) shown
 to Kate before the sweep.
+
+### Amendment F3.1 (8 Nov 2026 night, minimal sweep; recorded before any result at these sizes)
+Kate's stop rule for the night (docs/HANDOFF.md, "Night plan 8-9 Nov"): a minimal checkable result per item. The F3
+sweep therefore runs the tier-1 panel at w = 5, 10 and 20 px on the same 100 evenly spaced targets per source (the
+`--limit 100` rule), not on all targets, and only after the w = 10 smoke sheet looks right to the agent. The F2 panel at
+the three sizes is not run tonight; it is reported as a limitation (needs per-size densities, about 8 CPU hours).
+Rank stability is computed on these 100 targets per source, against the 16 px tier-1 rows of the same targets.
