@@ -101,3 +101,9 @@ def test_ixi_in_frame_with_na_rungs_never_values():
     card = {r["dataset"]: r for r in load("dataset_card.json")["rows"]}
     assert card["IXI"]["ratio_repeat"] == "n/a"
     assert 1.5 < card["IXI"]["ratio_stranger"] < 2.5
+
+
+def test_ixi_generative_not_run_with_reason():
+    v = load("values_generative.json")
+    assert v["not_run"]["IXI"]
+    assert not [k for k in v["values"] if k.endswith("|IXI")]

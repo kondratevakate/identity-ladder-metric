@@ -5,8 +5,13 @@
   "lookalike16": {
    "QTIM": "dropped by the brain protocol (PROTOCOL_donor_ladder_brain.md, block 5: k = 4, 8, 16 and the 16-look-alike mean)",
    "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
-   "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md)"
+   "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
+   "IXI": "not defined in brain Amendment 23"
   }
+ },
+ "not_run": {
+  "IXI": "IXI (brain Amendment 23) scores tier-1 pixel metrics only; LPIPS, Betti, persistence, FID, FWD not run",
+  "QTIM": "brain: betti_matching_3d: needs a C++ build of Betti-Matching-3D (no compiler here; Linux VM)"
  },
  "values": {
   "lpips_alex|GRAPE": {

@@ -37,12 +37,14 @@ MET = [("lpips_alex", "LPIPS (AlexNet)", "per target"), ("lpips_vgg", "LPIPS (VG
        ("betti_matched", "Betti matching, matched", "per target"), ("betti_unmatched", "Betti matching, unmatched", "per target"),
        ("persistence", "intensity persistence", "per target"), ("iriscode_hd", "iris code Hamming distance", "per target"),
        ("fid", "FID (set level)", "set"), ("fwd", "FWD (set level)", "set")]
-NOT_RUN = {}
+NOT_RUN = {"IXI": "IXI (brain Amendment 23) scores tier-1 pixel metrics only; LPIPS, Betti, persistence, FID, FWD not run"}
 NA16 = {"lookalike16": {   # same reasons as common_frame.py NOT_AVAILABLE; n/a, never a value
     "QTIM": "dropped by the brain protocol (PROTOCOL_donor_ladder_brain.md, block 5: k = 4, 8, 16 and the 16-look-alike mean)",
     "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
-    "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md)"}}
-NOT_RUN_METRICS = {"QTIM": ("betti_matched", "betti_unmatched", "fid", "fwd")}
+    "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
+    "IXI": "not defined in brain Amendment 23"}}
+NOT_RUN_METRICS = {"QTIM": ("betti_matched", "betti_unmatched", "fid", "fwd"),
+                   "IXI": ("lpips_alex", "lpips_vgg", "betti_matched", "betti_unmatched", "persistence", "fid", "fwd")}
 # Brain set level: the own-other-side and relative sets are drawn from the same scans as the target set, so their FID
 # and FWD are ~0 by construction (brain Amendment 22 note); left out of the set-level ranks, never read as identity.
 EXCLUDED_SET = {"QTIM": {r: "set nearly coincides with the target set by construction (Amendment 22)"
@@ -169,10 +171,10 @@ for d, (R, S) in src.items():
 json.dump(ranks, open(os.path.join(OUT, "ranks_generative.json"), "w"), indent=1)
 json.dump({"method": value_record.__doc__.strip(), "anchor_note": "self: R = (d(rung) - d(self)) / (d(16 strangers) - "
            "d(self)); repeat (brain): the same with the repeat scan in place of self", "not_available": NA16,
-           "values": values}, open(os.path.join(OUT, "values_generative.json"), "w"), indent=1)
+           "not_run": NOT_RUN, "values": values}, open(os.path.join(OUT, "values_generative.json"), "w"), indent=1)
 json.dump(status, open(os.path.join(OUT, "generative_status.json"), "w"), indent=1)
 
-DS = ["QTIM", "CelebA", "IMDb-WIKI", "GRAPE", "PAPILA", "UTIRIS NIR", "UTIRIS VIS", "UPOL"]
+DS = ["QTIM", "CelebA", "IMDb-WIKI", "GRAPE", "PAPILA", "UTIRIS NIR", "UTIRIS VIS", "UPOL", "IXI"]
 cmap = LinearSegmentedColormap.from_list("rank", ["#0b5d63", "#3aa6a8", "#bfe3dc", "#f6e7c8", "#f0a868", "#b7471a"])
 rows = []
 for m, name, kind in MET:
