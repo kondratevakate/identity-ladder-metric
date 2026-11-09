@@ -771,3 +771,24 @@ It runs after Amendment 22 finishes, never in parallel with it, and only when fr
   `R_anchor = "other_side"`). If the files fail integrity, SynthStrip cannot run without a download Kate has not
   approved, or the runtime does not fit, the run is written as a limitation with a time estimate. Pre-QC, affine
   only, like QTIM.
+
+
+Amendment 23, preparation outcome (9 Nov 2026, before any IXI ladder number). Kate, 9 Nov (quoted by the ISBI paper
+session): "на машине". Eligibility: 581 T1 files, 15 without a spreadsheet row, 3 without sex or age, 2 with
+disagreeing rows; 561 eligible. Sample of 100 (seed 20261109): Guys 56, HH 32, IOP 12; age 23 to 78 (median 47);
+60 female. Integrity check: 100 of 100 pass. Preparation (`src/ixi_prep.py`, `gcp/ixi_prep_vm.sh`) ran on a GCP
+n2-standard-8 spot VM in europe-west1-b (the 32-vCPU project quota did not allow more next to the face job),
+13:16 to 14:44 UTC, with the pinned FreeSurfer 8.0.0 image (digest checked on the VM; no Dice check needed) and the
+laptop's antspyx 0.6.3, nibabel 5.4.2, numpy 1.26.4; the ANTs calls are those of `real_cases.prepare_scan` (checked
+by a test). SynthStrip 12.7 s and preparation 18.5 s per scan (median), 0 failures. Only the prepared volumes,
+masks and per-scan JSON came back; the VM and its disk were deleted at 14:44 UTC. Cost about USD 0.15 at the spot
+catalog price (estimate; billing export lags a day). 3-scan smoke sheet looked at before the rest: masks on the
+brain edge, consistent registration, no N4 gradient; pass.
+D7: a first version of the IXI rule also excluded scans whose parietal box or mirror lay under 95% inside the own
+mask (8 scans, parietal 0.936 to 0.951, at the vertex near the edge of the IXI field of view). That is stricter than
+QTIM (`real_cases.qc_flags` excludes on the deep box only); it was corrected to the QTIM rule before any ladder
+number, with a test. The parietal box and every cube use the ladder's per-cube 95% validity rule (missing rows,
+never zero), as in QTIM. Result: 0 excluded; 5 flagged by template correlation (median 0.542, MAD 0.038; QTIM median
+0.513), looked at: 1 with enlarged ventricles, 1 with the lower IOP contrast, 3 unremarkable; registration and masks
+fine in all 5, kept. Random 30 (seed 123) looked at: 30 of 30 pass. Verdict by the brain metrics session, delegated
+by the ISBI paper session ("look at the QC sheet yourself"). The IXI ladder runs after Amendment 22 finishes.
