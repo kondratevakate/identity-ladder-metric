@@ -40,7 +40,7 @@ PROTEIN = ("tm_like", "gdt_like", "lddt_rep", "rmse_rep")   # Amendment 12, grou
 REP_MULT = (0.5, 1.0, 2.0, 4.0)                              # multiples of the repeat-scan tolerance
 MIN_REP_PAIRS = 5
 METRICS = ("mse", "rmse", "mae", "psnr", "psnr_fixed", "ssim", "pearson", "acc_dataset", "acc_cohort", "lddt") + PROTEIN
-LOWER_BETTER = {"mse", "rmse", "mae", "rmse_rep", "lpips", "persistence_w1"}   # lpips, persistence_w1: Amendment 20
+LOWER_BETTER = {"mse", "rmse", "mae", "rmse_rep", "lpips", "persistence_w1", "lpips_vgg"}   # Amendments 20, 22
 DESCRIPTIVE = ("amplitude", "mse_allvox", "n_vox")
 TESTS = {"T1": ("repeat", "dataset_mean"), "T2": ("repeat", "shrink_repeat"),
          "T3a": ("repeat", "wrong_detail"), "T3b": ("repeat", "noise")}
@@ -257,7 +257,7 @@ def run_position_at(args):
 
     The geometry is explicit (Amendment 21): geom = {"shell": mm, "W": block-search half-window mm, "paths": (region
     volume memmap, region mask memmap)}, regions of (size + 2 shell + 2 W) per side."""
-    pi, t, tg_cols, pos, a, lam, tier23, only, geom = args   # tier23: add Amendment 20 metrics; only: target subset
+    pi, t, tg_cols, pos, a, lam, tier23, only, geom = args   # tier23: None or a hook name in T23.EXTRAS; only: subset
     if tier23:
         import donor_ladder_brain_metrics_t23 as T23
     tg = pd.DataFrame(tg_cols)
@@ -368,7 +368,7 @@ def run_position_at(args):
                     continue
                 s["mse_allvox"] = float(np.mean((xi - plain) ** 2)) if plain is not None else np.nan
                 if tier23:
-                    s.update(T23.extra(xi, f, ei & ok, mu_c))
+                    s.update(T23.EXTRAS[tier23](xi, f, ei & ok, mu_c))
                 rows.append({"target": int(i), "patch": pi, "side": side, "drawn": side == drawn,
                              "fill": name, **s})
     return rows

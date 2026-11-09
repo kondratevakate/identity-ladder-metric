@@ -53,11 +53,11 @@ def test_persistence_is_zero_for_identity_and_ignores_outside():
 
 def test_lpips_scores_only_slices_fully_inside_the_mask():
     x, e = smooth((16, 16, 16)), np.ones((16, 16, 16), bool)
-    v, n = T.lpips_25d(x, x, e)
+    v, n = T.lpips_25d(x, x, e, net="alex")
     assert n == 3 and v == pytest.approx(0.0, abs=1e-6)
     e[8, 0, 0] = False                                      # lies only in the central x slice
-    assert T.lpips_25d(x, x, e)[1] == 2
-    v, n = T.lpips_25d(x, x, np.zeros_like(e))
+    assert T.lpips_25d(x, x, e, net="alex")[1] == 2
+    v, n = T.lpips_25d(x, x, np.zeros_like(e), net="alex")
     assert n == 0 and np.isnan(v)
 
 
@@ -101,7 +101,7 @@ def test_summary_keeps_missing_lpips_missing_and_holms_over_both_boxes():
     tg = pd.DataFrame({"family": [f"fam{i}" for i in range(12)]})
     pos = [None] * 34
     pos[T.FROZEN[0]], pos[T.FROZEN[1]] = ("deep", (0, 0, 0), (2, 2, 2)), ("parietal", (0, 0, 0), (2, 2, 2))
-    views, n_hyp = T.summarise(r, tg, pos)
+    views, n_hyp = T.summarise(r, tg, pos, T.T23, T.T23_DESCRIPTIVE)
     par, deep = views["parietal/LR"], views["deep/LR"]
     assert par["missing"]["lpips"] == par["n_rows"] and deep["missing"]["lpips"] == 0
     assert par["fills"]["repeat"]["lpips"]["raw"] is None and par["ladder_R"]["lpips"] is None   # missing, not zero

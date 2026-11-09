@@ -1,0 +1,5962 @@
+{
+ "status": "pre-QC: affine registration only, MRI registration gate not met (results/registration/status.md)",
+ "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendment 22)",
+ "version": "v5 (Amendment 20 = v4, kept)",
+ "seed": 20261102,
+ "boxes": [
+  "deep",
+  "parietal"
+ ],
+ "metrics": [
+  "lpips_vgg"
+ ],
+ "lower_is_better": [
+  "lpips_vgg"
+ ],
+ "descriptive": [
+  "lpips_vgg_slices"
+ ],
+ "lpips_vgg": {
+  "net": "vgg",
+  "version": "0.1",
+  "short_side_px": 64,
+  "z_scale": 4.0,
+  "slices": "central orthogonal, fully inside E (as Amendment 20)"
+ },
+ "set_level_method": {
+  "cell": "(target, side, slice axis)",
+  "sample": "central 24 x 24 square of the central slice, fully inside E, z/4 clipped to [0, 1], 64 px",
+  "fid": "Inception-v3 pool 2048 (pytorch-fid), exact Frechet",
+  "fwd": "Haar packets level 2, Frechet per packet, mean",
+  "interval": "100 family bootstrap resamples, 2.5-97.5 percentiles",
+  "floor": "_target_split_half",
+  "lower_is_better": true
+ },
+ "missing_rule": "missing is NaN, never zero; counts per view under 'missing'",
+ "n_hypotheses_holm_run": 8,
+ "reproduction_vs_v4": {
+  "rows_v5": 25495,
+  "rows_matched": 25495,
+  "mse": {
+   "max_abs_diff": 0.0,
+   "nan_pattern_equal": true
+  },
+  "ssim": {
+   "max_abs_diff": 0.0,
+   "nan_pattern_equal": true
+  },
+  "lddt": {
+   "max_abs_diff": 0.0,
+   "nan_pattern_equal": true
+  },
+  "mse_allvox": {
+   "max_abs_diff": 0.0,
+   "nan_pattern_equal": true
+  },
+  "ok": true
+ },
+ "not_run": {
+  "topology_distance": "needs equal-sized groups; own amendment"
+ },
+ "counts": {
+  "n_targets": 221,
+  "n_rows": 25495
+ },
+ "views": {
+  "deep/L": {
+   "n_rows": 6786,
+   "missing": {
+    "lpips_vgg": 0
+   },
+   "fills": {
+    "cohort_mean": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.35484672779411214,
+       "ci95": [
+        0.3508943648620978,
+        0.3587382235145234
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.2918552036199095,
+       "ci95": [
+        0.2635508849557522,
+        0.32213712705246295
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "cotwin": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3304101377725601,
+       "ci95": [
+        0.3189523046215375,
+        0.3475148156285286
+       ],
+       "n_targets": 8,
+       "n_families": 4
+      },
+      "c": {
+       "mean": 0.65625,
+       "ci95": [
+        0.3671875,
+        0.8828125
+       ],
+       "n_targets": 8,
+       "n_families": 4
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 8,
+       "n_families": 4
+      },
+      "c": null
+     }
+    },
+    "dataset_mean": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.36274423278295076,
+       "ci95": [
+        0.35897557856059303,
+        0.36639214528281056
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.22058823529411764,
+       "ci95": [
+        0.1951664936625874,
+        0.2471862349684486
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "lookalike": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3039520778672188,
+       "ci95": [
+        0.3008831124115646,
+        0.3070826527405314
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.8440328054298643,
+       "ci95": [
+        0.8192797837357659,
+        0.8667844026830668
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "lookalike_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.2977444626177418,
+       "ci95": [
+        0.2947891066758297,
+        0.3006105458026162
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.8930995475113123,
+       "ci95": [
+        0.8720283166458073,
+        0.9122992791892663
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "mean_k2": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.32151433182697664,
+       "ci95": [
+        0.3173142857166006,
+        0.3258812228993065
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.6750565610859729,
+       "ci95": [
+        0.6392167259083729,
+        0.7084290221497253
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "mirror": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.2916694048168433,
+       "ci95": [
+        0.2882664065836485,
+        0.29524661946298875
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.8800904977375565,
+       "ci95": [
+        0.8534115654253891,
+        0.9058330042295148
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "mirror_block": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.2847405095355723,
+       "ci95": [
+        0.28132133589266306,
+        0.2881669595336944
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.9273190045248869,
+       "ci95": [
+        0.9075957102633878,
+        0.9465615000941088
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "mirror_block_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.27586153828360555,
+       "ci95": [
+        0.2725936541815102,
+        0.27921705677782127
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.9700226244343891,
+       "ci95": [
+        0.9605388322834313,
+        0.9792651176186904
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "noise": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.469370498241882,
+       "ci95": [
+        0.46484109222310843,
+        0.4742348089191608
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "repeat": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.21229141777840213,
+       "ci95": [
+        0.20316412008866883,
+        0.22107647115877574
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      },
+      "c": {
+       "mean": 1.0,
+       "ci95": [
+        1.0,
+        1.0
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      },
+      "c": null
+     }
+    },
+    "shrink_mirror": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3269825773945761,
+       "ci95": [
+        0.3232056331841753,
+        0.3305777694640401
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.5981334841628959,
+       "ci95": [
+        0.5633405281459581,
+        0.6340910424669227
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "shrink_repeat": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.2064109295606613,
+       "ci95": [
+        0.19821677522166914,
+        0.2146164702062589
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      },
+      "c": {
+       "mean": 1.0,
+       "ci95": [
+        1.0,
+        1.0
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      },
+      "c": null
+     }
+    },
+    "sibling": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3181727983885341,
+       "ci95": [
+        0.310106590371387,
+        0.32656935791562436
+       ],
+       "n_targets": 102,
+       "n_families": 49
+      },
+      "c": {
+       "mean": 0.6488970588235294,
+       "ci95": [
+        0.5752396552931291,
+        0.7193980507425741
+       ],
+       "n_targets": 102,
+       "n_families": 49
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 102,
+       "n_families": 49
+      },
+      "c": null
+     }
+    },
+    "stranger": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3383617458210452,
+       "ci95": [
+        0.3336942127845208,
+        0.3432138297415906
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.5024038461538461,
+       "ci95": [
+        0.4616427490441801,
+        0.541196191255778
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "stranger_block": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3479927752172605,
+       "ci95": [
+        0.3426043832171491,
+        0.3535998190982774
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.40158371040723984,
+       "ci95": [
+        0.3570641006551519,
+        0.44307581018518505
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "stranger_block_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.33036027244133465,
+       "ci95": [
+        0.3255557448596476,
+        0.3355743077475398
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.5789027149321267,
+       "ci95": [
+        0.5362594436813186,
+        0.6183635628240615
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "wrong_detail": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.34182231998012075,
+       "ci95": [
+        0.33413358246847114,
+        0.3495562177960504
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.4290158371040724,
+       "ci95": [
+        0.37673532196969695,
+        0.48151627568440947
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    }
+   },
+   "ladder_R": {
+    "lpips_vgg": {
+     "cohort_mean": {
+      "R": 1.140730467096533,
+      "ci95": [
+       1.1157535046524722,
+       1.1670603027817608
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "cotwin": {
+      "R": 0.9451883806848831,
+      "ci95": [
+       0.8252939200005316,
+       1.1378523399071705
+      ],
+      "n_targets": 8,
+      "n_families": 4
+     },
+     "dataset_mean": {
+      "R": 1.203926461365861,
+      "ci95": [
+       1.1765754185194612,
+       1.23201927880632
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "lookalike": {
+      "R": 0.7334704514757783,
+      "ci95": [
+       0.706090161402223,
+       0.75858441773073
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "lookalike_oracle": {
+      "R": 0.6837969889978736,
+      "ci95": [
+       0.6526092100754223,
+       0.7107618826099412
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "mean_k2": {
+      "R": 0.874003962016878,
+      "ci95": [
+       0.846316081273579,
+       0.9010860573072719
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "mirror": {
+      "R": 0.635184253898117,
+      "ci95": [
+       0.5966023076213713,
+       0.669620406957705
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "mirror_block": {
+      "R": 0.5797390940524669,
+      "ci95": [
+       0.5387538417103604,
+       0.6160590298673835
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "mirror_block_oracle": {
+      "R": 0.5086893869424581,
+      "ci95": [
+       0.4648566387392558,
+       0.548704679113697
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "noise": {
+      "R": 2.05715198897561,
+      "ci95": [
+       1.9797314851014978,
+       2.14450244432746
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "repeat": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 23,
+      "n_families": 23
+     },
+     "shrink_mirror": {
+      "R": 0.9177609733820726,
+      "ci95": [
+       0.8957229607405995,
+       0.9392699012828878
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "shrink_repeat": {
+      "R": -0.04705578536948166,
+      "ci95": [
+       -0.06562671465898168,
+       -0.027448977611755264
+      ],
+      "n_targets": 23,
+      "n_families": 23
+     },
+     "sibling": {
+      "R": 0.8472649440200514,
+      "ci95": [
+       0.7831832690529799,
+       0.9092970711455592
+      ],
+      "n_targets": 102,
+      "n_families": 49
+     },
+     "stranger": {
+      "R": 1.0088173087291443,
+      "ci95": [
+       0.9785017168063905,
+       1.040496233973778
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "stranger_block": {
+      "R": 1.0858850002837723,
+      "ci95": [
+       1.0467645160252537,
+       1.1262192758251137
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "stranger_block_oracle": {
+      "R": 0.9447893572982797,
+      "ci95": [
+       0.9117311119846219,
+       0.980000714302462
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "wrong_detail": {
+      "R": 1.0365088929743709,
+      "ci95": [
+       0.9813843388418639,
+       1.089342669583385
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "_anchors": {
+      "d_repeat": 0.21229141777840213,
+      "d_stranger": 0.33725986048034184,
+      "n_repeat_targets": 23
+     }
+    }
+   },
+   "expectations": {
+    "lpips_vgg": {
+     "E1 mirror closer than stranger": {
+      "value": 0.635184253898117,
+      "ci95": [
+       0.5966023076213713,
+       0.669620406957705
+      ],
+      "pass": true
+     },
+     "E2 sibling closer than stranger": {
+      "value": 0.8472649440200514,
+      "ci95": [
+       0.7831832690529799,
+       0.9092970711455592
+      ],
+      "pass": true
+     },
+     "E3B dataset mean better than stranger": {
+      "value": 1.203926461365861,
+      "ci95": [
+       1.1765754185194612,
+       1.23201927880632
+      ],
+      "pass": false
+     },
+     "E3B mean of 2 better than stranger": {
+      "value": 0.874003962016878,
+      "ci95": [
+       0.846316081273579,
+       0.9010860573072719
+      ],
+      "pass": true
+     },
+     "E3B averages ordered by k": {
+      "value": [
+       1.203926461365861,
+       0.874003962016878,
+       1.0088173087291443
+      ],
+      "pass": false
+     },
+     "E5B wrong detail not better than stranger": {
+      "value": 1.0365088929743709,
+      "ci95": [
+       0.9813843388418639,
+       1.089342669583385
+      ],
+      "pass": true
+     },
+     "E6B white noise worse than stranger": {
+      "value": 2.05715198897561,
+      "ci95": [
+       1.9797314851014978,
+       2.14450244432746
+      ],
+      "pass": true
+     },
+     "slope dataset mean minus stranger": 0.19510915263671658
+    }
+   },
+   "expectations_realityA": {
+    "lpips_vgg": {
+     "A-E3a mean of 2 not better than stranger": {
+      "value": 0.874003962016878,
+      "ci95": [
+       0.846316081273579,
+       0.9010860573072719
+      ],
+      "pass": false
+     },
+     "A-E3b dataset mean not better than stranger": {
+      "value": 1.203926461365861,
+      "ci95": [
+       1.1765754185194612,
+       1.23201927880632
+      ],
+      "pass": true
+     },
+     "A-E4a repeat blend not rewarded": {
+      "value": -0.04705578536948166,
+      "lower95": -0.06562671465898168,
+      "upper95": -0.027448977611755264,
+      "pass": true
+     },
+     "A-E4b mirror blend not rewarded": {
+      "value": 0.2825767194839557,
+      "lower95": 0.25031164959240326,
+      "upper95": 0.3180499426732932,
+      "pass": true
+     },
+     "slope dataset mean minus stranger": 0.19510915263671658
+    }
+   }
+  },
+  "deep/LR": {
+   "n_rows": 13572,
+   "missing": {
+    "lpips_vgg": 0
+   },
+   "fills": {
+    "cohort_mean": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.35540762631332173,
+       "ci95": [
+        0.3522091051376587,
+        0.35869268319432457
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.2900169683257919,
+       "ci95": [
+        0.2670575263147117,
+        0.31522188926940636
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "cotwin": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3253030702471733,
+       "ci95": [
+        0.3130144774913788,
+        0.34616427992780996
+       ],
+       "n_targets": 8,
+       "n_families": 4
+      },
+      "c": {
+       "mean": 0.703125,
+       "ci95": [
+        0.4453125,
+        0.8671875
+       ],
+       "n_targets": 8,
+       "n_families": 4
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 8,
+       "n_families": 4
+      },
+      "c": null
+     }
+    },
+    "dataset_mean": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3641350437882799,
+       "ci95": [
+        0.36105358753249867,
+        0.3672892254012115
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.2145079185520362,
+       "ci95": [
+        0.1931047555653427,
+        0.2365029194663393
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "lookalike": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3037911236937948,
+       "ci95": [
+        0.30139910340570214,
+        0.30636650685119954
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.8464366515837104,
+       "ci95": [
+        0.8286040830842248,
+        0.8634554648125918
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "lookalike_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.2965042774606254,
+       "ci95": [
+        0.29429690623229815,
+        0.2987639674629404
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.8994626696832579,
+       "ci95": [
+        0.8847821239470973,
+        0.913675599503651
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "mean_k2": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3221244519719711,
+       "ci95": [
+        0.3187463344927618,
+        0.3256612401093456
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.682975113122172,
+       "ci95": [
+        0.6558277027027027,
+        0.7084942158659719
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "mirror": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.2916694048168433,
+       "ci95": [
+        0.2882664065836485,
+        0.29524661946298875
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.8881504524886877,
+       "ci95": [
+        0.8644898457357773,
+        0.9118355241402115
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "mirror_block": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.2846544939872906,
+       "ci95": [
+        0.28125380487228907,
+        0.2880531716026204
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.9249151583710408,
+       "ci95": [
+        0.9055295740762271,
+        0.9439475059774197
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "mirror_block_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.27574854953211714,
+       "ci95": [
+        0.27284951611066727,
+        0.27865156935691066
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.96875,
+       "ci95": [
+        0.9594941239368824,
+        0.977185671705998
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "noise": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4713883608085178,
+       "ci95": [
+        0.4675188719101754,
+        0.4757588313379815
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "repeat": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.21311299567637232,
+       "ci95": [
+        0.20443498595901152,
+        0.2218792278130633
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      },
+      "c": {
+       "mean": 1.0,
+       "ci95": [
+        1.0,
+        1.0
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      },
+      "c": null
+     }
+    },
+    "shrink_mirror": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3283824552732715,
+       "ci95": [
+        0.32551774989115073,
+        0.33125942860202706
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.5953054298642534,
+       "ci95": [
+        0.5683799116835421,
+        0.6238435008719482
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "shrink_repeat": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.2073351561051348,
+       "ci95": [
+        0.1988121762129383,
+        0.21569879869323055
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      },
+      "c": {
+       "mean": 1.0,
+       "ci95": [
+        1.0,
+        1.0
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      },
+      "c": null
+     }
+    },
+    "sibling": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.32188267764799733,
+       "ci95": [
+        0.31576557935463884,
+        0.3277624636372624
+       ],
+       "n_targets": 102,
+       "n_families": 49
+      },
+      "c": {
+       "mean": 0.6228553921568627,
+       "ci95": [
+        0.5685650716597319,
+        0.6795361705288177
+       ],
+       "n_targets": 102,
+       "n_families": 49
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 102,
+       "n_families": 49
+      },
+      "c": null
+     }
+    },
+    "stranger": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.33859669752025673,
+       "ci95": [
+        0.3348589202622551,
+        0.34266063990931367
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.5012726244343891,
+       "ci95": [
+        0.4697660972236451,
+        0.5335276260787486
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "stranger_block": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.35002855683478834,
+       "ci95": [
+        0.34515346190908247,
+        0.355437745956299
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.39324095022624433,
+       "ci95": [
+        0.3544533137077295,
+        0.4294053260760257
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "stranger_block_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.33078909260789735,
+       "ci95": [
+        0.3266418946435459,
+        0.3353748032434196
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.5783371040723982,
+       "ci95": [
+        0.5402986931672232,
+        0.6130061758168015
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "wrong_detail": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3422471221710582,
+       "ci95": [
+        0.33509990614616764,
+        0.34942188905489496
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.43071266968325794,
+       "ci95": [
+        0.38317419984725526,
+        0.47865862165178574
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    }
+   },
+   "ladder_R": {
+    "lpips_vgg": {
+     "cohort_mean": {
+      "R": 1.1397551006368927,
+      "ci95": [
+       1.1177338035096673,
+       1.162690542757019
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "cotwin": {
+      "R": 0.8986228725604506,
+      "ci95": [
+       0.7807065481018395,
+       1.1436889134205384
+      ],
+      "n_targets": 8,
+      "n_families": 4
+     },
+     "dataset_mean": {
+      "R": 1.2096601879753615,
+      "ci95": [
+       1.184558512954543,
+       1.2363573277424842
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "lookalike": {
+      "R": 0.7263159436265155,
+      "ci95": [
+       0.7006036006190886,
+       0.7495223000230116
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "lookalike_oracle": {
+      "R": 0.6679495799440975,
+      "ci95": [
+       0.6390405005826324,
+       0.6919226088719215
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "mean_k2": {
+      "R": 0.8731626961931308,
+      "ci95": [
+       0.852136837337928,
+       0.8945139756896985
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "mirror": {
+      "R": 0.6292230958033141,
+      "ci95": [
+       0.5905918374975887,
+       0.6633124969164921
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "mirror_block": {
+      "R": 0.5730348871358008,
+      "ci95": [
+       0.5330061040851918,
+       0.6102428985780297
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "mirror_block_oracle": {
+      "R": 0.5016998299144848,
+      "ci95": [
+       0.4600513240349636,
+       0.5390487947155239
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "noise": {
+      "R": 2.0687404961138425,
+      "ci95": [
+       1.992419879277869,
+       2.1538775065553315
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "repeat": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 23,
+      "n_families": 23
+     },
+     "shrink_mirror": {
+      "R": 0.9232882079607373,
+      "ci95": [
+       0.9051501480081363,
+       0.9409082004004611
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "shrink_repeat": {
+      "R": -0.0462794842820274,
+      "ci95": [
+       -0.0617073893849114,
+       -0.03208446190991002
+      ],
+      "n_targets": 23,
+      "n_families": 23
+     },
+     "sibling": {
+      "R": 0.8712261261502652,
+      "ci95": [
+       0.8184774224975409,
+       0.9214959632755618
+      ],
+      "n_targets": 102,
+      "n_families": 49
+     },
+     "stranger": {
+      "R": 1.005102501641607,
+      "ci95": [
+       0.9815303518838715,
+       1.0298497677125467
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "stranger_block": {
+      "R": 1.0966696950429118,
+      "ci95": [
+       1.063697393812216,
+       1.1336069316785968
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "stranger_block_oracle": {
+      "R": 0.9425649520321383,
+      "ci95": [
+       0.9138214337115333,
+       0.9731880423713091
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "wrong_detail": {
+      "R": 1.034341764547155,
+      "ci95": [
+       0.9807282590029426,
+       1.0853898661715338
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "_anchors": {
+      "d_repeat": 0.2131129956763723,
+      "d_stranger": 0.33795966717399095,
+      "n_repeat_targets": 23
+     }
+    }
+   },
+   "expectations": {
+    "lpips_vgg": {
+     "E1 mirror closer than stranger": {
+      "value": 0.6292230958033141,
+      "ci95": [
+       0.5905918374975887,
+       0.6633124969164921
+      ],
+      "pass": true
+     },
+     "E2 sibling closer than stranger": {
+      "value": 0.8712261261502652,
+      "ci95": [
+       0.8184774224975409,
+       0.9214959632755618
+      ],
+      "pass": true
+     },
+     "E3B dataset mean better than stranger": {
+      "value": 1.2096601879753615,
+      "ci95": [
+       1.184558512954543,
+       1.2363573277424842
+      ],
+      "pass": false
+     },
+     "E3B mean of 2 better than stranger": {
+      "value": 0.8731626961931308,
+      "ci95": [
+       0.852136837337928,
+       0.8945139756896985
+      ],
+      "pass": true
+     },
+     "E3B averages ordered by k": {
+      "value": [
+       1.2096601879753615,
+       0.8731626961931308,
+       1.005102501641607
+      ],
+      "pass": false
+     },
+     "E5B wrong detail not better than stranger": {
+      "value": 1.034341764547155,
+      "ci95": [
+       0.9807282590029426,
+       1.0853898661715338
+      ],
+      "pass": true
+     },
+     "E6B white noise worse than stranger": {
+      "value": 2.0687404961138425,
+      "ci95": [
+       1.992419879277869,
+       2.1538775065553315
+      ],
+      "pass": true
+     },
+     "slope dataset mean minus stranger": 0.20455768633375437
+    }
+   },
+   "expectations_realityA": {
+    "lpips_vgg": {
+     "A-E3a mean of 2 not better than stranger": {
+      "value": 0.8731626961931308,
+      "ci95": [
+       0.852136837337928,
+       0.8945139756896985
+      ],
+      "pass": false
+     },
+     "A-E3b dataset mean not better than stranger": {
+      "value": 1.2096601879753615,
+      "ci95": [
+       1.184558512954543,
+       1.2363573277424842
+      ],
+      "pass": true
+     },
+     "A-E4a repeat blend not rewarded": {
+      "value": -0.0462794842820274,
+      "lower95": -0.0617073893849114,
+      "upper95": -0.03208446190991002,
+      "pass": true
+     },
+     "A-E4b mirror blend not rewarded": {
+      "value": 0.29406511215742315,
+      "lower95": 0.2660056911863196,
+      "upper95": 0.32656098710398024,
+      "pass": true
+     },
+     "slope dataset mean minus stranger": 0.20455768633375437
+    }
+   },
+   "tests": {
+    "n_hypotheses_holm": 4,
+    "per_metric": {
+     "lpips_vgg": {
+      "T1": {
+       "n_targets": 23,
+       "n_families": 23,
+       "mean_diff": 0.15954357126484747,
+       "share_targets_pass": 1.0,
+       "p_one_sided": 1.1920928955078125e-07,
+       "p_holm": 4.76837158203125e-07,
+       "pass_holm_0.05": true,
+       "p_holm_run": 9.5367431640625e-07,
+       "pass_holm_run_0.05": true
+      },
+      "T2": {
+       "n_targets": 23,
+       "n_families": 23,
+       "mean_diff": -0.005777839571237555,
+       "share_targets_pass": 0.13043478260869565,
+       "p_one_sided": 0.9999977350234985,
+       "p_holm": 0.9999977350234985,
+       "pass_holm_0.05": false,
+       "p_holm_run": 0.9999977350234985,
+       "pass_holm_run_0.05": false
+      },
+      "T3a": {
+       "n_targets": 23,
+       "n_families": 23,
+       "mean_diff": 0.13018280278513397,
+       "share_targets_pass": 1.0,
+       "p_one_sided": 1.1920928955078125e-07,
+       "p_holm": 4.76837158203125e-07,
+       "pass_holm_0.05": true,
+       "p_holm_run": 9.5367431640625e-07,
+       "pass_holm_run_0.05": true
+      },
+      "T3b": {
+       "n_targets": 23,
+       "n_families": 23,
+       "mean_diff": 0.2674562190321909,
+       "share_targets_pass": 1.0,
+       "p_one_sided": 1.1920928955078125e-07,
+       "p_holm": 4.76837158203125e-07,
+       "pass_holm_0.05": true,
+       "p_holm_run": 9.5367431640625e-07,
+       "pass_holm_run_0.05": true
+      }
+     }
+    }
+   }
+  },
+  "deep/R": {
+   "n_rows": 6786,
+   "missing": {
+    "lpips_vgg": 0
+   },
+   "fills": {
+    "cohort_mean": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.35596852483253133,
+       "ci95": [
+        0.3525738489255418,
+        0.35948907861997487
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.2881787330316742,
+       "ci95": [
+        0.26138625021534084,
+        0.3191863060631229
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "cotwin": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3201960027217865,
+       "ci95": [
+        0.30544938643773395,
+        0.3459754784901937
+       ],
+       "n_targets": 8,
+       "n_families": 4
+      },
+      "c": {
+       "mean": 0.75,
+       "ci95": [
+        0.5234375,
+        0.875
+       ],
+       "n_targets": 8,
+       "n_families": 4
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 8,
+       "n_families": 4
+      },
+      "c": null
+     }
+    },
+    "dataset_mean": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.365525854793609,
+       "ci95": [
+        0.3623262586312168,
+        0.36882843207247573
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.20842760180995476,
+       "ci95": [
+        0.1859983566605554,
+        0.23362745266023066
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "lookalike": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3036301695203709,
+       "ci95": [
+        0.3005724962606299,
+        0.30693276617596676
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.8488404977375565,
+       "ci95": [
+        0.8232126841768097,
+        0.8723503832547169
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "lookalike_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.2952640923035091,
+       "ci95": [
+        0.29267070854606814,
+        0.29799386267999706
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.9058257918552036,
+       "ci95": [
+        0.8870598420497446,
+        0.922819925429727
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "mean_k2": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3227345721169655,
+       "ci95": [
+        0.3191120061473321,
+        0.32664607835213777
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.690893665158371,
+       "ci95": [
+        0.6593124689768568,
+        0.721512341673588
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "mirror": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.2916694048168433,
+       "ci95": [
+        0.2882664065836485,
+        0.29524661946298875
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.896210407239819,
+       "ci95": [
+        0.8729493778401783,
+        0.9195668300283868
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "mirror_block": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.28456847843900884,
+       "ci95": [
+        0.28114571617099715,
+        0.2880880698078473
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.9225113122171946,
+       "ci95": [
+        0.8993355149950836,
+        0.9435800221530919
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "mirror_block_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.27563556078062873,
+       "ci95": [
+        0.2729097419629391,
+        0.2785541320686949
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.9674773755656109,
+       "ci95": [
+        0.9547215247452693,
+        0.9782239819004525
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "noise": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.47340622337515353,
+       "ci95": [
+        0.46904824502746084,
+        0.47808488686838707
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "repeat": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.2139345735743426,
+       "ci95": [
+        0.20412542779484516,
+        0.22427142904936398
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      },
+      "c": {
+       "mean": 1.0,
+       "ci95": [
+        1.0,
+        1.0
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      },
+      "c": null
+     }
+    },
+    "shrink_mirror": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.32978233315196687,
+       "ci95": [
+        0.3266608389452392,
+        0.33302546792272303
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.5924773755656109,
+       "ci95": [
+        0.5599764266846858,
+        0.6264588178294573
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "shrink_repeat": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.20825938264960825,
+       "ci95": [
+        0.1983741213985975,
+        0.21861642654715238
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      },
+      "c": {
+       "mean": 1.0,
+       "ci95": [
+        1.0,
+        1.0
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 23,
+       "n_families": 23
+      },
+      "c": null
+     }
+    },
+    "sibling": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3255925569074606,
+       "ci95": [
+        0.3177391278928656,
+        0.33407656502891375
+       ],
+       "n_targets": 102,
+       "n_families": 49
+      },
+      "c": {
+       "mean": 0.5968137254901961,
+       "ci95": [
+        0.5222265625,
+        0.668704490291262
+       ],
+       "n_targets": 102,
+       "n_families": 49
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 102,
+       "n_families": 49
+      },
+      "c": null
+     }
+    },
+    "stranger": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3388316492194683,
+       "ci95": [
+        0.3348251323789967,
+        0.3429995185286162
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.5001414027149321,
+       "ci95": [
+        0.4655806868835867,
+        0.5365533751815619
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "stranger_block": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.3520643384523161,
+       "ci95": [
+        0.3467140955390049,
+        0.358113395549984
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.3848981900452489,
+       "ci95": [
+        0.34056154143628226,
+        0.4282611041112742
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "stranger_block_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.33121791277445994,
+       "ci95": [
+        0.3267906939434179,
+        0.33575787033336796
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.5777714932126696,
+       "ci95": [
+        0.5367449413314177,
+        0.6157856722299254
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    },
+    "wrong_detail": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.34267192436199556,
+       "ci95": [
+        0.3350075958470384,
+        0.3501199629423307
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": {
+       "mean": 0.43240950226244346,
+       "ci95": [
+        0.3810498462209952,
+        0.4819004524886878
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 3.0,
+       "ci95": [
+        3.0,
+        3.0
+       ],
+       "n_targets": 221,
+       "n_families": 168
+      },
+      "c": null
+     }
+    }
+   },
+   "ladder_R": {
+    "lpips_vgg": {
+     "cohort_mean": {
+      "R": 1.138777829640977,
+      "ci95": [
+       1.113034948135927,
+       1.1657159424110723
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "cotwin": {
+      "R": 0.8519664389192865,
+      "ci95": [
+       0.7027196944748832,
+       1.1472802356970484
+      ],
+      "n_targets": 8,
+      "n_families": 4
+     },
+     "dataset_mean": {
+      "R": 1.2154051104694488,
+      "ci95": [
+       1.1868211128784465,
+       1.2461228202381758
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "lookalike": {
+      "R": 0.7191474656231761,
+      "ci95": [
+       0.6837153259091372,
+       0.751241079632358
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "lookalike_oracle": {
+      "R": 0.6520712266589554,
+      "ci95": [
+       0.6161142394968823,
+       0.6835257715453187
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "mean_k2": {
+      "R": 0.8723197876829212,
+      "ci95": [
+       0.8473226684140256,
+       0.8962074164574467
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "mirror": {
+      "R": 0.6232502977328734,
+      "ci95": [
+       0.5800158382556673,
+       0.6610606888824672
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "mirror_block": {
+      "R": 0.5663175893391509,
+      "ci95": [
+       0.5219174538345647,
+       0.6079418551999103
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "mirror_block_oracle": {
+      "R": 0.4946966248214495,
+      "ci95": [
+       0.4482049527983282,
+       0.5360536347626801
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "noise": {
+      "R": 2.0803516313955646,
+      "ci95": [
+       1.992263776313164,
+       2.184144487260117
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "repeat": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 23,
+      "n_families": 23
+     },
+     "shrink_mirror": {
+      "R": 0.9288262352200862,
+      "ci95": [
+       0.9068279367515545,
+       0.9494660606844795
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "shrink_repeat": {
+      "R": -0.045501667360637536,
+      "ci95": [
+       -0.063442299484462,
+       -0.029915518493095157
+      ],
+      "n_targets": 23,
+      "n_families": 23
+     },
+     "sibling": {
+      "R": 0.8952340957623369,
+      "ci95": [
+       0.8261700468277299,
+       0.9627814563822503
+      ],
+      "n_targets": 102,
+      "n_families": 49
+     },
+     "stranger": {
+      "R": 1.0013804408856868,
+      "ci95": [
+       0.9752863543628293,
+       1.0282088013911754
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "stranger_block": {
+      "R": 1.10747544839205,
+      "ci95": [
+       1.0687595336278919,
+       1.1513335172427421
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "stranger_block_oracle": {
+      "R": 0.9403362033107981,
+      "ci95": [
+       0.9097289266589698,
+       0.9732207400074084
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "wrong_detail": {
+      "R": 1.0321704045055946,
+      "ci95": [
+       0.9743325785265693,
+       1.089013121767933
+      ],
+      "n_targets": 221,
+      "n_families": 168
+     },
+     "_anchors": {
+      "d_repeat": 0.21393457357434256,
+      "d_stranger": 0.3386594738676402,
+      "n_repeat_targets": 23
+     }
+    }
+   },
+   "expectations": {
+    "lpips_vgg": {
+     "E1 mirror closer than stranger": {
+      "value": 0.6232502977328734,
+      "ci95": [
+       0.5800158382556673,
+       0.6610606888824672
+      ],
+      "pass": true
+     },
+     "E2 sibling closer than stranger": {
+      "value": 0.8952340957623369,
+      "ci95": [
+       0.8261700468277299,
+       0.9627814563822503
+      ],
+      "pass": true
+     },
+     "E3B dataset mean better than stranger": {
+      "value": 1.2154051104694488,
+      "ci95": [
+       1.1868211128784465,
+       1.2461228202381758
+      ],
+      "pass": false
+     },
+     "E3B mean of 2 better than stranger": {
+      "value": 0.8723197876829212,
+      "ci95": [
+       0.8473226684140256,
+       0.8962074164574467
+      ],
+      "pass": true
+     },
+     "E3B averages ordered by k": {
+      "value": [
+       1.2154051104694488,
+       0.8723197876829212,
+       1.0013804408856868
+      ],
+      "pass": false
+     },
+     "E5B wrong detail not better than stranger": {
+      "value": 1.0321704045055946,
+      "ci95": [
+       0.9743325785265693,
+       1.089013121767933
+      ],
+      "pass": true
+     },
+     "E6B white noise worse than stranger": {
+      "value": 2.0803516313955646,
+      "ci95": [
+       1.992263776313164,
+       2.184144487260117
+      ],
+      "pass": true
+     },
+     "slope dataset mean minus stranger": 0.21402466958376198
+    }
+   },
+   "expectations_realityA": {
+    "lpips_vgg": {
+     "A-E3a mean of 2 not better than stranger": {
+      "value": 0.8723197876829212,
+      "ci95": [
+       0.8473226684140256,
+       0.8962074164574467
+      ],
+      "pass": false
+     },
+     "A-E3b dataset mean not better than stranger": {
+      "value": 1.2154051104694488,
+      "ci95": [
+       1.1868211128784465,
+       1.2461228202381758
+      ],
+      "pass": true
+     },
+     "A-E4a repeat blend not rewarded": {
+      "value": -0.045501667360637536,
+      "lower95": -0.063442299484462,
+      "upper95": -0.029915518493095157,
+      "pass": true
+     },
+     "A-E4b mirror blend not rewarded": {
+      "value": 0.3055759374872128,
+      "lower95": 0.2717924509434039,
+      "upper95": 0.34420862225624366,
+      "pass": true
+     },
+     "slope dataset mean minus stranger": 0.21402466958376198
+    }
+   }
+  },
+  "parietal/L": {
+   "n_rows": 5847,
+   "missing": {
+    "lpips_vgg": 3265
+   },
+   "fills": {
+    "cohort_mean": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.5561600907502838,
+       "ci95": [
+        0.5511353161058027,
+        0.5609513132560963
+       ],
+       "n_targets": 127,
+       "n_families": 108
+      },
+      "c": {
+       "mean": 0.01033464566929134,
+       "ci95": [
+        0.0024601493294783465,
+        0.02116161576073152
+       ],
+       "n_targets": 127,
+       "n_families": 108
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 1.1354166666666667,
+       "ci95": [
+        0.989574932795699,
+        1.293193717277487
+       ],
+       "n_targets": 192,
+       "n_families": 153
+      },
+      "c": null
+     }
+    },
+    "cotwin": {
+     "lpips_vgg": {
+      "raw": null,
+      "c": null
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "n_targets": 4,
+       "n_families": 2
+      },
+      "c": null
+     }
+    },
+    "dataset_mean": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.59133870942699,
+       "ci95": [
+        0.5869027454102523,
+        0.5956915454713952
+       ],
+       "n_targets": 127,
+       "n_families": 108
+      },
+      "c": {
+       "mean": 0.000984251968503937,
+       "ci95": [
+        0.0,
+        0.0030744055683511683
+       ],
+       "n_targets": 127,
+       "n_families": 108
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 1.1354166666666667,
+       "ci95": [
+        0.989574932795699,
+        1.293193717277487
+       ],
+       "n_targets": 192,
+       "n_families": 153
+      },
+      "c": null
+     }
+    },
+    "lookalike": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.44274157416689525,
+       "ci95": [
+        0.43412917161722403,
+        0.45112478226259517
+       ],
+       "n_targets": 91,
+       "n_families": 79
+      },
+      "c": {
+       "mean": 0.33550824175824173,
+       "ci95": [
+        0.288040425012213,
+        0.3807397959183674
+       ],
+       "n_targets": 91,
+       "n_families": 79
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.578125,
+       "ci95": [
+        0.48645667726550085,
+        0.6791494710532434
+       ],
+       "n_targets": 192,
+       "n_families": 153
+      },
+      "c": null
+     }
+    },
+    "lookalike_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4237959336430308,
+       "ci95": [
+        0.41491610531257583,
+        0.43253322692755786
+       ],
+       "n_targets": 84,
+       "n_families": 74
+      },
+      "c": {
+       "mean": 0.42671130952380953,
+       "ci95": [
+        0.3811061028174937,
+        0.47088321834415586
+       ],
+       "n_targets": 84,
+       "n_families": 74
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.5572916666666666,
+       "ci95": [
+        0.45940914318573894,
+        0.6580310880829016
+       ],
+       "n_targets": 192,
+       "n_families": 153
+      },
+      "c": null
+     }
+    },
+    "mean_k2": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4791153875273022,
+       "ci95": [
+        0.4726572982380195,
+        0.4859877875332623
+       ],
+       "n_targets": 103,
+       "n_families": 89
+      },
+      "c": {
+       "mean": 0.17354368932038836,
+       "ci95": [
+        0.13359827313618952,
+        0.21429473304473298
+       ],
+       "n_targets": 103,
+       "n_families": 89
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.78125,
+       "ci95": [
+        0.6557055188395845,
+        0.9055606457242583
+       ],
+       "n_targets": 192,
+       "n_families": 153
+      },
+      "c": null
+     }
+    },
+    "mirror": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4408671433187049,
+       "ci95": [
+        0.43377050119718547,
+        0.4483449261203624
+       ],
+       "n_targets": 92,
+       "n_families": 79
+      },
+      "c": {
+       "mean": 0.36345108695652173,
+       "ci95": [
+        0.31981190509518476,
+        0.40527905085748067
+       ],
+       "n_targets": 92,
+       "n_families": 79
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.8268156424581006,
+       "ci95": [
+        0.6760900974025974,
+        0.9768852188274153
+       ],
+       "n_targets": 179,
+       "n_families": 147
+      },
+      "c": null
+     }
+    },
+    "mirror_block": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4304590098221194,
+       "ci95": [
+        0.4235346387081155,
+        0.43769473883839793
+       ],
+       "n_targets": 88,
+       "n_families": 76
+      },
+      "c": {
+       "mean": 0.42329545454545453,
+       "ci95": [
+        0.3842303610188968,
+        0.4604894509981851
+       ],
+       "n_targets": 88,
+       "n_families": 76
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.7135416666666666,
+       "ci95": [
+        0.5789406892866684,
+        0.8631578947368421
+       ],
+       "n_targets": 192,
+       "n_families": 153
+      },
+      "c": null
+     }
+    },
+    "mirror_block_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.41658614136913946,
+       "ci95": [
+        0.40837769649287525,
+        0.42484560586056425
+       ],
+       "n_targets": 86,
+       "n_families": 77
+      },
+      "c": {
+       "mean": 0.467296511627907,
+       "ci95": [
+        0.42559165232358004,
+        0.5063967180023923
+       ],
+       "n_targets": 86,
+       "n_families": 77
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.7135416666666666,
+       "ci95": [
+        0.5846973518284994,
+        0.8571609862218997
+       ],
+       "n_targets": 192,
+       "n_families": 153
+      },
+      "c": null
+     }
+    },
+    "noise": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.6326232646393962,
+       "ci95": [
+        0.6294204422474529,
+        0.6356353809671788
+       ],
+       "n_targets": 127,
+       "n_families": 108
+      },
+      "c": {
+       "mean": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "n_targets": 127,
+       "n_families": 108
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 1.1354166666666667,
+       "ci95": [
+        0.989574932795699,
+        1.293193717277487
+       ],
+       "n_targets": 192,
+       "n_families": 153
+      },
+      "c": null
+     }
+    },
+    "repeat": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.12185560958459969,
+       "ci95": [
+        0.0993989420589059,
+        0.150341098580975
+       ],
+       "n_targets": 8,
+       "n_families": 8
+      },
+      "c": {
+       "mean": 0.5859375,
+       "ci95": [
+        0.5232421875,
+        0.6328125
+       ],
+       "n_targets": 8,
+       "n_families": 8
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.6470588235294118,
+       "ci95": [
+        0.29411764705882354,
+        1.0014705882352861
+       ],
+       "n_targets": 17,
+       "n_families": 17
+      },
+      "c": null
+     }
+    },
+    "shrink_mirror": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.49602718948238134,
+       "ci95": [
+        0.49042944112249337,
+        0.5016243867942871
+       ],
+       "n_targets": 92,
+       "n_families": 79
+      },
+      "c": {
+       "mean": 0.08899456521739131,
+       "ci95": [
+        0.06589673913043478,
+        0.11423597953770362
+       ],
+       "n_targets": 92,
+       "n_families": 79
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.8268156424581006,
+       "ci95": [
+        0.6760900974025974,
+        0.9768852188274153
+       ],
+       "n_targets": 179,
+       "n_families": 147
+      },
+      "c": null
+     }
+    },
+    "shrink_repeat": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.12292949017137283,
+       "ci95": [
+        0.10062997678760431,
+        0.15128958274144672
+       ],
+       "n_targets": 8,
+       "n_families": 8
+      },
+      "c": {
+       "mean": 0.5859375,
+       "ci95": [
+        0.5232421875,
+        0.6328125
+       ],
+       "n_targets": 8,
+       "n_families": 8
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.6470588235294118,
+       "ci95": [
+        0.29411764705882354,
+        1.0014705882352861
+       ],
+       "n_targets": 17,
+       "n_families": 17
+      },
+      "c": null
+     }
+    },
+    "sibling": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.43847954273223877,
+       "ci95": [
+        0.42294419151213436,
+        0.4546571990268098
+       ],
+       "n_targets": 36,
+       "n_families": 18
+      },
+      "c": {
+       "mean": 0.3715277777777778,
+       "ci95": [
+        0.2829861111111111,
+        0.4565972222222222
+       ],
+       "n_targets": 36,
+       "n_families": 18
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.5866666666666667,
+       "ci95": [
+        0.36363636363636365,
+        0.8266666666666667
+       ],
+       "n_targets": 75,
+       "n_families": 37
+      },
+      "c": null
+     }
+    },
+    "stranger": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.45222316960493725,
+       "ci95": [
+        0.44354434713034024,
+        0.4609039389082751
+       ],
+       "n_targets": 75,
+       "n_families": 68
+      },
+      "c": {
+       "mean": 0.30041666666666667,
+       "ci95": [
+        0.2512087955447331,
+        0.3495114739974937
+       ],
+       "n_targets": 75,
+       "n_families": 68
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.5416666666666666,
+       "ci95": [
+        0.4285530191458026,
+        0.6532713070302005
+       ],
+       "n_targets": 192,
+       "n_families": 153
+      },
+      "c": null
+     }
+    },
+    "stranger_block": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4547099493168018,
+       "ci95": [
+        0.445787943794332,
+        0.46327255736660805
+       ],
+       "n_targets": 72,
+       "n_families": 63
+      },
+      "c": {
+       "mean": 0.2821180555555556,
+       "ci95": [
+        0.2381631851922345,
+        0.328125
+       ],
+       "n_targets": 72,
+       "n_families": 63
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.5520833333333334,
+       "ci95": [
+        0.4385026737967914,
+        0.6769270833333334
+       ],
+       "n_targets": 192,
+       "n_families": 153
+      },
+      "c": null
+     }
+    },
+    "stranger_block_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4356144599119822,
+       "ci95": [
+        0.42768755225726857,
+        0.44429219066041753
+       ],
+       "n_targets": 75,
+       "n_families": 67
+      },
+      "c": {
+       "mean": 0.3908333333333333,
+       "ci95": [
+        0.3423992434335744,
+        0.4366444063926941
+       ],
+       "n_targets": 75,
+       "n_families": 67
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.6197916666666666,
+       "ci95": [
+        0.5,
+        0.7435897435897436
+       ],
+       "n_targets": 192,
+       "n_families": 153
+      },
+      "c": null
+     }
+    },
+    "wrong_detail": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.45274037943945983,
+       "ci95": [
+        0.44437496865074655,
+        0.4610088065032685
+       ],
+       "n_targets": 75,
+       "n_families": 68
+      },
+      "c": {
+       "mean": 0.295,
+       "ci95": [
+        0.24913194444444445,
+        0.34375988924050627
+       ],
+       "n_targets": 75,
+       "n_families": 68
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.5416666666666666,
+       "ci95": [
+        0.4285530191458026,
+        0.6532713070302005
+       ],
+       "n_targets": 192,
+       "n_families": 153
+      },
+      "c": null
+     }
+    }
+   },
+   "ladder_R": {
+    "lpips_vgg": {
+     "cohort_mean": {
+      "R": 1.3201064213959737,
+      "ci95": [
+       1.2881952753848114,
+       1.3588485878258862
+      ],
+      "n_targets": 127,
+      "n_families": 108
+     },
+     "dataset_mean": {
+      "R": 1.427034906882274,
+      "ci95": [
+       1.39110335322668,
+       1.4775579900771036
+      ],
+      "n_targets": 127,
+      "n_families": 108
+     },
+     "lookalike": {
+      "R": 0.9753609293737118,
+      "ci95": [
+       0.9489671423599148,
+       1.0019540918632324
+      ],
+      "n_targets": 91,
+      "n_families": 79
+     },
+     "lookalike_oracle": {
+      "R": 0.9177739994717102,
+      "ci95": [
+       0.8896961517032231,
+       0.9462001982416323
+      ],
+      "n_targets": 84,
+      "n_families": 74
+     },
+     "mean_k2": {
+      "R": 1.085922313540995,
+      "ci95": [
+       1.060945304923102,
+       1.1125469148764637
+      ],
+      "n_targets": 103,
+      "n_families": 89
+     },
+     "mirror": {
+      "R": 0.9696634330169684,
+      "ci95": [
+       0.9478563531982304,
+       0.9911262113774337
+      ],
+      "n_targets": 92,
+      "n_families": 79
+     },
+     "mirror_block": {
+      "R": 0.9380270017586241,
+      "ci95": [
+       0.915456363025372,
+       0.9600010585450762
+      ],
+      "n_targets": 88,
+      "n_families": 76
+     },
+     "mirror_block_oracle": {
+      "R": 0.8958592058408705,
+      "ci95": [
+       0.8696265763886483,
+       0.9201836786834876
+      ],
+      "n_targets": 86,
+      "n_families": 77
+     },
+     "noise": {
+      "R": 1.552522920024793,
+      "ci95": [
+       1.5071806980322207,
+       1.6141672317328077
+      ],
+      "n_targets": 127,
+      "n_families": 108
+     },
+     "repeat": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 8,
+      "n_families": 8
+     },
+     "shrink_mirror": {
+      "R": 1.1373272133899561,
+      "ci95": [
+       1.1142890008319408,
+       1.1625417241989306
+      ],
+      "n_targets": 92,
+      "n_families": 79
+     },
+     "shrink_repeat": {
+      "R": 0.003264153882563561,
+      "ci95": [
+       -0.0006381337921567103,
+       0.007115693774566546
+      ],
+      "n_targets": 8,
+      "n_families": 8
+     },
+     "sibling": {
+      "R": 0.9624061123983485,
+      "ci95": [
+       0.906446133030507,
+       1.0150254705506707
+      ],
+      "n_targets": 36,
+      "n_families": 18
+     },
+     "stranger": {
+      "R": 1.0041810672393006,
+      "ci95": [
+       0.9796453122073797,
+       1.029637095527769
+      ],
+      "n_targets": 75,
+      "n_families": 68
+     },
+     "stranger_block": {
+      "R": 1.011739851476153,
+      "ci95": [
+       0.984798177474132,
+       1.0385903576244764
+      ],
+      "n_targets": 72,
+      "n_families": 63
+     },
+     "stranger_block_oracle": {
+      "R": 0.9536974428062218,
+      "ci95": [
+       0.9292131196481193,
+       0.9777216476517461
+      ],
+      "n_targets": 75,
+      "n_families": 67
+     },
+     "wrong_detail": {
+      "R": 1.0057531717267558,
+      "ci95": [
+       0.9821169366837502,
+       1.0303132248597389
+      ],
+      "n_targets": 75,
+      "n_families": 68
+     },
+     "_anchors": {
+      "d_repeat": 0.12185560958459968,
+      "d_stranger": 0.4508476318386994,
+      "n_repeat_targets": 8
+     }
+    }
+   },
+   "expectations": {
+    "lpips_vgg": {
+     "E1 mirror closer than stranger": {
+      "value": 0.9696634330169684,
+      "ci95": [
+       0.9478563531982304,
+       0.9911262113774337
+      ],
+      "pass": true
+     },
+     "E2 sibling closer than stranger": {
+      "value": 0.9624061123983485,
+      "ci95": [
+       0.906446133030507,
+       1.0150254705506707
+      ],
+      "pass": false
+     },
+     "E3B dataset mean better than stranger": {
+      "value": 1.427034906882274,
+      "ci95": [
+       1.39110335322668,
+       1.4775579900771036
+      ],
+      "pass": false
+     },
+     "E3B mean of 2 better than stranger": {
+      "value": 1.085922313540995,
+      "ci95": [
+       1.060945304923102,
+       1.1125469148764637
+      ],
+      "pass": false
+     },
+     "E3B averages ordered by k": {
+      "value": [
+       1.427034906882274,
+       1.085922313540995,
+       1.0041810672393006
+      ],
+      "pass": false
+     },
+     "E5B wrong detail not better than stranger": {
+      "value": 1.0057531717267558,
+      "ci95": [
+       0.9821169366837502,
+       1.0303132248597389
+      ],
+      "pass": true
+     },
+     "E6B white noise worse than stranger": {
+      "value": 1.552522920024793,
+      "ci95": [
+       1.5071806980322207,
+       1.6141672317328077
+      ],
+      "pass": true
+     },
+     "slope dataset mean minus stranger": 0.4228538396429735
+    }
+   },
+   "expectations_realityA": {
+    "lpips_vgg": {
+     "A-E3a mean of 2 not better than stranger": {
+      "value": 1.085922313540995,
+      "ci95": [
+       1.060945304923102,
+       1.1125469148764637
+      ],
+      "pass": true
+     },
+     "A-E3b dataset mean not better than stranger": {
+      "value": 1.427034906882274,
+      "ci95": [
+       1.39110335322668,
+       1.4775579900771036
+      ],
+      "pass": true
+     },
+     "A-E4a repeat blend not rewarded": {
+      "value": 0.003264153882563561,
+      "lower95": -0.0006381337921567103,
+      "upper95": 0.007115693774566546,
+      "pass": true
+     },
+     "A-E4b mirror blend not rewarded": {
+      "value": 0.16766378037298768,
+      "lower95": 0.14468953439646168,
+      "upper95": 0.19505162426373202,
+      "pass": true
+     },
+     "slope dataset mean minus stranger": 0.4228538396429735
+    }
+   }
+  },
+  "parietal/LR": {
+   "n_rows": 11923,
+   "missing": {
+    "lpips_vgg": 7013
+   },
+   "fills": {
+    "cohort_mean": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.5573742454316442,
+       "ci95": [
+        0.5534029346551111,
+        0.5611050236451742
+       ],
+       "n_targets": 151,
+       "n_families": 127
+      },
+      "c": {
+       "mean": 0.010140728476821192,
+       "ci95": [
+        0.0036761536511156186,
+        0.018871855388738777
+       ],
+       "n_targets": 151,
+       "n_families": 127
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 1.0211267605633803,
+       "ci95": [
+        0.8896657583693113,
+        1.1603795524352787
+       ],
+       "n_targets": 213,
+       "n_families": 164
+      },
+      "c": null
+     }
+    },
+    "cotwin": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4874271154403686,
+       "ci95": [
+        0.4874271154403686,
+        0.4874271154403686
+       ],
+       "n_targets": 2,
+       "n_families": 1
+      },
+      "c": {
+       "mean": 0.0625,
+       "ci95": [
+        0.0625,
+        0.0625
+       ],
+       "n_targets": 2,
+       "n_families": 1
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.16666666666666666,
+       "ci95": [
+        0.0,
+        0.5
+       ],
+       "n_targets": 6,
+       "n_families": 3
+      },
+      "c": null
+     }
+    },
+    "dataset_mean": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.5954254544926005,
+       "ci95": [
+        0.5920672634023683,
+        0.5989899073123833
+       ],
+       "n_targets": 151,
+       "n_families": 127
+      },
+      "c": {
+       "mean": 0.0012417218543046358,
+       "ci95": [
+        0.0,
+        0.0032552083333333335
+       ],
+       "n_targets": 151,
+       "n_families": 127
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 1.0234741784037558,
+       "ci95": [
+        0.8933563870825526,
+        1.1634615384615385
+       ],
+       "n_targets": 213,
+       "n_families": 164
+      },
+      "c": null
+     }
+    },
+    "lookalike": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.44214780956861516,
+       "ci95": [
+        0.43488117627155326,
+        0.4497770678028619
+       ],
+       "n_targets": 112,
+       "n_families": 98
+      },
+      "c": {
+       "mean": 0.30943080357142855,
+       "ci95": [
+        0.2715310893027984,
+        0.34608680397609787
+       ],
+       "n_targets": 112,
+       "n_families": 98
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.460093896713615,
+       "ci95": [
+        0.3861578592192691,
+        0.5399084507042253
+       ],
+       "n_targets": 213,
+       "n_families": 164
+      },
+      "c": null
+     }
+    },
+    "lookalike_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.43091993886339763,
+       "ci95": [
+        0.4233186651908581,
+        0.4383298794989518
+       ],
+       "n_targets": 111,
+       "n_families": 95
+      },
+      "c": {
+       "mean": 0.36908783783783783,
+       "ci95": [
+        0.3289068630335844,
+        0.4091735015900831
+       ],
+       "n_targets": 111,
+       "n_families": 95
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.4460093896713615,
+       "ci95": [
+        0.37740384615384615,
+        0.5158389037433155
+       ],
+       "n_targets": 213,
+       "n_families": 164
+      },
+      "c": null
+     }
+    },
+    "mean_k2": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4774705666597142,
+       "ci95": [
+        0.47221662198838893,
+        0.4823904185116362
+       ],
+       "n_targets": 132,
+       "n_families": 112
+      },
+      "c": {
+       "mean": 0.15980113636363635,
+       "ci95": [
+        0.13091482736013987,
+        0.19202594015492255
+       ],
+       "n_targets": 132,
+       "n_families": 112
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.6971830985915493,
+       "ci95": [
+        0.5991049114706879,
+        0.7972431718556816
+       ],
+       "n_targets": 213,
+       "n_families": 164
+      },
+      "c": null
+     }
+    },
+    "mirror": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4408671433187049,
+       "ci95": [
+        0.43377050119718547,
+        0.4483449261203624
+       ],
+       "n_targets": 92,
+       "n_families": 79
+      },
+      "c": {
+       "mean": 0.32710597826086957,
+       "ci95": [
+        0.28975931186868686,
+        0.3627140878589263
+       ],
+       "n_targets": 92,
+       "n_families": 79
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.8268156424581006,
+       "ci95": [
+        0.6760900974025974,
+        0.9768852188274153
+       ],
+       "n_targets": 179,
+       "n_families": 147
+      },
+      "c": null
+     }
+    },
+    "mirror_block": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4311619426023825,
+       "ci95": [
+        0.42510037934723305,
+        0.4374543072661048
+       ],
+       "n_targets": 118,
+       "n_families": 101
+      },
+      "c": {
+       "mean": 0.3673199152542373,
+       "ci95": [
+        0.3379710344503655,
+        0.39610078828828826
+       ],
+       "n_targets": 118,
+       "n_families": 101
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.744131455399061,
+       "ci95": [
+        0.6193693693693694,
+        0.8766831786421941
+       ],
+       "n_targets": 213,
+       "n_families": 164
+      },
+      "c": null
+     }
+    },
+    "mirror_block_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4169210807392091,
+       "ci95": [
+        0.4103483086911708,
+        0.4234180541814264
+       ],
+       "n_targets": 121,
+       "n_families": 106
+      },
+      "c": {
+       "mean": 0.40831611570247933,
+       "ci95": [
+        0.37991444735472113,
+        0.4367069160383024
+       ],
+       "n_targets": 121,
+       "n_families": 106
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.7488262910798122,
+       "ci95": [
+        0.6273985745614035,
+        0.8823793194407806
+       ],
+       "n_targets": 213,
+       "n_families": 164
+      },
+      "c": null
+     }
+    },
+    "noise": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.6345372385536598,
+       "ci95": [
+        0.6319866017892622,
+        0.6369367619234184
+       ],
+       "n_targets": 151,
+       "n_families": 127
+      },
+      "c": {
+       "mean": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "n_targets": 151,
+       "n_families": 127
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 1.0234741784037558,
+       "ci95": [
+        0.8933563870825526,
+        1.1634615384615385
+       ],
+       "n_targets": 213,
+       "n_families": 164
+      },
+      "c": null
+     }
+    },
+    "repeat": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.12727034329954118,
+       "ci95": [
+        0.10246486902599114,
+        0.15803553562533726
+       ],
+       "n_targets": 12,
+       "n_families": 12
+      },
+      "c": {
+       "mean": 0.5546875,
+       "ci95": [
+        0.4895833333333333,
+        0.6197916666666666
+       ],
+       "n_targets": 12,
+       "n_families": 12
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.9,
+       "ci95": [
+        0.525,
+        1.3
+       ],
+       "n_targets": 20,
+       "n_families": 20
+      },
+      "c": null
+     }
+    },
+    "shrink_mirror": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.49680571951835917,
+       "ci95": [
+        0.4924208495075868,
+        0.5011779089627745
+       ],
+       "n_targets": 92,
+       "n_families": 79
+      },
+      "c": {
+       "mean": 0.09035326086956522,
+       "ci95": [
+        0.07039268092105262,
+        0.11160839686998394
+       ],
+       "n_targets": 92,
+       "n_families": 79
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.8268156424581006,
+       "ci95": [
+        0.6760900974025974,
+        0.9768852188274153
+       ],
+       "n_targets": 179,
+       "n_families": 147
+      },
+      "c": null
+     }
+    },
+    "shrink_repeat": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.12893423236285642,
+       "ci95": [
+        0.10472261859750784,
+        0.15919377854766528
+       ],
+       "n_targets": 12,
+       "n_families": 12
+      },
+      "c": {
+       "mean": 0.5546875,
+       "ci95": [
+        0.4895833333333333,
+        0.6197916666666666
+       ],
+       "n_targets": 12,
+       "n_families": 12
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.9,
+       "ci95": [
+        0.525,
+        1.3
+       ],
+       "n_targets": 20,
+       "n_families": 20
+      },
+      "c": null
+     }
+    },
+    "sibling": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.43770064060625274,
+       "ci95": [
+        0.4254960351182442,
+        0.45103795799639135
+       ],
+       "n_targets": 38,
+       "n_families": 19
+      },
+      "c": {
+       "mean": 0.3347039473684211,
+       "ci95": [
+        0.2738486842105263,
+        0.38980263157894735
+       ],
+       "n_targets": 38,
+       "n_families": 19
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.4838709677419355,
+       "ci95": [
+        0.2826086956521739,
+        0.6956521739130435
+       ],
+       "n_targets": 93,
+       "n_families": 45
+      },
+      "c": null
+     }
+    },
+    "stranger": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4483032168304066,
+       "ci95": [
+        0.4419701252621178,
+        0.45483546580801537
+       ],
+       "n_targets": 107,
+       "n_families": 96
+      },
+      "c": {
+       "mean": 0.29380841121495327,
+       "ci95": [
+        0.25943396226415094,
+        0.33191768072684336
+       ],
+       "n_targets": 107,
+       "n_families": 96
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.48826291079812206,
+       "ci95": [
+        0.4029007814349988,
+        0.5753456965624192
+       ],
+       "n_targets": 213,
+       "n_families": 164
+      },
+      "c": null
+     }
+    },
+    "stranger_block": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.45207471441531527,
+       "ci95": [
+        0.44605071578379113,
+        0.4583246809622299
+       ],
+       "n_targets": 115,
+       "n_families": 98
+      },
+      "c": {
+       "mean": 0.26304347826086955,
+       "ci95": [
+        0.23579482041396105,
+        0.2908118587162067
+       ],
+       "n_targets": 115,
+       "n_families": 98
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.6103286384976526,
+       "ci95": [
+        0.5091315212926194,
+        0.7153352064092577
+       ],
+       "n_targets": 213,
+       "n_families": 164
+      },
+      "c": null
+     }
+    },
+    "stranger_block_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4321372695667769,
+       "ci95": [
+        0.4254769177344022,
+        0.4389008258174105
+       ],
+       "n_targets": 124,
+       "n_families": 106
+      },
+      "c": {
+       "mean": 0.36013104838709675,
+       "ci95": [
+        0.328754131225661,
+        0.39102443881095744
+       ],
+       "n_targets": 124,
+       "n_families": 106
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.676056338028169,
+       "ci95": [
+        0.565300736003861,
+        0.7920822591040926
+       ],
+       "n_targets": 213,
+       "n_families": 164
+      },
+      "c": null
+     }
+    },
+    "wrong_detail": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.44890334935295984,
+       "ci95": [
+        0.4426450325398946,
+        0.4552026769064076
+       ],
+       "n_targets": 107,
+       "n_families": 96
+      },
+      "c": {
+       "mean": 0.28738317757009346,
+       "ci95": [
+        0.2547596795727637,
+        0.3254729264937107
+       ],
+       "n_targets": 107,
+       "n_families": 96
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.48826291079812206,
+       "ci95": [
+        0.4029007814349988,
+        0.5753456965624192
+       ],
+       "n_targets": 213,
+       "n_families": 164
+      },
+      "c": null
+     }
+    }
+   },
+   "ladder_R": {
+    "lpips_vgg": {
+     "cohort_mean": {
+      "R": 1.3398586265838242,
+      "ci95": [
+       1.3099024501120067,
+       1.3785927527152004
+      ],
+      "n_targets": 151,
+      "n_families": 127
+     },
+     "cotwin": {
+      "R": 1.1219594978872294,
+      "ci95": [
+       -0.5165293625866306,
+       1.1355821790936866
+      ],
+      "n_targets": 2,
+      "n_families": 1
+     },
+     "dataset_mean": {
+      "R": 1.4583956602157764,
+      "ci95": [
+       1.4207740898307164,
+       1.51065832740769
+      ],
+      "n_targets": 151,
+      "n_families": 127
+     },
+     "lookalike": {
+      "R": 0.980905514704899,
+      "ci95": [
+       0.9553966219505037,
+       1.004619364111745
+      ],
+      "n_targets": 112,
+      "n_families": 98
+     },
+     "lookalike_oracle": {
+      "R": 0.9459284792769971,
+      "ci95": [
+       0.9208806578334902,
+       0.9707785035987292
+      ],
+      "n_targets": 111,
+      "n_families": 95
+     },
+     "mean_k2": {
+      "R": 1.090942881417042,
+      "ci95": [
+       1.0701719399992689,
+       1.1134157399987228
+      ],
+      "n_targets": 132,
+      "n_families": 112
+     },
+     "mirror": {
+      "R": 0.9769159863276604,
+      "ci95": [
+       0.9546630191303193,
+       0.9996031896825002
+      ],
+      "n_targets": 92,
+      "n_families": 79
+     },
+     "mirror_block": {
+      "R": 0.9466823687342582,
+      "ci95": [
+       0.9261783706765248,
+       0.9663178066434928
+      ],
+      "n_targets": 118,
+      "n_families": 101
+     },
+     "mirror_block_oracle": {
+      "R": 0.9023192706019818,
+      "ci95": [
+       0.8780016021032376,
+       0.9229374130605498
+      ],
+      "n_targets": 121,
+      "n_families": 106
+     },
+     "noise": {
+      "R": 1.5802365945005308,
+      "ci95": [
+       1.5365605236085644,
+       1.6436803966512217
+      ],
+      "n_targets": 151,
+      "n_families": 127
+     },
+     "repeat": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 12,
+      "n_families": 12
+     },
+     "shrink_mirror": {
+      "R": 1.1511757024297085,
+      "ci95": [
+       1.1299472923254181,
+       1.174562567185379
+      ],
+      "n_targets": 92,
+      "n_families": 79
+     },
+     "shrink_repeat": {
+      "R": 0.005183343150596836,
+      "ci95": [
+       0.0016007770222467698,
+       0.009151609838688781
+      ],
+      "n_targets": 12,
+      "n_families": 12
+     },
+     "sibling": {
+      "R": 0.9670517048032463,
+      "ci95": [
+       0.9217898575755415,
+       1.0091347008580658
+      ],
+      "n_targets": 38,
+      "n_families": 19
+     },
+     "stranger": {
+      "R": 1.0000808243892896,
+      "ci95": [
+       0.9807916519580946,
+       1.0195673525869695
+      ],
+      "n_targets": 107,
+      "n_families": 96
+     },
+     "stranger_block": {
+      "R": 1.0118297844643551,
+      "ci95": [
+       0.9945348631568123,
+       1.0296810660065139
+      ],
+      "n_targets": 115,
+      "n_families": 98
+     },
+     "stranger_block_oracle": {
+      "R": 0.9497207049142036,
+      "ci95": [
+       0.928634950291097,
+       0.9706062009315655
+      ],
+      "n_targets": 124,
+      "n_families": 106
+     },
+     "wrong_detail": {
+      "R": 1.0019503557593852,
+      "ci95": [
+       0.9819186426295794,
+       1.0212627613358414
+      ],
+      "n_targets": 107,
+      "n_families": 96
+     },
+     "_anchors": {
+      "d_repeat": 0.12727034329954118,
+      "d_stranger": 0.44827727164146564,
+      "n_repeat_targets": 12
+     }
+    }
+   },
+   "expectations": {
+    "lpips_vgg": {
+     "E1 mirror closer than stranger": {
+      "value": 0.9769159863276604,
+      "ci95": [
+       0.9546630191303193,
+       0.9996031896825002
+      ],
+      "pass": true
+     },
+     "E2 sibling closer than stranger": {
+      "value": 0.9670517048032463,
+      "ci95": [
+       0.9217898575755415,
+       1.0091347008580658
+      ],
+      "pass": false
+     },
+     "E3B dataset mean better than stranger": {
+      "value": 1.4583956602157764,
+      "ci95": [
+       1.4207740898307164,
+       1.51065832740769
+      ],
+      "pass": false
+     },
+     "E3B mean of 2 better than stranger": {
+      "value": 1.090942881417042,
+      "ci95": [
+       1.0701719399992689,
+       1.1134157399987228
+      ],
+      "pass": false
+     },
+     "E3B averages ordered by k": {
+      "value": [
+       1.4583956602157764,
+       1.090942881417042,
+       1.0000808243892896
+      ],
+      "pass": false
+     },
+     "E5B wrong detail not better than stranger": {
+      "value": 1.0019503557593852,
+      "ci95": [
+       0.9819186426295794,
+       1.0212627613358414
+      ],
+      "pass": true
+     },
+     "E6B white noise worse than stranger": {
+      "value": 1.5802365945005308,
+      "ci95": [
+       1.5365605236085644,
+       1.6436803966512217
+      ],
+      "pass": true
+     },
+     "slope dataset mean minus stranger": 0.4583148358264868
+    }
+   },
+   "expectations_realityA": {
+    "lpips_vgg": {
+     "A-E3a mean of 2 not better than stranger": {
+      "value": 1.090942881417042,
+      "ci95": [
+       1.0701719399992689,
+       1.1134157399987228
+      ],
+      "pass": true
+     },
+     "A-E3b dataset mean not better than stranger": {
+      "value": 1.4583956602157764,
+      "ci95": [
+       1.4207740898307164,
+       1.51065832740769
+      ],
+      "pass": true
+     },
+     "A-E4a repeat blend not rewarded": {
+      "value": 0.005183343150596836,
+      "lower95": 0.0016007770222467698,
+      "upper95": 0.009151609838688781,
+      "pass": true
+     },
+     "A-E4b mirror blend not rewarded": {
+      "value": 0.17425971610204805,
+      "lower95": 0.15057171875244216,
+      "upper95": 0.20063850532716576,
+      "pass": true
+     },
+     "slope dataset mean minus stranger": 0.4583148358264868
+    }
+   },
+   "tests": {
+    "n_hypotheses_holm": 4,
+    "per_metric": {
+     "lpips_vgg": {
+      "T1": {
+       "n_targets": 12,
+       "n_families": 12,
+       "mean_diff": 0.46410129436602204,
+       "share_targets_pass": 1.0,
+       "p_one_sided": 0.000244140625,
+       "p_holm": 0.0009765625,
+       "pass_holm_0.05": true,
+       "p_holm_run": 0.001220703125,
+       "pass_holm_run_0.05": true
+      },
+      "T2": {
+       "n_targets": 12,
+       "n_families": 12,
+       "mean_diff": 0.0016638890633152408,
+       "share_targets_pass": 0.8333333333333334,
+       "p_one_sided": 0.008056640625,
+       "p_holm": 0.008056640625,
+       "pass_holm_0.05": true,
+       "p_holm_run": 0.01611328125,
+       "pass_holm_run_0.05": true
+      },
+      "T3a": {
+       "n_targets": 12,
+       "n_families": 12,
+       "mean_diff": 0.3166159206173486,
+       "share_targets_pass": 1.0,
+       "p_one_sided": 0.000244140625,
+       "p_holm": 0.0009765625,
+       "pass_holm_0.05": true,
+       "p_holm_run": 0.001220703125,
+       "pass_holm_run_0.05": true
+      },
+      "T3b": {
+       "n_targets": 12,
+       "n_families": 12,
+       "mean_diff": 0.5078221937227579,
+       "share_targets_pass": 1.0,
+       "p_one_sided": 0.000244140625,
+       "p_holm": 0.0009765625,
+       "pass_holm_0.05": true,
+       "p_holm_run": 0.001220703125,
+       "pass_holm_run_0.05": true
+      }
+     }
+    }
+   }
+  },
+  "parietal/R": {
+   "n_rows": 6076,
+   "missing": {
+    "lpips_vgg": 3748
+   },
+   "fills": {
+    "cohort_mean": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.5584668863543683,
+       "ci95": [
+        0.5535050863332417,
+        0.5634784419661267
+       ],
+       "n_targets": 118,
+       "n_families": 102
+      },
+      "c": {
+       "mean": 0.01059322033898305,
+       "ci95": [
+        0.0026933898835838493,
+        0.023305084745762712
+       ],
+       "n_targets": 118,
+       "n_families": 102
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 1.03,
+       "ci95": [
+        0.8773476052249637,
+        1.1979687499999998
+       ],
+       "n_targets": 200,
+       "n_families": 159
+      },
+      "c": null
+     }
+    },
+    "cotwin": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4874271154403686,
+       "ci95": [
+        0.4874271154403686,
+        0.4874271154403686
+       ],
+       "n_targets": 2,
+       "n_families": 1
+      },
+      "c": {
+       "mean": 0.0625,
+       "ci95": [
+        0.0625,
+        0.0625
+       ],
+       "n_targets": 2,
+       "n_families": 1
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.5,
+       "ci95": [
+        0.0,
+        1.0
+       ],
+       "n_targets": 4,
+       "n_families": 2
+      },
+      "c": null
+     }
+    },
+    "dataset_mean": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.5989415355153003,
+       "ci95": [
+        0.5947929617044354,
+        0.6029217903072376
+       ],
+       "n_targets": 118,
+       "n_families": 102
+      },
+      "c": {
+       "mean": 0.001059322033898305,
+       "ci95": [
+        0.0,
+        0.0026939655172413795
+       ],
+       "n_targets": 118,
+       "n_families": 102
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 1.035,
+       "ci95": [
+        0.8809285714285714,
+        1.2030497570509513
+       ],
+       "n_targets": 200,
+       "n_families": 159
+      },
+      "c": null
+     }
+    },
+    "lookalike": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.44215066116867646,
+       "ci95": [
+        0.4295881305838173,
+        0.45432279876434156
+       ],
+       "n_targets": 55,
+       "n_families": 52
+      },
+      "c": {
+       "mean": 0.2755681818181818,
+       "ci95": [
+        0.22169674834032146,
+        0.3269820601851851
+       ],
+       "n_targets": 55,
+       "n_families": 52
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.4,
+       "ci95": [
+        0.30254950495049504,
+        0.5048125
+       ],
+       "n_targets": 200,
+       "n_families": 159
+      },
+      "c": null
+     }
+    },
+    "lookalike_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4460877826736297,
+       "ci95": [
+        0.4338237110479796,
+        0.4588245930197699
+       ],
+       "n_targets": 54,
+       "n_families": 51
+      },
+      "c": {
+       "mean": 0.24710648148148148,
+       "ci95": [
+        0.18856538711776186,
+        0.30382612179487173
+       ],
+       "n_targets": 54,
+       "n_families": 51
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.395,
+       "ci95": [
+        0.2985496415117268,
+        0.5025125628140703
+       ],
+       "n_targets": 200,
+       "n_families": 159
+      },
+      "c": null
+     }
+    },
+    "mean_k2": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4734871496310395,
+       "ci95": [
+        0.4665397134073802,
+        0.48012336798648186
+       ],
+       "n_targets": 89,
+       "n_families": 83
+      },
+      "c": {
+       "mean": 0.15870786516853932,
+       "ci95": [
+        0.12571818671630094,
+        0.19452446693054135
+       ],
+       "n_targets": 89,
+       "n_families": 83
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.685,
+       "ci95": [
+        0.5666625615763546,
+        0.8125076970443349
+       ],
+       "n_targets": 200,
+       "n_families": 159
+      },
+      "c": null
+     }
+    },
+    "mirror": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4408671433187049,
+       "ci95": [
+        0.43377050119718547,
+        0.4483449261203624
+       ],
+       "n_targets": 92,
+       "n_families": 79
+      },
+      "c": {
+       "mean": 0.2907608695652174,
+       "ci95": [
+        0.2519731702302631,
+        0.3295533459595959
+       ],
+       "n_targets": 92,
+       "n_families": 79
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.8268156424581006,
+       "ci95": [
+        0.6760900974025974,
+        0.9768852188274153
+       ],
+       "n_targets": 179,
+       "n_families": 147
+      },
+      "c": null
+     }
+    },
+    "mirror_block": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.43118373635742396,
+       "ci95": [
+        0.42411416779372746,
+        0.43851115401974655
+       ],
+       "n_targets": 102,
+       "n_families": 87
+      },
+      "c": {
+       "mean": 0.34191176470588236,
+       "ci95": [
+        0.30619251575386897,
+        0.37758947973519297
+       ],
+       "n_targets": 102,
+       "n_families": 87
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.87,
+       "ci95": [
+        0.7232877535326349,
+        1.024636668872387
+       ],
+       "n_targets": 200,
+       "n_families": 159
+      },
+      "c": null
+     }
+    },
+    "mirror_block_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4177536944735726,
+       "ci95": [
+        0.4103220425797652,
+        0.42489696449519676
+       ],
+       "n_targets": 106,
+       "n_families": 94
+      },
+      "c": {
+       "mean": 0.38089622641509435,
+       "ci95": [
+        0.3474994266055046,
+        0.415267913510101
+       ],
+       "n_targets": 106,
+       "n_families": 94
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.885,
+       "ci95": [
+        0.7383121940364931,
+        1.0450347938144326
+       ],
+       "n_targets": 200,
+       "n_families": 159
+      },
+      "c": null
+     }
+    },
+    "noise": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.6357628412671008,
+       "ci95": [
+        0.6325192144691038,
+        0.6389407982581782
+       ],
+       "n_targets": 118,
+       "n_families": 102
+      },
+      "c": {
+       "mean": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ],
+       "n_targets": 118,
+       "n_families": 102
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 1.035,
+       "ci95": [
+        0.8809285714285714,
+        1.2030497570509513
+       ],
+       "n_targets": 200,
+       "n_families": 159
+      },
+      "c": null
+     }
+    },
+    "repeat": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.12588828284707332,
+       "ci95": [
+        0.10148420324807778,
+        0.15519948435895556
+       ],
+       "n_targets": 12,
+       "n_families": 12
+      },
+      "c": {
+       "mean": 0.5572916666666666,
+       "ci95": [
+        0.473828125,
+        0.6510416666666666
+       ],
+       "n_targets": 12,
+       "n_families": 12
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 1.2941176470588236,
+       "ci95": [
+        0.8235294117647058,
+        1.7647058823529411
+       ],
+       "n_targets": 17,
+       "n_families": 17
+      },
+      "c": null
+     }
+    },
+    "shrink_mirror": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.49758424955433694,
+       "ci95": [
+        0.49192574295994135,
+        0.5026316473405904
+       ],
+       "n_targets": 92,
+       "n_families": 79
+      },
+      "c": {
+       "mean": 0.09171195652173914,
+       "ci95": [
+        0.06388850732600732,
+        0.12306798656669792
+       ],
+       "n_targets": 92,
+       "n_families": 79
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.8268156424581006,
+       "ci95": [
+        0.6760900974025974,
+        0.9768852188274153
+       ],
+       "n_targets": 179,
+       "n_families": 147
+      },
+      "c": null
+     }
+    },
+    "shrink_repeat": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.12759087452044085,
+       "ci95": [
+        0.10421331490700438,
+        0.1565161858530094
+       ],
+       "n_targets": 12,
+       "n_families": 12
+      },
+      "c": {
+       "mean": 0.5572916666666666,
+       "ci95": [
+        0.473828125,
+        0.6510416666666666
+       ],
+       "n_targets": 12,
+       "n_families": 12
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 1.2941176470588236,
+       "ci95": [
+        0.8235294117647058,
+        1.7647058823529411
+       ],
+       "n_targets": 17,
+       "n_families": 17
+      },
+      "c": null
+     }
+    },
+    "sibling": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4349004551768303,
+       "ci95": [
+        0.41697980731370904,
+        0.45205538852938576
+       ],
+       "n_targets": 28,
+       "n_families": 14
+      },
+      "c": {
+       "mean": 0.31026785714285715,
+       "ci95": [
+        0.24776785714285715,
+        0.37723214285714285
+       ],
+       "n_targets": 28,
+       "n_families": 14
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.5,
+       "ci95": [
+        0.2716049382716049,
+        0.7692307692307693
+       ],
+       "n_targets": 80,
+       "n_families": 39
+      },
+      "c": null
+     }
+    },
+    "stranger": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.44495080148472504,
+       "ci95": [
+        0.43609527373778,
+        0.4534847045292565
+       ],
+       "n_targets": 68,
+       "n_families": 64
+      },
+      "c": {
+       "mean": 0.2849264705882353,
+       "ci95": [
+        0.24300373134328357,
+        0.32767857142857143
+       ],
+       "n_targets": 68,
+       "n_families": 64
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.495,
+       "ci95": [
+        0.3880597014925373,
+        0.6102564102564103
+       ],
+       "n_targets": 200,
+       "n_families": 159
+      },
+      "c": null
+     }
+    },
+    "stranger_block": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.45163410426013995,
+       "ci95": [
+        0.44324986819022644,
+        0.4601224044534851
+       ],
+       "n_targets": 96,
+       "n_families": 84
+      },
+      "c": {
+       "mean": 0.2565104166666667,
+       "ci95": [
+        0.21908602150537634,
+        0.29492450016801075
+       ],
+       "n_targets": 96,
+       "n_families": 84
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.75,
+       "ci95": [
+        0.6231155778894473,
+        0.8889022435897435
+       ],
+       "n_targets": 200,
+       "n_families": 159
+      },
+      "c": null
+     }
+    },
+    "stranger_block_oracle": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4316349308384527,
+       "ci95": [
+        0.42376482989334685,
+        0.4391675509062765
+       ],
+       "n_targets": 101,
+       "n_families": 90
+      },
+      "c": {
+       "mean": 0.34220297029702973,
+       "ci95": [
+        0.30074257425742573,
+        0.3805693069306931
+       ],
+       "n_targets": 101,
+       "n_families": 90
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.81,
+       "ci95": [
+        0.6733619316092658,
+        0.9587785860065937
+       ],
+       "n_targets": 200,
+       "n_families": 159
+      },
+      "c": null
+     }
+    },
+    "wrong_detail": {
+     "lpips_vgg": {
+      "raw": {
+       "mean": 0.4459059290295722,
+       "ci95": [
+        0.4372310689624639,
+        0.4542712434197195
+       ],
+       "n_targets": 68,
+       "n_families": 64
+      },
+      "c": {
+       "mean": 0.27849264705882354,
+       "ci95": [
+        0.23804701218173835,
+        0.3205386257763975
+       ],
+       "n_targets": 68,
+       "n_families": 64
+      }
+     },
+     "lpips_vgg_slices": {
+      "raw": {
+       "mean": 0.495,
+       "ci95": [
+        0.3880597014925373,
+        0.6102564102564103
+       ],
+       "n_targets": 200,
+       "n_families": 159
+      },
+      "c": null
+     }
+    }
+   },
+   "ladder_R": {
+    "lpips_vgg": {
+     "cohort_mean": {
+      "R": 1.3462059202774488,
+      "ci95": [
+       1.3118225577044396,
+       1.3893950766907477
+      ],
+      "n_targets": 118,
+      "n_families": 102
+     },
+     "cotwin": {
+      "R": 1.1251266542106813,
+      "ci95": [
+       -0.5082012930798738,
+       1.141401429839654
+      ],
+      "n_targets": 2,
+      "n_families": 1
+     },
+     "dataset_mean": {
+      "R": 1.4721650219986704,
+      "ci95": [
+       1.4298785785857373,
+       1.5264134457856808
+      ],
+      "n_targets": 118,
+      "n_families": 102
+     },
+     "lookalike": {
+      "R": 0.9842240984773731,
+      "ci95": [
+       0.9438197876625939,
+       1.0239989488450565
+      ],
+      "n_targets": 55,
+      "n_families": 52
+     },
+     "lookalike_oracle": {
+      "R": 0.9964766145191898,
+      "ci95": [
+       0.9562060981075274,
+       1.0345254234471717
+      ],
+      "n_targets": 54,
+      "n_families": 51
+     },
+     "mean_k2": {
+      "R": 1.0817447940150287,
+      "ci95": [
+       1.052902218185375,
+       1.1106694206769612
+      ],
+      "n_targets": 89,
+      "n_families": 83
+     },
+     "mirror": {
+      "R": 0.9802297277100629,
+      "ci95": [
+       0.9574102997900271,
+       1.0025392016319734
+      ],
+      "n_targets": 92,
+      "n_families": 79
+     },
+     "mirror_block": {
+      "R": 0.950094488301458,
+      "ci95": [
+       0.9261777082383937,
+       0.9724188980687732
+      ],
+      "n_targets": 102,
+      "n_families": 87
+     },
+     "mirror_block_oracle": {
+      "R": 0.9082995364776099,
+      "ci95": [
+       0.8821800752796798,
+       0.9320342143905807
+      ],
+      "n_targets": 106,
+      "n_families": 94
+     },
+     "noise": {
+      "R": 1.5867547390894374,
+      "ci95": [
+       1.5385151477715417,
+       1.6529169673135422
+      ],
+      "n_targets": 118,
+      "n_families": 102
+     },
+     "repeat": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 12,
+      "n_families": 12
+     },
+     "shrink_mirror": {
+      "R": 1.1567361558513363,
+      "ci95": [
+       1.13119210497442,
+       1.186324796164928
+      ],
+      "n_targets": 92,
+      "n_families": 79
+     },
+     "shrink_repeat": {
+      "R": 0.0052985491467189665,
+      "ci95": [
+       0.0007256740994559599,
+       0.009851370634495761
+      ],
+      "n_targets": 12,
+      "n_families": 12
+     },
+     "sibling": {
+      "R": 0.9616611003301712,
+      "ci95": [
+       0.9045390714124333,
+       1.0159635350413023
+      ],
+      "n_targets": 28,
+      "n_families": 14
+     },
+     "stranger": {
+      "R": 0.9929382730586147,
+      "ci95": [
+       0.9678729576572783,
+       1.0184950155389758
+      ],
+      "n_targets": 68,
+      "n_families": 64
+     },
+     "stranger_block": {
+      "R": 1.0137370404741153,
+      "ci95": [
+       0.9897752018470821,
+       1.0395000772344805
+      ],
+      "n_targets": 96,
+      "n_families": 84
+     },
+     "stranger_block_oracle": {
+      "R": 0.951498627749486,
+      "ci95": [
+       0.92668899529993,
+       0.9755149904299537
+      ],
+      "n_targets": 101,
+      "n_families": 90
+     },
+     "wrong_detail": {
+      "R": 0.9959106770218903,
+      "ci95": [
+       0.9704497612453685,
+       1.0204005539423047
+      ],
+      "n_targets": 68,
+      "n_families": 64
+     },
+     "_anchors": {
+      "d_repeat": 0.12588828284707332,
+      "d_stranger": 0.4472199580325025,
+      "n_repeat_targets": 12
+     }
+    }
+   },
+   "expectations": {
+    "lpips_vgg": {
+     "E1 mirror closer than stranger": {
+      "value": 0.9802297277100629,
+      "ci95": [
+       0.9574102997900271,
+       1.0025392016319734
+      ],
+      "pass": false
+     },
+     "E2 sibling closer than stranger": {
+      "value": 0.9616611003301712,
+      "ci95": [
+       0.9045390714124333,
+       1.0159635350413023
+      ],
+      "pass": false
+     },
+     "E3B dataset mean better than stranger": {
+      "value": 1.4721650219986704,
+      "ci95": [
+       1.4298785785857373,
+       1.5264134457856808
+      ],
+      "pass": false
+     },
+     "E3B mean of 2 better than stranger": {
+      "value": 1.0817447940150287,
+      "ci95": [
+       1.052902218185375,
+       1.1106694206769612
+      ],
+      "pass": false
+     },
+     "E3B averages ordered by k": {
+      "value": [
+       1.4721650219986704,
+       1.0817447940150287,
+       0.9929382730586147
+      ],
+      "pass": false
+     },
+     "E5B wrong detail not better than stranger": {
+      "value": 0.9959106770218903,
+      "ci95": [
+       0.9704497612453685,
+       1.0204005539423047
+      ],
+      "pass": true
+     },
+     "E6B white noise worse than stranger": {
+      "value": 1.5867547390894374,
+      "ci95": [
+       1.5385151477715417,
+       1.6529169673135422
+      ],
+      "pass": true
+     },
+     "slope dataset mean minus stranger": 0.4792267489400557
+    }
+   },
+   "expectations_realityA": {
+    "lpips_vgg": {
+     "A-E3a mean of 2 not better than stranger": {
+      "value": 1.0817447940150287,
+      "ci95": [
+       1.052902218185375,
+       1.1106694206769612
+      ],
+      "pass": true
+     },
+     "A-E3b dataset mean not better than stranger": {
+      "value": 1.4721650219986704,
+      "ci95": [
+       1.4298785785857373,
+       1.5264134457856808
+      ],
+      "pass": true
+     },
+     "A-E4a repeat blend not rewarded": {
+      "value": 0.0052985491467189665,
+      "lower95": 0.0007256740994559599,
+      "upper95": 0.009851370634495761,
+      "pass": true
+     },
+     "A-E4b mirror blend not rewarded": {
+      "value": 0.17650642814127337,
+      "lower95": 0.14964239176175773,
+      "upper95": 0.2059587689504807,
+      "pass": true
+     },
+     "slope dataset mean minus stranger": 0.4792267489400557
+    }
+   }
+  }
+ },
+ "set_level": {
+  "deep/LR": {
+   "cohort_mean": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 242.95263058171597,
+    "fwd": 0.2922649512965232,
+    "fid_ci95": [
+     237.72174725817538,
+     249.4215212223857
+    ],
+    "fwd_ci95": [
+     0.25587702438556353,
+     0.32402119465279483
+    ]
+   },
+   "cotwin": {
+    "n_cells": 48,
+    "status": "fewer than 10 families: not computed"
+   },
+   "dataset_mean": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 316.23319550570267,
+    "fwd": 0.39068949231205746,
+    "fid_ci95": [
+     314.6409840690581,
+     318.1607296570349
+    ],
+    "fwd_ci95": [
+     0.34750490125079564,
+     0.4395150838832004
+    ]
+   },
+   "lookalike": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 4.944347213699999,
+    "fwd": 0.007681120818186779,
+    "fid_ci95": [
+     7.102504575541699,
+     9.75650440444611
+    ],
+    "fwd_ci95": [
+     0.0091007162250635,
+     0.016526719077409234
+    ]
+   },
+   "lookalike_oracle": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 4.005197390058825,
+    "fwd": 0.004812844026488357,
+    "fid_ci95": [
+     6.877262954308094,
+     9.251427993019535
+    ],
+    "fwd_ci95": [
+     0.00758591347931497,
+     0.011548880203515475
+    ]
+   },
+   "mean_k2": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 22.981287867048408,
+    "fwd": 0.038129594734997635,
+    "fid_ci95": [
+     24.913688196205108,
+     28.293143550722274
+    ],
+    "fwd_ci95": [
+     0.03216496580843102,
+     0.06291141728122922
+    ]
+   },
+   "mirror": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 2.842170943040401e-14,
+    "fwd": -6.985966607986078e-13,
+    "fid_ci95": [
+     -1.7053025658242404e-13,
+     5.684341886080802e-14
+    ],
+    "fwd_ci95": [
+     -1.4849862254948533e-12,
+     1.5584542643814012e-12
+    ]
+   },
+   "mirror_block": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 2.290225816133642,
+    "fwd": 0.0016243134142806146,
+    "fid_ci95": [
+     3.0114796019733587,
+     4.406787179581709
+    ],
+    "fwd_ci95": [
+     0.0022584860834100814,
+     0.003999995225571062
+    ]
+   },
+   "mirror_block_oracle": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 4.681059349907429,
+    "fwd": 0.003818890288307427,
+    "fid_ci95": [
+     6.755412193468118,
+     8.08247348286839
+    ],
+    "fwd_ci95": [
+     0.005730462485736673,
+     0.007551889454134619
+    ]
+   },
+   "noise": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 119.25106451029654,
+    "fwd": 0.3743301245776171,
+    "fid_ci95": [
+     119.00031951853855,
+     124.9475995153943
+    ],
+    "fwd_ci95": [
+     0.3433889114665471,
+     0.4312161961644187
+    ]
+   },
+   "repeat": {
+    "n_cells": 138,
+    "n_families": 23,
+    "fid": 25.693666382973973,
+    "fwd": 0.030255871497049544,
+    "fid_ci95": [
+     29.505699311335192,
+     37.37845018078573
+    ],
+    "fwd_ci95": [
+     0.03720192324299649,
+     0.0874080657389959
+    ]
+   },
+   "shrink_mirror": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 152.80638834006209,
+    "fwd": 0.2594354921203677,
+    "fid_ci95": [
+     153.0600347946588,
+     156.89595948900316
+    ],
+    "fwd_ci95": [
+     0.2374172688787682,
+     0.28657295119205456
+    ]
+   },
+   "shrink_repeat": {
+    "n_cells": 138,
+    "n_families": 23,
+    "fid": 28.298204788687997,
+    "fwd": 0.040135095112295884,
+    "fid_ci95": [
+     31.737469528423674,
+     39.927121774667654
+    ],
+    "fwd_ci95": [
+     0.04021697836291294,
+     0.10748254334127792
+    ]
+   },
+   "sibling": {
+    "n_cells": 612,
+    "n_families": 49,
+    "fid": 0.40473536952239897,
+    "fwd": 0.0005682926579466749,
+    "fid_ci95": [
+     0.12019345992003991,
+     1.1791904854897517
+    ],
+    "fwd_ci95": [
+     0.000141386522872837,
+     0.0034044950671483954
+    ]
+   },
+   "stranger": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 3.0875888218803027,
+    "fwd": 0.005973071676647297,
+    "fid_ci95": [
+     6.014867280709361,
+     8.563004024692372
+    ],
+    "fwd_ci95": [
+     0.00804862292500023,
+     0.042907865203081624
+    ]
+   },
+   "stranger_block": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 6.422085391911651,
+    "fwd": 0.040363895238386176,
+    "fid_ci95": [
+     9.507742022827342,
+     11.436639531821038
+    ],
+    "fwd_ci95": [
+     0.029861006694411635,
+     0.07447543752365461
+    ]
+   },
+   "stranger_block_oracle": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 6.379462923977684,
+    "fwd": 0.02692439913622547,
+    "fid_ci95": [
+     9.472439715892953,
+     11.623011377152801
+    ],
+    "fwd_ci95": [
+     0.025883415390789245,
+     0.05655844744001015
+    ]
+   },
+   "wrong_detail": {
+    "n_cells": 1326,
+    "n_families": 168,
+    "fid": 10.85278227904243,
+    "fwd": 0.041045914691587325,
+    "fid_ci95": [
+     13.80668342069005,
+     16.82604718440353
+    ],
+    "fwd_ci95": [
+     0.035599185357842816,
+     0.08085630599115781
+    ]
+   },
+   "_target_split_half": {
+    "n_cells": [
+     666,
+     660
+    ],
+    "fid": 11.16686849069977,
+    "fwd": 0.026393186305998954,
+    "note": "two family-disjoint halves of the target set"
+   }
+  },
+  "parietal/LR": {
+   "cohort_mean": {
+    "n_cells": 1002,
+    "n_families": 164,
+    "fid": 360.3977663667969,
+    "fwd": 1.2555336859193431,
+    "fid_ci95": [
+     354.0601732823016,
+     368.7448538143132
+    ],
+    "fwd_ci95": [
+     1.2204174190043056,
+     1.3058417784254734
+    ]
+   },
+   "cotwin": {
+    "n_cells": 18,
+    "status": "fewer than 10 families: not computed"
+   },
+   "dataset_mean": {
+    "n_cells": 1003,
+    "n_families": 164,
+    "fid": 451.1330144584776,
+    "fwd": 1.5420287819984886,
+    "fid_ci95": [
+     447.54482791454427,
+     455.8167491627659
+    ],
+    "fwd_ci95": [
+     1.500461996961102,
+     1.6038183942196267
+    ]
+   },
+   "lookalike": {
+    "n_cells": 903,
+    "n_families": 164,
+    "fid": 47.271799713095646,
+    "fwd": 0.24856513615174308,
+    "fid_ci95": [
+     48.894414013589355,
+     57.889782112186595
+    ],
+    "fwd_ci95": [
+     0.25768795354963525,
+     0.3251057589786219
+    ]
+   },
+   "lookalike_oracle": {
+    "n_cells": 901,
+    "n_families": 164,
+    "fid": 47.960552375362994,
+    "fwd": 0.23625495965394602,
+    "fid_ci95": [
+     48.044947343066454,
+     58.57320828259252
+    ],
+    "fwd_ci95": [
+     0.24505549607515892,
+     0.3011546715937375
+    ]
+   },
+   "mean_k2": {
+    "n_cells": 968,
+    "n_families": 164,
+    "fid": 78.98124851416958,
+    "fwd": 0.15554869368204333,
+    "fid_ci95": [
+     81.28639343027459,
+     92.92781873205384
+    ],
+    "fwd_ci95": [
+     0.17515834145790168,
+     0.20811781532602638
+    ]
+   },
+   "mirror": {
+    "n_cells": 860,
+    "n_families": 147,
+    "fid": -8.526512829121202e-14,
+    "fwd": 5.10636685388012e-13,
+    "fid_ci95": [
+     -1.8545165403338616e-13,
+     8.526512829121202e-14
+    ],
+    "fwd_ci95": [
+     -1.0079494534078479e-12,
+     9.183670769585431e-13
+    ]
+   },
+   "mirror_block": {
+    "n_cells": 912,
+    "n_families": 164,
+    "fid": 17.86901234004071,
+    "fwd": 0.05647566565554058,
+    "fid_ci95": [
+     25.21895355325604,
+     28.65916832379167
+    ],
+    "fwd_ci95": [
+     0.08730352299909931,
+     0.11514550556917372
+    ]
+   },
+   "mirror_block_oracle": {
+    "n_cells": 935,
+    "n_families": 164,
+    "fid": 18.113703829804223,
+    "fwd": 0.050437862382063256,
+    "fid_ci95": [
+     25.244410661534577,
+     29.25883404911499
+    ],
+    "fwd_ci95": [
+     0.08002841927017518,
+     0.10241973525250367
+    ]
+   },
+   "noise": {
+    "n_cells": 1003,
+    "n_families": 164,
+    "fid": 336.1593316450231,
+    "fwd": 1.1931533217761943,
+    "fid_ci95": [
+     334.85280397761835,
+     343.0147923544404
+    ],
+    "fwd_ci95": [
+     1.1835568746347824,
+     1.2722887691717255
+    ]
+   },
+   "repeat": {
+    "n_cells": 87,
+    "n_families": 20,
+    "fid": 58.41396357578287,
+    "fwd": 0.1154013121983591,
+    "fid_ci95": [
+     64.6792605734657,
+     77.8478390187188
+    ],
+    "fwd_ci95": [
+     0.10943141066589637,
+     0.23271603369936375
+    ]
+   },
+   "shrink_mirror": {
+    "n_cells": 860,
+    "n_families": 147,
+    "fid": 218.46420475210178,
+    "fwd": 0.9442966113098775,
+    "fid_ci95": [
+     217.6739046499147,
+     227.73782020114092
+    ],
+    "fwd_ci95": [
+     0.9167449349663355,
+     0.9683164051827332
+    ]
+   },
+   "shrink_repeat": {
+    "n_cells": 87,
+    "n_families": 20,
+    "fid": 60.916517745758824,
+    "fwd": 0.14259147450727785,
+    "fid_ci95": [
+     66.53275675738101,
+     79.34996357193563
+    ],
+    "fwd_ci95": [
+     0.1363362002201577,
+     0.23299148345570692
+    ]
+   },
+   "sibling": {
+    "n_cells": 342,
+    "n_families": 45,
+    "fid": 0.5547294427887834,
+    "fwd": 0.0025041940431804405,
+    "fid_ci95": [
+     -1.0018652574217412e-13,
+     1.525834617259093
+    ],
+    "fwd_ci95": [
+     -4.633864002198299e-08,
+     0.012935767719208647
+    ]
+   },
+   "stranger": {
+    "n_cells": 882,
+    "n_families": 164,
+    "fid": 9.318848355725379,
+    "fwd": 0.027702289579318244,
+    "fid_ci95": [
+     17.37654699262007,
+     23.348804494497934
+    ],
+    "fwd_ci95": [
+     0.06381049985063074,
+     0.09743698868076889
+    ]
+   },
+   "stranger_block": {
+    "n_cells": 884,
+    "n_families": 164,
+    "fid": 18.80180511283274,
+    "fwd": 0.06865537395549016,
+    "fid_ci95": [
+     26.602778234775815,
+     31.150512746158512
+    ],
+    "fwd_ci95": [
+     0.10145192335746246,
+     0.1374446038921416
+    ]
+   },
+   "stranger_block_oracle": {
+    "n_cells": 907,
+    "n_families": 164,
+    "fid": 18.927856373777928,
+    "fwd": 0.056567319228425714,
+    "fid_ci95": [
+     26.69032837646232,
+     31.112148150267217
+    ],
+    "fwd_ci95": [
+     0.0917150345227091,
+     0.12114395440567048
+    ]
+   },
+   "wrong_detail": {
+    "n_cells": 882,
+    "n_families": 164,
+    "fid": 10.18397774069473,
+    "fwd": 0.031160763387572586,
+    "fid_ci95": [
+     18.510000391296998,
+     23.927452361728214
+    ],
+    "fwd_ci95": [
+     0.06645768017313419,
+     0.1036863629480049
+    ]
+   },
+   "_target_split_half": {
+    "n_cells": [
+     504,
+     499
+    ],
+    "fid": 28.026446774918384,
+    "fwd": 0.09160422076425973,
+    "note": "two family-disjoint halves of the target set"
+   }
+  }
+ }
+}

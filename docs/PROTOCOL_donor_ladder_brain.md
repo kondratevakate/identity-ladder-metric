@@ -724,6 +724,22 @@ new version.
 - **Order and gates.** Smoke on 3 targets with timing; one QC look at the slices and crops of one target (target,
   repeat, stranger, dataset mean, noise) and at the smoke numbers, then the full run, 2 workers. Pre-QC (affine only).
 
+
+Amendment 22, result (9 Nov 2026). The v5 pass reproduces the Amendment 20 rows exactly (25,495 shared rows; mse,
+ssim, lddt, mse_allvox max difference 0, same NaN pattern). LPIPS VGG: the rung order agrees with LPIPS AlexNet
+(Spearman of R over 18 rungs 0.965 in both boxes; expectation >= 0.8, met), and T1 passes (deep/LR: repeat closer
+than the dataset mean for 23 of 23 targets, Holm p 4.8e-7; met); T2 does not pass (repeat vs repeat shrunk to the
+mean, 3 of 23), as for the other tier-1 metrics. Set level (FID / FWD; floor = family-disjoint split half of the
+target set, deep 11.2 / 0.026, parietal 28.0 / 0.092): the single-donor rungs are at or below the floor (deep:
+own other side 0.0, sibling 0.4, stranger 3.1, look-alikes 4.0 to 4.9; parietal: 0.0, 0.6, 9.3, 47 to 48), except
+the repeat (deep 25.7, parietal 58.4), whose set has only 138 and 87 cells against about 1,300 and 880, so its FID
+carries the small-sample bias; the expectation that set-level distances cannot rank individual identity is met. The
+own-other-side and sibling sets reproduce the target set almost exactly by construction (the other side of a target
+is itself a target sample; siblings are themselves targets), so their near-zero values say nothing about identity.
+The mean fills and blended controls score far worse than a stranger, the opposite of MSE (deep FID: dataset mean
+316, cohort mean 243, mean of 2 23.0, other side shrunk 153, against stranger 3.1; FWD likewise); met. Not met:
+noise is not the worst on FWD. The dataset mean is worse than noise in both boxes (deep 0.391 vs 0.374; parietal
+1.542 vs 1.193, where the cohort mean, 1.256, is also worse); reported, not explained away.
 ## Amendment 23 (9 Nov 2026, IXI minimal run: 100 targets, other side as the R anchor; amends Amendment 19; recorded before any IXI scan is prepared)
 
 Kate, 9 Nov 2026 (quoted by the ISBI paper session): "мб еще запустим один датасет по мозгам ixi чтобы было для

@@ -68,14 +68,17 @@ def ms_ssim(x, f, e, scales=3):
     return float(np.prod(np.power(vals, MS_WEIGHTS)))
 
 
-def _lpips():
-    if "m" not in _LPIPS:
+def _lpips(net):
+    """LPIPS 0.1 model for net ("alex": Amendment 20, "vgg": Amendment 22), loaded once per process."""
+    if net not in ("alex", "vgg"):
+        raise ValueError(f"unknown LPIPS net {net!r}")
+    if net not in _LPIPS:
         os.environ["TORCH_HOME"] = TORCH_HOME
         import lpips
         import torch
         torch.set_num_threads(1)
-        _LPIPS["m"], _LPIPS["torch"] = lpips.LPIPS(net="alex", version="0.1", verbose=False).eval(), torch
-    return _LPIPS["m"], _LPIPS["torch"]
+        _LPIPS[net], _LPIPS["torch"] = lpips.LPIPS(net=net, version="0.1", verbose=False).eval(), torch
+    return _LPIPS[net], _LPIPS["torch"]
 
 
 def central_slices(v, e):
@@ -84,12 +87,13 @@ def central_slices(v, e):
     return [(v[c[0]], e[c[0]]), (v[:, c[1]], e[:, c[1]]), (v[:, :, c[2]], e[:, :, c[2]])]
 
 
-def lpips_25d(x, f, e):
-    """Mean LPIPS over the central orthogonal slices lying fully inside e; (NaN, 0) when none does."""
+def lpips_25d(x, f, e, net):
+    """Mean LPIPS (net passed explicitly) over the central orthogonal slices lying fully inside e; (NaN, 0) when none
+    does."""
     pairs = [(a, b) for (a, ea), (b, _) in zip(central_slices(x, e), central_slices(f, e)) if ea.all()]
     if not pairs:
         return np.nan, 0
-    model, torch = _lpips()
+    model, torch = _lpips(net)
     out = []
     with torch.no_grad():
         for a, b in pairs:
@@ -124,7 +128,7 @@ def extra(x, f, e, mu_c, dx=None):
     """Tier 2/3 metrics of fill f against target x on e. dx: the target's diagrams on the same e, if cached."""
     if e.sum() < 10:
         return {}
-    lp, n_sl = lpips_25d(x, f, e)
+    lp, n_sl = lpips_25d(x, f, e, net="alex")
     dx = diagrams(x, e)[0] if dx is None else dx
     df, ess = diagrams(f, e)
     out = {"ms_ssim": ms_ssim(x, f, e), "lpips": lp, "lpips_slices": n_sl,
@@ -133,6 +137,37 @@ def extra(x, f, e, mu_c, dx=None):
         nx = np.linalg.norm((x - mu_c)[e])
         out["amplitude_cohort"] = float(np.linalg.norm((f - mu_c)[e]) / nx) if nx > 0 else np.nan
     return out
+
+
+SET_SIDE = 24                                          # central square of each central slice (shortest box edge)
+
+
+def set_crops(x, f, e):
+    """Amendment 22 set-level samples: the central SET_SIDE square of each central orthogonal slice of target and fill,
+    and whether it lies fully inside e. Returns (x crops, f crops, valid) with shapes (3, S, S), (3, S, S), (3,)."""
+    xs, fs, ok = [], [], []
+    for (a, ea), (b, _) in zip(central_slices(x, e), central_slices(f, e)):
+        r0, c0 = a.shape[0] // 2 - SET_SIDE // 2, a.shape[1] // 2 - SET_SIDE // 2
+        if r0 < 0 or c0 < 0:
+            raise ValueError(f"slice {a.shape} smaller than the set crop {SET_SIDE}")
+        sl = (slice(r0, r0 + SET_SIDE), slice(c0, c0 + SET_SIDE))
+        xs.append(a[sl])
+        fs.append(b[sl])
+        ok.append(bool(ea[sl].all()))
+    return np.stack(xs).astype(np.float32), np.stack(fs).astype(np.float32), np.array(ok)
+
+
+def extra_vgg_set(x, f, e, mu_c):
+    """Amendment 22 hook: LPIPS VGG on the Amendment 20 slices plus the set-level crops (keys starting with '_' are
+    arrays, split off before the rows are saved)."""
+    if e.sum() < 10:
+        return {}
+    lp, n_sl = lpips_25d(x, f, e, net="vgg")
+    xc, fc, ok = set_crops(x, f, e)
+    return {"lpips_vgg": lp, "lpips_vgg_slices": n_sl, "_xc": xc, "_fc": fc, "_ok": ok}
+
+
+EXTRAS = {"t23": extra, "vgg_set": extra_vgg_set}     # run_position tier23 hook name -> function
 
 
 PRIVATE = os.path.join(M.B.PROJ, "donor-ladder-brain-metrics-20261107-v4")
@@ -144,26 +179,27 @@ NOT_RUN = {"betti_matching_3d": "needs a C++ build of Betti-Matching-3D (no comp
            "plausibility_latent": "needs a generative brain model and a GPU"}
 
 
-def summarise(r, tg, pos):
-    """Amendment 20 summary per box view: raw means and c (family bootstrap), R with intervals, the Amendment 13
-    expectations, and T1-T3 on the L+R view of each box with one Holm family over both boxes."""
+def summarise(r, tg, pos, metrics, descriptive):
+    """Summary per box view of the metrics given (Amendment 20: T23 and T23_DESCRIPTIVE; Amendment 22: lpips_vgg):
+    raw means and c (family bootstrap), R with intervals, the Amendment 13 expectations, and T1-T3 on the L+R view
+    of each box with one Holm family over both boxes and these metrics."""
     fam = tg.family.to_numpy()
-    cdf = M.calibrated_c(r, T23)
+    cdf = M.calibrated_c(r, metrics)
     rv, cv = M.views(r, pos), M.views(cdf, pos)
     out, ps = {}, []
     for view, rr in rv.groupby("view"):
-        per = rr.groupby(["target", "fill"])[list(T23) + list(T23_DESCRIPTIVE)].mean().reset_index()
+        per = rr.groupby(["target", "fill"])[list(metrics) + list(descriptive)].mean().reset_index()
         per["family"] = fam[per.target]
         cc = cv[cv.view == view].groupby(["target", "fill", "metric"])["c"].mean().reset_index()
         cc["family"] = fam[cc.target]
         fills = sorted(f for f in per.fill.unique() if not M.is_reference_stranger(f))
         v = {"n_rows": int(len(rr)),
-             "missing": {m: int(rr[m].isna().sum()) for m in T23},
+             "missing": {m: int(rr[m].isna().sum()) for m in metrics},
              "fills": {f: {m: {"raw": M.boot_mean(per[per.fill == f], m),
-                               "c": M.boot_mean(cc[(cc.fill == f) & (cc.metric == m)], "c") if m in T23 else None}
-                           for m in list(T23) + list(T23_DESCRIPTIVE)} for f in fills},
+                               "c": M.boot_mean(cc[(cc.fill == f) & (cc.metric == m)], "c") if m in metrics else None}
+                           for m in list(metrics) + list(descriptive)} for f in fills},
              "ladder_R": {}, "expectations": {}, "expectations_realityA": {}}
-        for m in T23:
+        for m in metrics:
             if per[m].notna().sum() == 0:             # every value missing in this view: no scale, never zero
                 v["ladder_R"][m] = None
                 continue
@@ -174,7 +210,7 @@ def summarise(r, tg, pos):
             v["expectations"][m] = M.expectations(R, arr)
             v["expectations_realityA"][m] = M.expectations(R, arr, M.EXPECT_A)
         if view.endswith("/LR"):
-            v["tests"] = M.tests(per, T23)
+            v["tests"] = M.tests(per, metrics)
             ps += [(view, m, t, e["p_one_sided"]) for m, d in v["tests"]["per_metric"].items() for t, e in d.items()
                    if "p_one_sided" in e]
         out[view] = v
@@ -216,7 +252,7 @@ def main():
     targets = sorted(only) if only is not None else list(range(len(tg)))
     chunks = [targets[k:k + CHUNK] for k in range(0, len(targets), CHUNK)]
     path = lambda pi, c: os.path.join(PRIVATE, "parts", f"{tag}p{pi:02d}_c{c:02d}.csv.gz")  # noqa: E731
-    jobs = [((pi, tcols, tgcols, pos, mc, lam, True, set(ch)), pi, c) for pi in FROZEN for c, ch in enumerate(chunks)
+    jobs = [((pi, tcols, tgcols, pos, mc, lam, "t23", set(ch)), pi, c) for pi in FROZEN for c, ch in enumerate(chunks)
             if not os.path.exists(path(pi, c))]
     n_all = len(FROZEN) * len(chunks)
     print(f"chunks done {n_all - len(jobs)}/{n_all}, to run {len(jobs)}", flush=True)
@@ -226,7 +262,7 @@ def main():
         r = pd.concat([pd.read_csv(path(pi, c)) for pi in FROZEN for c in range(len(chunks))], ignore_index=True)
         if r.duplicated(["target", "patch", "side", "fill"]).any():
             raise SystemExit("duplicate rows across chunks: no summary written")
-        views, n_hyp = summarise(r, tg, pos)
+        views, n_hyp = summarise(r, tg, pos, T23, T23_DESCRIPTIVE)
         out = {"status": "pre-QC: affine registration only, MRI registration gate not met (results/registration/status.md)",
                "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendment 20)", "tier": "2/3 (CPU part)",
                "seed": M.SEED, "boxes": [pos[p][0] for p in FROZEN], "metrics": list(T23),

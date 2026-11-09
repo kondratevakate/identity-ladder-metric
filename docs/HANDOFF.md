@@ -95,10 +95,14 @@ Per modality (current state as reported)
     "QTIM: no checked numbers"; brain numbers live in the JSONs above and the cross-modality explorer. The fundus
     branch (donor-ladder-bilateral, c040e37) holds the Gaussian `donor_ladder_brain_map_grid.json` without the
     matching script; the canonical pair is on cvpr2027-paper.
-  - Limitations (not tonight): FastSurfer 79 of 224 volumes (rest needs a GCP VM, Kate decides); Betti matching 3D
-    (C++ build, Linux VM); Brain-ID identity; set-level FID/FWD/TD; latent metrics (GPU); IXI (Amendment 19) blocked
-    on SynthStrip (ask Kate before pulling `freesurfer/synthstrip:1.8`, 389 MB). Persistence in the deep box puts the
-    own other side closer than the repeat (R -0.55): reported, not repaired.
+  - 9 Nov: FastSurfer 224 of 224 volumes (remainder on a GCP CPU VM, reproduction Dice >= 0.9997; b0a6653).
+    Amendment 22 done: LPIPS VGG and set-level FID/FWD per rung in `results/donor_ladder_brain_metrics_t23_v5.json`
+    (keys `views[box/LR]["ladder_R"]["lpips_vgg"]`, `set_level[box/LR][rung]`, floor `_target_split_half`); result
+    paragraph at the end of Amendment 22 (noise is not the worst on FWD: reported). IXI (Amendment 23): 100 scans
+    prepared on a GCP VM, D7 QC passed (5c0055b); the ladder (`src/donor_ladder_brain_ixi.py`) runs next.
+  - Limitations (not tonight): Betti matching 3D (C++ build, Linux VM); Brain-ID identity; Topology Distance at set
+    level; latent metrics (GPU). Persistence in the deep box puts the own other side closer than the repeat (R -0.55):
+    reported, not repaired.
 - Faces (CelebA, IMDb-WIKI; frame v6f, QC approved; owner session "Faces: compute the rest"): F2 panel full run
   started in the background (16-18 h, 3 workers); F3 window sweep written. Identity via ArcFace (cosine; norm, PLDA
   being prepared).
