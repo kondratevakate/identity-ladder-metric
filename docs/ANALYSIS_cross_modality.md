@@ -82,8 +82,10 @@ metrics. Metrics: rho for each dataset, mean over datasets. ArcFace left out (5 
   left out of the brain set-level ranks (`generative_status.json` `excluded_set_level_rungs`), never read as identity.
   Descriptive: under LPIPS VGG the shrunk repeat beats the repeat (T2 fails, unlike AlexNet); at set level the
   stranger set is closest (FID) and the dataset mean farthest, as on the other datasets; the repeat set has 138 cells
-  (small-sample FID bias). Still not run on brain: Betti matching 3D (C++ build). Faces LPIPS VGG (Amendment F2.1)
-  is running; it enters automatically from `panel_f2_lpips_vgg` when committed.
+  (small-sample FID bias). Still not run on brain: Betti matching 3D (C++ build).
+- 9 Nov, faces LPIPS VGG (Amendment F2.1, `panel_f2_lpips_vgg`, commit e4a301d) added. Rung order agrees with
+  AlexNet (face session: Spearman 0.95 / 0.96), but VGG puts the repeat shrunk to the mean above the repeat (3rd-4th
+  vs 5th), so T2 fails under VGG on faces too, and the dataset mean below the stranger.
 - 9 Nov, IXI (brain Amendment 23, commit 6c581d2; 100 scans, one per person, three centres; pre-QC) added to the
   common frame, rank tiles, agreement and dataset card from its private rows (random patches, both sides, as QTIM;
   bootstrap over targets; added last so every earlier value is unchanged). On the common self scale, not on the IXI

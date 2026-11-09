@@ -84,6 +84,7 @@
   ],
   "CelebA": [
    "lpips_alex",
+   "lpips_vgg",
    "betti_matched",
    "betti_unmatched",
    "persistence",
@@ -92,6 +93,7 @@
   ],
   "IMDb-WIKI": [
    "lpips_alex",
+   "lpips_vgg",
    "betti_matched",
    "betti_unmatched",
    "persistence",

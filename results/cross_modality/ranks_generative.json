@@ -474,6 +474,19 @@
   "dataset_mean": 10,
   "noise": 11
  },
+ "lpips_vgg|CelebA": {
+  "other_side": 1,
+  "lookalike_oracle": 2,
+  "shrink_ref": 3,
+  "lookalike": 4,
+  "repeat": 5,
+  "cohort_mean": 6,
+  "dataset_mean": 7,
+  "mean_k2": 8,
+  "wrong_detail": 9,
+  "stranger": 10,
+  "noise": 11
+ },
  "betti_matched|CelebA": {
   "lookalike_oracle": 1,
   "lookalike": 2,
@@ -551,6 +564,20 @@
   "wrong_detail": 9,
   "stranger": 10,
   "dataset_mean": 11,
+  "noise": 12
+ },
+ "lpips_vgg|IMDb-WIKI": {
+  "other_side": 1,
+  "lookalike_oracle": 2,
+  "lookalike": 3,
+  "shrink_ref": 4,
+  "repeat": 5,
+  "cohort_mean": 6,
+  "dataset_mean": 7,
+  "relative": 8,
+  "mean_k2": 9,
+  "wrong_detail": 10,
+  "stranger": 11,
   "noise": 12
  },
  "betti_matched|IMDb-WIKI": {

@@ -218,7 +218,7 @@ for k, b in rows:
                 color="white" if (t < 0.25 or t > 0.8) else "#222")
     y += 1
 ax.text(-7.0, y + 1.8, "Same columns and colours as the main rank tiles (1 = what the metric calls closest). Per-target metrics are "
-        "ranked by R_self,\nset-level FID and FWD by their per-rung set value. Fundus 9.15, iris P3, faces F2 (LPIPS AlexNet only), "
+        "ranked by R_self,\nset-level FID and FWD by their per-rung set value. Fundus 9.15, iris P3, faces F2 and F2.1 (LPIPS VGG), "
         "brain Amendments 20 and 22\n(deep box, both sides; repeat-anchored R; set level leaves out own other side and relative, "
         "near 0 by construction). Grey rows: not computed, reason given. All pre-QC except faces.",
         fontsize=7, color="#333", va="center")
