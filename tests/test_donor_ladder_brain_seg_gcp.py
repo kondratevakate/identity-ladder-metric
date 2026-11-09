@@ -146,3 +146,16 @@ def test_cpu_vm_version_check_uses_the_venv_and_never_exits_silently():
     assert 'PATH="$FS_HOME/.venv/bin:$PATH"' in head and "FASTSURFER_HOME=$FS_HOME" in head
     assert "trap " in head and " ERR" in head
     assert "grep -E '^[0-9]+\.[0-9]+\.[0-9]+'" in src
+
+
+def test_merge_devices_counts_the_reproduction_volumes_once():
+    lap = {"n_done": 79, "n_failed": 0, "seconds_per_volume": {}, "device": "laptop"}
+    r = dict(lap, n_total=224, n_left=145, laptop=lap)
+    c = {"n_total": 224, "n_done": 147, "n_failed": 0, "n_left": 77, "seconds_per_volume": {}}
+    repro = {"t009_oracle": {"min_dice": 0.9997, "voxels_differ": 6},
+             "t016_oracle": {"min_dice": 0.9999, "voxels_differ": 8}, "pass": True}
+    m = G.merge_devices(r, c, repro, 224)
+    assert (m["n_done"], m["n_failed"], m["n_left"]) == (224, 0, 0)
+    assert m["cloud"]["reproduction_vs_laptop"]["min_dice"] == 0.9997 and m["cloud"]["reproduction_vs_laptop"]["pass"]
+    assert "laptop" in m["device"] and G.CLOUD_DEVICE in m["device"]
+    assert "seconds_per_volume" not in m and "n_left" not in m["cloud"]      # timing stays per device

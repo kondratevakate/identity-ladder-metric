@@ -1,17 +1,43 @@
 {
  "n_total": 224,
- "n_done": 79,
+ "n_done": 224,
  "n_failed": 0,
- "n_left": 145,
- "seconds_per_volume": {
-  "n": 79,
-  "median": 1500.0,
-  "p10": 969.4,
-  "p90": 2784.0
- },
+ "n_left": 0,
  "targets": 17,
- "device": "cpu (Kate's laptop, WSL Ubuntu-24.04), 2 runners x 4 threads",
+ "device": "cpu, one device class: cpu (Kate's laptop, WSL Ubuntu-24.04), 2 runners x 4 threads; remainder cpu (GCP n2-standard-32 spot, europe-west1), 8 runners x 4 threads",
  "fastsurfer": "v2.5.3 native, torch 2.7.1+cpu, --seg_only --no_cereb --no_hypothal --no_biasfield",
  "input": "clipped to [0, c_t], Amendment 15 'Input clip'",
- "note": "seconds include volumes timed while other jobs shared the CPU and the last ones before the 8 Nov 2026 crash (disk full); not a clean D8 runtime"
+ "note": "seconds include volumes timed while other jobs shared the CPU and the last ones before the 8 Nov 2026 crash (disk full); not a clean D8 runtime",
+ "laptop": {
+  "n_done": 79,
+  "n_failed": 0,
+  "seconds_per_volume": {
+   "n": 79,
+   "median": 1500.0,
+   "p10": 969.4,
+   "p90": 2784.0
+  },
+  "device": "cpu (Kate's laptop, WSL Ubuntu-24.04), 2 runners x 4 threads"
+ },
+ "cloud": {
+  "n_done": 147,
+  "n_failed": 0,
+  "seconds_per_volume": {
+   "n": 147,
+   "median": 575.0,
+   "p10": 556.6,
+   "p90": 590.4
+  },
+  "device": "cpu (GCP n2-standard-32 spot, europe-west1), 8 runners x 4 threads",
+  "reproduction_vs_laptop": {
+   "volumes": 2,
+   "pass": true,
+   "rule": "per-label Dice >= 0.995",
+   "min_dice": 0.9997395154988278,
+   "voxels_differ": [
+    6,
+    8
+   ]
+  }
+ }
 }

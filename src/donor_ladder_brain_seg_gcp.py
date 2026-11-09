@@ -27,6 +27,7 @@ STAGE_DIR = os.path.join(S.PRIVATE, "gcp_stage")
 CLIP_LOG = os.path.join(S.PRIVATE, "clip_log.json")
 DL_DIR = os.path.join(S.PRIVATE, "local_out")   # labels of the local CPU run (gcp_out: the GPU tests)
 RUN_JSON = os.path.join(B.ROOT, "results", "donor_ladder_brain_seg_gcp_run.json")
+CLOUD_DEVICE = "cpu (GCP n2-standard-32 spot, europe-west1), 8 runners x 4 threads"
 
 
 def clip_level(oracle):
@@ -122,6 +123,22 @@ def run_summary(status_tsv, usage_log, n_total):
                                    "p90": float(np.percentile(s, 90)) if s.size else None}}
 
 
+def merge_devices(r, c, repro, n_total, n_repro=2):
+    """Laptop summary r plus cloud summary c; the n_repro volumes run on both count once (labels kept from the laptop)."""
+    c = {k: v for k, v in c.items() if k not in ("n_total", "n_left")}   # left/total only make sense combined
+    c["device"] = CLOUD_DEVICE
+    c["reproduction_vs_laptop"] = {"volumes": n_repro, "pass": repro["pass"], "rule": "per-label Dice >= 0.995",
+                                   "min_dice": min(v["min_dice"] for k, v in repro.items() if k != "pass"),
+                                   "voxels_differ": [v["voxels_differ"] for k, v in repro.items() if k != "pass"]}
+    out = dict(r, cloud=c)
+    out.pop("seconds_per_volume", None)   # timing is per device (laptop, cloud), never pooled
+    n_done = r["laptop"]["n_done"] + c["n_done"] - n_repro
+    n_failed = r["laptop"]["n_failed"] + c["n_failed"]
+    out.update({"n_done": n_done, "n_failed": n_failed, "n_left": n_total - n_done - n_failed,
+                "device": "cpu, one device class: " + r["laptop"]["device"] + "; remainder " + CLOUD_DEVICE})
+    return out
+
+
 def cleanup_stage(tid):
     """Remove a target's staged copies after the upload has been verified."""
     shutil.rmtree(os.path.join(STAGE_DIR, tid), ignore_errors=True)
@@ -131,7 +148,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("step", choices=("stage", "collect", "run"))
     ap.add_argument("--targets", nargs="+", required=True, help="target folders, e.g. t009 t033")
-    ap.add_argument("--source", choices=("local_out", "gcp_out"), default="local_out",
+    ap.add_argument("--source", choices=("local_out", "gcp_out", "cpu_out"), default="local_out",
                     help="where the FastSurfer labels were brought back")
     a = ap.parse_args()
     global DL_DIR
@@ -155,6 +172,12 @@ def main():
                   "input": "clipped to [0, c_t], Amendment 15 'Input clip'",
                   "note": "seconds include volumes timed while other jobs shared the CPU and the last ones before the "
                           "8 Nov 2026 crash (disk full); not a clean D8 runtime"})
+        r["laptop"] = {k: r[k] for k in ("n_done", "n_failed", "seconds_per_volume", "device")}
+        cloud_status = os.path.join(S.PRIVATE, "cpu_status.tsv")
+        if os.path.exists(cloud_status):   # 9 Nov 2026 remainder on the GCP CPU VM (protocol: "Device, remainder")
+            c = run_summary(cloud_status, os.path.join(S.PRIVATE, "cpu_usage.log"), n_total)
+            repro = json.load(open(os.path.join(S.PRIVATE, "cpu_reproduction.json"), encoding="utf-8"))
+            r = merge_devices(r, c, repro, n_total)
         json.dump(r, open(RUN_JSON, "w"), indent=1)
         print(json.dumps(r))
         return
