@@ -1,0 +1,54 @@
+{
+  "reviewer": "Codex documentary review",
+  "date": "2026-11-09",
+  "rubric": "repro-judge icml2026_v2",
+  "rubric_sha256": "3815d3e82e7ee1271c3d5e9ab8a70abaf4757ad5eaf1b193f1c87f056ba2fcff",
+  "paid_or_model_judge_called": false,
+  "experiments_rerun": false,
+  "source": {
+    "path": "results/iris_ladder_metrics.json",
+    "sha256": "c42fb1071d07f785f67c8aab672380442d59d483c62bb6a0abe04537ccc7a794",
+    "reviewed_commit": "f7d2580e50cd69079bfc80f1ac24febacf441f64"
+  },
+  "claims": [
+    {
+      "id": "R1",
+      "claim": "The prespecified iris P3 H4 superiority of repeat over shrink-repeat is established.",
+      "verdict": "inconclusive",
+      "evidence_key": "amendment_p3/hypotheses/H4/per_metric",
+      "observed": "All three recorded T2_p_holm values are 1.0; superiority is not established.",
+      "limit": "Failure to establish a directional test is not equivalence or proof of the reverse."
+    },
+    {
+      "id": "R2",
+      "claim": "The iris P3 H5 distribution-level conclusion has trusted uncertainty for all reported readouts.",
+      "verdict": "inconclusive",
+      "evidence_key": "amendment_p3/hypotheses/H5/per_metric",
+      "observed": "FID dataset_mean ratio 19.707159; FWD dataset_mean ratio 415.549101. Three interval_trusted flags are false.",
+      "limit": "Point-value support is separate from trusted interval evidence; no FID/FWD per-eye score is implied."
+    },
+    {
+      "id": "R3",
+      "claim": "The recorded NIR LPIPS-AlexNet P3 profile orders repeat below look-alike below stranger.",
+      "verdict": "verified",
+      "evidence_key": "amendment_p3/hypotheses/H6/R_self",
+      "observed": {
+        "repeat": 0.18864839193024924,
+        "lookalike": 0.3188357713519253,
+        "stranger": 1.0052757109045731
+      },
+      "repeat_upper_95": 0.22054791513644637,
+      "limit": "Existing real-eye control result at the recorded support/setting; 156 eyes/78 people in the corresponding T2 record. Not independent rerun or generator/fairness validation."
+    },
+    {
+      "id": "R4",
+      "claim": "The released experiments establish conditional-generative-model performance differences between target population strata.",
+      "verdict": "inconclusive",
+      "evidence_key": "paper/cvpr2027/sec/3_methods.tex; sec/5_synthesis.tex; src/cross_modality/generative_block.py",
+      "observed": "Available profiles concern metric/reference controls; no shared-case generated-output subgroup experiment was executed by this audit.",
+      "limit": "Metric-block naming, metadata-matched donors and cross-dataset contrasts do not establish target-stratum model behavior."
+    }
+  ],
+  "overall_score": null,
+  "score_note": "No aggregate score; a rubric verdict is not a probability of truth, a release score or independent experimental reproduction."
+}

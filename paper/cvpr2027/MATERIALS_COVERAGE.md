@@ -18,7 +18,7 @@ This inventory maps available tracked materials to text roles. It is an editoria
 | Real-case demonstrations | 11 | Supplementary preparation history; fixed examples are not cohort validation |
 | Registration | 24 | Methods, source-version interpretation and limitations; unresolved gate retained |
 | Related ISBI | 8 | Related-work/overlap review; source preserved, not copied as a new contribution |
-| Supporting material | 56 | Methods/provenance/reference context; review separately before making an empirical claim |
+| Supporting material | 62 | Methods/provenance/reference context; review separately before making an empirical claim |
 | Withdrawn MRI results | 2 | Excluded: source explicitly invalidates c/rho/label results after the intensity-scaling failure; not provisional support |
 
 ## Frozen other-branch inputs
@@ -42,6 +42,8 @@ The base face pipeline/protocol has now been recovered, and full iris P3 plus ne
 | `docs/HANDOFF_face_metrics.md` | Face donor ladder | Main face panel; historical/synthetic drawings distinguished from measured v6f |
 | `docs/HANDOFF_iris_metrics.md` | Iris | Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review |
 | `docs/LITERATURE_closest_work_2026-11-02.md` | Supporting material | Methods/provenance/reference context; review separately before making an empirical claim |
+| `docs/OPEN_REPOSITORY_RELEASE_PLAN.md` | Supporting material | Methods/provenance/reference context; review separately before making an empirical claim |
+| `docs/OPEN_REPOSITORY_REVIEW.md` | Supporting material | Methods/provenance/reference context; review separately before making an empirical claim |
 | `docs/PROTOCOL_2d_ladder.md` | Supporting material | Methods/provenance/reference context; review separately before making an empirical claim |
 | `docs/PROTOCOL_care_reproduction.md` | CARE reproduction | Related work and supplementary aggregation audit; not an image-level reconstruction rerun |
 | `docs/PROTOCOL_care_reproduction_amendment1.md` | CARE reproduction | Related work and supplementary aggregation audit; not an image-level reconstruction rerun |
@@ -60,6 +62,10 @@ The base face pipeline/protocol has now been recovered, and full iris P3 plus ne
 | `docs/REPRODUCTION_WORKFLOW.md` | Supporting material | Methods/provenance/reference context; review separately before making an empirical claim |
 | `docs/REVIEW_care_reproduction.md` | CARE reproduction | Related work and supplementary aggregation audit; not an image-level reconstruction rerun |
 | `docs/Research_Plan_Identity_Ladder_Metric.md` | Supporting material | Methods/provenance/reference context; review separately before making an empirical claim |
+| `docs/audits/open_repository_claims_20261109.json` | Supporting material | Methods/provenance/reference context; review separately before making an empirical claim |
+| `docs/audits/open_repository_findings_20261109.csv` | Supporting material | Methods/provenance/reference context; review separately before making an empirical claim |
+| `docs/audits/open_repository_inventory_20261109.json` | Supporting material | Methods/provenance/reference context; review separately before making an empirical claim |
+| `docs/audits/release_readiness_20261109.json` | Supporting material | Methods/provenance/reference context; review separately before making an empirical claim |
 | `docs/figures_draft.md` | Supporting material | Methods/provenance/reference context; review separately before making an empirical claim |
 | `paper/isbi2027/README.md` | Related ISBI | Related-work/overlap review; source preserved, not copied as a new contribution |
 | `paper/isbi2027/overleaf/fig_cases.pdf` | Related ISBI | Related-work/overlap review; source preserved, not copied as a new contribution |

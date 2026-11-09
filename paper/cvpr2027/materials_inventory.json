@@ -1,8 +1,8 @@
 {
-  "snapshot": "b001d9c9a1ff0a1991f8ccd10a45a93ba9151c9c",
+  "snapshot": "f7d2580e50cd69079bfc80f1ac24febacf441f64",
   "scope": "Tracked material inventory; no private participant data opened.",
   "counts": {
-    "Supporting material": 56,
+    "Supporting material": 62,
     "Face donor ladder": 54,
     "Iris": 23,
     "CARE reproduction": 16,
@@ -82,6 +82,20 @@
       "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
       "bytes": 9203,
       "sha256": "aa21af1fd837984c909f815b67ce220cc6b144acf2b1aec741666539b4e37fb7"
+    },
+    {
+      "path": "docs/OPEN_REPOSITORY_RELEASE_PLAN.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 2772,
+      "sha256": "1b96104394de54504019ad8b0cdea09da2bea572ef3119239931615d64d6fe4c"
+    },
+    {
+      "path": "docs/OPEN_REPOSITORY_REVIEW.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 14035,
+      "sha256": "73ee2d13ba15004a9e8bcb7d4b2dd1ee4f9d6704d5d85d5c827fca726f18325f"
     },
     {
       "path": "docs/PROTOCOL_2d_ladder.md",
@@ -210,6 +224,34 @@
       "sha256": "c6615e14c7684ad00651787f86fc0a7f527e78681b7dcdbf03544f4782558ce0"
     },
     {
+      "path": "docs/audits/open_repository_claims_20261109.json",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 2811,
+      "sha256": "a1e37c4255840ada15501e07e1fd05223cf7dba49dd89d3b4af8486cc4a77614"
+    },
+    {
+      "path": "docs/audits/open_repository_findings_20261109.csv",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 6639,
+      "sha256": "ed6bb297f01f7274a0f263f92f45e93d232eb1d1078af800a8df6c4c554d2fd9"
+    },
+    {
+      "path": "docs/audits/open_repository_inventory_20261109.json",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 128081,
+      "sha256": "6a6e9eab37b0d169ee95d942acc7624cd5fe846aff1ab94dc6963c81ee0365ce"
+    },
+    {
+      "path": "docs/audits/release_readiness_20261109.json",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 917,
+      "sha256": "073781ede52d585bdbc52973965fe77a22711d9dd8e78f34945a9db44e183b7d"
+    },
+    {
       "path": "docs/figures_draft.md",
       "family": "Supporting material",
       "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
@@ -276,22 +318,22 @@
       "path": "results/METRICS_STATUS.csv",
       "family": "Metric board",
       "placement": "Operational generated view; not an additional experiment or independent result",
-      "bytes": 29738,
-      "sha256": "8d2d663c06e5a62a5a969f16d715b0e136a13407186b9dce3607851c84a8648d"
+      "bytes": 29865,
+      "sha256": "b7c6f84ce38ad48353be907112bbfbe64cc1e438a33a3d78ca7bd80d107e56ac"
     },
     {
       "path": "results/METRICS_STATUS.json",
       "family": "Metric board",
       "placement": "Operational generated view; not an additional experiment or independent result",
       "bytes": 73070,
-      "sha256": "792febf8f9ad32763fdd65f77c62a2081415e748875b70b4ee3b92c9fe990357"
+      "sha256": "a9bf50378ed6712f1b3e6602bd896b7b7e52cb03220d3dde0e20d6d19b6a6bcc"
     },
     {
       "path": "results/METRICS_STATUS.md",
       "family": "Metric board",
       "placement": "Operational generated view; not an additional experiment or independent result",
       "bytes": 24793,
-      "sha256": "bb465d4a928261c6efb19571f6fe5f4b39543d7e4b7de5b61032e93ca84c1187"
+      "sha256": "f5ef87ccec6967e49cbf335959c88f7e345bb6eeea79a3c5b84dd6d716d22e00"
     },
     {
       "path": "results/all_ladder_metrics.csv",
