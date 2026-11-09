@@ -298,3 +298,22 @@ this as new ones. Nothing in F2 changes: `panel_f2`, its rows and its parts stay
   source); the Spearman is reported next to the result.
 - Compute: local CPU, one torch thread per worker, at most 6 workers (the brain pass holds 2 of the 8 cores); smoke on
   4 targets per source with timing and a QC look before the full run.
+
+### F2.1 note (9 Nov 2026, cloud CPU for the IMDb-WIKI jobs; recorded before those jobs were scored)
+
+The 6-worker laptop run took about 20 GB (3.3 GB per worker) and starved the workstation; it was stopped with 226 of
+594 jobs saved (all CelebA). Kate (via the ISBI session): run the rest on a VM. IMDb-WIKI goes to the GCP VM
+fs-cpu-remainder (n2-standard-32 spot, europe-west1-b, Kate's project); CelebA stays on the laptop (its agreement
+allows copies for internal use at a single site; a cloud copy needs Kate's explicit yes), resumed with 2 workers.
+- Payload (`src/face_vgg_vm.py payload`): the v6f cache with every non-IMDb row blanked (NaN in X and embeddings, False
+  in masks; 3260 IMDb rows kept, 3686 other rows blanked, no overlap), same indices and job names; v1 keys + MSE for
+  IMDb only; the face results JSON (aggregates). Copied by scp to the VM disk, no bucket. Rows return as CSV + JSON
+  (no pickles leave the VM) and are deleted from the VM with the VM.
+- Environment: Python 3.12.3 (laptop 3.11.9); numpy 1.26.4, scipy 1.15.3, pandas 2.3.3, torch 2.10.0+cpu, torchvision
+  0.25.0+cpu, lpips 0.1.4, scikit-learn 1.8.0 as on the laptop; VGG16 weights sha256 397923af8e79... equal.
+- Reproduction across machines, required before the remaining jobs: two IMDb jobs (imdb_p00_c00, imdb_p09_c07; 2914
+  rows, 1958 VGG pairs) run on both. Result: same keys and missing pattern, MSE identical (max |diff| 0; v1 residual 0
+  on both), LPIPS VGG max |diff| 1.5e-7 (float32 last bit) against the 1e-5 tolerance: passed. A first comparison
+  showed an MSE difference of 8.9e-16 that came from the default CSV float text format (the laptop's own rows through
+  the same CSV differ by the same amount, and by 0 from the VM); transport is now lossless (`%.17g`, round-trip read),
+  with a test. The laptop values are kept for the two reference jobs.

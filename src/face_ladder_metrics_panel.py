@@ -501,8 +501,9 @@ def target_chunks(sel, size):
     return [sel[k:k + size] for k in range(0, len(sel), size)]
 
 
-def build_jobs(version, limit, state):
-    """Jobs of the F2 row pass (one per source x position x chunk of targets), their names and the run meta."""
+def build_jobs(version, limit, state, sources=None):
+    """Jobs of the F2 row pass (one per source x position x chunk of targets), their names and the run meta;
+    `sources` restricts them to the named sources (job names and contents unchanged)."""
     desc = json.load(open(os.path.join(state["cache"], "desc.json")))["data"]
     lam = FM.lambdas(version)
     v1 = pd.read_csv(os.path.join(V1, f"rows{version}.csv.gz"), usecols=["src", "target", "patch", "fill", "mse"])
@@ -512,6 +513,8 @@ def build_jobs(version, limit, state):
                                                           "face_ladder_metrics": sha(FM.__file__)}}
     names = []
     for src, d in desc.items():
+        if sources and src not in sources:
+            continue
         valid = np.load(os.path.join(state["cache"], f"{src}_valid.npy"))
         pos = FM.positions(valid)
         T = d["targets"]
@@ -591,7 +594,9 @@ def run_rows(version, limit, workers):
 # ---------------------------------------------------------------------------------------------------- LPIPS VGG (F2.1)
 
 VGG_PRIVATE = os.path.join(os.path.dirname(FM.PRIVATE), "face-ladder-metrics-20261109-v3-vgg")
-VGG_WORKERS = 6                                        # Amendment F2.1: the brain pass holds 2 of the 8 cores
+# Amendment F2.1: 6 on the laptop (the brain pass holds 2 of the 8 cores); a VM sets its own cap (F2.1 note).
+# ram_guard applies either way.
+VGG_WORKERS = int(os.environ.get("FACE_VGG_MAX_WORKERS", 6))
 VGG_KEYS = ["src", "target", "family", "patch", "fill"]
 WORKER_GB = 3.5                                        # measured 9 Nov: one worker holds the face cache, about 3.3 GB
 RAM_RESERVE_GB = 4.0                                   # left for the OS and other sessions
@@ -667,14 +672,22 @@ def scored_set_gate(vgg, f2):
             "passed": bool(a == b and len(a) > 0)}
 
 
-def run_vgg(version, limit, workers):
+def run_vgg(version, limit, workers, sources=None, only=None):
+    """All jobs, then the F2.1 gates and the rows file. With `sources` or `only` (named jobs) it saves parts only
+    and stops: the gates and the rows file need every job, assembled by a later run without them."""
     state = {"cache": os.path.join(V1, f"cache{version}"), "fundus": need_env("FUNDUS_METRICS_SRC"),
              "betti": need_env("BETTI_SRC"), "torch_home": need_env("TORCH_HOME")}
     if workers > VGG_WORKERS:
         raise SystemExit(f"at most {VGG_WORKERS} workers (Amendment F2.1)")
     ram_guard(workers)
     tag = version + (f"_n{limit}" if limit else "")
-    jobs, names, meta = build_jobs(version, limit, state)
+    jobs, names, meta = build_jobs(version, limit, state, sources)
+    if only:
+        missing = set(only) - set(names)
+        if missing:
+            raise SystemExit(f"unknown jobs: {sorted(missing)}")
+        keep = [k for k in range(len(jobs)) if names[k] in set(only)]
+        jobs, names = [jobs[k] for k in keep], [names[k] for k in keep]
     import lpips
     meta["sha256"]["lpips_vgg_linear"] = sha(os.path.join(os.path.dirname(lpips.__file__), "weights", "v0.1",
                                                           "vgg.pth"))
@@ -700,6 +713,9 @@ def run_vgg(version, limit, workers):
             print(f"job {n + 1}/{len(todo)} ({names[k]}): rows {len(res[0])} vgg {n_lp} repro {res[1]:.2e}, "
                   f"{el / 60:.0f} min, ETA {eta / 60:.0f} min ({time.strftime('%H:%M', time.localtime(time.time() + eta))})",
                   flush=True)
+    if sources or only:
+        print(f"parts only ({len(jobs)} jobs saved in {parts}); assemble with a run over all sources", flush=True)
+        return
     rows, worst = [], 0.0
     for k in range(len(jobs)):
         with open(part(k), "rb") as fh:
@@ -903,6 +919,8 @@ def main():
     ap.add_argument("--version", required=True, help="face frame version, e.g. _v6f (no default)")
     ap.add_argument("--limit", type=int, default=0, help="evenly spaced targets per source (smoke)")
     ap.add_argument("--workers", type=int, default=3)
+    ap.add_argument("--src", choices=("celeba", "imdb"), help="vgg: run this source's jobs only (parts only)")
+    ap.add_argument("--only", help="vgg: comma-separated job names to run (parts only), e.g. imdb_p00_c00")
     a = ap.parse_args()
     FM.snapshot(a.version)
     if a.stage == "prep":
@@ -912,7 +930,7 @@ def main():
     elif a.stage == "set":
         run_set(a.version, a.limit)
     elif a.stage == "vgg":
-        run_vgg(a.version, a.limit, a.workers)
+        run_vgg(a.version, a.limit, a.workers, [a.src] if a.src else None, a.only.split(",") if a.only else None)
     elif a.stage == "vgg_summary":
         write_vgg_json(a.version, a.limit)
     else:
