@@ -1,6 +1,6 @@
 # Cross-modality analysis (metrics explorer, 7-8 Nov 2026)
 
-Exploratory, post hoc analysis across brain (QTIM), faces (CelebA, IMDb-WIKI), fundus (GRAPE, PAPILA) and iris
+Exploratory, post hoc analysis across brain (QTIM, IXI), faces (CelebA, IMDb-WIKI), fundus (GRAPE, PAPILA) and iris
 (UTIRIS NIR, UTIRIS VIS, UPOL). Recorded in `docs/ANALYSIS_cross_modality.md`. Inputs are the private per-target rows
 under `C:\Projects\data\projects\identity-ladder-metric\` and the per-modality result JSONs; every output in
 `results/cross_modality/` is an aggregate (no participant IDs, filenames or image-level rows).

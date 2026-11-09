@@ -15,7 +15,7 @@ from matplotlib.patches import Rectangle
 SCR = sys.argv[1]
 c = json.load(open(SCR + "/common_all.json"))
 TST = json.load(open(SCR + "/tests_all.json"))["datasets"]
-QC = {"QTIM": "pre-QC", "CelebA": "QC", "IMDb-WIKI": "QC", "GRAPE": "pre-QC", "PAPILA": "pre-QC", "UTIRIS NIR": "pre-QC", "UTIRIS VIS": "pre-QC", "UPOL": "pre-QC"}
+QC = {"QTIM": "pre-QC", "CelebA": "QC", "IMDb-WIKI": "QC", "GRAPE": "pre-QC", "PAPILA": "pre-QC", "UTIRIS NIR": "pre-QC", "UTIRIS VIS": "pre-QC", "UPOL": "pre-QC", "IXI": "pre-QC"}
 COLS = ["repeat", "other_side", "relative", "lookalike_oracle", "lookalike", "lookalike16", "cohort_mean", "mean_k2",
         "dataset_mean", "stranger", "shrink_ref", "wrong_detail", "noise"]
 LAB = {"repeat": "repeat image", "other_side": "other side (mirror / eye)", "relative": "relative (sibling or twin)", "cotwin": "co-twin",
@@ -149,7 +149,7 @@ ax.text(0, ly + 3.2, "Columns are in identity-ladder order for every row; a metr
         "gradient. Empty = rung not available. ArcFace has no averaged or noise fills.|"
         "Top: what each column puts into the compared window, on a drawn face. [T1]-[T3b] = the four reference tests: the repeat must come out|"
         "closer than this control. Test results are in the table on the page.|"
-        "Brain (QTIM), GRAPE, PAPILA and iris (UTIRIS, UPOL; frame P2, lid-shadow sheets not yet re-shown) pre-QC; faces QC approved.".replace("|", chr(10)),
+        "Brain (QTIM, IXI), GRAPE, PAPILA and iris (UTIRIS, UPOL; frame P2, lid-shadow sheets not yet re-shown) pre-QC; faces QC approved.".replace("|", chr(10)),
         fontsize=7, color="#333", ha="left", va="center")
 ax.set_xlim(-8.6, len(COLS) * TW + 0.3)
 ax.set_ylim(ly + 5.6, -7.6)

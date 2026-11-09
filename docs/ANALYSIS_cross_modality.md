@@ -84,6 +84,13 @@ metrics. Metrics: rho for each dataset, mean over datasets. ArcFace left out (5 
   stranger set is closest (FID) and the dataset mean farthest, as on the other datasets; the repeat set has 138 cells
   (small-sample FID bias). Still not run on brain: Betti matching 3D (C++ build). Faces LPIPS VGG (Amendment F2.1)
   is running; it enters automatically from `panel_f2_lpips_vgg` when committed.
+- 9 Nov, IXI (brain Amendment 23, commit 6c581d2; 100 scans, one per person, three centres; pre-QC) added to the
+  common frame, rank tiles, agreement and dataset card from its private rows (random patches, both sides, as QTIM;
+  bootstrap over targets; added last so every earlier value is unchanged). On the common self scale, not on the IXI
+  file's other-side anchor. n/a with the reason: repeat, relative, sex-age mean (IXI has an age-only matched mean,
+  not put in that column), mean of 16 look-alikes, and the repeat-tolerance metrics. Its own extra rungs (same- and
+  other-centre strangers) are not columns of the common tiles. Dataset mean and other-side MSE equal the IXI file;
+  stranger / V 1.98, other side / V 1.31; rung order agrees with QTIM at rho 0.95.
 
 ## 5. Window size follows the object (Kate, 8 Nov 2026: "да переделай честно")
 One pixel window covers a different share of each object (brain about 1/10 of its length, faces 0.4 inter-ocular

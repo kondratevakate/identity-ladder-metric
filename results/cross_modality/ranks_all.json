@@ -106,6 +106,17 @@
   "stranger": 10,
   "wrong_detail": 11
  },
+ "mse|IXI": {
+  "lookalike_oracle": 1,
+  "shrink_ref": 2,
+  "dataset_mean": 3,
+  "lookalike": 4,
+  "other_side": 5,
+  "mean_k2": 6,
+  "noise": 7,
+  "stranger": 8,
+  "wrong_detail": 9
+ },
  "rmse|QTIM": {
   "shrink_ref": 1,
   "repeat": 2,
@@ -212,6 +223,17 @@
   "mean_k2": 9,
   "stranger": 10,
   "wrong_detail": 11
+ },
+ "rmse|IXI": {
+  "lookalike_oracle": 1,
+  "shrink_ref": 2,
+  "dataset_mean": 3,
+  "lookalike": 4,
+  "other_side": 5,
+  "mean_k2": 6,
+  "noise": 7,
+  "stranger": 8,
+  "wrong_detail": 9
  },
  "mae|QTIM": {
   "shrink_ref": 1,
@@ -320,6 +342,17 @@
   "wrong_detail": 10,
   "stranger": 11
  },
+ "mae|IXI": {
+  "lookalike_oracle": 1,
+  "shrink_ref": 2,
+  "lookalike": 3,
+  "dataset_mean": 4,
+  "other_side": 5,
+  "mean_k2": 6,
+  "noise": 7,
+  "wrong_detail": 8,
+  "stranger": 9
+ },
  "psnr|QTIM": {
   "shrink_ref": 1,
   "repeat": 2,
@@ -426,6 +459,17 @@
   "noise": 9,
   "stranger": 10,
   "wrong_detail": 11
+ },
+ "psnr|IXI": {
+  "lookalike_oracle": 1,
+  "shrink_ref": 2,
+  "lookalike": 3,
+  "dataset_mean": 4,
+  "other_side": 5,
+  "mean_k2": 6,
+  "noise": 7,
+  "stranger": 8,
+  "wrong_detail": 9
  },
  "psnr_fixed|QTIM": {
   "shrink_ref": 1,
@@ -534,6 +578,17 @@
   "stranger": 10,
   "wrong_detail": 11
  },
+ "psnr_fixed|IXI": {
+  "lookalike_oracle": 1,
+  "shrink_ref": 2,
+  "lookalike": 3,
+  "dataset_mean": 4,
+  "other_side": 5,
+  "mean_k2": 6,
+  "noise": 7,
+  "stranger": 8,
+  "wrong_detail": 9
+ },
  "ssim|QTIM": {
   "repeat": 1,
   "shrink_ref": 2,
@@ -640,6 +695,17 @@
   "stranger": 9,
   "noise": 10,
   "wrong_detail": 11
+ },
+ "ssim|IXI": {
+  "lookalike_oracle": 1,
+  "shrink_ref": 2,
+  "lookalike": 3,
+  "dataset_mean": 4,
+  "other_side": 5,
+  "mean_k2": 6,
+  "stranger": 7,
+  "wrong_detail": 8,
+  "noise": 9
  },
  "pearson|QTIM": {
   "shrink_ref": 1,
@@ -748,6 +814,17 @@
   "wrong_detail": 10,
   "stranger": 11
  },
+ "pearson|IXI": {
+  "lookalike_oracle": 1,
+  "shrink_ref": 2,
+  "dataset_mean": 3,
+  "lookalike": 4,
+  "other_side": 5,
+  "mean_k2": 6,
+  "noise": 7,
+  "stranger": 8,
+  "wrong_detail": 9
+ },
  "acc_dataset|QTIM": {
   "repeat": 1,
   "shrink_ref": 2,
@@ -846,6 +923,16 @@
   "stranger": 8,
   "noise": 9,
   "mean_k2": 10
+ },
+ "acc_dataset|IXI": {
+  "lookalike_oracle": 1,
+  "lookalike": 2,
+  "other_side": 3,
+  "shrink_ref": 4,
+  "mean_k2": 5,
+  "stranger": 6,
+  "wrong_detail": 7,
+  "noise": 8
  },
  "acc_cohort|QTIM": {
   "shrink_ref": 1,
@@ -1016,6 +1103,17 @@
   "stranger": 9,
   "lookalike16": 10,
   "dataset_mean": 11
+ },
+ "ampdev_dataset|IXI": {
+  "wrong_detail": 1,
+  "noise": 2,
+  "lookalike_oracle": 3,
+  "other_side": 4,
+  "lookalike": 5,
+  "stranger": 6,
+  "mean_k2": 7,
+  "shrink_ref": 8,
+  "dataset_mean": 9
  },
  "ampdev_cohort|GRAPE": {
   "noise": 1,
@@ -1216,6 +1314,17 @@
   "stranger": 9,
   "wrong_detail": 10,
   "noise": 11
+ },
+ "lddt|IXI": {
+  "shrink_ref": 1,
+  "dataset_mean": 2,
+  "lookalike_oracle": 3,
+  "lookalike": 4,
+  "mean_k2": 5,
+  "other_side": 6,
+  "stranger": 7,
+  "wrong_detail": 8,
+  "noise": 9
  },
  "lddt_rep|QTIM": {
   "shrink_ref": 1,

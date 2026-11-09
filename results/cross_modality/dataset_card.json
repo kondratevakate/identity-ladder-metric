@@ -100,6 +100,7 @@
     "other side",
     "best look-alike",
     "look-alike",
+    "mean of 16",
     "sex-age mean",
     "mean of 2",
     "dataset mean",
@@ -108,7 +109,7 @@
     "wrong detail",
     "noise"
    ],
-   "n_rungs": 11,
+   "n_rungs": 12,
    "V_dataset_mean_mse": 0.401,
    "ratio_repeat": 0.39,
    "ratio_other_side": 1.31,
@@ -127,6 +128,7 @@
     "other side",
     "best look-alike",
     "look-alike",
+    "mean of 16",
     "sex-age mean",
     "mean of 2",
     "dataset mean",
@@ -135,7 +137,7 @@
     "wrong detail",
     "noise"
    ],
-   "n_rungs": 10,
+   "n_rungs": 11,
    "V_dataset_mean_mse": 0.576,
    "ratio_repeat": "n/a",
    "ratio_other_side": 1.44,
@@ -155,6 +157,7 @@
     "other side",
     "best look-alike",
     "look-alike",
+    "mean of 16",
     "mean of 2",
     "dataset mean",
     "stranger",
@@ -162,7 +165,7 @@
     "wrong detail",
     "noise"
    ],
-   "n_rungs": 10,
+   "n_rungs": 11,
    "V_dataset_mean_mse": 0.344,
    "ratio_repeat": 0.4,
    "ratio_other_side": 1.21,
@@ -182,6 +185,7 @@
     "other side",
     "best look-alike",
     "look-alike",
+    "mean of 16",
     "mean of 2",
     "dataset mean",
     "stranger",
@@ -189,7 +193,7 @@
     "wrong detail",
     "noise"
    ],
-   "n_rungs": 10,
+   "n_rungs": 11,
    "V_dataset_mean_mse": 0.338,
    "ratio_repeat": 0.57,
    "ratio_other_side": 1.29,
@@ -209,6 +213,7 @@
     "other side",
     "best look-alike",
     "look-alike",
+    "mean of 16",
     "mean of 2",
     "dataset mean",
     "stranger",
@@ -216,12 +221,38 @@
     "wrong detail",
     "noise"
    ],
-   "n_rungs": 10,
+   "n_rungs": 11,
    "V_dataset_mean_mse": 0.705,
    "ratio_repeat": 0.18,
    "ratio_other_side": 1.12,
    "ratio_lookalike": 0.84,
    "ratio_stranger": 1.96
+  },
+  {
+   "dataset": "IXI",
+   "modality": "brain MRI",
+   "status": "pre-QC",
+   "persons": 100,
+   "target_images": 100,
+   "images_in_frame": 100,
+   "positions": 34,
+   "rungs_available": [
+    "other side",
+    "best look-alike",
+    "look-alike",
+    "mean of 2",
+    "dataset mean",
+    "stranger",
+    "shrunk ref.",
+    "wrong detail",
+    "noise"
+   ],
+   "n_rungs": 9,
+   "V_dataset_mean_mse": 0.265,
+   "ratio_repeat": "n/a",
+   "ratio_other_side": 1.31,
+   "ratio_lookalike": 1.02,
+   "ratio_stranger": 1.98
   }
  ]
 }

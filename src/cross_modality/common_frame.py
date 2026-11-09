@@ -38,18 +38,36 @@ SRC = {
 IRIS = "C:/Projects/data/projects/identity-ladder-metric/iris-ladder-metrics-20261107-v1/rows_{}_P2_full.csv.gz"
 for _ds, _f in (("UTIRIS NIR", "UTIRIS_NIR"), ("UTIRIS VIS", "UTIRIS_VIS"), ("UPOL", "UPOL")):
     SRC[_ds] = dict(path=IRIS.format(_f), cell=["unit", "patch"], unit="person", ren={"fellow": "other_side"}, filt=None)
+# IXI (brain Amendment 23, pre-QC): same view as QTIM (random patches, both sides), rows in per-position parts. Added
+# last so the bootstrap draws of the datasets above stay unchanged. Rungs and metrics IXI marks n/a are dropped here.
+IXI_NA_RUNGS = ("repeat", "sibling", "cotwin", "cohort_mean", "shrink_repeat")
+IXI_NA_METRICS = ("acc_cohort", "tm_like", "gdt_like", "lddt_rep", "rmse_rep")
+SRC["IXI"] = dict(path=P + "ixi-ladder-20261109-v1/parts/p*.csv.gz", cell=["target", "patch", "side"], unit="target",
+                  ren={"mirror": "other_side"},
+                  filt=lambda r: r[(r.patch < 32) & ~r.fill.isin(IXI_NA_RUNGS)].drop(columns=list(IXI_NA_METRICS), errors="ignore"))
 rng = np.random.default_rng(20261106)
 # Rungs a dataset's own protocol does not define: n/a with the reason, never a value (lookalike16 = mean of the 16
 # nearest look-alikes, fundus and iris only).
 NOT_AVAILABLE = {"lookalike16": {
     "QTIM": "dropped by the brain protocol (PROTOCOL_donor_ladder_brain.md, block 5: k = 4, 8, 16 and the 16-look-alike mean)",
     "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows",
-    "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows"}}
+    "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows",
+    "IXI": "not defined in brain Amendment 23"},
+    **{r: {"IXI": "no repeat, no families in IXI (donor_ladder_brain_ixi.json not_available)"}
+       for r in ("repeat", "relative")},
+    "cohort_mean": {"IXI": "no sex-age mean in IXI; its age-matched mean (age only) is not put in this column"}}
 out = {"method": __doc__.strip(), "not_available": NOT_AVAILABLE, "metrics": ALL, "rungs": RUNGS, "kind": {**{m: "R" for m in SIM + ERR}, **{m: "dB" for m in DB},
                                                                          **{m: "raw" for m in RAW}}, "datasets": {}}
 for name, s in SRC.items():
     need = set(s["cell"] + [s["unit"], "fill", "src", "amplitude"] + ALL)
-    r = pd.read_csv(s["path"], usecols=lambda c: c in need)
+    if "*" in s["path"]:
+        import glob
+        files = sorted(glob.glob(s["path"]))
+        if not files:
+            raise SystemExit(f"{name}: no rows at {s['path']}")
+        r = pd.concat([pd.read_csv(f, usecols=lambda c: c in need) for f in files], ignore_index=True)
+    else:
+        r = pd.read_csv(s["path"], usecols=lambda c: c in need)
     if s["filt"]:
         r = s["filt"](r)
     if "ampdev_dataset" not in r.columns and "amplitude" in r.columns:

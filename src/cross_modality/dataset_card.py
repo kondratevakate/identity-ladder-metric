@@ -25,12 +25,14 @@ B = json.load(open(os.path.join(HERE, "results", "donor_ladder_brain_metrics.jso
 Fa = json.load(open(os.path.join(HERE, "results", "face_ladder_metrics.json")))["counts"]
 Fu = json.load(open(os.path.join(BIL, "results", "fundus_ladder_metrics.json")))["panel"]
 Ir = json.load(open(os.path.join(HERE, "results", "iris_ladder_metrics.json")))["panel"]
+IX = json.load(open(os.path.join(HERE, "results", "donor_ladder_brain_ixi.json")))["counts"]
 QC = {"QTIM": "pre-QC", "CelebA": "QC", "IMDb-WIKI": "QC", "GRAPE": "pre-QC", "PAPILA": "pre-QC", "UTIRIS NIR": "pre-QC",
-      "UTIRIS VIS": "pre-QC", "UPOL": "pre-QC"}
+      "UTIRIS VIS": "pre-QC", "UPOL": "pre-QC", "IXI": "pre-QC"}
 MOD = {"QTIM": "brain MRI", "CelebA": "face photo", "IMDb-WIKI": "face photo", "GRAPE": "fundus", "PAPILA": "fundus",
-       "UTIRIS NIR": "iris NIR", "UTIRIS VIS": "iris visible", "UPOL": "iris visible"}
+       "UTIRIS NIR": "iris NIR", "UTIRIS VIS": "iris visible", "UPOL": "iris visible",
+       "IXI": "brain MRI"}
 RUNG_SHORT = {"repeat": "repeat", "other_side": "other side", "relative": "relative", "lookalike_oracle": "best look-alike",
-              "lookalike": "look-alike", "cohort_mean": "sex-age mean", "mean_k2": "mean of 2", "dataset_mean": "dataset mean",
+              "lookalike": "look-alike", "lookalike16": "mean of 16", "cohort_mean": "sex-age mean", "mean_k2": "mean of 2", "dataset_mean": "dataset mean",
               "stranger": "stranger", "shrink_ref": "shrunk ref.", "wrong_detail": "wrong detail", "noise": "noise"}
 NA = "n/a"
 
@@ -39,6 +41,8 @@ def counts(d):
     """persons, target images, images in frame, positions; n/a where the JSON does not record it."""
     if d == "QTIM":
         return (f"{B['n_families']} families", B["n_targets"], B["n_targets"] + B["n_repeat_scans"], B["n_positions"])
+    if d == "IXI":   # one scan per person, no families, no repeats
+        return (IX["n_targets"], IX["n_targets"], IX["n_targets"], IX["n_positions"])
     if d in ("CelebA", "IMDb-WIKI"):
         c = Fa["celeba" if d == "CelebA" else "imdb"]
         return (f"{c['n_families']} families" if d == "IMDb-WIKI" else c["n_families"], c["n_targets"], NA, c["n_positions"])

@@ -89,3 +89,15 @@ def test_generative_values_match_ranks_and_mark_anchor():
         assert v[key]["anchor"] == ("repeat" if key.endswith("|QTIM") else "self"), key
         for r, rec in v[key]["rungs"].items():
             assert rec.get("ci95", rec.get("ratio_ci95")) is not None and rec["n"] is not None, (key, r)
+
+
+def test_ixi_in_frame_with_na_rungs_never_values():
+    c = load("common_all.json")
+    raw = c["datasets"]["IXI"]["raw"]
+    for r in ("repeat", "relative", "cohort_mean", "lookalike16"):
+        assert r not in raw, r
+        assert c["not_available"][r]["IXI"], r
+    assert "other_side" in raw and "stranger" in raw
+    card = {r["dataset"]: r for r in load("dataset_card.json")["rows"]}
+    assert card["IXI"]["ratio_repeat"] == "n/a"
+    assert 1.5 < card["IXI"]["ratio_stranger"] < 2.5
