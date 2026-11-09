@@ -99,7 +99,8 @@ Per modality (current state as reported)
     Amendment 22 done: LPIPS VGG and set-level FID/FWD per rung in `results/donor_ladder_brain_metrics_t23_v5.json`
     (keys `views[box/LR]["ladder_R"]["lpips_vgg"]`, `set_level[box/LR][rung]`, floor `_target_split_half`); result
     paragraph at the end of Amendment 22 (noise is not the worst on FWD: reported). IXI (Amendment 23): 100 scans
-    prepared on a GCP VM, D7 QC passed (5c0055b); the ladder (`src/donor_ladder_brain_ixi.py`) runs next.
+    prepared on a GCP VM, D7 QC passed (5c0055b); ladder done (`results/donor_ladder_brain_ixi.json`, E1-E4 met,
+    result paragraph at the end of Amendment 23); dataset card and rank tables: explorer's scripts.
   - Limitations (not tonight): Betti matching 3D (C++ build, Linux VM); Brain-ID identity; Topology Distance at set
     level; latent metrics (GPU). Persistence in the deep box puts the own other side closer than the repeat (R -0.55):
     reported, not repaired.

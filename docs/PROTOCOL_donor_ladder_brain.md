@@ -808,3 +808,27 @@ never zero), as in QTIM. Result: 0 excluded; 5 flagged by template correlation (
 0.513), looked at: 1 with enlarged ventricles, 1 with the lower IOP contrast, 3 unremarkable; registration and masks
 fine in all 5, kept. Random 30 (seed 123) looked at: 30 of 30 pass. Verdict by the brain metrics session, delegated
 by the ISBI paper session ("look at the QC sheet yourself"). The IXI ladder runs after Amendment 22 finishes.
+
+Amendment 23, ladder result (9 Nov 2026). Script `src/donor_ladder_brain_ixi.py`, which calls the QTIM tier-1 code
+unchanged (region arrays, `run_position_at`, `score`, `ladder_R`, `tests`). The run took about 37 min on 2 workers
+for 100 targets and 34 positions. Output: `results/donor_ladder_brain_ixi.json`, `R_anchor = "other_side"`.
+Not available, reported as n/a and never filled: the repeat, sibling, co-twin and cohort-mean rungs; T1;
+acc_cohort; and the four protein-style metrics, which need the repeat-scan tolerance. The protein-style metrics
+were removed from the IXI metric list at the summary step, after the rows existed, because their rows are NaN by
+construction. In the parietal box, 91 of 100 targets have a valid box; the rest are cut at the vertex and are
+missing, never zero. Median gap of the age-matched mean: 2.8 years.
+Expectations, with MSE R and 95% family-bootstrap intervals on the L+R views:
+- **E1, met.** The dataset mean is closer than a stranger: deep 0.31 [0.24, 0.37], parietal -2.53, random cubes
+  -0.46. The age-matched mean gives the same picture: 0.32, -2.24, -0.37.
+- **E2, met.** Best look-alike < look-alike by context < stranger: deep -0.05 < 0.07 < 1.16; parietal -1.77 < -1.20
+  < 1.19; random cubes -0.78 < -0.43 < 0.97.
+- **E3, met.** The same-centre stranger is closer than the different-centre stranger in every view: deep 0.62
+  [0.56, 0.68] against 1.19 [1.13, 1.25]; parietal 0.53 against 1.14; random cubes 0.63 against 1.17. The scanner
+  effect is about half the stranger scale.
+- **E4, met.** The QTIM rows were recomputed on the same other-side anchor, with no rerun. Spearman of R over the 12
+  shared rungs in the deep box: mse 0.972, ssim 0.958, pearson 0.965.
+- **Tests (MSE, Holm within IXI).** T3a and T3b pass in every view. T2 passes in the deep box only (60% of targets);
+  it fails in the parietal box and in the random cubes, as T2 does in QTIM.
+- **Parietal box.** The other side is almost as far as a stranger here, so the parietal R values have large
+  magnitudes and wide intervals; read the order, not the size.
+Pre-QC, affine only.
