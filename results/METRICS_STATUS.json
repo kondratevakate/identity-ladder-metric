@@ -1,12 +1,12 @@
 {
-  "generated_at_utc": "2026-11-08T20:06:41.305077+00:00",
+  "generated_at_utc": "2026-11-09T18:44:58.386638+00:00",
   "source_sha256": {
-    "ladder2d_brats_baseline.json": "ec027dc6e51af2a0b166bfe5e373913b62e06d54b5d3d3546bccebeeab34f3b6",
-    "ladder2d.json": "f996f34ec15334cfa66d443db156da616cf9e14ed2d583d0ccebe1ffb79be836",
-    "care_reproduction.json": "60da156c1f2eda27489375bee629c54fbb92ab463906ea2b00c8715393bbbf7c",
-    "care_reproduction_all_phases_posthoc.json": "cdc56f6c0fd6b9f6a2d6d760277ed24fd11e0d26172976609403f5ebc5df9822",
-    "care_iteration2.json": "be3cff62a444fb068c5336d1eb456ec7ead0c22b774775195a93034ccaae870a",
-    "care_iteration2_state.json": "bc37b3afea520674a99adcbcba8b733cace4782695e5bf9d2aae9bacb56a6529"
+    "ladder2d_brats_baseline.json": "89be6ac5225bac018b603c239c91425e77a0ed85c876540520e136b1f4aad62b",
+    "ladder2d.json": "f628dc07aff5b1183f2ecb2dca113877f60caa1d6760d89983c74162fd8ee55f",
+    "care_reproduction.json": "0186fc64d1f567c7ad99e947803f9f0d92a027b29de11886da0a23a0b58654ae",
+    "care_reproduction_all_phases_posthoc.json": "2db56aee0d755a4440701d17d592863546eb3c64d1f28f74dcc972efa1861373",
+    "care_iteration2.json": "017f0d5d33b3afcb96c4827af14eae696c79337148b22b0bdab7d7caee784be9",
+    "care_iteration2_state.json": "9613b04f47876d6c4555e9b03e2c73dbf3b18e01deb2d5663cde46d27b5789bf"
   },
   "brats_rows": [
     {

@@ -17,7 +17,7 @@ from PIL import Image, ImageFilter
 from matplotlib import colormaps
 from matplotlib.colors import TwoSlopeNorm
 
-import make_provenance_infographic as source_spec
+import infographic_sources as source_spec
 import source_snapshot
 
 HERE=Path(__file__).resolve().parent

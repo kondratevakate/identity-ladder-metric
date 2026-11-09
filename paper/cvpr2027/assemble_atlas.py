@@ -146,7 +146,6 @@ def main():
     full=HERE/'fig/atlas_all_modalities_full.pdf'
     source.save(full,garbage=4,deflate=True)
 
-    selected=compact_atlas(source)
     provenance={
         'assembly_generator':'paper/cvpr2027/assemble_atlas.py',
         'assembly_generator_sha256':sha(Path(__file__).read_bytes()),
@@ -163,9 +162,8 @@ def main():
         'replacement_scalar_annotations':ratios,
         'shared_diverging_scale':{'vmin':0,'vcenter':1,'vmax':2.4},
         'method':'PDF-panel assembly from saved aggregate maps; private-data maps were not recomputed.',
-        'changes':'Replace brain row/scalar annotations and stale footer. Main version redraws labels/legend at native size, retaining six primary rows and columns anatomy/repeat/bilateral/stranger/context/V. Full version retains all eight rows and columns.',
-        'compact_source_annotations':selected,
-        'outputs':{p.name:sha(p.read_bytes()) for p in (HERE/'fig/atlas_all_modalities.pdf',full)},
+        'changes':'Replace brain row/scalar annotations and stale footer. The supplementary atlas retains all eight rows and columns. The current main infographic selects four rows separately; no superseded compact atlas is generated.',
+        'outputs':{full.name:sha(full.read_bytes())},
     }
     (HERE/'atlas_provenance.json').write_text(json.dumps(provenance,indent=2)+'\n')
     print('Assembled Gaussian brain row with existing provisional fundus and P2 iris panels; no experiments rerun.')

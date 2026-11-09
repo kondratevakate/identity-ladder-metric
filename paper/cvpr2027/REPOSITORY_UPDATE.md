@@ -140,3 +140,5 @@ M	tests/test_iris_ladder_metrics.py
 A	tests/test_ixi_prep.py
 M	tests/test_no_box_windows.py
 ```
+
+Cleanup completed after remote verification of b001d9c. The two former folders were moved to Windows Recycle Bin; one canonical Git clone and the hash-verified ignored runtime remain. See LOCAL_CLEANUP.json. Superseded renderings remain recoverable from the preservation commit.

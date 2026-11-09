@@ -1,6 +1,6 @@
 {
   "date": "2026-11-09",
-  "base_commit": "80a094c7c3cab36d51d0e290b0634cca0ccf8d36",
+  "base_commit": "b001d9c9a1ff0a1991f8ccd10a45a93ba9151c9c",
   "evidence_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
   "generator": "paper/cvpr2027/prepare.py",
   "generator_sha256": "b75dcf6623a94025bfd5ddb41c69d3d415ad47e9f0b7e34ea3c7a936e5b6f417",
@@ -1471,7 +1471,7 @@
     "audit_profiles.pdf": {
       "generator": "paper/cvpr2027/prepare.py",
       "generator_sha256": "b75dcf6623a94025bfd5ddb41c69d3d415ad47e9f0b7e34ea3c7a936e5b6f417",
-      "assembly_base_commit": "80a094c7c3cab36d51d0e290b0634cca0ccf8d36",
+      "assembly_base_commit": "b001d9c9a1ff0a1991f8ccd10a45a93ba9151c9c",
       "inputs": [
         {
           "path": "results/donor_ladder_brain_metrics.json",
@@ -1492,7 +1492,7 @@
           "producing_commit": "29e38c4a7d9225aa509b8316f5fb6dda20d2d91a"
         }
       ],
-      "sha256": "aa6c43b8adf903d132be1d5afc61bd835b3cc9423bc4e23e1c0356d3b95615fc"
+      "sha256": "0182130a51530e40e82072bdf41a75de7b68134978776ceda43fef3b7902a5d1"
     },
     "brain_gaussian_maps.pdf": {
       "path": "results/figures/fig_ladder_maps_common.pdf",

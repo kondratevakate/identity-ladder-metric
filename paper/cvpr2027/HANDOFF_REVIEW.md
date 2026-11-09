@@ -66,7 +66,7 @@ These are reading anchors, not substitutes for checking the full JSON records, i
 ## 5. Checks already performed, and their limits
 
 - Both PDFs compiled and were rendered/inspected. The saved file audit found no overfull boxes, missing glyphs, unresolved references or identifying-text hits. It does not certify anonymity of every upstream artifact or biological validity.
-- The main PDF SHA-256 is `67b9794a751297c26eca8654817cf104fbf5767cb88ec96aa94d85b122074c3f`; supplement is `2f76c86c34ff8f7c627b1aed71d808f08cf20adbcaf7940f52014cfd31e2a074`.
+- The main PDF SHA-256 is `dea32d2b9acc6aa3889c5333d54fece1db3b45c3c0f7a680a10d0d46bc82f590`; supplement is `97babbab5a665afcff1e97b3e9973f6ee9161f49a60f35942e5fe0e4c7b8e383`.
 - Full pytest after consolidation: **417 passed, 7 skipped, 1 failed** (9 November). Earlier 8 November result: 349 passed, 8 skipped, 1 failed. Failure: `tests/test_real_cases.py::test_guard_refuses_changed_inputs_and_missing_amendment`; its frozen guard requires Python 3.11, while the test environment is 3.12. No guard was relaxed. These tests are not experiment replication.
 - Bibliography: 21 entries checked by bib-verify. Eighteen unflagged; three manual resolutions in `citation_report.md`: Dobeš/TeX accent normalization, Betti matching preprint-versus-conference year, and FWD preprint-versus-conference year. Recheck those primary sources independently. Automatic flags were preserved, not overwritten.
 - Existing Codex repro-judge review: five verified, two toy, one inconclusive claims; 12/16 under `icml2026_v2`. This is a documentary development review, not a truth probability, independent experiment rerun or paper-quality score. Do not simply inherit its labels.

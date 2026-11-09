@@ -1,5 +1,5 @@
 {
-  "snapshot": "80a094c7c3cab36d51d0e290b0634cca0ccf8d36",
+  "snapshot": "b001d9c9a1ff0a1991f8ccd10a45a93ba9151c9c",
   "scope": "Tracked material inventory; no private participant data opened.",
   "counts": {
     "Supporting material": 56,
@@ -284,14 +284,14 @@
       "family": "Metric board",
       "placement": "Operational generated view; not an additional experiment or independent result",
       "bytes": 73070,
-      "sha256": "354a65f7812992f7ffbcc884e82723f2f9dff5ad7c1f930ee00a8d17bf17e287"
+      "sha256": "792febf8f9ad32763fdd65f77c62a2081415e748875b70b4ee3b92c9fe990357"
     },
     {
       "path": "results/METRICS_STATUS.md",
       "family": "Metric board",
       "placement": "Operational generated view; not an additional experiment or independent result",
       "bytes": 24793,
-      "sha256": "9cb342da4e61c729fb040e8d48ae237026293c919b147171a79ee306aaee854f"
+      "sha256": "bb465d4a928261c6efb19571f6fe5f4b39543d7e4b7de5b61032e93ca84c1187"
     },
     {
       "path": "results/all_ladder_metrics.csv",

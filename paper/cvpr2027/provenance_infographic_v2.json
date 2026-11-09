@@ -1,19 +1,19 @@
 {
   "generator": {
     "path": "paper/cvpr2027/make_provenance_infographic_v2.py",
-    "sha256": "3a801ee9e45e5862f16162c7739b78837544f8c3e15e93455026b7383ff43879"
+    "sha256": "69b75c57cc852aafa39f997b3f4cd7ccde747d49d8434549e0a7407dae098153"
   },
   "source_specification_module": {
-    "path": "paper/cvpr2027/make_provenance_infographic.py",
-    "sha256": "58e72c989896964c4ef726c9938e0e9c7e8ea511d310febafb657419ba97b49b"
+    "path": "paper/cvpr2027/infographic_sources.py",
+    "sha256": "d5a4cc94e452ceaf4c8a6d7809e5c3c562fa3d264a54efcdb187a0d64894363c"
   },
   "source_atlas": {
     "path": "paper/cvpr2027/fig/atlas_all_modalities_full.pdf",
-    "sha256": "4d6b82760125b2878f6e1147c95308ced00704cd5e047f0958f520143f9815c2"
+    "sha256": "3a8ca685c2ecb9f6f19f9e109fe77ac2e214673c440e4e41d76496586ebc8f3e"
   },
   "source_atlas_provenance": {
     "path": "paper/cvpr2027/atlas_provenance.json",
-    "sha256": "7039e469d808f34e0ea54767cf32aa8852ad98affcfe53823a3f0d01a9efed5c"
+    "sha256": "4ec516660e418405153e297203ab178886e4634f86a66ca083796b59bfcb901f"
   },
   "source_commit": "82ed7fe8a52e557854cf4cd2d02eb47d5803d7cb",
   "original_source_pdf": "results/figures/fig_ladder_maps_all_modalities.pdf",
@@ -575,7 +575,7 @@
   "generated_scientific_images": false,
   "output": {
     "path": "paper/cvpr2027/fig/identity_ladder_provenance_v2.pdf",
-    "sha256": "644fbd4e19fa049c1595b110535da05e97396fb55f3f380e22b65286a92b45bf"
+    "sha256": "ec181914a1e918b467d6ef5682c47c53e845c1ecc9e3642a80e0636bbd37fd4a"
   },
   "shareable_png": {
     "path": "paper/cvpr2027/fig/identity_ladder_provenance_v2.png",
