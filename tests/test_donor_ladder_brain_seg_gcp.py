@@ -118,3 +118,21 @@ def test_run_summary_counts_retried_volume_once_and_keeps_no_names(tmp_path):
     assert (r["n_done"], r["n_failed"], r["n_left"]) == (2, 1, 2)
     assert r["seconds_per_volume"]["n"] == 2 and r["seconds_per_volume"]["median"] == 950
     assert "t1_" not in str(r)
+
+
+CPU_VM = os.path.join(os.path.dirname(__file__), "..", "gcp", "fastsurfer_cpu_vm.sh")
+
+
+def test_cpu_vm_keeps_the_laptop_device_class_and_runner():
+    # 9 Nov 2026 remainder: same device class (CPU), version and runner as the laptop run; no GPU flag anywhere
+    src = open(CPU_VM, encoding="utf-8").read()
+    assert "cuda" not in src.lower().replace("torch.cuda.is_available()", "")
+    assert 'FS_VERSION=2.5.3+926af8d' in src and 'TORCH=2.7.1+cpu' in src and '"$TORCH False"' in src
+    assert 'fastsurfer_native_run.sh' in src and "${BUCKET:?" in src and "${4:?threads}" in src
+
+
+def test_cpu_vm_checks_input_hashes_before_any_run():
+    src = open(CPU_VM, encoding="utf-8").read()
+    pull = src[src.index("  pull)"):src.index("  run)")]
+    assert "sha256sum -c" in pull and "exit 3" in pull
+    assert src.index("  run)") < src.index("check\n    rm -f")   # run starts with the version and device check
