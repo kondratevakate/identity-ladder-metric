@@ -317,3 +317,12 @@ allows copies for internal use at a single site; a cloud copy needs Kate's expli
   showed an MSE difference of 8.9e-16 that came from the default CSV float text format (the laptop's own rows through
   the same CSV differ by the same amount, and by 0 from the VM); transport is now lossless (`%.17g`, round-trip read),
   with a test. The laptop values are kept for the two reference jobs.
+- Where each job ran: CelebA 226 jobs on the laptop (6 workers, before the stop) and 116 on the laptop (2 workers, after
+  the brain A22 run); IMDb-WIKI 2 reference jobs on both machines (laptop values kept) and 250 on the VM (n2-standard-16
+  spot after a preemption of the 32-vCPU machine; the global 32-vCPU quota did not allow the restart at 32). The CelebA
+  cloud copy was not made (the upload needs Kate's approval in the running session). The VM and its disk were deleted
+  on 9 Nov on Kate's direct yes; no payload remains in the cloud.
+- Result (aggregates in `results/face_ladder_metrics.json`, block `panel_f2_lpips_vgg`): gates passed on all 594 jobs
+  (869972 rows reproduce v1 exactly; VGG scored exactly the 593018 AlexNet rows). Rung order Spearman vs AlexNet
+  0.95 (CelebA) and 0.96 (IMDb-WIKI), above the 0.9 written expectation. VGG compresses the scale (white noise R 1.35 /
+  1.25 against 2.74 / 2.19) and, unlike AlexNet, places the dataset mean below the stranger (R 0.87 / 0.90).
