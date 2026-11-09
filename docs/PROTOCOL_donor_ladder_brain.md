@@ -719,3 +719,51 @@ new version.
   MSE; noise scores worst on FWD.
 - **Order and gates.** Smoke on 3 targets with timing; one QC look at the slices and crops of one target (target,
   repeat, stranger, dataset mean, noise) and at the smoke numbers, then the full run, 2 workers. Pre-QC (affine only).
+
+## Amendment 23 (9 Nov 2026, IXI minimal run: 100 targets, other side as the R anchor; amends Amendment 19; recorded before any IXI scan is prepared)
+
+Kate, 9 Nov 2026 (quoted by the ISBI paper session): "мб еще запустим один датасет по мозгам ixi чтобы было для
+сравнения?". Purpose: a second brain dataset for the dataset-comparison result, as faces have CelebA and IMDb-WIKI and
+iris has three sets. Amendment 19 stays the full design; this is its smallest version that answers the comparison.
+It runs after Amendment 22 finishes, never in parallel with it, and only when free RAM and disk cover its peak
+(STUDIES-044, checked and logged before each stage).
+
+- **Data and integrity.** Registry id `ixi`, local copy `datasets/neuroimaging/ixi/version-unverified/raw` (payload
+  integrity not verified by the registry). Every file used is checked before use: full gzip decompression, nibabel
+  load, 3D shape, finite voxels, sha256 recorded in the private manifest. A failing file is excluded and counted,
+  never repaired. Eligibility as Amendment 19 (one T1 per ID with sex and age from `IXI.xls`; IDs whose duplicate
+  rows disagree are excluded and counted).
+- **Sample.** 100 targets drawn from the eligible scans, stratified by centre (Guys, HH, IOP; proportional, largest
+  remainder) and age tertile within centre, random within strata, seed 20261109. No selection by image content
+  (STUDIES-025). The same 100 scans are the donor pool (leave the target out).
+- **Preparation.** Identical to QTIM and Amendment 19: SynthStrip mask (pinned FreeSurfer 8.0.0 image), N4 on a 2 mm
+  copy, ANTs affine to the nilearn MNI 2009a symmetric template (same settings, seed 123), 1 mm, own mask by nearest
+  neighbour, z-scored in the own mask. If SynthStrip runs from another image, the Amendment 19 Dice check on 5 QTIM
+  scans (>= 0.99 each) comes first. D7 automatic QC rules as in QTIM.
+- **Positions and metrics.** The two frozen boxes and the same random 16 mm cubes (Gaussian window of Amendment 18)
+  as QTIM, both sides. Tier-1 metrics of Amendments 10 to 12 (`src/donor_ladder_brain_metrics.py`, unchanged). Tier 2
+  and 3, LPIPS VGG and set level are not run on IXI here.
+- **Rungs.** Own other side (reference), look-alike by context (2 and 4 mm shell search) and best look-alike
+  (oracle), same-sex age-matched mean (the 10 same-sex donors nearest in age; the median age gap is reported),
+  dataset mean (leave-one-out), stranger from the same centre and stranger from a different centre (16 each, exact
+  expectation; a rung with fewer than 16 eligible donors uses all and reports n), mean of 2 strangers, reference
+  shrunk to the mean (QTIM lambdas), wrong detail, white noise. Not available in IXI and reported as n/a, never
+  filled or drawn as 0: repeat, sibling, co-twin, cohort mean.
+- **R and tests.** IXI has no repeat, so R uses the other side as the reference, as PAPILA does:
+  R = (d(rung) - d(other side)) / (d(strangers) - d(other side)), d(strangers) = mean over 16 reference strangers drawn
+  from all centres (as QTIM str00-str15).
+  Tests as the cross-modality rule (`tests_uniform.py`) with reference = other side: T1 n/a (it needs a repeat), T2 =
+  other side shrunk to the mean, T3a = wrong detail, T3b = noise, Wilcoxon over targets (no families), Holm within
+  IXI. For the comparison, QTIM R is also recomputed on the same other-side anchor from its existing rows (no rerun).
+- **Expectations (stated now).** E1 the dataset mean is closer than a stranger on MSE-type metrics (R < 1), as in
+  QTIM. E2 best look-alike < look-alike by context < stranger. E3 the same-centre stranger is closer than the
+  different-centre stranger on intensity metrics (scanner effect, as in the image-ladder run). E4 the order of the
+  shared rungs on the other-side anchor agrees with QTIM (Spearman >= 0.8 in the deep box). A failure is reported,
+  not explained away.
+- **Order and gates.** Integrity check of all 100 files; preparation of 3 targets plus their QC sheet (three slices
+  through both boxes) looked at before the rest; smoke ladder on 3 targets with timing; then the full run on 2
+  workers. Private outputs in `projects/identity-ladder-metric/ixi-ladder-20261109-v1/`; the repository holds
+  aggregates only, in `results/donor_ladder_brain_ixi.json` (keys as `results/donor_ladder_brain_metrics.json`, with
+  `R_anchor = "other_side"`). If the files fail integrity, SynthStrip cannot run without a download Kate has not
+  approved, or the runtime does not fit, the run is written as a limitation with a time estimate. Pre-QC, affine
+  only, like QTIM.
