@@ -683,3 +683,39 @@ repeat as the cube shrinks with the search kept at +-8 mm (MSE R at 8, 16, 32 mm
 0.58, 0.62; best look-alike that knows the answer 0.11, 0.35, 0.53; look-alike by context 0.26, 0.52, 0.66). A
 search-based donor is therefore stated with its window size. `results/donor_ladder_brain_metrics_size.json`, figure
 `results/figures/fig_brain_window_sizes`. Pre-QC, affine only.
+
+## Amendment 22 (9 Nov 2026, LPIPS VGG and set-level FID/FWD on the frozen boxes; recorded before any result)
+
+Kate, 9 Nov 2026 (quoted by the ISBI paper session): "Gpu для метрик разрешаю 20$" and "только сохрани старые
+результаты а это сделай новыми". The work fits the laptop CPU (measured: LPIPS VGG 54 ms per slice pair at 64 px,
+1 thread), so no GPU or cloud is used and no data leaves the laptop. Amendment 20 outputs stay untouched; this is a
+new version.
+
+- **Run.** One new pass over the two frozen boxes (deep, parietal; 221 targets, both sides) with the same donors,
+  fills, scored voxels E and seed as Amendment 20 (`run_position` with the extra hook `vgg_set`). Tier-1 columns are
+  recomputed and must equal the Amendment 20 rows (`donor-ladder-brain-metrics-20261107-v4`) on every shared row,
+  which proves the fills are the same; otherwise no summary is written. Private rows and crops in
+  `donor-ladder-brain-metrics-20261109-v5\`; public aggregates in `results/donor_ladder_brain_metrics_t23_v5.json`.
+- **LPIPS VGG.** `lpips` 0.1, net vgg (torchvision VGG16 weights from the project TORCH_HOME), on exactly the
+  Amendment 20 slices: the three central orthogonal slices lying fully inside E, z / 4 clipped to [-1, 1], bilinear
+  to a 64 px short side, mean over the slices; NaN when no slice lies inside E, never 0. Lower is better. Summarised
+  like Amendment 20 (raw, c, R with family-bootstrap intervals, T1-T3 on the L+R view of each box, one Holm family
+  over both boxes for this metric only; the Amendment 20 Holm family is not changed).
+- **Set-level FID and FWD per rung.** Cell = (target, side, slice axis) in one box. Sample = the central 24 x 24
+  square of that central slice (24 mm is the shortest box edge), used only when it lies fully inside E of that
+  target-fill pair, z / 4 clipped and mapped to [0, 1], bilinear to 64 x 64. For each rung the target set and the
+  fill set are the samples of the same cells (cells valid for that rung). FID: Inception-v3 pool features
+  (pytorch-fid weights, 2048-d), Frechet distance computed exactly through the n x n cross-Gram matrix because n is
+  below 2048. FWD: Frechet distance per orthonormal Haar packet (level 2, 16 packets), unweighted mean, as in the
+  face panel. Reported per box view (`deep/LR`, `parietal/LR`) and rung: fid, fwd, n_cells, and a 95% interval from
+  100 bootstrap resamples of families (all cells of a family move together; duplicates allowed). Floor: the target
+  set split into two family-disjoint halves (`_target_split_half`). Reference strangers (str00-str15) are not rungs.
+  Topology Distance stays not run (it needs equal-sized groups; own amendment if wanted).
+- **Expectations (stated now).** LPIPS VGG orders the rungs like LPIPS AlexNet (Spearman of the rung order >= 0.8 in
+  the deep box) and passes T1. Set level: every single-donor rung (repeat, own other side, sibling, look-alikes,
+  stranger) is close to the split-half floor, because each of these sets is a sample of real brains; set-level
+  distances therefore cannot rank individual identity. The mean fills (dataset mean, mean of 2, cohort mean) and the
+  blended controls have reduced variance and score clearly worse than a stranger on FID and FWD, the opposite of
+  MSE; noise scores worst on FWD.
+- **Order and gates.** Smoke on 3 targets with timing; one QC look at the slices and crops of one target (target,
+  repeat, stranger, dataset mean, noise) and at the smoke numbers, then the full run, 2 workers. Pre-QC (affine only).
