@@ -54,7 +54,9 @@ def test_generative_brain_and_faces_present():
     status = load("generative_status.json")
     for d in ("QTIM", "CelebA", "IMDb-WIKI"):
         assert "lpips_alex" in status["present"][d], d
-    assert "fid" not in status["present"]["QTIM"]   # brain set level is its own amendment: not run, never a value
+    for r in ("other_side", "relative"):   # brain sets that coincide with the target set by construction
+        assert r not in load("ranks_generative.json").get("fid|QTIM", {}), r
+    assert "betti_matched" not in status["present"]["QTIM"]   # Betti 3D not built: not run, never a value
 
 
 def test_tile_ranks_are_permutations():

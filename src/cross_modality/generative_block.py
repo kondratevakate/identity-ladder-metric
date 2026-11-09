@@ -43,6 +43,10 @@ NA16 = {"lookalike16": {   # same reasons as common_frame.py NOT_AVAILABLE; n/a,
     "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
     "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md)"}}
 NOT_RUN_METRICS = {"QTIM": ("betti_matched", "betti_unmatched", "fid", "fwd")}
+# Brain set level: the own-other-side and relative sets are drawn from the same scans as the target set, so their FID
+# and FWD are ~0 by construction (brain Amendment 22 note); left out of the set-level ranks, never read as identity.
+EXCLUDED_SET = {"QTIM": {r: "set nearly coincides with the target set by construction (Amendment 22)"
+                         for r in ("mirror", "sibling", "cotwin")}}
 
 
 def ren(f, has_repeat):
@@ -126,13 +130,25 @@ for key, d in (("celeba", "CelebA"), ("imdb", "IMDb-WIKI")):
     S = {m: {r: {"value": e["R"], "n_cells": e["n_targets"]} for r, e in b.items()} for m, b in S.items()}
     src[d] = (R, S)
 brain = json.load(open(os.path.join(HERE, "results", "donor_ladder_brain_metrics_t23.json")))
-src["QTIM"] = (from_ladder(brain["views"]["deep/LR"]["ladder_R"], {"lpips": "lpips_alex", "persistence_w1": "persistence"}), {})
-NOT_RUN["QTIM"] = "brain: " + "; ".join(f"{k}: {v}" for k, v in brain["not_run"].items() if k in ("betti_matching_3d", "fid_fwd_topology_distance"))
+R = from_ladder(brain["views"]["deep/LR"]["ladder_R"], {"lpips": "lpips_alex", "persistence_w1": "persistence"})
+S = {}
+b5p = os.path.join(HERE, "results", "donor_ladder_brain_metrics_t23_v5.json")   # Amendment 22: LPIPS VGG, FID, FWD
+if os.path.exists(b5p):
+    b5 = json.load(open(b5p))
+    R.update(from_ladder(b5["views"]["deep/LR"]["ladder_R"], {"lpips_vgg": "lpips_vgg"}))
+    sl = {r: e for r, e in b5["set_level"]["deep/LR"].items()
+          if not r.startswith("_") and r not in EXCLUDED_SET.get("QTIM", {}) and e.get("fid") is not None}
+    S = {m: {r: {"value": e[m], "n_cells": e["n_cells"]} for r, e in sl.items()} for m in ("fid", "fwd")}
+    NOT_RUN_METRICS["QTIM"] = ("betti_matched", "betti_unmatched")
+src["QTIM"] = (R, S)
+NOT_RUN["QTIM"] = "brain: " + "; ".join(f"{k}: {v}" for k, v in brain["not_run"].items()
+                                        if k == "betti_matching_3d" or (k == "fid_fwd_topology_distance" and not S))
 
 ANCHOR = {d: "self" for d in src}
 ANCHOR["QTIM"] = "repeat"   # brain Amendment 20 R: repeat scan 0, strangers 1 (an affine map of the self scale)
 ranks, values = {}, {}
-status = {"method": __doc__.strip(), "not_run": NOT_RUN, "not_run_metrics": NOT_RUN_METRICS, "anchor": ANCHOR, "present": {}}
+status = {"method": __doc__.strip(), "not_run": NOT_RUN, "not_run_metrics": NOT_RUN_METRICS, "anchor": ANCHOR, "excluded_set_level_rungs": EXCLUDED_SET,
+          "present": {}}
 for d, (R, S) in src.items():
     status["present"][d] = []
     for m, _, _ in MET:
@@ -201,7 +217,8 @@ for k, b in rows:
     y += 1
 ax.text(-7.0, y + 1.8, "Same columns and colours as the main rank tiles (1 = what the metric calls closest). Per-target metrics are "
         "ranked by R_self,\nset-level FID and FWD by their per-rung set value. Fundus 9.15, iris P3, faces F2 (LPIPS AlexNet only), "
-        "brain Amendment 20\n(deep box, both sides; repeat-anchored R). Grey rows: not computed, reason given. All pre-QC except faces.",
+        "brain Amendments 20 and 22\n(deep box, both sides; repeat-anchored R; set level leaves out own other side and relative, "
+        "near 0 by construction). Grey rows: not computed, reason given. All pre-QC except faces.",
         fontsize=7, color="#333", va="center")
 ax.set_xlim(-7.2, len(COLS) + 0.2)
 ax.set_ylim(y + 3.2, -5.2)

@@ -4908,6 +4908,105 @@
     }
    }
   },
+  "lpips_vgg|QTIM": {
+   "anchor": "repeat",
+   "scale": "R",
+   "rungs": {
+    "repeat": {
+     "R": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "n": 23
+    },
+    "other_side": {
+     "R": 0.6292230958033141,
+     "ci95": [
+      0.5905918374975887,
+      0.6633124969164921
+     ],
+     "n": 221
+    },
+    "relative": {
+     "R": 0.8732186167982786,
+     "ci95": "n/a",
+     "n": 110
+    },
+    "lookalike_oracle": {
+     "R": 0.6679495799440975,
+     "ci95": [
+      0.6390405005826324,
+      0.6919226088719215
+     ],
+     "n": 221
+    },
+    "lookalike": {
+     "R": 0.7263159436265155,
+     "ci95": [
+      0.7006036006190886,
+      0.7495223000230116
+     ],
+     "n": 221
+    },
+    "cohort_mean": {
+     "R": 1.1397551006368927,
+     "ci95": [
+      1.1177338035096673,
+      1.162690542757019
+     ],
+     "n": 221
+    },
+    "mean_k2": {
+     "R": 0.8731626961931308,
+     "ci95": [
+      0.852136837337928,
+      0.8945139756896985
+     ],
+     "n": 221
+    },
+    "dataset_mean": {
+     "R": 1.2096601879753615,
+     "ci95": [
+      1.184558512954543,
+      1.2363573277424842
+     ],
+     "n": 221
+    },
+    "stranger": {
+     "R": 1.005102501641607,
+     "ci95": [
+      0.9815303518838715,
+      1.0298497677125467
+     ],
+     "n": 221
+    },
+    "shrink_ref": {
+     "R": -0.0462794842820274,
+     "ci95": [
+      -0.0617073893849114,
+      -0.03208446190991002
+     ],
+     "n": 23
+    },
+    "wrong_detail": {
+     "R": 1.034341764547155,
+     "ci95": [
+      0.9807282590029426,
+      1.0853898661715338
+     ],
+     "n": 221
+    },
+    "noise": {
+     "R": 2.0687404961138425,
+     "ci95": [
+      1.992419879277869,
+      2.1538775065553315
+     ],
+     "n": 221
+    }
+   }
+  },
   "persistence|QTIM": {
    "anchor": "repeat",
    "scale": "R",
@@ -5004,6 +5103,158 @@
       62.79093599482344
      ],
      "n": 221
+    }
+   }
+  },
+  "fid|QTIM": {
+   "anchor": "repeat",
+   "scale": "ratio to stranger set",
+   "rungs": {
+    "repeat": {
+     "ratio_to_stranger": 8.321595868237033,
+     "value": 25.693666382973973,
+     "stranger_value": 3.0875888218803027,
+     "ratio_ci95": "n/a",
+     "n": 138
+    },
+    "lookalike_oracle": {
+     "ratio_to_stranger": 1.2971926059829788,
+     "value": 4.005197390058825,
+     "stranger_value": 3.0875888218803027,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "lookalike": {
+     "ratio_to_stranger": 1.601361936104223,
+     "value": 4.944347213699999,
+     "stranger_value": 3.0875888218803027,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "cohort_mean": {
+     "ratio_to_stranger": 78.68684743901906,
+     "value": 242.95263058171597,
+     "stranger_value": 3.0875888218803027,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "mean_k2": {
+     "ratio_to_stranger": 7.443117977429745,
+     "value": 22.981287867048408,
+     "stranger_value": 3.0875888218803027,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "dataset_mean": {
+     "ratio_to_stranger": 102.42076058337348,
+     "value": 316.23319550570267,
+     "stranger_value": 3.0875888218803027,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "stranger": {
+     "ratio_to_stranger": 1.0,
+     "value": 3.0875888218803027,
+     "stranger_value": 3.0875888218803027,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "shrink_ref": {
+     "ratio_to_stranger": 9.165146792912259,
+     "value": 28.298204788687997,
+     "stranger_value": 3.0875888218803027,
+     "ratio_ci95": "n/a",
+     "n": 138
+    },
+    "wrong_detail": {
+     "ratio_to_stranger": 3.514970064062229,
+     "value": 10.85278227904243,
+     "stranger_value": 3.0875888218803027,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "noise": {
+     "ratio_to_stranger": 38.62271545525098,
+     "value": 119.25106451029654,
+     "stranger_value": 3.0875888218803027,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    }
+   }
+  },
+  "fwd|QTIM": {
+   "anchor": "repeat",
+   "scale": "ratio to stranger set",
+   "rungs": {
+    "repeat": {
+     "ratio_to_stranger": 5.065378943189287,
+     "value": 0.030255871497049544,
+     "stranger_value": 0.005973071676647297,
+     "ratio_ci95": "n/a",
+     "n": 138
+    },
+    "lookalike_oracle": {
+     "ratio_to_stranger": 0.805756951704591,
+     "value": 0.004812844026488357,
+     "stranger_value": 0.005973071676647297,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "lookalike": {
+     "ratio_to_stranger": 1.2859582529734876,
+     "value": 0.007681120818186779,
+     "stranger_value": 0.005973071676647297,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "cohort_mean": {
+     "ratio_to_stranger": 48.930427612174974,
+     "value": 0.2922649512965232,
+     "stranger_value": 0.005973071676647297,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "mean_k2": {
+     "ratio_to_stranger": 6.383582317297737,
+     "value": 0.038129594734997635,
+     "stranger_value": 0.005973071676647297,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "dataset_mean": {
+     "ratio_to_stranger": 65.40847213327811,
+     "value": 0.39068949231205746,
+     "stranger_value": 0.005973071676647297,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "stranger": {
+     "ratio_to_stranger": 1.0,
+     "value": 0.005973071676647297,
+     "stranger_value": 0.005973071676647297,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "shrink_ref": {
+     "ratio_to_stranger": 6.719339275503861,
+     "value": 0.040135095112295884,
+     "stranger_value": 0.005973071676647297,
+     "ratio_ci95": "n/a",
+     "n": 138
+    },
+    "wrong_detail": {
+     "ratio_to_stranger": 6.871826911447096,
+     "value": 0.041045914691587325,
+     "stranger_value": 0.005973071676647297,
+     "ratio_ci95": "n/a",
+     "n": 1326
+    },
+    "noise": {
+     "ratio_to_stranger": 62.669618722494505,
+     "value": 0.3743301245776171,
+     "stranger_value": 0.005973071676647297,
+     "ratio_ci95": "n/a",
+     "n": 1326
     }
    }
   }

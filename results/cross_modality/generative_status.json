@@ -1,14 +1,12 @@
 {
  "method": "Generative, perceptual and topology block for the cross-modality tiles (aggregates only).\n\nSources, read only: fundus `results/fundus_ladder_metrics_a915.json` (Amendment 9.15, identity-ladder-bilateral),\niris `results/iris_ladder_metrics.json` key `amendment_p3`, faces `results/face_ladder_metrics.json` key `panel_f2`\n(LPIPS is AlexNet there), brain `results/donor_ladder_brain_metrics_t23.json` view `deep/LR` (Amendment 20, LPIPS\nAlexNet on central orthogonal slices, persistence W1 over H0-H2; pre-QC). Brain R is anchored on the repeat scan\n(repeat 0, strangers 1); it is an affine map of the per-rung mean distance, so the rank order is the same as on the\nself scale. Relative = sibling and co-twin pooled, weighted by targets. Metrics a summary does not carry (brain Betti\n3D, FID, FWD) are \"not run\" with the reason from that JSON; never a zero.\nPer-target metrics (LPIPS AlexNet, LPIPS VGG, Betti matching matched / unmatched, intensity persistence, iris-code\nHamming distance) use R_self per rung (target 0, mean of 16 strangers 1, lower = closer). Set-level metrics (FID,\nFWD) use the per-rung set value (lower = closer). The tile rank is the rung's place among the rungs present.\nWrites `ranks_generative.json`, `generative_status.json` and `generative_tiles.png`.\n\nUsage: python -I src/cross_modality/generative_block.py results/cross_modality <bilateral_worktree>",
  "not_run": {
-  "QTIM": "brain: betti_matching_3d: needs a C++ build of Betti-Matching-3D (no compiler here; Linux VM); fid_fwd_topology_distance: set-level, own amendment"
+  "QTIM": "brain: betti_matching_3d: needs a C++ build of Betti-Matching-3D (no compiler here; Linux VM)"
  },
  "not_run_metrics": {
   "QTIM": [
    "betti_matched",
-   "betti_unmatched",
-   "fid",
-   "fwd"
+   "betti_unmatched"
   ]
  },
  "anchor": {
@@ -20,6 +18,13 @@
   "CelebA": "self",
   "IMDb-WIKI": "self",
   "QTIM": "repeat"
+ },
+ "excluded_set_level_rungs": {
+  "QTIM": {
+   "mirror": "set nearly coincides with the target set by construction (Amendment 22)",
+   "sibling": "set nearly coincides with the target set by construction (Amendment 22)",
+   "cotwin": "set nearly coincides with the target set by construction (Amendment 22)"
+  }
  },
  "present": {
   "GRAPE": [
@@ -85,7 +90,10 @@
   ],
   "QTIM": [
    "lpips_alex",
-   "persistence"
+   "lpips_vgg",
+   "persistence",
+   "fid",
+   "fwd"
   ]
  }
 }

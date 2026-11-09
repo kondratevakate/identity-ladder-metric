@@ -89,6 +89,6 @@ for a, M, lab, title, per in ((ax[0], Md, DS, "Do datasets agree?  (rho of rung 
         s.set_visible(False)
 fig.text(0.01, 0.015, "rho = Spearman correlation of the rung order (the tile ranks) between two datasets or two metrics, over rungs both have (at least 5). "
          "1 = same order, 0 = unrelated, -1 = reversed. ArcFace left out (5 shared rungs on one dataset).\nLPIPS, Betti, persistence, FID, FWD "
-         "from fundus 9.15, iris P3, faces F2 and brain Amendment 20 (brain: LPIPS and persistence only). MSE, RMSE, PSNR and PSNR fixed give the same order by construction. Brain, fundus and iris pre-QC; faces QC approved.", fontsize=7.5, color="#333")
-plt.tight_layout(rect=(0, 0.07, 1, 1))
+         "from fundus 9.15, iris P3, faces F2 and brain Amendments 20 and 22 (brain: no Betti; set level without own other side and relative).\nMSE, RMSE, PSNR and PSNR fixed give the same order by construction. Brain, fundus and iris pre-QC; faces QC approved.", fontsize=7.5, color="#333")
+plt.tight_layout(rect=(0, 0.09, 1, 1))
 plt.savefig(SCR + "/agreement.png", dpi=160, facecolor="white")

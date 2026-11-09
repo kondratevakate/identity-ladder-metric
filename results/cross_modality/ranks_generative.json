@@ -637,6 +637,20 @@
   "dataset_mean": 11,
   "noise": 12
  },
+ "lpips_vgg|QTIM": {
+  "shrink_ref": 1,
+  "repeat": 2,
+  "other_side": 3,
+  "lookalike_oracle": 4,
+  "lookalike": 5,
+  "mean_k2": 6,
+  "relative": 7,
+  "stranger": 8,
+  "wrong_detail": 9,
+  "cohort_mean": 10,
+  "dataset_mean": 11,
+  "noise": 12
+ },
  "persistence|QTIM": {
   "other_side": 1,
   "lookalike_oracle": 2,
@@ -650,5 +664,29 @@
   "stranger": 10,
   "wrong_detail": 11,
   "noise": 12
+ },
+ "fid|QTIM": {
+  "stranger": 1,
+  "lookalike_oracle": 2,
+  "lookalike": 3,
+  "wrong_detail": 4,
+  "mean_k2": 5,
+  "repeat": 6,
+  "shrink_ref": 7,
+  "noise": 8,
+  "cohort_mean": 9,
+  "dataset_mean": 10
+ },
+ "fwd|QTIM": {
+  "lookalike_oracle": 1,
+  "stranger": 2,
+  "lookalike": 3,
+  "repeat": 4,
+  "mean_k2": 5,
+  "shrink_ref": 6,
+  "wrong_detail": 7,
+  "cohort_mean": 8,
+  "noise": 9,
+  "dataset_mean": 10
  }
 }

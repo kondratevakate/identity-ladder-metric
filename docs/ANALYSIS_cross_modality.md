@@ -76,6 +76,14 @@ metrics. Metrics: rho for each dataset, mean over datasets. ArcFace left out (5 
   the generative block, from the existing fundus and iris rows; brain dropped it in its protocol and faces never
   defined it, so it is n/a with that reason (`common_all.json` `not_available`). Adding the rung left every existing
   common-frame value unchanged; ranks shift by one where it sits above a rung.
+- 9 Nov, brain Amendment 22 (`donor_ladder_brain_metrics_t23_v5.json`, commit 2240ea8; deep box, both sides; pre-QC):
+  LPIPS VGG (repeat-anchored R) and set-level FID / FWD added; GPU not needed (local CPU, USD 0). The own-other-side
+  and relative sets are drawn from the same scans as the target set, so their FID is ~0 by construction; they are
+  left out of the brain set-level ranks (`generative_status.json` `excluded_set_level_rungs`), never read as identity.
+  Descriptive: under LPIPS VGG the shrunk repeat beats the repeat (T2 fails, unlike AlexNet); at set level the
+  stranger set is closest (FID) and the dataset mean farthest, as on the other datasets; the repeat set has 138 cells
+  (small-sample FID bias). Still not run on brain: Betti matching 3D (C++ build). Faces LPIPS VGG (Amendment F2.1)
+  is running; it enters automatically from `panel_f2_lpips_vgg` when committed.
 
 ## 5. Window size follows the object (Kate, 8 Nov 2026: "да переделай честно")
 One pixel window covers a different share of each object (brain about 1/10 of its length, faces 0.4 inter-ocular
