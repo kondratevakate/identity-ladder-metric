@@ -543,6 +543,7 @@ def run_rows(version, limit, workers):
              "prep": os.path.join(PRIVATE, f"prep{version}")}
     if workers > 3:
         raise SystemExit("at most 3 workers (shared CPU)")
+    ram_guard(workers)
     tag = version + (f"_n{limit}" if limit else "")
     jobs, names, meta = build_jobs(version, limit, state)
     print(json.dumps(meta["sources"]), flush=True)
@@ -592,6 +593,21 @@ def run_rows(version, limit, workers):
 VGG_PRIVATE = os.path.join(os.path.dirname(FM.PRIVATE), "face-ladder-metrics-20261109-v3-vgg")
 VGG_WORKERS = 6                                        # Amendment F2.1: the brain pass holds 2 of the 8 cores
 VGG_KEYS = ["src", "target", "family", "patch", "fill"]
+WORKER_GB = 3.5                                        # measured 9 Nov: one worker holds the face cache, about 3.3 GB
+RAM_RESERVE_GB = 4.0                                   # left for the OS and other sessions
+
+
+def ram_guard(workers, free_gb=None):
+    """Refuse to start when the workers' peak memory does not fit in free RAM with a reserve (9 Nov: 6 workers took
+    20 GB and starved the workstation and a brain run). Returns the free GB checked."""
+    if free_gb is None:
+        import psutil
+        free_gb = psutil.virtual_memory().available / 2 ** 30
+    need = workers * WORKER_GB + RAM_RESERVE_GB
+    if free_gb < need:
+        raise SystemExit(f"{workers} workers need about {need:.1f} GB free RAM, {free_gb:.1f} GB available; "
+                         f"use fewer workers or wait")
+    return free_gb
 
 
 def _init_vgg(state):
@@ -656,6 +672,7 @@ def run_vgg(version, limit, workers):
              "betti": need_env("BETTI_SRC"), "torch_home": need_env("TORCH_HOME")}
     if workers > VGG_WORKERS:
         raise SystemExit(f"at most {VGG_WORKERS} workers (Amendment F2.1)")
+    ram_guard(workers)
     tag = version + (f"_n{limit}" if limit else "")
     jobs, names, meta = build_jobs(version, limit, state)
     import lpips

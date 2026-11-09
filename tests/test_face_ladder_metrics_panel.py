@@ -142,3 +142,10 @@ def test_rung_spearman_skips_metadata_and_missing():
 def test_vgg_outputs_are_a_new_folder_and_f2_keeps_its_own():
     assert P.VGG_PRIVATE != P.PRIVATE and os.path.basename(P.VGG_PRIVATE).endswith("-vgg")
     assert "lpips_vgg" not in P.NEW_ROW and "lpips_vgg" not in P.LOWER
+
+
+def test_ram_guard_refuses_workers_that_do_not_fit():
+    # 9 Nov: 6 workers x 3.3 GB on 15 GB free starved the workstation; the guard must refuse that start
+    with pytest.raises(SystemExit):
+        P.ram_guard(6, free_gb=15.0)
+    assert P.ram_guard(2, free_gb=12.0) == 12.0
