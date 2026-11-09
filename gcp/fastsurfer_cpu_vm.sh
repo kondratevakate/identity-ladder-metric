@@ -12,10 +12,12 @@ BASE=$HOME/fastsurfer-local; FS_HOME=$BASE/FastSurfer
 export PRIVATE=$HOME/private
 FS_TAG=v2.5.3; FS_VERSION=2.5.3+926af8d; TORCH=2.7.1+cpu
 HERE=$(cd "$(dirname "$0")" && pwd)
+export FASTSURFER_HOME=$FS_HOME PATH="$FS_HOME/.venv/bin:$PATH"   # as the runner sets them
+trap 'echo "failed (rc=$?) at line $LINENO: $BASH_COMMAND" >&2' ERR   # no silent exit under set -e
 
 check() {
   local v t
-  v=$("$FS_HOME/run_fastsurfer.sh" --version 2>/dev/null | head -1)
+  v=$("$FS_HOME/run_fastsurfer.sh" --version 2>/dev/null | grep -E '^[0-9]+\.[0-9]+\.[0-9]+' | head -1)
   t=$("$FS_HOME/.venv/bin/python" -c "import torch; print(torch.__version__, torch.cuda.is_available())")
   [[ "$v" == "$FS_VERSION"* ]] || { echo "FastSurfer version '$v', want $FS_VERSION" >&2; exit 2; }
   [[ "$t" == "$TORCH False" ]] || { echo "torch '$t', want '$TORCH False'" >&2; exit 2; }

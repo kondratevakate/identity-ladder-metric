@@ -136,3 +136,13 @@ def test_cpu_vm_checks_input_hashes_before_any_run():
     pull = src[src.index("  pull)"):src.index("  run)")]
     assert "sha256sum -c" in pull and "exit 3" in pull
     assert src.index("  run)") < src.index("check\n    rm -f")   # run starts with the version and device check
+
+
+def test_cpu_vm_version_check_uses_the_venv_and_never_exits_silently():
+    # 9 Nov 2026: without the venv on PATH run_fastsurfer.sh --version failed and set -e ended setup with no message;
+    # its first output line is an info line, not the version
+    src = open(CPU_VM, encoding="utf-8").read()
+    head = src[:src.index("check() {")]
+    assert 'PATH="$FS_HOME/.venv/bin:$PATH"' in head and "FASTSURFER_HOME=$FS_HOME" in head
+    assert "trap " in head and " ERR" in head
+    assert "grep -E '^[0-9]+\.[0-9]+\.[0-9]+'" in src
