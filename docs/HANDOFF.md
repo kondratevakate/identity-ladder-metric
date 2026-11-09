@@ -36,6 +36,22 @@ Paper scope (Kate, 8 Nov night; descriptive result is enough, minimal additions 
    (rank tiles by dataset, dataset agreement, dataset card table).
 Citations for the protein-structure approach go through bib-verify before any text uses them.
 
+Backlog (Kate, 9 Nov 2026: "надо строить только отличия которые будут влиять на downstream task ... измерение перестает
+быть одинаковым когда разница в сегментации мозга например превосходит 1мм"; "пускай амендмент будет в беклог"):
+downstream significance threshold per dataset. A difference between fills counts only if it changes a downstream
+task by more than max(task tolerance, the dataset's own repeat or inter-rater noise); two metrics are redundant when
+their "matters / does not matter" calls agree (kappa), and then one is kept. Proposed amendments, none written yet:
+- Brain Amendment 24 (QTIM, IXI): FastSurfer label boundary shift in the box, ASSD and HD95 in mm; threshold
+  max(1 mm, repeat-vs-oracle shift on QTIM repeats); IXI borrows the QTIM floor (flagged). Needs the FastSurfer labels.
+- Fundus A9.16: PAPILA disc and cup contours (two experts per eye, `ExpertsSegmentations/Contours`), shift and CDR
+  change against the inter-expert difference, on windows that intersect the contours; GRAPE: inter-visit change,
+  whether GRAPE has disc contours is not checked.
+- Faces F4: ArcFace verification, change of the same / not-same decision at a fixed false-match rate set from the
+  dataset's own genuine and stranger pairs.
+- Iris P5: iris-code Hamming distance, change of the match decision at the dataset's own genuine-vs-impostor point.
+Caveat: one 16 px window rarely flips a whole-image decision (faces, iris), so those tasks may need several windows or
+the similarity shift itself. Parked because: Kate put it in the backlog on 9 Nov; reopens when she says so.
+
 ## Status 8 Nov 2026 (after the forced reboot; start here for the papers)
 
 Everything here is from the session reports of 7-8 Nov and the repository; numbers live in the result JSONs, not here.
