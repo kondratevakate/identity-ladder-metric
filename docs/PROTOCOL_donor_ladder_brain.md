@@ -832,3 +832,52 @@ Expectations, with MSE R and 95% family-bootstrap intervals on the L+R views:
 - **Parietal box.** The other side is almost as far as a stranger here, so the parietal R values have large
   magnitudes and wide intervals; read the order, not the size.
 Pre-QC, affine only.
+## Amendment 24 (9 Nov 2026, mean of 16 look-alikes and Betti matching 3D; recorded before any result)
+
+Kate, 9 Nov 2026 evening, on the list of remaining items (quoted by the ISBI paper session): "запускай".
+
+**A. Mean of 16 look-alikes, QTIM and IXI.** This reverses the Amendment 11 line "k = 4, 8, 16 and the 16-look-alike
+mean are dropped" for the k = 16 mean only, on Kate's decision, so that the rung exists for the brain as it does
+for fundus and iris (cross-modality key `lookalike16`).
+- Fill: the per-voxel masked mean of the 16 donors with the smallest scaffold distance, computed with the same
+  distances `masked_dist` already uses to pick the k = 1 look-alike (Amendment 11 scaffold rule: shell voxels inside
+  both masks, at least 50% of the scaffold shared, donor cube at least 95% inside its own mask, other families
+  only). There is no new search. If fewer than 16 donors are eligible, the mean uses all of them and n is reported.
+  The pools are 218 to 220 people (QTIM) and 99 (IXI). E = target mask AND the voxels where at least one of the 16
+  donors is valid (the rule of every mean fill).
+- Positions, sides, targets, metrics: as the tier-1 rows (QTIM Amendments 10 to 12; IXI Amendment 23 with its
+  metric list), all 34 positions, both sides.
+- R anchors: QTIM repeat = 0, stranger = 1 (Amendment 11). IXI other side = 0, stranger = 1 (Amendment 23).
+  Intervals and views as before.
+- Reproduction gate: the nearest of the 16 must reproduce the committed k = 1 look-alike rows on every metric
+  (same donor, same E, same means). Otherwise no summary is written.
+- Old results stay untouched. Private rows: `donor-ladder-brain-lookalike16-20261109-v1/` (QTIM) and
+  `ixi-ladder-20261109-v1/lookalike16_parts/` (IXI). Public: `results/donor_ladder_brain_lookalike16.json`, with
+  `lookalike16` and, for reference, `lookalike` and `dataset_mean` per dataset, view and metric.
+- Expectation (stated now): on MSE-type metrics the 16-look-alike mean is closer than the single look-alike and
+  than the dataset mean in the random cubes (averaging selected donors removes their individual detail while
+  keeping the scaffold-matched part). On SSIM, pearson and lddt it is reported without an expectation.
+- Order: smoke on 3 targets with timing, then QTIM, then IXI, one job at a time on the laptop CPU.
+
+**B. Betti matching 3D, QTIM (IXI if the timing allows it within the budget).**
+- Library: Betti-Matching-3D (github.com/nstucki/Betti-Matching-3D), built from source on a Linux VM, commit
+  recorded at clone. Same settings as the 2D library in fundus Amendment 9.15 and iris P3 (Betti-matching at commit
+  3e7eca26): sublevel filtration, absolute (not relative). The matched and unmatched parts are computed with the
+  same formula as `iris_ladder_metrics_extra.betti_parts`, over dimensions 0, 1 and 2 (dimension 2 exists only in
+  3D; also reported as dims 0-1 only, so it is comparable with 2D). Lower = closer for both parts.
+- Input: the 16 mm random cubes of the tier-1 rows, z clipped to [-3, 3] and mapped linearly to [0, 1]. Only cubes
+  where E covers all 4096 voxels are used (no filler enters the filtration). Topology subset S as in fundus: per
+  target and side, 2 wholly valid random positions, drawn with seed [20261102, target, side]. All rungs of the
+  tier-1 rows for those cells.
+- Agreement check before any full run: on 2 targets, the 3D library on a single 16 x 16 slice (a 16 x 16 x 1
+  volume) must give the same matched and unmatched parts in dimensions 0 and 1 as the 2D library on the same slice,
+  within 1e-6 relative. Otherwise stop and report.
+- Compute: a Linux GCP spot VM in the cheapest allowed EU region (gcp/prices.py, STUDIES-038), resumable. Only the
+  cube pairs of S are uploaded, as float16 npz keyed by row index; no scans, no IDs. The VM and its disk are
+  deleted at the end, also on failure, and the cost is reported. Cap: USD 2 for this item. If the timed estimate is
+  higher, stop and report before the full run.
+- Summary: R and tests as tier 1 (QTIM repeat anchor; IXI other-side anchor), on the subset S. Private rows in
+  `donor-ladder-brain-betti3d-20261109-v1/`; public `results/donor_ladder_brain_betti3d.json`.
+- Expectations (stated now): Betti matching ranks noise far (it adds features; passes T3b) and the dataset mean far
+  (smoothing removes features). It may, like persistence in Amendment 20, put the own other side ahead of the
+  repeat because of the session intensity offset; that is reported, not repaired.
