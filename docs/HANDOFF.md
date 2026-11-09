@@ -18,7 +18,7 @@ QC sheet on a few targets, look at it, then the full run), exactly as done with 
 | Iris full P3 | Iris | aggregates into results/, figures without real eyes, commit | done e2df476 (P3), 6461725 (P4, 10 px; rung order Spearman 0.97-1.00) |
 | All-modality map figure | this session | brain numbers from Gaussian JSONs, footer fixed, test | done 8 Nov night |
 | Integrity | this session | every committed result JSON has its generating script in git; tests pass | done: paper-core JSONs trace to committed scripts; 371 tests pass. Limitation: the face v6f pipeline (`src/donor_ladder_face.py`, its protocol) is uncommitted on master and `src/face_ladder_metrics.py` hardcodes FACE_SRC to the master path; needs Kate's decision on who commits it and a repo-relative path |
-| Generative/latent block in cross-modality tiles | Explorer | LPIPS, FID/FWD, Betti matching rows added to `results/cross_modality/` from tonight's JSONs | done 4c58f32: fundus 9.15 + iris P3 in `generative_tiles.png` and agreement; brain, faces drawn "not run" (limitation in `docs/ANALYSIS_cross_modality.md` 4b); faces F2 and brain Amendment 20 added in cdbb4d7; still "not run" with reason: brain Betti 3D, brain FID/FWD, LPIPS VGG on faces and brain |
+| Generative/latent block in cross-modality tiles | Explorer | LPIPS, FID/FWD, Betti matching rows added to `results/cross_modality/` from tonight's JSONs | done 4c58f32: fundus 9.15 + iris P3 in `generative_tiles.png` and agreement; brain, faces drawn "not run" (limitation in `docs/ANALYSIS_cross_modality.md` 4b); faces F2 and brain Amendment 20 added in cdbb4d7; 9 Nov under Kate's GPU budget ("Gpu для метрик разрешаю 20$"): brain LPIPS VGG + FID/FWD (A22) in 014077d, faces LPIPS VGG (F2.1) in 376e108, IXI in 8f672cf / 6252498, values behind the ranks and the mean-of-16-look-alikes rung in 26b9dd3; still "not run" with reason: brain Betti 3D (C++ build), IXI generative metrics (tier 1 only), latent metrics |
 | Dataset card table | Explorer | one row per dataset: persons, images, rungs available, V, repeat / look-alike / stranger ratios | done 4c58f32: `results/cross_modality/dataset_card.{json,png}`, n/a never 0, test `tests/test_cross_modality.py`; explorer page v16 |
 | Not tonight (limitation) | | Brain-ID, latent metrics (no GPU), Betti 3D, FastSurfer rest, IXI | written as limitations |
 
@@ -117,7 +117,11 @@ Kate's open decisions
 1. Fundus: verdict on the new-metric QC sheets (`qc_extra_GRAPE_p8.png`, `qc_extra_PAPILA_p9.png`) and which LPIPS
    variant is primary.
 2. Iris: re-look at the lid-shadow mask sheets (frame P2 status).
-3. GPU for the latent metrics and the Betti matching 3D build (GCP VM, cheapest region first), or leave them blocked.
+3. Latent metrics (pullback, Fisher-Rao, LDDMM, plausibility): need a generative model with an inversion encoder per
+   modality and an amendment; choose the model before any GPU is priced. Betti matching 3D: C++ build on a Linux VM.
+   GPU budget USD 20 (9 Nov): spent so far about USD 0.23 (estimate, billing lags a day: face IMDb LPIPS VGG on the
+   spot VM fs-cpu-remainder, europe-west1-b, deleted 14:20Z); LPIPS VGG and brain FID/FWD otherwise ran on the laptop
+   CPU at USD 0. The brain session's FastSurfer VM time before 12:58Z is its own cost, to be reported by it.
 4. Visual QC of one window size per modality before each sweep.
 5. Paper scope: which results enter as confirmatory (per-modality protocols) and which as exploratory (cross-modality
    analysis, post hoc).
