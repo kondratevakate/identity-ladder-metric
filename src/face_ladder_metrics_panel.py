@@ -501,15 +501,10 @@ def target_chunks(sel, size):
     return [sel[k:k + size] for k in range(0, len(sel), size)]
 
 
-def run_rows(version, limit, workers):
-    state = {"cache": os.path.join(V1, f"cache{version}"), "fundus": need_env("FUNDUS_METRICS_SRC"),
-             "betti": need_env("BETTI_SRC"), "torch_home": need_env("TORCH_HOME"),
-             "prep": os.path.join(PRIVATE, f"prep{version}")}
-    if workers > 3:
-        raise SystemExit("at most 3 workers (shared CPU)")
+def build_jobs(version, limit, state):
+    """Jobs of the F2 row pass (one per source x position x chunk of targets), their names and the run meta."""
     desc = json.load(open(os.path.join(state["cache"], "desc.json")))["data"]
     lam = FM.lambdas(version)
-    tag = version + (f"_n{limit}" if limit else "")
     v1 = pd.read_csv(os.path.join(V1, f"rows{version}.csv.gz"), usecols=["src", "target", "patch", "fill", "mse"])
     jobs = []
     meta = {"version": version, "sources": {}, "sha256": {"fundus_metrics_source": sha(state["fundus"]),
@@ -539,6 +534,17 @@ def run_rows(version, limit, workers):
                 names.append(f"{src}_p{pk:02d}_c{c:02d}")
         meta["sources"][src] = {"n_targets_scored": int(len(sel)), "n_betti_targets": len(bsel & set(sel.tolist())),
                                 "n_set_cells": len(cells), "n_positions": len(pos)}
+    return jobs, names, meta
+
+
+def run_rows(version, limit, workers):
+    state = {"cache": os.path.join(V1, f"cache{version}"), "fundus": need_env("FUNDUS_METRICS_SRC"),
+             "betti": need_env("BETTI_SRC"), "torch_home": need_env("TORCH_HOME"),
+             "prep": os.path.join(PRIVATE, f"prep{version}")}
+    if workers > 3:
+        raise SystemExit("at most 3 workers (shared CPU)")
+    tag = version + (f"_n{limit}" if limit else "")
+    jobs, names, meta = build_jobs(version, limit, state)
     print(json.dumps(meta["sources"]), flush=True)
     t0 = time.time()
     # resumable: every (source, position) job is saved on its own, so a crash loses one position only
@@ -579,6 +585,166 @@ def run_rows(version, limit, workers):
     meta["minutes"] = round((time.time() - t0) / 60, 1)
     json.dump(meta, open(os.path.join(PRIVATE, f"meta{tag}.json"), "w"), indent=1)
     print("rows written", meta["minutes"], "min", flush=True)
+
+
+# ---------------------------------------------------------------------------------------------------- LPIPS VGG (F2.1)
+
+VGG_PRIVATE = os.path.join(os.path.dirname(FM.PRIVATE), "face-ladder-metrics-20261109-v3-vgg")
+VGG_WORKERS = 6                                        # Amendment F2.1: the brain pass holds 2 of the 8 cores
+VGG_KEYS = ["src", "target", "family", "patch", "fill"]
+
+
+def _init_vgg(state):
+    from threadpoolctl import threadpool_limits
+    W2["blas"] = threadpool_limits(1)
+    FM._init(state["cache"])
+    os.environ["TORCH_HOME"] = state["torch_home"]
+    import lpips
+    import torch
+    torch.set_num_threads(1)
+    W2["lpips"], W2["torch"] = lpips.LPIPS(net="vgg", version="0.1", verbose=False).eval(), torch
+
+
+def score_vgg(args):
+    """LPIPS VGG only, on the F2 fills rebuilt exactly as in `score_position` (same window, ring, pool, fills, E and
+    the same all-in-E input rule); MSE is recomputed only for the reproduction gate against v1."""
+    src, pk, (y0, x0), targets, lam, pool, n_sub, shift_px, _betti, _cells, v1_mse, cell_cap = args
+    sl = (slice(y0, y0 + WIN), slice(x0, x0 + WIN))
+    valid = np.asarray(FM.WORK[f"{src}_valid"])
+    ring = FM.ring_mask(y0, x0) & valid
+    P = FM.pool_window(src, {"pool": pool}, sl, ring)
+    P["shift_px"] = shift_px
+    rows, lp_pairs, lp_idx, worst = [], [], [], 0.0
+    for ti, d in targets:
+        if (np.asarray(FM.WORK["M"][d["t"]])[sl] & valid[sl]).mean() < FM.MIN_IN_MASK:
+            continue
+        xw, tv, fills = FM.window_fills(src, ti, d, pk, sl, ring, lam, P, n_sub, ident=lambda t, g: g)
+        for name, (f, ok, g) in fills.items():
+            e = tv & ok
+            if e.sum() < 10:
+                continue
+            f = np.asarray(f, np.float32)
+            mse = float(np.mean((f[e].astype(np.float64) - xw[e]) ** 2))
+            ref = v1_mse.get((ti, name))
+            if ref is None or not np.isclose(mse, ref, rtol=0, atol=1e-5):
+                worst = np.inf if ref is None else max(worst, abs(mse - ref))
+            if e.all():
+                lp_pairs.append((xw, f))
+                lp_idx.append(len(rows))
+            rows.append({"src": src, "target": ti, "family": d["family"], "patch": pk, "fill": name, "mse": mse,
+                         "lpips_vgg": np.nan})
+        if len(lp_pairs) >= cell_cap:
+            for k, v in zip(lp_idx, lpips_batch(lp_pairs)):
+                rows[k]["lpips_vgg"] = v
+            lp_pairs, lp_idx = [], []
+    for k, v in zip(lp_idx, lpips_batch(lp_pairs)):
+        rows[k]["lpips_vgg"] = v
+    return rows, worst
+
+
+def scored_set_gate(vgg, f2):
+    """F2.1 gate: VGG is scored on exactly the (source, target, position, fill) rows where F2 AlexNet LPIPS exists."""
+    key = ["src", "target", "patch", "fill"]
+    a = set(map(tuple, vgg.loc[vgg.lpips_vgg.notna(), key].astype(str).values.tolist()))
+    b = set(map(tuple, f2.loc[f2.lpips.notna(), key].astype(str).values.tolist()))
+    return {"n_vgg": len(a), "n_alexnet": len(b), "only_vgg": len(a - b), "only_alexnet": len(b - a),
+            "passed": bool(a == b and len(a) > 0)}
+
+
+def run_vgg(version, limit, workers):
+    state = {"cache": os.path.join(V1, f"cache{version}"), "fundus": need_env("FUNDUS_METRICS_SRC"),
+             "betti": need_env("BETTI_SRC"), "torch_home": need_env("TORCH_HOME")}
+    if workers > VGG_WORKERS:
+        raise SystemExit(f"at most {VGG_WORKERS} workers (Amendment F2.1)")
+    tag = version + (f"_n{limit}" if limit else "")
+    jobs, names, meta = build_jobs(version, limit, state)
+    import lpips
+    meta["sha256"]["lpips_vgg_linear"] = sha(os.path.join(os.path.dirname(lpips.__file__), "weights", "v0.1",
+                                                          "vgg.pth"))
+    meta["sha256"]["vgg16_backbone"] = sha(os.path.join(state["torch_home"], "hub", "checkpoints",
+                                                         "vgg16-397923af.pth"))
+    meta["sha256"]["face_ladder_metrics_panel"] = sha(__file__)
+    print(json.dumps(meta["sources"]), flush=True)
+    parts = os.path.join(VGG_PRIVATE, f"parts{tag}")
+    os.makedirs(parts, exist_ok=True)
+    # pickles written by this function into the private folder only (never untrusted input)
+    part = lambda k: os.path.join(parts, f"{names[k]}.pkl")  # noqa: E731
+    todo = [k for k in range(len(jobs)) if not os.path.exists(part(k))]
+    print(f"jobs done {len(jobs) - len(todo)}/{len(jobs)}, to run {len(todo)}", flush=True)
+    t0 = time.time()
+    with ProcessPoolExecutor(workers, initializer=_init_vgg, initargs=(state,)) as ex:
+        for n, (k, res) in enumerate(zip(todo, ex.map(score_vgg, [jobs[k] for k in todo]))):
+            with open(part(k) + ".tmp", "wb") as fh:
+                pickle.dump(res, fh)
+            os.replace(part(k) + ".tmp", part(k))
+            el = time.time() - t0
+            eta = el / (n + 1) * (len(todo) - n - 1)
+            n_lp = sum(1 for r in res[0] if np.isfinite(r["lpips_vgg"]))
+            print(f"job {n + 1}/{len(todo)} ({names[k]}): rows {len(res[0])} vgg {n_lp} repro {res[1]:.2e}, "
+                  f"{el / 60:.0f} min, ETA {eta / 60:.0f} min ({time.strftime('%H:%M', time.localtime(time.time() + eta))})",
+                  flush=True)
+    rows, worst = [], 0.0
+    for k in range(len(jobs)):
+        with open(part(k), "rb") as fh:
+            r, w = pickle.load(fh)
+        rows += r
+        worst = max(worst, w)
+    vgg = pd.DataFrame(rows)
+    n_v1 = int(sum(len(j[10]) for j in jobs))
+    meta["reproduction"] = {"max_abs_mse_diff": worst, "n_rows": len(vgg), "n_rows_v1": n_v1,
+                            "passed": bool(worst <= 1e-5 and len(vgg) == n_v1)}
+    f2 = pd.read_csv(os.path.join(PRIVATE, f"rows{tag}.csv.gz"), usecols=["src", "target", "patch", "fill", "lpips"])
+    meta["scored_set"] = scored_set_gate(vgg, f2)
+    print(json.dumps(meta["reproduction"]), json.dumps(meta["scored_set"]), flush=True)
+    if not (meta["reproduction"]["passed"] and meta["scored_set"]["passed"]):
+        raise SystemExit("VGG pass fails the F2.1 gates; nothing written")
+    vgg[VGG_KEYS + ["lpips_vgg"]].to_csv(os.path.join(VGG_PRIVATE, f"rows_vgg{tag}.csv.gz"), index=False)
+    meta["minutes"] = round((time.time() - t0) / 60, 1)
+    json.dump(meta, open(os.path.join(VGG_PRIVATE, f"meta_vgg{tag}.json"), "w"), indent=1)
+    print("vgg rows written", meta["minutes"], "min", flush=True)
+
+
+def spearman_rungs(Ra, Rb):
+    """Spearman of rung R between two ladders over the rungs both define (metadata keys starting with _ skipped)."""
+    from scipy.stats import spearmanr
+    ks = sorted(k for k in set(Ra) & set(Rb) if not k.startswith("_")
+                and np.isfinite(Ra[k]["R"]) and np.isfinite(Rb[k]["R"]))
+    if len(ks) < 3:
+        return {"n_rungs": len(ks), "spearman": None}
+    return {"n_rungs": len(ks), "spearman": float(spearmanr([Ra[k]["R"] for k in ks], [Rb[k]["R"] for k in ks])[0])}
+
+
+def write_vgg_json(version, limit):
+    tag = version + (f"_n{limit}" if limit else "")
+    r = pd.read_csv(os.path.join(VGG_PRIVATE, f"rows_vgg{tag}.csv.gz"))
+    meta = json.load(open(os.path.join(VGG_PRIVATE, f"meta_vgg{tag}.json")))
+    BM.LOWER_BETTER.add("lpips_vgg")
+    SELF_ZERO.add("lpips_vgg")                         # as AlexNet LPIPS: d(target, itself) = 0
+    FM.with_self = with_self_panel
+    views = {src: FM.summarise(r[r.src == src], ["lpips_vgg"]) for src in ("celeba", "imdb")}
+    if limit:
+        alex = json.load(open(os.path.join(PRIVATE, f"summary_panel{tag}.json")))["panel_f2"]["views"]
+    else:
+        alex = json.load(open(FM.OUT_JSON, encoding="utf-8"))["panel_f2"]["views"]
+    rank = {src: spearman_rungs(views[src]["ladder_R"].get("lpips_vgg", {}), alex[src]["ladder_R"].get("lpips", {}))
+            for src in views}
+    block = {"amendment": "F2.1 (docs/PROTOCOL_face_metrics.md)", "rows": os.path.basename(VGG_PRIVATE),
+             "metric": "LPIPS VGG16, lpips 0.1.4, linear layers v0.1; F2 input rule; lower = closer",
+             "reproduction_of_v1_rows": meta["reproduction"], "scored_set_equals_alexnet": meta["scored_set"],
+             "sha256": meta["sha256"], "counts": meta["sources"], "views": views,
+             "rung_order_spearman_vs_alexnet": rank}
+    if limit:
+        path = os.path.join(VGG_PRIVATE, f"summary_vgg{tag}.json")
+        json.dump(BM.finite({"panel_f2_lpips_vgg": block}), open(path, "w"), indent=1, allow_nan=False)
+    else:
+        path = FM.OUT_JSON
+        out = json.load(open(path, encoding="utf-8"))
+        if out.get("frame") != version:
+            raise SystemExit(f"{path} holds frame {out.get('frame')}, not {version}")
+        out["panel_f2_lpips_vgg"] = block              # sibling block; panel_f2 is not touched
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(BM.finite(out), fh, indent=1, allow_nan=False)
+    print(path, json.dumps(rank))
 
 
 # ---------------------------------------------------------------------------------------------------- set level
@@ -716,7 +882,7 @@ def write_json(version, limit):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("stage", choices=("prep", "rows", "set", "summary"))
+    ap.add_argument("stage", choices=("prep", "rows", "set", "summary", "vgg", "vgg_summary"))
     ap.add_argument("--version", required=True, help="face frame version, e.g. _v6f (no default)")
     ap.add_argument("--limit", type=int, default=0, help="evenly spaced targets per source (smoke)")
     ap.add_argument("--workers", type=int, default=3)
@@ -728,6 +894,10 @@ def main():
         run_rows(a.version, a.limit, a.workers)
     elif a.stage == "set":
         run_set(a.version, a.limit)
+    elif a.stage == "vgg":
+        run_vgg(a.version, a.limit, a.workers)
+    elif a.stage == "vgg_summary":
+        write_vgg_json(a.version, a.limit)
     else:
         write_json(a.version, a.limit)
 

@@ -111,3 +111,34 @@ def test_target_chunks_cover_each_target_once_in_order():
     assert all(0 < len(c) <= P.CHUNK for c in ch)
     assert [t for c in ch for t in c] == sel
     assert P.target_chunks([3, 7], 50) == [[3, 7]] and P.target_chunks([], 50) == []
+
+
+def test_vgg_scored_set_gate_requires_exactly_the_alexnet_rows():
+    import pandas as pd
+    f2 = pd.DataFrame({"src": ["celeba"] * 3, "target": [1, 1, 2], "patch": [0, 1, 0], "fill": ["mirror"] * 3,
+                       "lpips": [0.1, np.nan, 0.2]})
+    same = f2.rename(columns={"lpips": "lpips_vgg"})
+    assert P.scored_set_gate(same, f2)["passed"]
+    extra = same.copy()
+    extra.loc[1, "lpips_vgg"] = 0.3                    # VGG scored a row AlexNet left missing
+    g = P.scored_set_gate(extra, f2)
+    assert not g["passed"] and g["only_vgg"] == 1
+    lost = same.copy()
+    lost.loc[0, "lpips_vgg"] = np.nan                  # VGG lost a row AlexNet scored
+    g = P.scored_set_gate(lost, f2)
+    assert not g["passed"] and g["only_alexnet"] == 1
+    empty = same.assign(lpips_vgg=np.nan)
+    assert not P.scored_set_gate(empty, f2.assign(lpips=np.nan))["passed"]
+
+
+def test_rung_spearman_skips_metadata_and_missing():
+    Ra = {"a": {"R": 0.1}, "b": {"R": 0.5}, "c": {"R": 0.9}, "d": {"R": np.nan}, "_anchors": {"R": 1.0}}
+    Rb = {"a": {"R": 0.2}, "b": {"R": 0.4}, "c": {"R": 1.1}, "d": {"R": 0.3}, "_anchors": {"R": -5.0}}
+    out = P.spearman_rungs(Ra, Rb)
+    assert out["n_rungs"] == 3 and out["spearman"] == pytest.approx(1.0)
+    assert P.spearman_rungs({"a": {"R": 1.0}}, {"a": {"R": 1.0}})["spearman"] is None
+
+
+def test_vgg_outputs_are_a_new_folder_and_f2_keeps_its_own():
+    assert P.VGG_PRIVATE != P.PRIVATE and os.path.basename(P.VGG_PRIVATE).endswith("-vgg")
+    assert "lpips_vgg" not in P.NEW_ROW and "lpips_vgg" not in P.LOWER

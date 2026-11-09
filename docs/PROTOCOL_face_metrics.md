@@ -280,3 +280,21 @@ sweep therefore runs the tier-1 panel at w = 5, 10 and 20 px on the same 100 eve
 `--limit 100` rule), not on all targets, and only after the w = 10 smoke sheet looks right to the agent. The F2 panel at
 the three sizes is not run tonight; it is reported as a limitation (needs per-size densities, about 8 CPU hours).
 Rank stability is computed on these 100 targets per source, against the 16 px tier-1 rows of the same targets.
+
+## Amendment F2.1 (9 Nov 2026, LPIPS with the VGG backbone; recorded before any VGG result)
+
+Requested by the cross-modality integration (the brain panel adds LPIPS VGG); Kate: keep the old results and write
+this as new ones. Nothing in F2 changes: `panel_f2`, its rows and its parts stay as they are.
+- Metric: LPIPS VGG16, lpips 0.1.4, linear layers v0.1 (torchvision VGG16 weights `vgg16-397923af.pth` from the same
+  TORCH_HOME). Input rule unchanged from F2: the 16 px window, z / 4 clipped to [-1, 1], grey to 3 channels, bilinear
+  to 64 px, scored only if every window pixel is in E. Lower = closer.
+- Pairs: the same F2 fills, rebuilt by the same code at v6f; a VGG-only pass (no other metric recomputed). Gate: the
+  rebuilt MSE equals v1 within 1e-5 on every row, and the scored (source, target, position, fill) set equals the set
+  where F2 AlexNet LPIPS is present; otherwise nothing is written.
+- Outputs: private `face-ladder-metrics-20261109-v3-vgg/` (parts, rows with keys and `lpips_vgg` only, meta); public
+  `results/face_ladder_metrics.json` gains a sibling block `panel_f2_lpips_vgg` with the F2 view shape
+  (`views[src].ladder_R.lpips_vgg`, R with 0 = target itself, 1 = stranger mean, family-bootstrap CI).
+- Expectation, written now (descriptive, not a gate): VGG orders the rungs like AlexNet (Spearman of rung R >= 0.9 per
+  source); the Spearman is reported next to the result.
+- Compute: local CPU, one torch thread per worker, at most 6 workers (the brain pass holds 2 of the 8 cores); smoke on
+  4 targets per source with timing and a QC look before the full run.
