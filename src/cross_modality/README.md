@@ -18,7 +18,7 @@ Run order (`OUT=results/cross_modality`; Python with `-I`):
 | 7 | `cal_tiles.py OUT` | calibrated score c tiles, `cal_c_all.json` |
 | 8 | `agreement.py OUT` | dataset x dataset and metric x metric agreement of rung order |
 | 9 | `dataset_card.py OUT <bilateral_worktree>` | `dataset_card.json` / `.png`: persons, images, rungs, V, ladder ratios |
-| 10 | `generative_block.py OUT <bilateral_worktree>` | LPIPS, Betti matching, persistence, iris code, FID, FWD ranks and tiles (fundus 9.15, iris P3, faces F2, brain Amendment 20; missing parts "not run") |
+| 10 | `generative_block.py OUT <bilateral_worktree>` | LPIPS, Betti matching, persistence, iris code, FID, FWD ranks, values (`values_generative.json`) and tiles (fundus 9.15, iris P3, faces F2, brain Amendment 20; missing parts "not run") |
 | 11 | `agreement.py OUT` again | agreement including the generative block |
 | 12 | `build_data.py OUT`, then `build_explorer.py OUT page.html` | explorer page (published privately as a claude.ai artifact) |
 

@@ -20,7 +20,7 @@ def test_every_aggregate_has_its_generating_script():
     made_by = {"common_all.json": "common_frame.py", "tests_all.json": "tests_uniform.py", "cal_faces.json": "cal_uniform.py",
                "cal_brain.json": "cal_uniform.py", "cal_c_all.json": "cal_tiles.py", "ranks_all.json": "rank_tiles.py",
                "agreement.json": "agreement.py", "corr_all.json": "explore_corr.py", "data.json": "build_data.py",
-               "dataset_card.json": "dataset_card.py", "ranks_generative.json": "generative_block.py",
+               "dataset_card.json": "dataset_card.py", "ranks_generative.json": "generative_block.py", "values_generative.json": "generative_block.py",
                "generative_status.json": "generative_block.py"}
     for f in os.listdir(OUT):
         if f.endswith(".json"):
@@ -60,3 +60,30 @@ def test_generative_brain_and_faces_present():
 def test_tile_ranks_are_permutations():
     for key, rank in load("ranks_all.json").items():
         assert sorted(rank.values()) == list(range(1, len(rank) + 1)), key
+
+
+def test_every_tile_column_has_a_drawn_thumbnail():
+    import numpy as np
+    keys = set(np.load(os.path.join(OUT, "drawn_face_thumbs.npz")).files)
+    for col in ("repeat", "other_side", "relative", "lookalike_oracle", "lookalike", "lookalike16", "cohort_mean",
+                "mean_k2", "dataset_mean", "stranger", "shrink_ref", "wrong_detail", "noise"):
+        assert col in keys, col
+
+
+def test_lookalike16_is_na_with_reason_never_a_value():
+    c = load("common_all.json")
+    na = c["not_available"]["lookalike16"]
+    for d in ("QTIM", "CelebA", "IMDb-WIKI"):
+        assert d in na and na[d]
+        assert "lookalike16" not in c["datasets"][d]["R_self"], d
+    for d in ("GRAPE", "PAPILA", "UTIRIS NIR", "UTIRIS VIS", "UPOL"):
+        assert "lookalike16" in c["datasets"][d]["R_self"], d
+
+
+def test_generative_values_match_ranks_and_mark_anchor():
+    v = load("values_generative.json")["values"]
+    for key, rank in load("ranks_generative.json").items():
+        assert set(v[key]["rungs"]) == set(rank), key
+        assert v[key]["anchor"] == ("repeat" if key.endswith("|QTIM") else "self"), key
+        for r, rec in v[key]["rungs"].items():
+            assert rec.get("ci95", rec.get("ratio_ci95")) is not None and rec["n"] is not None, (key, r)

@@ -6,11 +6,12 @@
   "lookalike": 4,
   "other_side": 5,
   "cohort_mean": 6,
-  "mean_k2": 7,
-  "dataset_mean": 8,
-  "wrong_detail": 9,
-  "stranger": 10,
-  "noise": 11
+  "lookalike16": 7,
+  "mean_k2": 8,
+  "dataset_mean": 9,
+  "wrong_detail": 10,
+  "stranger": 11,
+  "noise": 12
  },
  "lpips_vgg|GRAPE": {
   "repeat": 1,
@@ -21,9 +22,10 @@
   "cohort_mean": 6,
   "mean_k2": 7,
   "wrong_detail": 8,
-  "stranger": 9,
-  "dataset_mean": 10,
-  "noise": 11
+  "lookalike16": 9,
+  "stranger": 10,
+  "dataset_mean": 11,
+  "noise": 12
  },
  "betti_matched|GRAPE": {
   "repeat": 1,
@@ -31,38 +33,41 @@
   "lookalike_oracle": 3,
   "dataset_mean": 4,
   "lookalike": 5,
-  "cohort_mean": 6,
-  "mean_k2": 7,
-  "other_side": 8,
-  "stranger": 9,
-  "wrong_detail": 10,
-  "noise": 11
+  "lookalike16": 6,
+  "cohort_mean": 7,
+  "mean_k2": 8,
+  "other_side": 9,
+  "stranger": 10,
+  "wrong_detail": 11,
+  "noise": 12
  },
  "betti_unmatched|GRAPE": {
   "shrink_ref": 1,
   "repeat": 2,
   "lookalike_oracle": 3,
-  "dataset_mean": 4,
-  "lookalike": 5,
-  "mean_k2": 6,
-  "cohort_mean": 7,
-  "other_side": 8,
-  "stranger": 9,
-  "wrong_detail": 10,
-  "noise": 11
+  "lookalike16": 4,
+  "dataset_mean": 5,
+  "lookalike": 6,
+  "mean_k2": 7,
+  "cohort_mean": 8,
+  "other_side": 9,
+  "stranger": 10,
+  "wrong_detail": 11,
+  "noise": 12
  },
  "persistence|GRAPE": {
   "shrink_ref": 1,
   "repeat": 2,
   "lookalike_oracle": 3,
   "lookalike": 4,
-  "dataset_mean": 5,
-  "other_side": 6,
-  "mean_k2": 7,
-  "cohort_mean": 8,
-  "wrong_detail": 9,
-  "stranger": 10,
-  "noise": 11
+  "lookalike16": 5,
+  "dataset_mean": 6,
+  "other_side": 7,
+  "mean_k2": 8,
+  "cohort_mean": 9,
+  "wrong_detail": 10,
+  "stranger": 11,
+  "noise": 12
  },
  "fid|GRAPE": {
   "other_side": 1,
@@ -75,7 +80,8 @@
   "lookalike_oracle": 8,
   "cohort_mean": 9,
   "noise": 10,
-  "dataset_mean": 11
+  "lookalike16": 11,
+  "dataset_mean": 12
  },
  "fwd|GRAPE": {
   "other_side": 1,
@@ -86,9 +92,10 @@
   "mean_k2": 6,
   "lookalike_oracle": 7,
   "lookalike": 8,
-  "noise": 9,
-  "cohort_mean": 10,
-  "dataset_mean": 11
+  "lookalike16": 9,
+  "noise": 10,
+  "cohort_mean": 11,
+  "dataset_mean": 12
  },
  "lpips_alex|PAPILA": {
   "lookalike_oracle": 1,
@@ -98,9 +105,10 @@
   "wrong_detail": 5,
   "shrink_ref": 6,
   "cohort_mean": 7,
-  "stranger": 8,
-  "dataset_mean": 9,
-  "noise": 10
+  "lookalike16": 8,
+  "stranger": 9,
+  "dataset_mean": 10,
+  "noise": 11
  },
  "lpips_vgg|PAPILA": {
   "lookalike_oracle": 1,
@@ -110,45 +118,49 @@
   "wrong_detail": 5,
   "shrink_ref": 6,
   "stranger": 7,
-  "cohort_mean": 8,
-  "dataset_mean": 9,
-  "noise": 10
+  "lookalike16": 8,
+  "cohort_mean": 9,
+  "dataset_mean": 10,
+  "noise": 11
  },
  "betti_matched|PAPILA": {
   "lookalike_oracle": 1,
   "dataset_mean": 2,
   "cohort_mean": 3,
-  "lookalike": 4,
-  "shrink_ref": 5,
-  "mean_k2": 6,
-  "other_side": 7,
-  "stranger": 8,
-  "wrong_detail": 9,
-  "noise": 10
+  "lookalike16": 4,
+  "lookalike": 5,
+  "shrink_ref": 6,
+  "mean_k2": 7,
+  "other_side": 8,
+  "stranger": 9,
+  "wrong_detail": 10,
+  "noise": 11
  },
  "betti_unmatched|PAPILA": {
   "lookalike_oracle": 1,
-  "cohort_mean": 2,
-  "shrink_ref": 3,
-  "dataset_mean": 4,
-  "lookalike": 5,
-  "mean_k2": 6,
-  "other_side": 7,
-  "stranger": 8,
-  "wrong_detail": 9,
-  "noise": 10
+  "lookalike16": 2,
+  "cohort_mean": 3,
+  "shrink_ref": 4,
+  "dataset_mean": 5,
+  "lookalike": 6,
+  "mean_k2": 7,
+  "other_side": 8,
+  "stranger": 9,
+  "wrong_detail": 10,
+  "noise": 11
  },
  "persistence|PAPILA": {
   "lookalike_oracle": 1,
   "lookalike": 2,
   "other_side": 3,
   "shrink_ref": 4,
-  "cohort_mean": 5,
-  "mean_k2": 6,
-  "dataset_mean": 7,
-  "wrong_detail": 8,
-  "stranger": 9,
-  "noise": 10
+  "lookalike16": 5,
+  "cohort_mean": 6,
+  "mean_k2": 7,
+  "dataset_mean": 8,
+  "wrong_detail": 9,
+  "stranger": 10,
+  "noise": 11
  },
  "fid|PAPILA": {
   "other_side": 1,
@@ -159,8 +171,9 @@
   "lookalike_oracle": 6,
   "shrink_ref": 7,
   "cohort_mean": 8,
-  "noise": 9,
-  "dataset_mean": 10
+  "lookalike16": 9,
+  "noise": 10,
+  "dataset_mean": 11
  },
  "fwd|PAPILA": {
   "other_side": 1,
@@ -171,20 +184,22 @@
   "lookalike": 6,
   "noise": 7,
   "shrink_ref": 8,
-  "cohort_mean": 9,
-  "dataset_mean": 10
+  "lookalike16": 9,
+  "cohort_mean": 10,
+  "dataset_mean": 11
  },
  "lpips_alex|UTIRIS NIR": {
   "shrink_ref": 1,
   "repeat": 2,
   "lookalike_oracle": 3,
   "lookalike": 4,
-  "other_side": 5,
-  "dataset_mean": 6,
-  "mean_k2": 7,
-  "stranger": 8,
-  "wrong_detail": 9,
-  "noise": 10
+  "lookalike16": 5,
+  "other_side": 6,
+  "dataset_mean": 7,
+  "mean_k2": 8,
+  "stranger": 9,
+  "wrong_detail": 10,
+  "noise": 11
  },
  "lpips_vgg|UTIRIS NIR": {
   "repeat": 1,
@@ -192,47 +207,51 @@
   "lookalike_oracle": 3,
   "lookalike": 4,
   "other_side": 5,
-  "mean_k2": 6,
-  "wrong_detail": 7,
-  "stranger": 8,
-  "dataset_mean": 9,
-  "noise": 10
+  "lookalike16": 6,
+  "mean_k2": 7,
+  "wrong_detail": 8,
+  "stranger": 9,
+  "dataset_mean": 10,
+  "noise": 11
  },
  "betti_matched|UTIRIS NIR": {
   "lookalike_oracle": 1,
   "shrink_ref": 2,
   "repeat": 3,
-  "lookalike": 4,
-  "dataset_mean": 5,
-  "other_side": 6,
-  "mean_k2": 7,
-  "wrong_detail": 8,
-  "stranger": 9,
-  "noise": 10
+  "lookalike16": 4,
+  "lookalike": 5,
+  "dataset_mean": 6,
+  "other_side": 7,
+  "mean_k2": 8,
+  "wrong_detail": 9,
+  "stranger": 10,
+  "noise": 11
  },
  "betti_unmatched|UTIRIS NIR": {
   "shrink_ref": 1,
   "repeat": 2,
   "lookalike_oracle": 3,
-  "lookalike": 4,
-  "dataset_mean": 5,
-  "mean_k2": 6,
-  "other_side": 7,
-  "stranger": 8,
-  "wrong_detail": 9,
-  "noise": 10
+  "lookalike16": 4,
+  "lookalike": 5,
+  "dataset_mean": 6,
+  "mean_k2": 7,
+  "other_side": 8,
+  "stranger": 9,
+  "wrong_detail": 10,
+  "noise": 11
  },
  "iriscode_hd|UTIRIS NIR": {
   "repeat": 1,
   "shrink_ref": 2,
   "lookalike_oracle": 3,
-  "lookalike": 4,
-  "dataset_mean": 5,
-  "noise": 6,
-  "other_side": 7,
-  "mean_k2": 8,
-  "wrong_detail": 9,
-  "stranger": 10
+  "lookalike16": 4,
+  "lookalike": 5,
+  "dataset_mean": 6,
+  "noise": 7,
+  "other_side": 8,
+  "mean_k2": 9,
+  "wrong_detail": 10,
+  "stranger": 11
  },
  "fid|UTIRIS NIR": {
   "repeat": 1,
@@ -243,8 +262,9 @@
   "lookalike_oracle": 6,
   "mean_k2": 7,
   "wrong_detail": 8,
-  "noise": 9,
-  "dataset_mean": 10
+  "lookalike16": 9,
+  "noise": 10,
+  "dataset_mean": 11
  },
  "fwd|UTIRIS NIR": {
   "repeat": 1,
@@ -255,20 +275,22 @@
   "shrink_ref": 6,
   "mean_k2": 7,
   "wrong_detail": 8,
-  "dataset_mean": 9,
-  "noise": 10
+  "lookalike16": 9,
+  "dataset_mean": 10,
+  "noise": 11
  },
  "lpips_alex|UTIRIS VIS": {
   "shrink_ref": 1,
   "repeat": 2,
   "lookalike_oracle": 3,
   "lookalike": 4,
-  "other_side": 5,
-  "mean_k2": 6,
-  "dataset_mean": 7,
-  "wrong_detail": 8,
-  "stranger": 9,
-  "noise": 10
+  "lookalike16": 5,
+  "other_side": 6,
+  "mean_k2": 7,
+  "dataset_mean": 8,
+  "wrong_detail": 9,
+  "stranger": 10,
+  "noise": 11
  },
  "lpips_vgg|UTIRIS VIS": {
   "repeat": 1,
@@ -276,47 +298,51 @@
   "lookalike_oracle": 3,
   "lookalike": 4,
   "other_side": 5,
-  "mean_k2": 6,
-  "wrong_detail": 7,
-  "stranger": 8,
-  "dataset_mean": 9,
-  "noise": 10
+  "lookalike16": 6,
+  "mean_k2": 7,
+  "wrong_detail": 8,
+  "stranger": 9,
+  "dataset_mean": 10,
+  "noise": 11
  },
  "betti_matched|UTIRIS VIS": {
   "repeat": 1,
   "lookalike_oracle": 2,
   "shrink_ref": 3,
-  "dataset_mean": 4,
-  "lookalike": 5,
-  "other_side": 6,
-  "mean_k2": 7,
-  "stranger": 8,
-  "wrong_detail": 9,
-  "noise": 10
+  "lookalike16": 4,
+  "dataset_mean": 5,
+  "lookalike": 6,
+  "other_side": 7,
+  "mean_k2": 8,
+  "stranger": 9,
+  "wrong_detail": 10,
+  "noise": 11
  },
  "betti_unmatched|UTIRIS VIS": {
   "shrink_ref": 1,
   "repeat": 2,
   "lookalike_oracle": 3,
-  "lookalike": 4,
-  "dataset_mean": 5,
-  "mean_k2": 6,
-  "other_side": 7,
-  "stranger": 8,
-  "wrong_detail": 9,
-  "noise": 10
+  "lookalike16": 4,
+  "lookalike": 5,
+  "dataset_mean": 6,
+  "mean_k2": 7,
+  "other_side": 8,
+  "stranger": 9,
+  "wrong_detail": 10,
+  "noise": 11
  },
  "iriscode_hd|UTIRIS VIS": {
   "repeat": 1,
   "shrink_ref": 2,
   "lookalike_oracle": 3,
-  "lookalike": 4,
-  "dataset_mean": 5,
-  "other_side": 6,
-  "noise": 7,
-  "mean_k2": 8,
-  "wrong_detail": 9,
-  "stranger": 10
+  "lookalike16": 4,
+  "lookalike": 5,
+  "dataset_mean": 6,
+  "other_side": 7,
+  "noise": 8,
+  "mean_k2": 9,
+  "wrong_detail": 10,
+  "stranger": 11
  },
  "fid|UTIRIS VIS": {
   "repeat": 1,
@@ -327,8 +353,9 @@
   "lookalike": 6,
   "shrink_ref": 7,
   "lookalike_oracle": 8,
-  "noise": 9,
-  "dataset_mean": 10
+  "lookalike16": 9,
+  "noise": 10,
+  "dataset_mean": 11
  },
  "fwd|UTIRIS VIS": {
   "other_side": 1,
@@ -339,20 +366,22 @@
   "mean_k2": 6,
   "shrink_ref": 7,
   "wrong_detail": 8,
-  "dataset_mean": 9,
-  "noise": 10
+  "lookalike16": 9,
+  "dataset_mean": 10,
+  "noise": 11
  },
  "lpips_alex|UPOL": {
   "shrink_ref": 1,
   "repeat": 2,
   "lookalike_oracle": 3,
   "lookalike": 4,
-  "other_side": 5,
-  "mean_k2": 6,
-  "dataset_mean": 7,
-  "wrong_detail": 8,
-  "stranger": 9,
-  "noise": 10
+  "lookalike16": 5,
+  "other_side": 6,
+  "mean_k2": 7,
+  "dataset_mean": 8,
+  "wrong_detail": 9,
+  "stranger": 10,
+  "noise": 11
  },
  "lpips_vgg|UPOL": {
   "repeat": 1,
@@ -360,47 +389,51 @@
   "lookalike_oracle": 3,
   "lookalike": 4,
   "other_side": 5,
-  "mean_k2": 6,
-  "wrong_detail": 7,
-  "stranger": 8,
-  "dataset_mean": 9,
-  "noise": 10
+  "lookalike16": 6,
+  "mean_k2": 7,
+  "wrong_detail": 8,
+  "stranger": 9,
+  "dataset_mean": 10,
+  "noise": 11
  },
  "betti_matched|UPOL": {
   "repeat": 1,
   "shrink_ref": 2,
   "lookalike_oracle": 3,
-  "lookalike": 4,
-  "dataset_mean": 5,
-  "other_side": 6,
-  "mean_k2": 7,
-  "stranger": 8,
-  "wrong_detail": 9,
-  "noise": 10
+  "lookalike16": 4,
+  "lookalike": 5,
+  "dataset_mean": 6,
+  "other_side": 7,
+  "mean_k2": 8,
+  "stranger": 9,
+  "wrong_detail": 10,
+  "noise": 11
  },
  "betti_unmatched|UPOL": {
   "shrink_ref": 1,
   "repeat": 2,
-  "lookalike_oracle": 3,
-  "dataset_mean": 4,
-  "lookalike": 5,
-  "mean_k2": 6,
-  "other_side": 7,
-  "stranger": 8,
-  "wrong_detail": 9,
-  "noise": 10
+  "lookalike16": 3,
+  "lookalike_oracle": 4,
+  "dataset_mean": 5,
+  "lookalike": 6,
+  "mean_k2": 7,
+  "other_side": 8,
+  "stranger": 9,
+  "wrong_detail": 10,
+  "noise": 11
  },
  "iriscode_hd|UPOL": {
   "repeat": 1,
   "shrink_ref": 2,
   "lookalike_oracle": 3,
-  "lookalike": 4,
-  "dataset_mean": 5,
-  "other_side": 6,
-  "noise": 7,
-  "mean_k2": 8,
-  "wrong_detail": 9,
-  "stranger": 10
+  "lookalike16": 4,
+  "lookalike": 5,
+  "dataset_mean": 6,
+  "other_side": 7,
+  "noise": 8,
+  "mean_k2": 9,
+  "wrong_detail": 10,
+  "stranger": 11
  },
  "fid|UPOL": {
   "repeat": 1,
@@ -411,8 +444,9 @@
   "lookalike_oracle": 6,
   "mean_k2": 7,
   "wrong_detail": 8,
-  "noise": 9,
-  "dataset_mean": 10
+  "lookalike16": 9,
+  "noise": 10,
+  "dataset_mean": 11
  },
  "fwd|UPOL": {
   "repeat": 1,
@@ -423,8 +457,9 @@
   "lookalike_oracle": 6,
   "mean_k2": 7,
   "wrong_detail": 8,
-  "dataset_mean": 9,
-  "noise": 10
+  "lookalike16": 9,
+  "dataset_mean": 10,
+  "noise": 11
  },
  "lpips_alex|CelebA": {
   "other_side": 1,

@@ -21,7 +21,7 @@ RAW = ["ampdev_dataset", "ampdev_cohort"]
 ALL = ERR[:3] + DB + ["ssim", "ms_ssim", "pearson", "acc_dataset", "acc_cohort", "ampdev_dataset", "ampdev_cohort",
                       "lddt", "lddt_rep", "tm_like", "gdt_like", "rmse_rep", "persistence", "arcface_cos"]
 STR = [f"str{j:02d}" for j in range(16)]
-RUNGS = ["repeat", "other_side", "relative", "lookalike_oracle", "lookalike", "cohort_mean", "mean_k2", "dataset_mean", "wrong_detail", "noise", "shrink_ref"]
+RUNGS = ["repeat", "other_side", "relative", "lookalike_oracle", "lookalike", "lookalike16", "cohort_mean", "mean_k2", "dataset_mean", "wrong_detail", "noise", "shrink_ref"]
 SRC = {
     "QTIM": dict(path=P + "donor-ladder-brain-metrics-20261106-v3/rows.csv.gz", cell=["target", "patch", "side"], unit="target",
                  ren={"mirror": "other_side"}, filt=lambda r: r[r.patch < 32]),
@@ -39,7 +39,13 @@ IRIS = "C:/Projects/data/projects/identity-ladder-metric/iris-ladder-metrics-202
 for _ds, _f in (("UTIRIS NIR", "UTIRIS_NIR"), ("UTIRIS VIS", "UTIRIS_VIS"), ("UPOL", "UPOL")):
     SRC[_ds] = dict(path=IRIS.format(_f), cell=["unit", "patch"], unit="person", ren={"fellow": "other_side"}, filt=None)
 rng = np.random.default_rng(20261106)
-out = {"method": __doc__.strip(), "metrics": ALL, "rungs": RUNGS, "kind": {**{m: "R" for m in SIM + ERR}, **{m: "dB" for m in DB},
+# Rungs a dataset's own protocol does not define: n/a with the reason, never a value (lookalike16 = mean of the 16
+# nearest look-alikes, fundus and iris only).
+NOT_AVAILABLE = {"lookalike16": {
+    "QTIM": "dropped by the brain protocol (PROTOCOL_donor_ladder_brain.md, block 5: k = 4, 8, 16 and the 16-look-alike mean)",
+    "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows",
+    "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows"}}
+out = {"method": __doc__.strip(), "not_available": NOT_AVAILABLE, "metrics": ALL, "rungs": RUNGS, "kind": {**{m: "R" for m in SIM + ERR}, **{m: "dB" for m in DB},
                                                                          **{m: "raw" for m in RAW}}, "datasets": {}}
 for name, s in SRC.items():
     need = set(s["cell"] + [s["unit"], "fill", "src", "amplitude"] + ALL)

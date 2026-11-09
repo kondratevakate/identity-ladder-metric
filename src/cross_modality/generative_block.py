@@ -26,10 +26,11 @@ from matplotlib.patches import Rectangle
 
 OUT, BIL = sys.argv[1], sys.argv[2]
 HERE = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
-COLS = ["repeat", "other_side", "relative", "lookalike_oracle", "lookalike", "cohort_mean", "mean_k2", "dataset_mean",
-        "stranger", "shrink_ref", "wrong_detail", "noise"]
+COLS = ["repeat", "other_side", "relative", "lookalike_oracle", "lookalike", "lookalike16", "cohort_mean", "mean_k2",
+        "dataset_mean", "stranger", "shrink_ref", "wrong_detail", "noise"]
 LAB = {"repeat": "repeat image", "other_side": "other side (mirror / eye)", "relative": "relative (sibling or twin)",
-       "lookalike_oracle": "best look-alike", "lookalike": "look-alike", "cohort_mean": "sex-age mean",
+       "lookalike_oracle": "best look-alike", "lookalike": "look-alike", "lookalike16": "mean of 16 look-alikes",
+       "cohort_mean": "sex-age mean",
        "mean_k2": "mean of 2 strangers", "dataset_mean": "dataset mean   [T1]", "stranger": "stranger",
        "shrink_ref": "repeat shrunk to mean   [T2]", "wrong_detail": "wrong detail   [T3a]", "noise": "white noise   [T3b]"}
 MET = [("lpips_alex", "LPIPS (AlexNet)", "per target"), ("lpips_vgg", "LPIPS (VGG)", "per target"),
@@ -37,6 +38,10 @@ MET = [("lpips_alex", "LPIPS (AlexNet)", "per target"), ("lpips_vgg", "LPIPS (VG
        ("persistence", "intensity persistence", "per target"), ("iriscode_hd", "iris code Hamming distance", "per target"),
        ("fid", "FID (set level)", "set"), ("fwd", "FWD (set level)", "set")]
 NOT_RUN = {}
+NA16 = {"lookalike16": {   # same reasons as common_frame.py NOT_AVAILABLE; n/a, never a value
+    "QTIM": "dropped by the brain protocol (PROTOCOL_donor_ladder_brain.md, block 5: k = 4, 8, 16 and the 16-look-alike mean)",
+    "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
+    "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md)"}}
 NOT_RUN_METRICS = {"QTIM": ("betti_matched", "betti_unmatched", "fid", "fwd")}
 
 
@@ -47,19 +52,37 @@ def ren(f, has_repeat):
     return f
 
 
-def per_rung(R, sets, m):
-    """{rung: value} for one metric, lower = closer; None if the metric is absent."""
-    if m in ("fid", "fwd"):
-        blk = (sets or {}).get(m)
-        if not blk:
-            return None
-        has_rep = "repeat" in blk
-        return {ren(f, has_rep): e["value"] for f, e in blk.items() if isinstance(e, dict) and e.get("value") is not None}
-    blk = (R or {}).get(m)
+def entries(R, sets, m):
+    """{rung: source entry} for one metric (rungs renamed to the common frame); None if the metric is absent."""
+    key = "value" if m in ("fid", "fwd") else "R"
+    blk = ((sets if key == "value" else R) or {}).get(m)
     if not blk:
         return None
     has_rep = "repeat" in blk
-    return {ren(f, has_rep): e["R"] for f, e in blk.items() if isinstance(e, dict) and e.get("R") is not None}
+    return {ren(f, has_rep): e for f, e in blk.items() if isinstance(e, dict) and e.get(key) is not None}
+
+
+def per_rung(R, sets, m):
+    """{rung: value} for one metric, lower = closer; None if the metric is absent."""
+    e = entries(R, sets, m)
+    return None if e is None else {r: x["value" if m in ("fid", "fwd") else "R"] for r, x in e.items()}
+
+
+def value_record(m, e, stranger):
+    """The number a rank comes from, with its interval and n. Per target: R with its bootstrap interval. Set level:
+    value / stranger-set value, interval as the source JSON gives it (n/a when it gives none); the flag says whether
+    that interval contains the point (small-sample FID bias makes it miss on fundus and iris)."""
+    n = e.get("n_targets", e.get("n_cells", e.get("windows", e.get("n_windows"))))
+    if m not in ("fid", "fwd"):
+        ci = e.get("ci95")
+        return {"R": e["R"], "ci95": ci if ci else "n/a", "n": n if n is not None else "n/a"}
+    ratio = e["value"] / stranger["value"]
+    ci = e.get("ratio_ci95") or e.get("over_stranger_ci95")
+    rec = {"ratio_to_stranger": ratio, "value": e["value"], "stranger_value": stranger["value"],
+           "ratio_ci95": ci if ci else "n/a", "n": n if n is not None else "n/a"}
+    if ci:
+        rec["ratio_ci_contains_point"] = bool(ci[0] <= ratio <= ci[1])
+    return rec
 
 
 src = {}
@@ -90,26 +113,37 @@ def from_ladder(L, names):
     return {new: pool_relative(fix(L[old])) for old, new in names.items() if old in L}
 
 
-face = json.load(open(os.path.join(HERE, "results", "face_ladder_metrics.json")))["panel_f2"]
+face_all = json.load(open(os.path.join(HERE, "results", "face_ladder_metrics.json")))
+face, face_vgg = face_all["panel_f2"], face_all.get("panel_f2_lpips_vgg")   # VGG: Amendment F2.1, absent until run
 for key, d in (("celeba", "CelebA"), ("imdb", "IMDb-WIKI")):
     R = from_ladder(face["views"][key]["ladder_R"], {"lpips": "lpips_alex", "betti_matched": "betti_matched",
                                                     "betti_unmatched": "betti_unmatched", "persistence": "persistence"})
+    if face_vgg:
+        R.update(from_ladder(face_vgg["views"][key]["ladder_R"], {"lpips_vgg": "lpips_vgg"}))
     sl = {r: e for r, e in face["set_level"][key].items() if not r.startswith("_") and r != "target"}
     S = {m: pool_relative({r: {"value": e[m], "R": e[m], "n_targets": e.get("n_cells", 1)} for r, e in sl.items()
                            if e.get(m) is not None}) for m in ("fid", "fwd")}
-    S = {m: {r: {"value": e["R"]} for r, e in b.items()} for m, b in S.items()}
+    S = {m: {r: {"value": e["R"], "n_cells": e["n_targets"]} for r, e in b.items()} for m, b in S.items()}
     src[d] = (R, S)
 brain = json.load(open(os.path.join(HERE, "results", "donor_ladder_brain_metrics_t23.json")))
 src["QTIM"] = (from_ladder(brain["views"]["deep/LR"]["ladder_R"], {"lpips": "lpips_alex", "persistence_w1": "persistence"}), {})
 NOT_RUN["QTIM"] = "brain: " + "; ".join(f"{k}: {v}" for k, v in brain["not_run"].items() if k in ("betti_matching_3d", "fid_fwd_topology_distance"))
 
-ranks, status = {}, {"method": __doc__.strip(), "not_run": NOT_RUN, "not_run_metrics": NOT_RUN_METRICS, "present": {}}
+ANCHOR = {d: "self" for d in src}
+ANCHOR["QTIM"] = "repeat"   # brain Amendment 20 R: repeat scan 0, strangers 1 (an affine map of the self scale)
+ranks, values = {}, {}
+status = {"method": __doc__.strip(), "not_run": NOT_RUN, "not_run_metrics": NOT_RUN_METRICS, "anchor": ANCHOR, "present": {}}
 for d, (R, S) in src.items():
     status["present"][d] = []
     for m, _, _ in MET:
         v = per_rung(R, S, m)
         if not v:
             continue
+        ent = entries(R, S, m)
+        if m in ("fid", "fwd") and "stranger" not in ent:
+            continue
+        values[f"{m}|{d}"] = {"anchor": ANCHOR[d], "scale": "ratio to stranger set" if m in ("fid", "fwd") else "R",
+                              "rungs": {r: value_record(m, ent[r], ent.get("stranger")) for r in COLS if r in ent}}
         it = [(r, v[r]) for r in COLS if r in v]
         if len(it) < 3:
             continue
@@ -117,6 +151,9 @@ for d, (R, S) in src.items():
         ranks[f"{m}|{d}"] = {r: i + 1 for i, (r, _) in enumerate(order)}
         status["present"][d].append(m)
 json.dump(ranks, open(os.path.join(OUT, "ranks_generative.json"), "w"), indent=1)
+json.dump({"method": value_record.__doc__.strip(), "anchor_note": "self: R = (d(rung) - d(self)) / (d(16 strangers) - "
+           "d(self)); repeat (brain): the same with the repeat scan in place of self", "not_available": NA16,
+           "values": values}, open(os.path.join(OUT, "values_generative.json"), "w"), indent=1)
 json.dump(status, open(os.path.join(OUT, "generative_status.json"), "w"), indent=1)
 
 DS = ["QTIM", "CelebA", "IMDb-WIKI", "GRAPE", "PAPILA", "UTIRIS NIR", "UTIRIS VIS", "UPOL"]

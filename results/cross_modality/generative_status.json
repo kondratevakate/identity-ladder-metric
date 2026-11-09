@@ -11,6 +11,16 @@
    "fwd"
   ]
  },
+ "anchor": {
+  "GRAPE": "self",
+  "PAPILA": "self",
+  "UTIRIS NIR": "self",
+  "UTIRIS VIS": "self",
+  "UPOL": "self",
+  "CelebA": "self",
+  "IMDb-WIKI": "self",
+  "QTIM": "repeat"
+ },
  "present": {
   "GRAPE": [
    "lpips_alex",

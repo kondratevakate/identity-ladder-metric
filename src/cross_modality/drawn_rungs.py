@@ -21,11 +21,14 @@ pool = [LF.render(LF.traits(LF.draw_genome(rng)), {"shirt": LF.SHIRTS[2]}) for _
 err = lambda im: LF.rmse(top, im)
 box = lambda im: im[ys, xs]
 src = {"repeat": C["L0"], "other_side": C["bilateral"], "cotwin": C["MZ"], "sibling": C["DZ / sibling"],
+       "relative": C["DZ / sibling"],   # the pooled sibling-or-twin column of the tiles
        "stranger": C["L4"], "dataset_mean": mean, "lookalike": min(strangers, key=err), "lookalike_oracle": min(pool, key=err),
        "mean_k2": (pool[0] + pool[1]) / 2, "wrong_detail": strangers[3],
        # matched mean, illustration only: drawn faces have no sex or age, so the 16 pool people closest to the person
        # over the whole face stand in for "same sex and age"
-       "cohort_mean": np.mean(sorted(pool, key=lambda im: float(np.mean((im - top) ** 2)))[:16], axis=0)}
+       "cohort_mean": np.mean(sorted(pool, key=lambda im: float(np.mean((im - top) ** 2)))[:16], axis=0),
+       # mean of the 16 pool people closest inside the box only (look-alike search is local), unlike the sex-age mean
+       "lookalike16": np.mean(sorted(pool, key=lambda im: float(np.mean((box(im) - box(top)) ** 2)))[:16], axis=0)}
 th = {}
 def fill(content):
     im = top.copy()

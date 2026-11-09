@@ -69,6 +69,13 @@ metrics. Metrics: rho for each dataset, mean over datasets. ArcFace left out (5 
   amendment), LPIPS VGG on faces and brain. Descriptive: faces under LPIPS put the mirror first and the repeat 4th,
   the shrunk repeat 5th (T2 holds); under Betti and persistence the shrunk repeat beats the repeat on faces and brain
   persistence (T2 fails); face FID and FWD put the repeat first and the dataset mean near last.
+- 9 Nov, for the summary figure on the distance scale: `values_generative.json` holds the number each generative rank
+  comes from (R with its bootstrap interval and n; set-level FID / FWD as the ratio to the stranger set with the
+  source's interval, n/a where the source gives none, and a flag when that interval misses the point), with the anchor
+  per dataset (brain: repeat). New rung "mean of 16 look-alikes" (lookalike16) in `common_all.json`, the rank tiles and
+  the generative block, from the existing fundus and iris rows; brain dropped it in its protocol and faces never
+  defined it, so it is n/a with that reason (`common_all.json` `not_available`). Adding the rung left every existing
+  common-frame value unchanged; ranks shift by one where it sits above a rung.
 
 ## 5. Window size follows the object (Kate, 8 Nov 2026: "да переделай честно")
 One pixel window covers a different share of each object (brain about 1/10 of its length, faces 0.4 inter-ocular
