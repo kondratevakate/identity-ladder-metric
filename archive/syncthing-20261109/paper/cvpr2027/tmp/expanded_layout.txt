@@ -1,0 +1,695 @@
+CVPR                                                                                                                                          CVPR
+                                CVPR 2027 Submission. CONFIDENTIAL REVIEW COPY. DO NOT DISTRIBUTE.
+
+
+
+
+           Identity Ladder: Measuring Identity, Symmetry, and Variability in Human
+                                           Images
+
+                                                   Anonymous CVPR submission
+
+
+ 001   Development copy, not for submission. The related ISBI               image may have low error without reproducing the target’s          039
+ 002   manuscript is under review. This draft retains shared analy-         distinguishing features. Conversely, a new acquisition of          040
+ 003   ses to develop the argument; their inclusion is not a determi-       the same individual may incur substantial error because of         041
+ 004   nation of permissible publication overlap. An independent            illumination, sensor, pose, physiology, or time. The rele-         042
+ 005   CVPR contribution and a compliant submission scope re-               vant question is therefore not only how close two images           043
+ 006   main to be established.                                              are, but what their closeness measures.                            044
+                                Abstract                                        The ambiguity matters when reconstruction is intended          045
+                                                                            to preserve anatomy or biometric information. In healthy-          046
+ 007   Human images differ across individuals, across repeated              tissue inpainting, plausible population structure and target-      047
+ 008   captures, and between bilateral structures of one person. A          speciﬁc structure need not coincide. In ocular imaging, the        048
+ 009   useful distance must be interpreted relative to these sources        same eye changes appearance across captures, while two             049
+ 010   of variation, particularly when evaluating whether an in-            eyes from the same person share both biology and acquisi-          050
+ 011   painted region preserves individual anatomy. We develop              tion conditions. A metric can respond to either source of          051
+ 012   Identity Ladder, an audit protocol combining controlled              similarity. Even a successful same-person versus unrelated-        052
+ 013   identity and nuisance comparisons, matched unrelated ref-            person comparison may exploit capture shortcuts if the             053
+ 014   erences, and population-mean and incorrect-detail con-               comparison groups do not share acquisition conditions.             054
+ 015   trols. The protocol separates discrimination, residual mag-              Bilateral anatomy makes the question particularly con-         055
+ 016   nitude, and target alignment without prescribing a univer-           crete. A left hemisphere and a right hemisphere belong to          056
+ 017   sal biological ordering. Saved synthetic experiments expose          one person but are not identical copies; two irises belong         057
+ 018   opposite failure directions: a population-mean tissue image          to one person but are distinct biometric instances. A face         058
+ 019   reaches an unrelated-reference rank of 0.995 under RMSE              reﬂected about its midline supplies a within-image asym-           059
+ 020   despite zero target residual, whereas the same simulated eye         metry measurement, whereas an independently captured               060
+ 021   under dilation reaches 0.004. Matching the reference dila-           face also includes acquisition variation. These comparisons        061
+ 022   tion raises the latter to 0.449 but does not establish invari-       should therefore be described by the structures and condi-         062
+ 023   ance. Exploratory real-image comparisons show that rep-              tions they change. Calling all of them same identity con-          063
+ 024   resentation and correspondence matter: reﬂecting fellow-             ceals the distinction the metric is supposed to resolve.           064
+ 025   eye fundus pixels changes their mean rank from 0.692 to
+                                                                                We formulate this problem as a metric audit. Iden-             065
+ 026   0.810, while image mean and contrast alone reach 0.919
+                                                                            tity Ladder organizes repeated captures, nuisance interven-        066
+ 027   for same-eye UPOL comparisons, close to the pixel score of
+                                                                            tions, later observations, bilateral or family relationships       067
+ 028   0.923. We specify how these comparisons extend to spatial
+                                                                            where available, and unrelated comparisons. Population             068
+ 029   variability maps and held-out inpainting evaluation. The
+                                                                            means and wrong-detail controls test complementary fail-           069
+ 030   present evidence supports an audit of similarity interpre-
+                                                                            ure modes. Matched unrelated references express each dis-          070
+ 031   tations; the full cross-anatomy atlas, contemporary recon-
+                                                                            tance as an interpretable rank, but the audit explicitly dis-      071
+ 032   struction comparison, and validation of a scalar identity
+                                                                            tinguishes this calibration from invariance or validation of       072
+ 033   measure remain unperformed.
+                                                                            identity preservation.                                             073
+                                                                                Our methodological contribution is the organization of         074
+
+ 034   1. Introduction                                                      these checks into a single evaluation protocol. The empiri-        075
+                                                                            cal contribution at this stage is a set of synthetic counterex-    076
+ 035   Image reconstruction is often evaluated against one refer-           amples and acquisition-aware comparisons of saved fundus           077
+ 036   ence image. A small error is then used to support a stronger         and iris representations. Together they separate three ques-       078
+ 037   interpretation: that the reconstruction preserves the depicted       tions that a single similarity score conﬂates: does a rep-         079
+ 038   individual. These are different claims. A population-typical         resentation discriminate controlled identity relationships,        080
+
+
+                                                                        1
+CVPR                                                                                                                                               CVPR
+                                    CVPR 2027 Submission. CONFIDENTIAL REVIEW COPY. DO NOT DISTRIBUTE.
+
+
+
+
+                  DEFINE                           COMPARE                            CALIBRATE                           AUDIT
+
+                 Identity unit               Repeat / altered capture            Matched unrelated pairs        Discrimination + attenuation
+             + nuisance condition           + identity-negative controls       + explicit reference coverage         + target alignment
+
+
+
+
+                   A high rank against unrelated pairs is evidence about that comparison, not proof of preserved identity.
+
+
+
+       Figure 1. Identity Ladder as an audit of interpretation. Deﬁne what identity means for the task, construct comparisons that vary identity
+       and acquisition separately where possible, and calibrate against unrelated references with the same measured nuisance condition. Report a
+       proﬁle of checks. The order of these operations is a protocol, not a learned image-generation pipeline.
+
+
+ 081   does an output retain individual variation, and is the retained         eyes [2]. This highlights the need to specify whether the            116
+ 082   variation aligned with the target? The percentile transfor-             identity unit is an eye or a person. A fellow eye is a dif-          117
+ 083   mation and its AUC interpretation are established statistical           ferent biometric instance even when it belongs to the same           118
+ 084   tools, as is the squared-error preference for a conditional             person. More broadly, metric suitability depends on the in-          119
+ 085   mean. Neither is claimed as a new distance.                             tended task and data properties, as emphasized by Metrics            120
+ 086      The evidence comprises saved synthetic tissue and eye                Reloaded [6]. We extend this task-ﬁrst reasoning to a pro-           121
+ 087   experiments and exploratory ocular-image pilots. It sup-                ﬁle of identity, nuisance and collapse checks, rather than           122
+ 088   ports a failure analysis and a protocol, rather than a univer-          proposing a replacement for all recognition or reconstruc-           123
+ 089   sal ordering of biological similarity. In particular, we do not         tion metrics.                                                        124
+ 090   infer a validated identity score from a hand-designed sim-
+ 091   ulator. The absence of held-out comparisons on outputs of
+                                                                               Conditional calibration. Reference-distribution place-               125
+ 092   modern reconstruction methods remains a material limita-
+                                                                               ment values and covariate-adjusted ROC analysis are estab-           126
+ 093   tion of the present draft.
+                                                                               lished ways to interpret markers relative to controls [5, 7].        127
+ 094      The intended next contribution is a common benchmark
+                                                                               Our unrelated-reference score is an application of that ma-          128
+ 095   across brain, external-eye, fundus, face, and pupil-related
+                                                                               chinery to image pairs. Its value depends on the control             129
+ 096   views. Its central visual artifact is an atlas separating re-
+                                                                               population, matching variables and weighting. The nov-               130
+ 097   peat, bilateral, and between-person spatial differences. Sec-
+                                                                               elty sought here is the audit design around the calibrated           131
+ 098   tion 6 speciﬁes that extension so that its design is reviewable
+                                                                               score, not the score’s statistical deﬁnition. GRAPE [4] and          132
+ 099   before further scoring; those proposed experiments are not
+                                                                               UTIRIS [3] provide exploratory ocular comparisons, and               133
+ 100   included among the measured results.
+                                                                               the fundus pilot uses released RETFound features [10].               134
+
+ 101   2. Related work
+                                                                               3. Identity Ladder audit                                             135
+ 102   Distortion and perception. The perception–distortion
+ 103   tradeoff formalizes the distinction between average refer-              3.1. Identity units and comparison conditions                        136
+ 104   ence distortion and distributional perceptual quality [1].              Let xu,s be an image of identity unit u under measured ac-           137
+ 105   SSIM [8] and learned perceptual distances such as                       quisition condition s. A unit may be a person, an eye, or a          138
+ 106   LPIPS [9] address aspects of image similarity. Identity                 speciﬁed anatomical structure. The deﬁnition must be ﬁxed            139
+ 107   preservation is an additional task-speciﬁc interpretation: an           before scoring. Let d(x, y) be a distance in a ﬁxed represen-        140
+ 108   image may be plausible yet depict the wrong individual.                 tation, with smaller values denoting greater similarity. Sim-        141
+ 109   Our audit does not assume that either pixel or learned fea-             ilarity measures are oriented consistently before calibration.       142
+ 110   tures resolve that interpretation without controls. It also                 The audit records comparisons that isolate different             143
+ 111   does not claim that perceptual metrics fail on the present              sources of variation: a repeated capture under closely               144
+ 112   experiments, because those comparisons have not yet been                matched conditions; the same unit with an altered acqui-             145
+ 113   run.                                                                    sition condition; the same unit at a later time; a related unit,     146
+                                                                               such as the fellow eye or a family member; and unrelated             147
+ 114   Recognition and metric selection. Classical iris recog-                 units. A population mean and a candidate with incorrect              148
+ 115   nition compares normalized iris texture to distinguish                  individual detail are additional negative controls. A mean           149
+
+
+                                                                           2
+CVPR                                                                                                                                           CVPR
+                                 CVPR 2027 Submission. CONFIDENTIAL REVIEW COPY. DO NOT DISTRIBUTE.
+
+
+
+ 150   is not a biological rung and need not lie at the bottom of a          3.3. Population collapse and target alignment                      198
+ 151   distance ranking.                                                     Let x = µ + δ in a Euclidean representation, where µ is a          199
+ 152      The term ladder describes a collection of interpretable            population expectation and Eδ = 0. Let V = E∥δ∥2 /D in             200
+ 153   comparisons, not a guaranteed total order. A repeat and               D dimensions. These assumptions yield a simple diagnostic          201
+ 154   a matched unrelated comparison support a discrimination               counterexample.                                                    202
+ 155   question. A cross-device comparison supports a nuisance-
+ 156   sensitivity question. Whether a fellow eye should be closer           Proposition 1 (Population-mean advantage) For         an           203
+ 157   than a later capture of the same eye depends on the repre-            equal-variance donor y = µ + δ ′ with E⟨δ, δ ′ ⟩/D = rV ,          204
+ 158   sentation and identity unit; it is not prescribed. Family rela-       the expected per-dimension squared error is 2V (1 − r),            205
+ 159   tionships require veriﬁed metadata, and unknown zygosity              while the error of µ is V . Thus the population mean has           206
+ 160   cannot be turned into monozygotic or dizygotic labels. An             smaller expected squared error whenever r < 1/2.                   207
+ 161   unavailable rung is reported as unavailable.
+                                                                             The result follows by expanding ∥δ − δ ′ ∥2 . For an inde-         208
+                                                                             pendent donor r = 0, the ratio is 1/2. A ﬁnite independent         209
+ 162   3.2. Matched unrelated-reference calibration                          sample mean has estimation variance and need not attain            210
+ 163   For target x and candidate y, let q describe the measured             this exact value. Likewise, unequal donor variances alter          211
+ 164   condition of the pair, such as its unordered camera pair and          the expression. The result concerns expected error, not the        212
+ 165   eye relationship. Let Dq be a distance from an unrelated-             ranking of every target or an arbitrary calibrated AUC.            213
+ 166   reference comparison satisfying that condition. Deﬁne                    For a predictor conditioned on visible context z, squared       214
+                                                                             error is minimized by E[x | z]. A population mean is               215
+                                                                             therefore a useful collapse control, but need not be the           216
+ 167     cq (x, y) = P{Dq > d(x, y)} + 12 P{Dq = d(x, y)}. (1)
+                                                                             best context-conditioned baseline. Beating an uncondi-             217
+                                                                             tional mean alone does not establish recovery of the hidden        218
+ 168   With a ﬁnite reference panel, probabilities are empirical             individual detail.                                                 219
+ 169   proportions. A value near one means the candidate is closer              To describe attenuation and incorrect detail separately,        220
+ 170   than almost all members of that panel. It is not a probability        use an independently estimated mean µ̂, let a = x − µ̂ and         221
+ 171   that identity was preserved. Under exchangeability, an inde-          b = y − µ̂, and report                                             222
+ 172   pendently drawn unrelated comparison has expected score
+ 173   1/2, including ties. An anchor assigned 1/2 by construction                    ∥b∥              ⟨b, a⟩            ∥b − P a∥
+                                                                                A=        ,      P =          ,    O=              .    (2)     223
+ 174   is not an independent validation of the calibration.                           ∥a∥              ∥a∥2                 ∥a∥
+ 175       The mean score over candidate comparisons has a pair-             Here A measures residual magnitude, P target-directed pro-         224
+ 176   wise discrimination interpretation. If each candidate uses            jection, and O the orthogonal component. They are descrip-         225
+ 177   the same reference distribution, it is the usual AUC. With            tive coordinates, not a validated scalar identity score. A         226
+ 178   target-dependent or condition-dependent references, it is a           noisy candidate can have A ≃ 1 while P ≃ 0. Residual               227
+ 179   weighted average of conditional discrimination probabili-             cosine alone misses amplitude loss: on the oracle shrinkage        228
+ 180   ties. It need not equal an AUC computed by pooling all                path yλ = µ̂ + λ(x − µ̂) it remains one for every λ > 0,           229
+ 181   candidates and strangers. We therefore report the reference           while A = P = λ.                                                   230
+ 182   construction and weighting alongside the score.                           This path deliberately uses the known target. Its algebra      231
+ 183       Calibration cannot repair an unsuitable representation.           is an implementation check, not evidence of external valid-        232
+ 184   Within a ﬁxed reference stratum, Eq. 1 is monotone in dis-            ity. If ∥a∥ is small relative to repeat-measurement variabil-      233
+ 185   tance, with possible ties from ﬁnite resolution. It cannot            ity, the ratios are unstable and should be ﬂagged as unre-         234
+ 186   reverse an ordering produced by d. A strictly increasing              solved. A repeat-derived resolution threshold remains to be        235
+ 187   transform of distance produces the same score. A change in            established. The decomposition also requires a ﬁxed Eu-            236
+ 188   the reference condition can change the score, but does not            clidean representation; it cannot be transferred to arbitrary      237
+ 189   remove nuisance information from the representation.                  distances without a corresponding deﬁnition.                       238
+ 190       Exact observed matching is preferable to a binary “same
+ 191   versus different sensor” indicator when several devices or
+                                                                             3.4. Reporting and uncertainty                                     239
+
+ 192   spectra are present. When a matching stratum has no un-               The audit reports raw distances, calibrated ranks, residual        240
+ 193   related references, the audit abstains for that stratum and           diagnostics where deﬁned, and all unavailable conditions.          241
+ 194   reports coverage. Pooling unmatched pairs changes the es-             Targets, template contributors and reference donors must be        242
+ 195   timand. Matching also cannot remove unmeasured session                separated at the relevant identity or family level. Nuisance-      243
+ 196   effects, disease progression, or acquisition factors shared           only features, such as image mean and standard deviation,          244
+ 197   only by the positive pair.                                            test whether a high score requires individual structure at all.    245
+
+
+                                                                         3
+CVPR                                                                                                                                              CVPR
+                                CVPR 2027 Submission. CONFIDENTIAL REVIEW COPY. DO NOT DISTRIBUTE.
+
+
+
+ 246       Repeated pairs do not create independent participants.          Table 1. Attenuation versus wrong detail. Means over 24 inde-
+ 247   Conﬁrmatory intervals should resample participants or fam-          pendent synthetic targets per modality. c is the unrelated-reference
+ 248   ilies, preserve within-cluster relationships and reconstruct        rank; A and P are Eq. 2. A high c need not imply a retained target
+                                                                           residual.
+ 249   the calibration reference within each resample. Pair-
+ 250   weighted and participant-weighted summaries answer dif-
+                                                                                          Candidate         RMSE c SSIM c        A       P
+ 251   ferent questions and should not be silently substituted.
+ 252   The exploratory pilot intervals below are inherited from                  Tissue   Repeat capture      1.000   1.000   0.999 0.974
+                                                                                 Tissue   50% residual        1.000   1.000   0.500 0.500
+ 253   saved patient/person-bootstrap outputs; their treatment of                Tissue   Population mean     0.995   0.950   0.000 0.000
+ 254   reference-pool uncertainty has not been certiﬁed for a ﬁnal               Tissue   Wrong detail        0.566   0.184   1.000 -0.000
+ 255   benchmark.                                                                Eyes     Repeat capture      1.000   1.000   1.000   0.988
+                                                                                 Eyes     50% residual        0.998   1.000   0.500   0.500
+ 256   3.5. Bilateral correspondence and distance repre-                         Eyes     Population mean     0.797   0.835   0.000   0.000
+ 257         sentation                                                           Eyes     Wrong detail        0.389   0.085   0.972   0.000
+
+ 258   Let Lp,t and Rp,t denote observed left and right struc-
+ 259   tures of person p at acquisition t, and let H be a ﬁxed
+ 260   reﬂection/correspondence operator. The within-acquisition           40 and 24 families or people. Five shrinkage values, λ ∈                296
+ 261   quantity d(Lp,t , HRp,t ) measures observed bilateral differ-       {1, .75, .5, .25, 0}, share the same target and are not ﬁve             297
+ 262   ence under shared capture conditions. Comparing Lp,t with           independent identities. The tissue prior scale is 0.25. A               298
+ 263   HRp,t′ at another acquisition changes both side and cap-            wrong-detail control starts with a residual orthogonal to the           299
+ 264   ture. Neither quantity alone identiﬁes a biological symme-          target and matched in norm before nonnegativity clipping;               300
+ 265   try component. A useful control repeats the same corre-             diagnostics describe the actual clipped image.                          301
+ 266   spondence operation on unrelated opposite-side pairs; oth-              The saved experiment computes the nine intensity out-               302
+ 267   erwise a change in score can arise from transforming only           puts of the BraTS inpainting package, version 0.0.12, with              303
+ 268   the candidate.                                                      torchmetrics 1.9.0. These are two-dimensional diagnostic                304
+ 269      The interpretation also depends on representation. Eu-           adaptations, not ofﬁcial three-dimensional challenge sub-               305
+ 270   clidean pixel distances retain local photometry and corre-          missions. We focus on RMSE and SSIM here; multiple                      306
+ 271   spondence errors. A normalized iris code targets texture in         monotone variants of squared error do not constitute in-                307
+ 272   a speciﬁc coordinate system. A learned fundus representa-           dependent evidence. The experiment does not evaluate a                  308
+ 273   tion may suppress some left–right layout differences while          trained reconstruction model.                                           309
+ 274   retaining acquisition information. These are hypotheses for
+ 275   controlled comparison, not guarantees supplied by the rep-
+ 276   resentation name. We therefore retain unreﬂected and re-            Pupil intervention. A separate eye simulator keeps latent               310
+ 277   ﬂected pixel conditions separately and avoid selecting the          identity parameters ﬁxed while increasing pupil radius by               311
+ 278   better condition after observing identity scores.                   30% and deforming iris texture in normalized radial coor-               312
+ 279      Monotone-equivalent distances should not be counted              dinates. Three seeds contain 32 target people each, for 96              313
+ 280   as independent successful baselines. In particular, unit-           independent synthetic targets, with separate template and               314
+ 281   normalized features satisfy ∥u − v∥2 = 2(1 − u⊤ v), so              reference pools. Images are 96 × 96, evaluated in a central             315
+ 282   cosine distance and squared Euclidean distance produce the          64 × 64 mask against 16 unrelated donors per target. The                316
+ 283   same ordering on those features. Likewise, MSE and RMSE             comparison is also recalibrated using dilated unrelated ref-            317
+ 284   have identical within-case ordering. PSNR has that equiv-           erences. Pupil masks are obtained by smoothing and thresh-              318
+ 285   alence only when its range and preprocessing are ﬁxed;              olding. This controlled model is not a study of human phys-             319
+ 286   image-dependent range selection and clamping must be ex-            iology or a validated biometric.                                        320
+ 287   amined separately. Raw values remain useful for diagnos-
+ 288   ing residual attenuation even when their calibrated ranks co-       Label sensitivity. The label-space experiment varies a                  321
+ 289   incide.                                                             population prior over 0, 0.25, 1 and uses two illustrative la-          322
+                                                                           tent variance settings. Five seeds contain 60 two-person                323
+ 290   4. Experiments                                                      families each. Shared draws across settings support paired              324
+                                                                           comparisons; they do not multiply the number of indepen-                325
+ 291   4.1. Saved synthetic experiments
+                                                                           dent families. A smoothed threshold segmenter produces                  326
+ 292   Controlled shrinkage. The population-null experiment                two-class labels, compared with labels of the true image us-            327
+ 293   contains three seeds and eight independent targets per seed         ing Dice and simple geometry/topology descriptors. Seed                 328
+ 294   per modality: 24 tissue families and 24 eye identities.             ranges are descriptive minima and maxima, not conﬁdence                 329
+ 295   Each seed uses separate template and reference pools of             intervals.                                                              330
+
+
+                                                                       4
+CVPR                                                                                                                                                                                                                                                                                   CVPR
+                                                                                          CVPR 2027 Submission. CONFIDENTIAL REVIEW COPY. DO NOT DISTRIBUTE.
+
+
+
+                                                                                               Synthetic tissue: corresponding tissue, alternative donors and population mean
+                                                                                                    Orange: target region. Teal: the corresponding location in the other hemisphere.
+                                                                                                    Bilateral arrangement is schematic; independent side component, already in target coordinates.
+
+
+                                                                      Original               Repeat capture                      Later visit                  Other hemisphere                       MZ co-twin                     Stranger tissue           Population mean
+            Context + fill region
+            Threshold segmentation Evaluated tissue enlarged
+
+
+
+
+                                                               Mean-distance ratio 1.00   Mean-distance ratio 0.99         Mean-distance ratio 0.97          Mean-distance ratio 1.03          Mean-distance ratio 1.00          Mean-distance ratio 0.86   Mean-distance ratio 0.00
+                                                                Target projection 1.00     Target projection 0.97           Target projection 0.94            Target projection 0.89            Target projection 0.53            Target projection 0.15     Target projection 0.00
+
+                                                                                                           Seed 401, first target of the saved 24-target tissue experiment; prior 0.25. Synthetic threshold masks, not MRI segmentation.
+                                                                                                              Mean: 40 independent template families; 24 reference families. Image and all controls use the same original and ROI.
+
+
+       Figure 2. Synthetic tissue controls. Saved, ﬁxed-index example showing target context, enlarged candidate regions and threshold seg-
+       mentations. The population mean suppresses individual detail. Example-level scores need not equal the cohort means in Table 1. This is
+       synthetic random-ﬁeld tissue, not an MRI scan or a trained inpainting output.
+
+
+ 331   4.2. Exploratory ocular pilots                                                                                                                                        the image mean and standard deviation; a separate condition                                                355
+                                                                                                                                                                             standardizes each image’s pixels to zero mean and unit stan-                                               356
+ 332   The fundus pilot uses 631 GRAPE images and released                                                                                                                   dard deviation. UPOL contains 384 images from 64 people.                                                   357
+ 333   RETFound features. Comparisons distinguish the same eye                                                                                                               The within-NIR UTIRIS pixel comparisons involve 78 peo-                                                    358
+ 334   across visits from fellow eyes in one visit. Unrelated refer-                                                                                                         ple. These pair sets differ from the phase-code QC subset,                                                 359
+ 335   ences are matched on the exact unordered camera pair and                                                                                                              so the phase-code and pixel scores are not treated as a paired                                             360
+ 336   eye relationship. Visits are deﬁned from acquisition date.                                                                                                            ranking of methods.                                                                                        361
+ 337   Table 2 reports the saved pair-weighted summaries and
+ 338   patient-bootstrap intervals with the number of contributing
+ 339   patients for each condition; these subsets differ.                                                                                                                       For GRAPE, the reﬂected-pixel condition reﬂects the                                                     362
+ 340       The UTIRIS pilot uses near-infrared iris images and                                                                                                               actual fellow-eye image and applies the same transforma-                                                   363
+ 341   a classical normalized phase-code representation: a 16 ×                                                                                                              tion to unrelated opposite-eye references. Same-eye dis-                                                   364
+ 342   128 rubber-sheet strip, one-dimensional log-Gabor ﬁltering,                                                                                                           tances remain unchanged. RETFound uses the released fea-                                                   365
+ 343   two-bit phase and minimum Hamming distance over ±6                                                                                                                    tures; reﬂected-image RETFound features were not recom-                                                    366
+ 344   shifts. After exclusion of recorded eye-label conﬂicts, 778                                                                                                           puted. The saved representation comparisons use the same                                                   367
+ 345   images enter the saved near-infrared analysis, and segmen-                                                                                                            recorded pair counts within a dataset and condition. All                                                   368
+ 346   tation passes its QC rule for approximately 94%. Same-eye                                                                                                             summaries remain pair-weighted, and a common count does                                                    369
+ 347   and fellow-eye pairs are calibrated against unrelated people                                                                                                          not make repeated pairs independent.                                                                       370
+ 348   under the same sensor and eye condition. We use the plain
+ 349   fellow-eye comparison, rather than selecting the ﬂipped ver-
+ 350   sion for a higher score. Visible-spectrum results are sec-                                                                                                               No real-MRI ordering result is used as primary evidence                                                 371
+ 351   ondary because segmentation acceptance is much lower.                                                                                                                 here. The previous MRI audit identiﬁed protocol confound-                                                  372
+ 352       The saved pixel pilot provides additional representation                                                                                                          ing and unresolved middle comparisons. Human-image ex-                                                     373
+ 353   controls on UPOL and UTIRIS. Images are reduced to                                                                                                                    emplars are not reproduced; the present draft uses aggregate                                               374
+ 354   16×16 grayscale arrays. The photometric control uses only                                                                                                             ocular outputs and synthetic illustrations only.                                                           375
+
+
+                                                                                                                                                                      5
+CVPR                                                                                                                                               CVPR
+                                 CVPR 2027 Submission. CONFIDENTIAL REVIEW COPY. DO NOT DISTRIBUTE.
+
+
+
+ 376   5. Results                                                                                                          RMSE       SSIM
+
+ 377   5.1. A high rank can survive residual collapse                                       Repeat
+
+ 378   On synthetic tissue, the population mean reaches RMSE
+ 379   c = 0.995 and SSIM c = 0.950, despite zero residual am-                   Same eye, dilated
+
+ 380   plitude and projection (Table 1). Retaining only half the
+ 381   target residual yields c = 1.000 under both metrics. This              Dilated, matched ref.
+ 382   is saturation relative to the selected unrelated panel. It does
+ 383   not mean that the half-residual image equals the target: its               Population mean
+ 384   raw RMSE is nonzero. The exact target has zero error, so                                       0.0    0.2     0.4      0.6    0.8     1.0
+ 385   describing the two as indistinguishable from truth would                                        Unrelated-reference rank c (seed ranges)
+ 386   overstate the result.
+ 387       The eye simulator shows the same direction with a                 Figure 3. Two failure directions in one simulator. An identity-
+ 388   smaller mean advantage: the population mean scores 0.797              preserving dilation is penalized, while the population mean retains
+ 389   under RMSE and 0.835 under SSIM. Thus the magnitude                   a high score. Bars are minima/maxima of three seed means, not
+ 390   of collapse tolerance depends on the image generator and              conﬁdence intervals. The vertical line is the unrelated anchor.
+ 391   reference distribution. The wrong-detail tissue control has           Matching the reference intervention changes calibration without
+ 392   residual amplitude 1.000 but projection approximately zero;           repairing the representation.
+ 393   its scores fall to 0.566 and 0.184. Magnitude alone there-
+ 394   fore cannot establish that a candidate preserves the correct
+                                                                             pled denominator; the accuracy argument does not establish             426
+ 395   individual detail.
+                                                                             a general Dice theorem. Component counts of the mean are               427
+ 396   5.2. Matching does not establish invariance                           approximately unrelated-like, with c around 0.50–0.56, but             428
+                                                                             rare holes, ties and mask-border cuts limit interpretation.            429
+ 397   In the pupil experiment, repeat capture reaches c = 1.000             No trained-segmenter or topology-based identity validation             430
+ 398   under RMSE and SSIM. The same eye after dilation reaches              follows from these results.                                            431
+ 399   0.004 and 0.006 against normal-pupil unrelated references.
+ 400   Dilation-matched references raise these scores to 0.449 and           5.4. Real-image pilots require acquisition-aware in-                   432
+ 401   0.432 (Fig. 3), far below the simulated repeat level. The                   terpretation                                                     433
+ 402   latent identity parameters are unchanged by construction,             In GRAPE, same-eye later-visit comparisons score 0.873                 434
+ 403   yet the representation responds strongly to the intervention.         with the same camera and 0.777 across cameras. These are               435
+ 404      The independent population mean scores 0.794 under                 descriptive summaries over different patient subsets, not a            436
+ 405   RMSE and 0.842 under SSIM in this experiment. These                   causal camera-effect estimate. Camera, acquisition era and             437
+ 406   numbers come from a different design than the shrinkage               time gap are coupled, and disease progression was not con-             438
+ 407   experiment in Table 1 and should not be combined into one             trolled. The same-visit fellow eye scores 0.907, illustrating          439
+ 408   estimate. Pupil component-count error is zero for every can-          why a naive biological ordering cannot be imposed. Shared              440
+ 409   didate and therefore yields c = 0.5, even for repeats. A              visit conditions and distinct subsets complicate comparison            441
+ 410   topology descriptor can be uninformative rather than pro-             with same-eye longitudinal observations.                               442
+ 411   tective against identity collapse.                                       In UTIRIS near-infrared images, the phase code scores               443
+                                                                             0.913 for the same eye and 0.668 for the fellow eye under              444
+ 412   5.3. Label agreement has a conditional failure mode
+                                                                             the recorded matching scheme. This separates eye-level and             445
+ 413   Across the label sensitivity conditions, mean-image RMSE              person-level relationships descriptively. The fellow-eye sig-          446
+ 414   ranks remain approximately 0.995–0.997. The paired Dice               nal does not by itself prove shared identity-speciﬁc iris tex-         447
+ 415   comparison with a simulated monozygotic co-twin de-                   ture: estimated geometry, segmentation and residual cap-               448
+ 416   pends on the prior and latent variance setting. In the                ture effects remain possible contributors. Earlier pixel-level         449
+ 417   low-genetic-share setting with prior scale one, the mean-             pilots also found that nuisance-only intensity summaries re-           450
+ 418   minus-co-twin difference is +0.215, with ﬁve-seed range               produced much of the apparent similarity. Strong perfor-               451
+ 419   [+0.150, +0.284]. At prior scale 0.25 the range crosses               mance on the calibration scale therefore requires examina-             452
+ 420   zero; without a prior there is no stable direction. The higher-       tion of which features produce it.                                     453
+ 421   genetic-share setting favors the co-twin on Dice in every
+ 422   tested prior condition.                                               5.5. Photometric controls and reﬂection reveal dif-                    454
+
+ 423       This supports a conditional empirical observation in the                ferent signals                                                   455
+
+ 424   simulator. Pointwise label accuracy is maximized by a con-            Table 3 compares representations within recorded compar-               456
+ 425   ditional modal label, but Dice is a ratio with a spatially cou-       ison conditions. In UPOL, image mean and standard devi-                457
+
+
+                                                                         6
+CVPR                                                                                                                                                                                                                                                                           CVPR
+                                                                      CVPR 2027 Submission. CONFIDENTIAL REVIEW COPY. DO NOT DISTRIBUTE.
+
+
+
+                                                                                              Synthetic eye: changing the pupil is not changing the eye
+                            Target eye                           Same eye: repeat                    Same eye: dilated                      Other eye                        Stranger eye                    Population mean                      Blurred stranger
+       Intensity
+       Pupil mask
+       Contour overlay
+
+
+
+
+                                                               RMSE c=1.00; SSIM c=1.00             RMSE c=0.00; SSIM c=0.00          RMSE c=0.88; SSIM c=0.88           RMSE c=0.97; SSIM c=0.78          RMSE c=0.69; SSIM c=0.81             RMSE c=0.88; SSIM c=0.81
+                                                            Pupil Dice=1.00; boundary=0.0px      Pupil Dice=0.74; boundary=5.1px   Pupil Dice=0.96; boundary=0.6px    Pupil Dice=0.97; boundary=0.5px   Pupil Dice=0.95; boundary=0.9px      Pupil Dice=0.96; boundary=0.7px
+
+
+
+                                                                            Fixed example: seed 201, target 0. Blue: target pupil; dashed orange: candidate. Dilation +30%, same latent iris texture.
+                                                                         Numbers describe this one example, not cohort means. c uses 16 normal-pupil stranger donors; masked region is central 64 x 64.
+                                                                                           Illustrative simulator, not human eye data. A pupil outline alone is not an identity measure.
+
+
+       Figure 4. Fixed synthetic eye example. Seed 201, target index zero, chosen independently of its metric results. Rows show intensity,
+       estimated pupil mask and contour agreement. These are example-level values; cohort results are in Fig. 3. Pupil shape alone does not
+       deﬁne eye identity, and fellow-eye similarity reﬂects the simulator’s chosen shared parameters.
+
+                                                                                      Synthetic tissue: all donor positions, including the other hemisphere
+                                           True image / oracle          Same-sitting repeat                    Other day                Other hemisphere*                   MZ co-twin                  Stranger tissue                   Population mean
+                         Prior 0.25
+                         Intensity
+                            Segmentation
+
+
+
+
+                                                                                                    Seed 101; BASE; first target (family 0, twin 0), chosen by index rather than score.
+                                                                                                      Orange box: fill / evaluation region. Same grayscale (60-140) for all intensities.
+                                                                                         *Other side at corresponding coordinates in this model, already aligned; not a flipped copy of the target.
+                                                                                           Outside the box: original target. Threshold segmentation; synthetic fields, not real MRI or FastSurfer.
+
+
+       Figure 5. Synthetic label-space comparison. A ﬁxed folding-like example includes other-day and opposite-side donors as well as mean
+       and unrelated controls. Labels come from a threshold segmenter. The experiment tests possible behavior of overlap and simple shape
+       descriptors; it does not establish their behavior on real brain segmentations.
+
+
+ 458   ation yield same-eye c = 0.919 and fellow-eye c = 0.884.                                                                                       fraction of texture information.                                                                                          467
+ 459   The corresponding pixel scores are 0.923 and 0.805. Stan-                                                                                         UTIRIS NIR shows a related but distinct proﬁle. The                                                                    468
+ 460   dardizing image intensity changes them to 0.875 and 0.719.                                                                                     photometric control scores 0.793 for the same eye and 0.764                                                               469
+ 461   Thus a high same-eye rank can also be obtained without                                                                                         for the fellow eye; pixels score 0.846 and 0.713. With per-                                                               470
+ 462   a spatial texture representation, and the relative apparent                                                                                    image standardization, the scores become 0.785 and 0.616.                                                                 471
+ 463   strength of fellow-eye similarity changes with preprocess-                                                                                     Standardization therefore does not uniformly improve the                                                                  472
+ 464   ing. The control demonstrates a photometric signal associ-                                                                                     measured discrimination. It changes the information used                                                                  473
+ 465   ated with the comparison labels; it does not establish that                                                                                    by the distance and may remove both acquisition variation                                                                 474
+ 466   the signal is entirely acquisition nuisance or quantify the                                                                                    and person-associated appearance. These summaries do not                                                                  475
+
+
+                                                                                                                                               7
+CVPR                                                                                                                                                CVPR
+                                    CVPR 2027 Submission. CONFIDENTIAL REVIEW COPY. DO NOT DISTRIBUTE.
+
+
+
+       Table 2. Exploratory ocular pilots. Saved pair-weighted means with original 95% patient/person-bootstrap intervals. N is contributing
+       patients or people, not images; pair counts are dependent. The reference populations and representations differ between datasets, so equal
+       values are not a common biological scale. These intervals do not certify full uncertainty from estimating the reference pool.
+
+                               Dataset    Comparison                                N    Pairs    Mean c [95% interval]
+                               GRAPE      Same eye, later visit, same camera       71      250    0.873 [0.832, 0.906]
+                               GRAPE      Same eye, later visit, other camera      83      398    0.777 [0.735, 0.812]
+                               GRAPE      Fellow eye, same visit, same camera     119      276    0.907 [0.883, 0.930]
+                               UTIRIS     Same eye, same sensor                    76    1453     0.913 [0.889, 0.938]
+                               UTIRIS     Fellow eye, same sensor                  75    1789     0.668 [0.622, 0.710]
+
+
+
+       Table 3. Representation changes the interpretation of a high score. Saved mean calibrated ranks for same-unit (s) and fellow-eye (b)
+       comparisons. Ns /Nb counts contributing people and Ps /Pb dependent pairs. GRAPE uses the same eye at a later visit and the fellow eye
+       in the same visit, both with the same camera; iris datasets use the same sensor. Rows within a dataset use the same recorded pair counts.
+       No paired signiﬁcance test between representations is asserted.
+
+                          Dataset         Representation                Ns /Nb       Ps /Pb      Same-unit c    Fellow-eye c
+                          GRAPE           Pixels                         71/119     250/276            0.714             0.692
+                          GRAPE           Pixels, fellow eye reﬂected    71/119     250/276            0.714             0.810
+                          GRAPE           RETFound                       71/119     250/276            0.873             0.907
+                          UPOL            Image mean and SD              64/64      384/576            0.919             0.884
+                          UPOL            Pixels                         64/64      384/576            0.923             0.805
+                          UPOL            Standardized pixels            64/64      384/576            0.875             0.719
+                          UTIRIS NIR      Image mean and SD              78/78     1587/1967           0.793             0.764
+                          UTIRIS NIR      Pixels                         78/78     1587/1967           0.846             0.713
+                          UTIRIS NIR      Standardized pixels            78/78     1587/1967           0.785             0.616
+
+
+
+
+ 476   identify a preferred normalization without a prespeciﬁed                isons and measured human pupil responses are not present              497
+ 477   target task.                                                            in the saved result set. Unsupported conditions should re-            498
+ 478       In GRAPE, same-eye later-visit pixels score 0.714,                  main unavailable rather than be ﬁlled by synthetic examples           499
+ 479   whereas fellow-eye same-visit pixels score 0.692. Reﬂect-               labeled as real evidence.                                             500
+ 480   ing the fellow-eye pixels changes the latter to 0.810 while             6.1. Spatial difference atlas                                         501
+ 481   leaving the same-eye score unchanged. RETFound pro-
+ 482   duces 0.873 and 0.907 for the two conditions. Reﬂection                 The proposed main ﬁgure places anatomical views in rows               502
+ 483   changes correspondence and its matched reference together;              and repeat-capture, bilateral, and unrelated-person differ-           503
+ 484   the observed rank change is not a direct estimate of anatom-            ences in columns. An individual-residual panel compares               504
+ 485   ical symmetry or an effect size attributable only to the can-           held-out images with an independently estimated popula-               505
+ 486   didate image. The differing proﬁles motivate comparison-                tion template. For a valid spatial location v, deﬁne a squared        506
+ 487   speciﬁc interpretation: representations can emphasize dif-              residual after prespeciﬁed within-domain correspondence               507
+ 488   ferent aspects of shared appearance, and the same-unit and              T,                                                                    508
+ 489   fellow-eye conditions also differ in acquisition timing.                                1 ∑[                                 ]2
+                                                                                                  C
+                                                                                   eab (v) =         (Ta xa )(v, c) − (Tb xb )(v, c) .       (3)     509
+                                                                                               C c=1
+ 490   6. Cross-anatomy benchmark extension
+                                                                               Here C is the number of channels. For condition q, let                510
+ 491   The following speciﬁcation deﬁnes proposed experiments                  Pp,q (v) contain the eligible pairs of participant p that are         511
+ 492   rather than additional ﬁndings. The intended domains are                valid at v. First average eab (v) within each participant, then       512
+ 493   brain MRI, external-eye or iris images, fundus photographs,             average these summaries with equal participant weight and             513
+ 494   faces, and pupil geometry. These are anatomical views,                  take the square root. Report the number of valid contribu-            514
+ 495   not necessarily independent cohorts: pupil contours and iris            tors at each location. Use family-level weighting if families,        515
+ 496   texture can come from the same eye images. Face compar-                 rather than people, deﬁne the independent sampling units.             516
+
+
+                                                                           8
+CVPR                                                                                                                                           CVPR
+                                 CVPR 2027 Submission. CONFIDENTIAL REVIEW COPY. DO NOT DISTRIBUTE.
+
+
+
+ 517       These maps summarize observed differences under a                   ﬂoor. Simple topology may detect a change in one setting         568
+ 518   speciﬁed preprocessing procedure. Subtracting a repeat                  and tie on every candidate in another.                           569
+ 519   map from an unrelated map does not automatically iso-                      These observations favor a proﬁle of task-speciﬁc checks      570
+ 520   late identity variance. Acquisition, progression, registra-             over an unsupported scalar identity score. Repeat compar-        571
+ 521   tion error and unequal variances can contribute to the con-             isons establish a measured resolution condition. Nuisance-       572
+ 522   trast. Registration should therefore be ﬁxed independently              only controls test shortcuts. Matched unrelated compar-          573
+ 523   of the tested metric, with sensitivity analysis for correspon-          isons provide a reference for discrimination. Mean and           574
+ 524   dence strength. A nonlinear registration that removes local             wrong-detail controls distinguish loss of variation from in-     575
+ 525   anatomical variation may reduce exactly the differences the             correct variation. Biological relationships supply additional    576
+ 526   benchmark intends to measure.                                           questions when metadata and sample size support them;            577
+ 527       Each anatomical row should share a color scale across               they do not deﬁne a universal calibration target.                578
+ 528   its comparison columns, while retaining a domain-speciﬁc                   The real-image controls sharpen the distinction between       579
+ 529   unit and scale. Quantitatively different modalities should              recognizing a comparison condition and recovering individ-       580
+ 530   not share an unlabeled absolute scale. Invalid background               ual anatomy. A global photometric descriptor can discrimi-       581
+ 531   and interpolation padding are excluded. Examples, crops                 nate repeated captures when person and capture conditions        582
+ 532   and display windows are ﬁxed independently of their score               remain associated. Conversely, removing global photom-           583
+ 533   rankings. A compact adjacent metric proﬁle connects the                 etry can lower an identity-associated score as well as nui-      584
+ 534   spatial observations to discrimination results; a scalar fea-           sance sensitivity. Similarly, reﬂection can improve corre-       585
+ 535   ture distance is not rendered as a spatial error map without            spondence without establishing that the two structures share     586
+ 536   an explicit attribution deﬁnition.                                      the same biometric identity. These ﬁndings argue for docu-       587
+                                                                               menting what changes between each pair of images, rather         588
+ 537   6.2. Inpainting as the application test                                 than treating a larger calibrated rank as sufﬁcient evidence     589
+ 538   The application experiment should use held-out regions                  of a better identity measure.                                    590
+ 539   whose original images are observed. Candidates include                     For inpainting, the practical consequence is that a recon-    591
+ 540   interpolation, an independently estimated template ﬁll, ac-             struction leaderboard should state which aspect of similar-      592
+ 541   tual contralateral anatomy where meaningful, a matched                  ity its distances assess. Strong reference ﬁdelity, realistic    593
+ 542   unrelated donor, and trained reconstruction outputs. Tem-               population detail and correct individual detail are separate     594
+ 543   plate, reference, training and test roles must be separated             endpoints. Their disagreement is an informative result that a    595
+ 544   at the identity level, with family separation where relevant.           benchmark should expose, rather than resolve by choosing         596
+ 545   Known-target shrinkage remains a diagnostic control, not a              an unvalidated weighted sum. The planned atlas provides          597
+ 546   competing reconstruction method.                                        spatial context for this question; its value will depend on      598
+ 547       Evaluation should distinguish the masked interior from              measured repeat variability, adequate matching and trans-        599
+ 548   a boundary band and vary prespeciﬁed mask locations and                 parent missing-condition coverage.                               600
+ 549   sizes. For each candidate, report reference distortion, cal-
+ 550   ibrated discrimination, residual amplitude and target align-
+                                                                               Evidence limits. The synthetic ﬁelds, noise and variance         601
+ 551   ment where deﬁned, and structure-speciﬁc measurements.
+                                                                               components are hand-designed and not calibrated to human         602
+ 552   A method can preserve a boundary while replacing the in-
+                                                                               anatomy. Oracle shrinkage makes the expected residual co-        603
+ 553   terior with typical tissue, or retain realistic but incorrect de-
+                                                                               ordinates true by construction. Threshold segmentations do       604
+ 554   tail. Multiple stochastic outputs from one case remain clus-
+                                                                               not substitute for real downstream models. The ocular pi-        605
+ 555   tered within that case. The comparison should ask whether
+                                                                               lots are exploratory, depend on estimated preprocessing and      606
+ 556   metric rankings agree with held-out identity evidence, with-
+                                                                               inherited intervals, and do not evaluate generated outputs.      607
+ 557   out treating closeness to a single reference as a complete
+                                                                               The present evidence therefore demonstrates possible fail-       608
+ 558   oracle for all plausible hidden anatomy.
+                                                                               ure modes and motivates an audit; it does not show that the      609
+                                                                               proposed diagnostics reliably rank reconstruction methods        610
+ 559   7. Discussion
+                                                                               on a held-out population.                                        611
+ 560   The audit exposes two routes to a misleading identity inter-               A stronger benchmark requires prespeciﬁed endpoints,          612
+ 561   pretation. A representation can favor a population-typical              held-out identity and reference pools, repeat-derived thresh-    613
+ 562   image after target detail has disappeared, or it can penalize           olds, nuisance-normalized representations, and compar-           614
+ 563   a nuisance intervention while identity is held ﬁxed. Cali-              isons with contemporary perceptual and foundation-model          615
+ 564   bration alone does not resolve either route. Residual am-               distances. It must also score outputs of actual reconstruc-      616
+ 565   plitude detects attenuation but confuses target detail with             tion methods and document condition-speciﬁc coverage.            617
+ 566   wrong detail; projection adds target alignment but depends              If broad applicability to natural-image reconstruction is        618
+ 567   on the chosen representation and a usable residual noise                claimed, that claim needs evidence in an appropriate non-        619
+
+
+                                                                           9
+CVPR                                                                                                 CVPR
+                                CVPR 2027 Submission. CONFIDENTIAL REVIEW COPY. DO NOT DISTRIBUTE.
+
+
+
+ 620   medical task. No such additional results are asserted here.
+
+ 621   Ethics and data. The real-image analyses use existing
+ 622   aggregate outputs from ocular research datasets. No par-
+ 623   ticipant images, identiﬁers or newly reconstructed human
+ 624   anatomy are included in this draft. Re-identiﬁcation-related
+ 625   measurements can expose sensitive information even when
+ 626   analysis uses accessible data. Dataset permissions, the basis
+ 627   for secondary analysis and institutional review requirements
+ 628   must be conﬁrmed before submission; an ethics approval
+ 629   or exemption is not asserted here. Template and reference
+ 630   construction should also exclude related people from target
+ 631   pools where family information is relevant.
+
+ 632   8. Conclusion
+ 633   Identity Ladder asks what evidence supports interpreting
+ 634   image similarity as preservation of an individual. Synthetic
+ 635   controls distinguish attenuation from incorrect detail, while
+ 636   saved fundus and iris comparisons show how photometry,
+ 637   representation and correspondence change the meaning of
+ 638   a high score. The protocol separates these questions and
+ 639   speciﬁes a spatial atlas and inpainting extension. Complet-
+ 640   ing that empirical benchmark, validating a combined iden-
+ 641   tity measure and evaluating modern reconstruction outputs
+ 642   remain open work.
+
+
+
+
+                                                                       10
+CVPR                                                                                                                                                 CVPR
+                                 CVPR 2027 Submission. CONFIDENTIAL REVIEW COPY. DO NOT DISTRIBUTE.
+
+
+
+ 643   LLM Usage Statement                                                       [7] Margaret Sullivan Pepe and Gary Longton. Standardizing di-       698
+                                                                                     agnostic markers to evaluate and compare their performance.      699
+ 644   OpenAI Codex assisted with restructuring this working                         Epidemiology, 16(5):598–603, 2005. 2                             700
+ 645   manuscript, drafting and revising prose, inspecting saved                 [8] Zhou Wang, A.C. Bovik, H.R. Sheikh, and E.P. Simoncelli.         701
+ 646   aggregate results, and writing manuscript-preparation code.                   Image quality assessment: from error visibility to structural    702
+ 647   The source project records earlier Claude assistance with                     similarity. IEEE Transactions on Image Processing, 13(4):        703
+ 648   code, literature checking and draft text. AI assistance was                   600–612, 2004. 2                                                 704
+ 649   not used to create new experimental observations in this                  [9] Richard Zhang, Phillip Isola, Alexei A. Efros, Eli Shecht-       705
+ 650   writing session. This disclosure describes the working                        man, and Oliver Wang. The unreasonable effectiveness of          706
+ 651   draft; the authors must verify the text, citations, numerical                 deep features as a perceptual metric. In 2018 IEEE/CVF           707
+ 652   provenance and ﬁnal scope before submission.                                  Conference on Computer Vision and Pattern Recognition,           708
+                                                                                     pages 586–595, 2018. 2                                           709
+ 653   References                                                               [10] Yukun Zhou, Mark A. Chia, Siegfried K. Wagner, Murat S.          710
+                                                                                     Ayhan, Dominic J. Williamson, Robbert R. Struyven, Tim-          711
+ 654    [1] Yochai Blau and Tomer Michaeli. The perception-distortion                ing Liu, Moucheng Xu, Mateo G. Lozano, Peter Woodward-           712
+ 655        tradeoff. In 2018 IEEE/CVF Conference on Computer Vision                 Court, Yuka Kihara, UK Biobank Eye & Vision Consor-              713
+ 656        and Pattern Recognition, pages 6228–6237, 2018. 2                        tium, Naomi Allen, John E. J. Gallacher, Thomas Little-          714
+ 657    [2] J. Daugman. How iris recognition works. IEEE Transactions                johns, Tariq Aslam, Paul Bishop, Graeme Black, Panagi-           715
+ 658        on Circuits and Systems for Video Technology, 14(1):21–30,               otis Sergouniotis, Denize Atan, Andrew D. Dick, Cathy            716
+ 659        2004. 2                                                                  Williams, Sarah Barman, Jenny H. Barrett, Sarah Mackie,          717
+ 660    [3] Mahdi S. Hosseini, Babak N. Araabi, and Hamid Soltanian-                 Tasanee Braithwaite, Roxana O. Carare, Sarah Ennis, Jane         718
+ 661        Zadeh. Pigment melanin: Pattern for iris recognition. IEEE               Gibson, Andrew J. Lotery, Jay Self, Usha Chakravarthy,           719
+ 662        Transactions on Instrumentation and Measurement, 59(4):                  Ruth E. Hogg, Euan Paterson, Jayne Woodside, Tunde Peto,         720
+ 663        792–804, 2010. 2                                                         Gareth Mckay, Bernadette Mcguinness, Paul J. Foster, Kon-        721
+ 664    [4] Xiaoling Huang, Xiangyin Kong, Ziyan Shen, Jing Ouyang,                  stantinos Balaskas, Anthony P. Khawaja, Nikolas Pontikos,        722
+ 665        Yunxiang Li, Kai Jin, and Juan Ye. Grape: A multi-modal                  Jugnoo S. Rahi, Gerassimos Lascaratos, Praveen J. Patel,         723
+ 666        dataset of longitudinal follow-up visual ﬁeld and fundus im-             Michelle Chan, Sharon Y. L. Chua, Alexander Day, Parul           724
+ 667        ages for glaucoma management. Scientiﬁc Data, 10(1):520,                 Desai, Cathy Egan, Marcus Fruttiger, David F. Garway-            725
+ 668        2023. 2                                                                  Heath, Alison Hardcastle, Sir Peng T. Khaw, Tony Moore,          726
+ 669    [5] Holly Janes, Gary Longton, and Margaret S. Pepe. Ac-                     Sobha Sivaprasad, Nicholas Strouthidis, Dhanes Thomas,           727
+ 670        commodating covariates in receiver operating characteristic              Adnan Tufail, Ananth C. Viswanathan, Bal Dhillon, Tom            728
+ 671        analysis. The Stata Journal: Promoting communications on                 Macgillivray, Cathie Sudlow, Veronique Vitart, Alexander         729
+ 672        statistics and Stata, 9(1):17–39, 2009. 2                                Doney, Emanuele Trucco, Jeremy A. Guggeinheim, James E.          730
+ 673    [6] Lena Maier-Hein, Annika Reinke, Patrick Godau, Minu D.                   Morgan, Chris J. Hammond, Katie Williams, Pirro Hysi, Si-        731
+ 674        Tizabi, Florian Buettner, Evangelia Christodoulou, Ben                   mon P. Harding, Yalin Zheng, Robert Luben, Phil Luthert,         732
+ 675        Glocker, Fabian Isensee, Jens Kleesiek, Michal Kozubek,                  Zihan Sun, Martin McKibbin, Eoin O’Sullivan, Richard             733
+ 676        Mauricio Reyes, Michael A. Riegler, Manuel Wiesen-                       Oram, Mike Weedon, Chris G. Owen, Alicja R. Rudnicka,            734
+ 677        farth, A. Emre Kavur, Carole H. Sudre, Michael Baum-                     Naveed Sattar, David Steel, Irene Stratton, Robyn Tapp,          735
+ 678        gartner, Matthias Eisenmann, Doreen Heckmann-Nötzel,                     Max M. Yates, Axel Petzold, Savita Madhusudhan, Andre            736
+ 679        Tim Rädsch, Laura Acion, Michela Antonelli, Tal Ar-                      Altmann, Aaron Y. Lee, Eric J. Topol, Alastair K. Dennis-        737
+ 680        bel, Spyridon Bakas, Arriel Benis, Matthew B. Blaschko,                  ton, Daniel C. Alexander, and Pearse A. Keane. A founda-         738
+ 681        M. Jorge Cardoso, Veronika Cheplygina, Beth A. Cimini,                   tion model for generalizable disease detection from retinal      739
+ 682        Gary S. Collins, Keyvan Farahani, Luciana Ferrer, Adrian                 images. Nature, 622:156–163, 2023. 2                             740
+ 683        Galdran, Bram van Ginneken, Robert Haase, Daniel A.
+ 684        Hashimoto, Michael M. Hoffman, Merel Huisman, Pierre
+ 685        Jannin, Charles E. Kahn, Dagmar Kainmueller, Bernhard
+ 686        Kainz, Alexandros Karargyris, Alan Karthikesalingam, Flo-
+ 687        rian Koﬂer, Annette Kopp-Schneider, Anna Kreshuk, Tahsin
+ 688        Kurc, Bennett A. Landman, Geert Litjens, Amin Madani,
+ 689        Klaus Maier-Hein, Anne L. Martel, Peter Mattson, Erik Mei-
+ 690        jering, Bjoern Menze, Karel G. M. Moons, Henning Müller,
+ 691        Brennan Nichyporuk, Felix Nickel, Jens Petersen, Nasir Ra-
+ 692        jpoot, Nicola Rieke, Julio Saez-Rodriguez, Clara I. Sánchez,
+ 693        Shravya Shetty, Maarten van Smeden, Ronald M. Summers,
+ 694        Abdel A. Taha, Aleksei Tiulpin, Sotirios A. Tsaftaris, Ben
+ 695        Van Calster, Gaël Varoquaux, and Paul F. Jäger. Metrics
+ 696        reloaded: recommendations for image analysis validation.
+ 697        Nature Methods, 21(2):195–212, 2024. 2
+
+
+                                                                           11
+

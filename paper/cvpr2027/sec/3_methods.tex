@@ -2,32 +2,176 @@
 \label{sec:methods}
 
 % One subsection per modality: data and rungs, protocol (file + amendment), preprocessing and alignment, metrics.
-% Inventory approved by Kate before prose is drafted.
+% Source inventory and claim boundaries are recorded in MATERIALS_COVERAGE.md.
 
 \subsection{The donor ladder and the unit}
 \label{sec:ladder}
-\TODO{Rungs, unit V, ratio = sum of errors / sum of V, bootstrap over families. Source: docs/PROTOCOL\_donor\_ladder\_general.md sections 1--6.}
+Let $x_{p,t,s}$ denote an image of person $p$, acquisition $t$, and anatomical side $s$.
+The identity unit is a person for the face comparison and an eye for the iris comparison; bilateral structures remain separate observed anatomy in every domain.
+For a target region, candidates include another acquisition, the actual opposite-side structure in a fixed common frame, related donors where labeled, unrelated donors, metadata-matched means, and the dataset mean.
+Unavailable relationships remain unavailable.
+
+Let $\hat\mu_{-g}$ be a masked population mean excluding the target's person or family $g$.
+For each candidate $f_i$, squared error and the reference error are evaluated on the same eligible support $E_i$.
+Define
+\begin{equation}
+\begin{aligned}
+e_i(f)&=\frac{\sum_{v\in E_i}(x_i(v)-f_i(v))^2}{|E_i|},\\
+V_i&=e_i(\hat\mu_{-g}),\qquad
+Q(f)=\frac{\sum_i e_i(f)}{\sum_i V_i}.
+\end{aligned}
+\label{eq:unit}
+\end{equation}
+The ratio is formed after summing errors, not by averaging unstable per-target ratios.
+The dataset mean has $Q=1$ by construction on that support.
+Under an equal-variance additive model with an independent stranger, its expected squared error is twice the population-mean error.
+A finite estimated mean, unequal variances, support changes, and nuisance correlations can alter this reference.
+The stranger level of two is not a theorem for SSIM, LPIPS, or an arbitrary representation.
+
+For oriented distances, we also retain the recorded panel scales
+\begin{equation}
+\begin{aligned}
+R_{\rm rep}(f)&=
+\frac{\bar d(f)-\bar d({\rm repeat})}
+{\bar d({\rm strangers})-\bar d({\rm repeat})},\\
+R_{\rm self}(f)&=
+\frac{\bar d(f)-d(x,x)}
+{\bar d({\rm strangers})-d(x,x)}.
+\end{aligned}
+\label{eq:anchors}
+\end{equation}
+The brain panel uses the repeat anchor, whereas face and iris use the self anchor and retain repeat as a measured acquisition floor.
+These coordinates are not interchangeable biological units.
+Unstable or undefined denominators are not replaced by zero.
+MSE is a raw squared intensity distance; SSIM and correlations are higher-is-closer scores that the anchored coordinates orient toward increasing distance.
+Residual correlation subtracts the independent dataset mean before computing Pearson correlation.
+The TM-like and lDDT-like measures adapt protein-comparison ideas~\cite{tmscore2004,lddt2013} to intensities, rather than transferring their original structural interpretation.
+Their kernels and independently estimated repeat tolerances are defined in the supplement.
+The saved unrelated-reference rank is $c=P(d_{\rm stranger}>d)+\frac12P(d_{\rm stranger}=d)$, computed against the recorded donor panel.
+It expresses relative discrimination, not the probability that identity was preserved.
+
+\subsection{Proposed population audit of completions}
+For a held-out target $x_i$, context $c_i$ and mask $M_i$, let $y_{ik}=G(c_i,M_i,z_k)$ be completion $k$.
+For target stratum $a$, lower-is-closer paired distance $d_m$ and control $f_{ir}$, a proposed profile is
+\begin{equation}
+\begin{aligned}
+\Delta_{a,m,r}=\mathbb E_{i\mid a}\!\left[\right.&
+\mathbb E_k d_m(y_{ik},x_i;E_{ir})\\
+&\left.-d_m(f_{ir},x_i;E_{ir})\right].
+\end{aligned}
+\label{eq:population-audit}
+\end{equation}
+Support and target eligibility are fixed independently of generated content, with model failures reported separately.
+Seeds are averaged within targets before the population average.
+Negative values mean metric preference over the control, not identity preservation.
+Profiles retain raw distances and both common and stratum-matched references, since group-specific normalization can conceal raw differences.
+Fill-only, identically composited and whole-image endpoints require explicit spatial scope; set-level FID/FWD need a separate definition.
+Intervals must account for independent people/families, repeated masks and outputs.
+The current experiments characterize controls; generated subgroup profiles in Eq.~\ref{eq:population-audit} have not been measured.
 
 \subsection{Result status}
 \label{sec:status}
-\TODO{Final (F), provisional pre-QC (P), not run. Missing is never zero.}
+The superscript \statusfinal\ identifies a frozen result whose recorded frame passed the author's visual gate.
+It does not mean independent replication or clinical validation.
+The superscript \statuspre\ identifies provisional evidence with an unresolved gate or a source-version limitation.
+We distinguish \notrun\ from an undefined mathematical quantity, an unavailable relationship, and an executed result absent from the accessible snapshot.
+Historical outputs are not silently relabeled as newer experiments.
+
+Every image has a validity mask.
+Errors, normalization, donor means, context comparisons, and local maps exclude unobserved support.
+Padding and stored background zeros are never measurements.
+A donor mean averages only valid contributing samples at each location and is undefined where no donor contributes.
+The acquisition field is retained where the recorded canvas permits it; version-specific crop losses remain limitations.
+
+\subsection{Controls, spatial maps, and uncertainty}
+\label{sec:controls}
+Context-selected look-alikes use only the visible shell or ring.
+Oracle donors use the true hidden region and are upper-bound diagnostics rather than achievable inpainting methods.
+The same selection rule on unrelated anatomy controls the benefit of searching many candidates.
+We exclude block-search outputs that predate their missing-support correction.
+
+Attenuation controls have the form $\hat\mu+\lambda(f-\hat\mu)$, with the recorded $\lambda$ derived from the original donor comparison.
+Incorrect-detail controls use a stranger residual made orthogonal to the target residual and matched in norm on eligible support.
+Residual amplitude and target projection distinguish reduced variation from variation in the wrong direction.
+Residual correlation alone is invariant to positive rescaling and cannot establish preservation of amplitude.
+
+Drawn maps use masked Gaussian local averages with standard deviation $w/\sqrt{12}$, where $w$ is the recorded window width.
+Box support fractions may define eligibility, but box filters do not define displayed errors.
+The latest geometry protocol specifies $w=fL$ with $f\in\{1/16,1/8,1/4\}$ and anatomical extent $L$; this specification is not evidence that every size sweep has finished.
+Independent family or person halves assess spatial reproducibility, and coverage is reported separately from the error map.
+
+The source protocols use bootstrap resampling of families or people, with positions resampled independently for the panels that specify two-way intervals.
+Saved intervals use 2,000 resamples.
+Repeated regions and both eyes do not multiply the number of independent people.
+Fewer than ten independent units support descriptive reporting only.
+The recorded one-sided tests ask whether the repeat is better than the mean (T1), its attenuated version (T2), incorrect detail (T3a), and noise (T3b).
+The brain and iris sources retain their own Holm correction families.
+Failure to establish one directional test is not proof of equivalence or of its reverse.
 
 \subsection{Brain MRI (QTIM)}
 \label{sec:m-brain}
-\TODO{docs/PROTOCOL\_donor\_ladder\_brain.md, Amendments 1--9.}
+The QTIM panel contains 221 prepared targets from 168 families, including 23 repeat acquisitions.
+Volumes are N4-corrected and affinely aligned to an independent symmetric MNI frame, with intensity standardized within the brain mask.
+The panel evaluates both hemispheres at the recorded random regions and frozen deep and parietal boxes.
+Family members are excluded from the target's reference pool.
+The source records related-donor labels; it does not justify converting unknown zygosity into monozygotic or dizygotic classes.
+
+The current tier-1 reference uses a 16\,mm window and 4\,mm context shell.
+The latest object-relative amendment gives a registered-space extent of 127.0\,mm and specifies 8, 16, and 32\,mm windows.
+The displayed fine maps and coarse look-alike maps follow the Gaussian amendments.
+The metric panel nevertheless remains provisional because the registration gate has not been met.
+The completed HACA3+ stage-1 contrast sensitivity is reported separately and does not establish a harmonized metric benchmark.
+% Sources: donor_ladder_brain_metrics.json; PROTOCOL_donor_ladder_brain.md Amendments 10--21.
 
 \subsection{Fundus photographs (PAPILA, GRAPE)}
 \label{sec:m-fundus}
-\TODO{docs/PROTOCOL\_donor\_ladder\_fundus.md; docs/PROTOCOL\_donor\_ladder\_general.md section 9, Amendments 9.1--9.4.}
+GRAPE~\cite{grape2023} supplies longitudinal and fellow-eye photographs; PAPILA~\cite{papila2022} supplies paired eyes with expert disc contours.
+The protocols distinguish a GRAPE disc--fovea similarity frame from the PAPILA disc-anchored frame.
+The protocol versions specify green-channel preprocessing and standardization on valid field of view.
+Laterality comes from metadata, and opposite eyes are transformed consistently with their comparison references.
+
+The primary frame-only aggregate was recovered from the frozen bilateral-branch Git snapshot.
+It uses GRAPE P8 and PAPILA P9 in a 128-pixel frame, with no pairwise registration or target-dependent intensity fit.
+The saved P7 snapshot is retained as historical evidence, rather than relabeled as P8/P9.
+P8 and P9 change the field mask and preserve more of the PAPILA acquisition field.
+Fixed-composition map regions hold the contributing target set constant over space.
+This avoids interpreting abrupt changes of cohort membership as anatomical boundaries.
+The saved P7 block searches predate the support correction and are excluded.
+No value from a currently running fundus metric panel is inferred here.
+The completed v1 panel is kept separate from its newer extension; its reference donor is the repeat for GRAPE and the fellow eye for PAPILA, where T1 is unavailable.
 
 \subsection{Face photographs (CelebA, IMDb-WIKI)}
 \label{sec:m-face}
-\TODO{docs/PROTOCOL\_donor\_ladder\_face.md (not yet committed), Amendments 1--8.}
+The frozen v6f panel analyzes CelebA~\cite{celeba2015} and IMDb-WIKI~\cite{rothe2018} separately.
+The available protocol specifies a landmark-affine population frame, image-wise masked intensity normalization, restricted pose, and fixed local windows with context rings.
+CelebA target and pool identities use separate dataset partitions.
+The IMDb-WIKI analysis clusters recorded kinship links and excludes target-family members from the pool.
+The base face pipeline and its complete v6f protocol were not committed in this source snapshot, which limits reconstruction of the upstream selection.
+
+The face repeat is another photograph chosen by the recorded pose/expression rule, rather than an exact duplicate.
+The bilateral candidate is the opposite face half in the same photograph, with a midline exclusion.
+The panel's local pixel distances are distinct from its ArcFace donor reference.
+The latter compares whole-image embeddings of target and donor and is unavailable for means, unembedded reflections, and artificial controls.
+It is not an embedding of the composited inpainted region.
 
 \subsection{Iris images (UTIRIS, UPOL)}
 \label{sec:m-iris}
-\TODO{No pixel donor ladder yet; iris codes and calibration only.}
+UTIRIS~\cite{hosseini2010} near-infrared images are primary, with UTIRIS visible-light and UPOL~\cite{dobes2004} reported separately.
+The P2 frame uses learned iris segmentation, a normalized radial--angular strip, and masks for acquisition support, lids, and reflections.
+The same-eye repeat is the next eligible capture in fixed source order rather than the closest image by a metric.
+The fellow-eye strip is transformed by the recorded angular reflection.
+Donor pools exclude the target person.
+
+The panel retains measured coverage and endpoint-specific eligibility.
+It uses no fixed-sector removal or pairwise rotation search.
+Lid shadow remains a known source of shared appearance, and the saved status records an outstanding final mask-sheet review.
+Earlier iris-code calibration is background evidence and is not substituted for this strip-based panel.
+The full P3 extension reported by the workstation handoff includes LPIPS, Betti matching, Fréchet inception distance (FID), and Fréchet wavelet distance (FWD), but is not contained in the accessible aggregate file.
 
 \subsection{Synthetic simulations}
 \label{sec:m-sim}
-\TODO{src/theory\_sim.py, toy ladder, population null, label ladder.}
+Saved synthetic tissue and eye experiments supply mechanism controls.
+Their known-target shrinkage path verifies attenuation coordinates by construction and does not independently validate an identity metric.
+A threshold segmenter supports conditional observations about label overlap and simple topology; it is not a trained-segmenter result.
+Synthetic variance components are illustrative, not estimates of human heritability.
+These shared experiments remain secondary to the cross-anatomy metric audit.

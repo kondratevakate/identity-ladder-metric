@@ -1,0 +1,148 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo))
+(spconf.sty)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty))
+ (C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.c
+fg)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+)))
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty
+)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefine
+keys.sty)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.s
+ty
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmds
+.sty
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.s
+ty)))
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\gettit
+lestring.sty
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+)))
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.s
+ty) (C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
+) (C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
+) (C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcalc
+.sty)))
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfil
+echeck.sty
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\uniquec
+ounter.sty)))
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1ptm.fd)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
+tex.def) (main.aux)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
+ii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
+ase.sty
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.c
+fg)) (main.out) (main.out)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\kondr\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+Overfull \hbox (129.92781pt too wide) in paragraph at lines 20--20
+ [][] 
+[1{C:/Users/kondr/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/ko
+ndr/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}]
+Overfull \hbox (1.01419pt too wide) in paragraph at lines 61--62
+[]\OT1/ptm/m/it/10 Scoring
+
+Underfull \hbox (badness 2443) in paragraph at lines 66--67
+[]\OT1/ptm/m/it/10 For a
+[2]
+Overfull \hbox (23.29189pt too wide) in paragraph at lines 101--114
+ [][] 
+
+Underfull \vbox (badness 2828) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active [3 <./fig_
+ladder.pdf>] (main.bbl
+Underfull \hbox (badness 1348) in paragraph at lines 16--22
+[]\OT1/ptm/m/n/10 Giacomo Neb-bia, Sourav Ku-mar, Stephen Michael
+
+Underfull \hbox (badness 10000) in paragraph at lines 24--44
+[]\OT1/ptm/m/n/10 Lena Maier-Hein, An-nika Reinke, Patrick Go-
+
+Underfull \hbox (badness 1859) in paragraph at lines 24--44
+\OT1/ptm/m/n/10 dau, Minu D. Ti-z-abi, Flo-rian Buet-tner, Evan-gelia
+
+Underfull \hbox (badness 2221) in paragraph at lines 24--44
+\OT1/ptm/m/n/10 Christodoulou, Ben Glocker, Fabian Isensee, Jens
+
+Underfull \hbox (badness 1968) in paragraph at lines 24--44
+\OT1/ptm/m/n/10 Su-dre, Michael Baum-gart-ner, Matthias Eisen-mann,
+
+Underfull \hbox (badness 2894) in paragraph at lines 24--44
+\OT1/ptm/m/n/10 Be-nis, Matthew B. Blaschko, M. Jorge Car-doso,
+
+Underfull \hbox (badness 1824) in paragraph at lines 24--44
+\OT1/ptm/m/n/10 Tahsin Kurc, Ben-nett A. Land-man, Geert Lit-jens,
+
+Underfull \hbox (badness 1067) in paragraph at lines 24--44
+\OT1/ptm/m/n/10 Fe-lix Nickel, Jens Pe-tersen, Nasir Ra-jpoot, Nicola
+
+Underfull \hbox (badness 2409) in paragraph at lines 53--57
+[]\OT1/ptm/m/n/10 Roland Auck-en-thaler, Michael Carey, and Har-vey
+
+Underfull \hbox (badness 5817) in paragraph at lines 53--57
+\OT1/ptm/m/n/10 Lloyd-Thomas,  ``Score nor-mal-iza-tion for text-
+[4]
+Underfull \hbox (badness 1412) in paragraph at lines 131--135
+[]\OT1/ptm/m/n/10 Mahdi S. Hos-seini, Babak N. Araabi, and Hamid
+
+Underfull \hbox (badness 1796) in paragraph at lines 150--157
+\OT1/ptm/m/n/10 Wag-ner, Rami Al-Maskari, Emilia Gryska, Mi-hail
+) [5] (main.aux) )
+(see the transcript file for additional information)<C:/Users/kondr/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/kondr/Ap
+pData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/
+kondr/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C
+:/Users/kondr/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi
+8.pfb><C:/Users/kondr/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
+/cm/cmr10.pfb><C:/Users/kondr/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+amsfonts/cm/cmr7.pfb><C:/Users/kondr/AppData/Local/Programs/MiKTeX/fonts/type1/
+public/amsfonts/cm/cmr8.pfb><C:/Users/kondr/AppData/Local/Programs/MiKTeX/fonts
+/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/kondr/AppData/Local/Programs/MiK
+TeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/kondr/AppData/Local/Prog
+rams/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/kondr/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/ko
+ndr/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pf
+b><C:/Users/kondr/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pf
+b><C:/Users/kondr/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.p
+fb><C:/Users/kondr/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.p
+fb><C:/Users/kondr/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.
+pfb>
+Output written on main.pdf (5 pages, 278785 bytes).
+Transcript written on main.log.

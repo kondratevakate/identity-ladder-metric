@@ -1,0 +1,41 @@
+{
+  "development_pairs": 1,
+  "sheets_prepared": 2,
+  "visual_acceptance": "NOT ESTABLISHED",
+  "gate": "NOT MET",
+  "metric_scoring": "NOT RUN",
+  "diagnostics": {
+    "template": {
+      "brain_p99": 0.9098039865493774,
+      "brain_nonzero_fraction": 1.0,
+      "meaning": "intensity diagnostic, not anatomical accuracy or source coverage"
+    },
+    "rigid": {
+      "brain_p99": 69.23856384277337,
+      "brain_nonzero_fraction": 0.9995363754116461,
+      "meaning": "intensity diagnostic, not anatomical accuracy or source coverage"
+    },
+    "affine": {
+      "brain_p99": 70.13676513671874,
+      "brain_nonzero_fraction": 1.0,
+      "meaning": "intensity diagnostic, not anatomical accuracy or source coverage"
+    },
+    "joint": {
+      "brain_p99": 69.80198791503902,
+      "brain_nonzero_fraction": 1.0,
+      "meaning": "intensity diagnostic, not anatomical accuracy or source coverage"
+    },
+    "syn": {
+      "brain_p99": 55.64348037719726,
+      "brain_nonzero_fraction": 1.0,
+      "meaning": "intensity diagnostic, not anatomical accuracy or source coverage"
+    }
+  },
+  "sheets_inspected": 2,
+  "method_box_observations": 6,
+  "method_box_pass": 0,
+  "method_box_fail": 0,
+  "method_box_unreviewable": 6,
+  "gate_count_increment": 0,
+  "review_scope": "two sheets, three method outputs on one exposed scan; not six independent gate cases"
+}

@@ -1,0 +1,31 @@
+{
+  "source_files_unchanged": 33,
+  "new_representation_score_cells_checked": 18,
+  "approximate_tex_word_count_before": 3971,
+  "approximate_tex_word_count_after": 5583,
+  "approximate_net_word_increase": 1612,
+  "pdf_pages": 11,
+  "page_sections": {
+    "1": [],
+    "2": [],
+    "3": [],
+    "4": [],
+    "5": [],
+    "6": [
+      "422   tested prior condition.                                               5.5. Photometric controls and re\ufb02ection reveal dif-                    454"
+    ],
+    "7": [],
+    "8": [
+      "480   ing the fellow-eye pixels changes the latter to 0.810 while             6.1. Spatial difference atlas                                         501",
+      "490   6. Cross-anatomy benchmark extension"
+    ],
+    "9": [],
+    "10": [
+      "632   8. Conclusion"
+    ],
+    "11": [
+      "643   LLM Usage Statement                                                       [7] Margaret Sullivan Pepe and Gary Longton. Standardizing di-       698",
+      "653   References                                                               [10] Yukun Zhou, Mark A. Chia, Siegfried K. Wagner, Murat S.          710"
+    ]
+  }
+}

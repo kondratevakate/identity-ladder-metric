@@ -1,0 +1,149 @@
+{
+  "checked_on": "2026-11-09",
+  "scope": "Revised-draft file checks; no portal audit or experimental rerun.",
+  "pdfs": {
+    "main": {
+      "pages": 10,
+      "layout_or_reference_warnings": [],
+      "identifying_text_hits": [],
+      "sha256": "67b9794a751297c26eca8654817cf104fbf5767cb88ec96aa94d85b122074c3f"
+    },
+    "supplementary": {
+      "pages": 15,
+      "layout_or_reference_warnings": [],
+      "identifying_text_hits": [],
+      "sha256": "2f76c86c34ff8f7c627b1aed71d808f08cf20adbcaf7940f52014cfd31e2a074"
+    }
+  },
+  "main_content_pages": 8,
+  "llm_page": 9,
+  "references_first_page": 9,
+  "remaining_todo_files": [],
+  "metadata": {
+    "title": "Identity Ladder: Population References for Inpainting and Conditional Generation",
+    "title_words": 9,
+    "abstract_words": 219,
+    "abstract_characters": 1740
+  },
+  "bibliography": [
+    {
+      "key": "wang2004",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "blau2018",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "zhang2018lpips",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "care2025",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "lmsb2025",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "papila2022",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "grape2023",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "hosseini2010",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "dobes2004",
+      "status": "substituted",
+      "issues": [
+        "escalated from 'verified_by_doi' to 'substituted' based on field-level classification",
+        "author overlap with resolved record is only 50% (threshold 60% for 3+ author entries) -- likely wrong paper"
+      ]
+    },
+    {
+      "key": "celeba2015",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "rothe2018",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "metrics2024",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "daugman2004",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "daugman2001",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "arcface2022",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "tmscore2004",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "lddt2013",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "brainid2024",
+      "status": "verified_by_doi",
+      "issues": []
+    },
+    {
+      "key": "betti2023",
+      "status": "needs_review",
+      "issues": [
+        "escalated from 'verified_by_arxiv' to 'needs_review' based on field-level classification"
+      ]
+    },
+    {
+      "key": "fwd2025",
+      "status": "substituted",
+      "issues": [
+        "escalated from 'verified_by_arxiv' to 'substituted' based on field-level classification"
+      ]
+    },
+    {
+      "key": "brats2023",
+      "status": "verified_by_arxiv",
+      "issues": []
+    }
+  ],
+  "template": {
+    "url": "https://media.eventhosts.cc/Conferences/CVPR2027/author-kit-CVPR2027-v1-latex.zip",
+    "zip_sha256": "da1ec5db9b73531ea82a87723e4aedb631083331fe655d1972279b48a7bdb2fe",
+    "official_style_sha256": "1cd7f434b13d41c475df4a1901a5d82d9ca8b80b8cf6205dc4602a5c164286b4",
+    "local_style_sha256": "1cd7f434b13d41c475df4a1901a5d82d9ca8b80b8cf6205dc4602a5c164286b4",
+    "match": true
+  }
+}

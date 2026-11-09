@@ -1,0 +1,163 @@
+{
+ "protocol": "docs/PROTOCOL_donor_ladder_face.md",
+ "status": "pre-QC (no human visual check yet)",
+ "scale": "1 = dataset mean, 2 = stranger (squared error, z-scored grey level, 128 px frame)",
+ "window_px": 16,
+ "pose_max_deg": 10.0,
+ "results": {
+  "celeba": {
+   "repeat": {
+    "ratio": 1.383,
+    "ci95": [
+     1.324,
+     1.449
+    ],
+    "targets": 423,
+    "families": 423,
+    "split_half_r": 0.75
+   },
+   "mirror": {
+    "ratio": 1.002,
+    "ci95": [
+     0.939,
+     1.068
+    ],
+    "targets": 423,
+    "families": 423,
+    "split_half_r": 0.92
+   },
+   "stranger": {
+    "ratio": 2.031,
+    "ci95": [
+     1.995,
+     2.068
+    ],
+    "targets": 423,
+    "families": 423,
+    "split_half_r": 0.05
+   },
+   "lookalike": {
+    "ratio": 0.568,
+    "ci95": [
+     0.557,
+     0.578
+    ],
+    "targets": 423,
+    "families": 423,
+    "split_half_r": 0.92
+   },
+   "lookalike_ring4": {
+    "ratio": 0.527,
+    "ci95": [
+     0.518,
+     0.536
+    ],
+    "targets": 423,
+    "families": 423
+   },
+   "sexage": {
+    "ratio": 0.947,
+    "ci95": [
+     0.939,
+     0.954
+    ],
+    "targets": 423,
+    "families": 423,
+    "split_half_r": 0.92
+   },
+   "mean": {
+    "ratio": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "targets": 423,
+    "families": 423,
+    "split_half_r": NaN
+   },
+   "pool_people": 665
+  },
+  "imdb": {
+   "repeat": {
+    "ratio": 1.513,
+    "ci95": [
+     1.449,
+     1.579
+    ],
+    "targets": 362,
+    "families": 283,
+    "split_half_r": 0.61
+   },
+   "mirror": {
+    "ratio": 1.321,
+    "ci95": [
+     1.24,
+     1.401
+    ],
+    "targets": 362,
+    "families": 283,
+    "split_half_r": 0.95
+   },
+   "sibling": {
+    "ratio": 1.818,
+    "ci95": [
+     1.692,
+     1.936
+    ],
+    "targets": 97,
+    "families": 64,
+    "split_half_r": 0.12
+   },
+   "stranger": {
+    "ratio": 2.013,
+    "ci95": [
+     1.975,
+     2.054
+    ],
+    "targets": 362,
+    "families": 283,
+    "split_half_r": 0.2
+   },
+   "lookalike": {
+    "ratio": 0.57,
+    "ci95": [
+     0.555,
+     0.584
+    ],
+    "targets": 362,
+    "families": 283,
+    "split_half_r": 0.96
+   },
+   "lookalike_ring4": {
+    "ratio": 0.531,
+    "ci95": [
+     0.517,
+     0.544
+    ],
+    "targets": 362,
+    "families": 283
+   },
+   "sexage": {
+    "ratio": 0.994,
+    "ci95": [
+     0.984,
+     1.005
+    ],
+    "targets": 323,
+    "families": 258,
+    "split_half_r": 0.59
+   },
+   "mean": {
+    "ratio": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "targets": 362,
+    "families": 283,
+    "split_half_r": NaN
+   },
+   "pool_people": 677
+  }
+ }
+}

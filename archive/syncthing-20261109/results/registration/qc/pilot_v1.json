@@ -1,0 +1,130 @@
+{
+  "gate": "NOT MET",
+  "visual_acceptance": "Pilot: zero accepted of 13 reviewed; full set not established",
+  "manifest_sha256": "2d8f42fe8259cf6ea683cf0bd4a8cad1e9307533043b2e921e9a59ce70a5a666",
+  "strata": [
+    {
+      "stratum": "GRAPE | same_camera_1y+ | ordinary",
+      "intended": 71,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 70
+    },
+    {
+      "stratum": "GRAPE | same_camera_1y+ | reflected_input",
+      "intended": 71,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 70
+    },
+    {
+      "stratum": "GRAPE | other_camera | ordinary",
+      "intended": 152,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 151
+    },
+    {
+      "stratum": "GRAPE | other_camera | reflected_input",
+      "intended": 152,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 151
+    },
+    {
+      "stratum": "GRAPE | fellow_eye_same_visit | fellow_mirror",
+      "intended": 119,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 118
+    },
+    {
+      "stratum": "GRAPE | same_camera_<1y | ordinary",
+      "intended": 95,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 94
+    },
+    {
+      "stratum": "GRAPE | same_camera_<1y | reflected_input",
+      "intended": 95,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 94
+    },
+    {
+      "stratum": "UPOL | same_eye_same_sitting | ordinary",
+      "intended": 128,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 127
+    },
+    {
+      "stratum": "UPOL | same_eye_same_sitting | reflected_input",
+      "intended": 128,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 127
+    },
+    {
+      "stratum": "UPOL | fellow_eye_same_sitting | fellow_mirror",
+      "intended": 64,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 63
+    },
+    {
+      "stratum": "UTIRIS | same_eye_same_sitting | ordinary",
+      "intended": 156,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 155
+    },
+    {
+      "stratum": "UTIRIS | same_eye_same_sitting | reflected_input",
+      "intended": 156,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 155
+    },
+    {
+      "stratum": "UTIRIS | fellow_eye_same_sitting | fellow_mirror",
+      "intended": 78,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 77
+    }
+  ],
+  "pilot_preparation": {
+    "candidate_only": 4,
+    "transform_rejected": 4,
+    "insufficient_matches": 5
+  },
+  "review_sha256": "bf70eb267102e9e8ba1a753e9602119afb68f7ce8afe97a6eb74a86f749ce455"
+}

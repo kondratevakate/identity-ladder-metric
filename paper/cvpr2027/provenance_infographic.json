@@ -1,0 +1,401 @@
+{
+  "generator": {
+    "path": "paper/cvpr2027/make_provenance_infographic.py",
+    "sha256": "45e390f6871d235da45b66f17282a377ad40846aef240c8500d91c2568db0ec6"
+  },
+  "source_atlas": {
+    "path": "paper/cvpr2027/fig/atlas_all_modalities_full.pdf",
+    "sha256": "9995bc0b511af44d96fe9ac56d95e44a3a23b1976704b439410fd27499bd2880"
+  },
+  "source_atlas_provenance": {
+    "path": "paper/cvpr2027/atlas_provenance.json",
+    "sha256": "7db41eac931b17a95167fd9fa9dc1221b72f53fee4589a88e024a529fa770188"
+  },
+  "original_source_commit": "82ed7fe8a52e557854cf4cd2d02eb47d5803d7cb",
+  "original_source_path": "results/figures/fig_ladder_maps_all_modalities.pdf",
+  "original_source_sha256": "5aadadd499d90da2ccbcf5103787b14d9d751b6e0101bc92bac94bc1d653037e",
+  "scientific_inputs": {
+    "brain": {
+      "path": "results/donor_ladder_brain_metrics.json",
+      "sha256": "6e33995b8a40de145fda81f76063d0652c42b839b22e5d00bdca749d0cfcfcb8"
+    },
+    "face": {
+      "path": "results/face_ladder_metrics.json",
+      "sha256": "3477dd2f0886c055a942dc5e04c4859b698b530d5fc2750d30833fb5d5e79692"
+    },
+    "fundus": {
+      "path": "paper/cvpr2027/inputs/donor_ladder_2d_facefmt.json",
+      "sha256": "365396632ad6c8a6aee98ca99892a89cb911ae910456452e20ad48c317b7238c"
+    },
+    "iris": {
+      "path": "results/iris_ladder_metrics.json",
+      "sha256": "5f0828e93a8d3bf216c0e493a166f7878a39bc90141c961dab1565dd4ebc3c69"
+    }
+  },
+  "decorative_asset": {
+    "path": "paper/cvpr2027/fig/assets/identity_bust_v1.png",
+    "sha256": "5c8e1e5459a6e888f21bd454b3f124972375b2d850df3ac0b2440e509873b186",
+    "role": "Synthetic decorative illustration, not participant data or a measured anatomy panel.",
+    "generation_record": {
+      "path": "paper/cvpr2027/fig/assets/identity_bust_v1.provenance.json",
+      "sha256": "8ff2191c7be534c8e5faa9b01b1e813ce16cfeebaac113131713ddfc5f2486ed"
+    }
+  },
+  "displayed_sources": [
+    {
+      "key": "brain",
+      "rect": [
+        10,
+        43,
+        176,
+        104
+      ],
+      "color": [
+        0.27,
+        0.51,
+        0.72
+      ],
+      "title": "Brain MRI  /  QTIM",
+      "counts": "221 targets / 168 families",
+      "detail": "23 repeat scans; Gaussian maps",
+      "status": "P"
+    },
+    {
+      "key": "face",
+      "rect": [
+        10,
+        111,
+        176,
+        172
+      ],
+      "color": [
+        0.49,
+        0.43,
+        0.66
+      ],
+      "title": "Face photos  /  CelebA",
+      "counts": "921 targets / 921 clusters",
+      "detail": "v6f frame approved",
+      "status": "F"
+    },
+    {
+      "key": "fundus",
+      "rect": [
+        319,
+        43,
+        485,
+        104
+      ],
+      "color": [
+        0.2,
+        0.58,
+        0.53
+      ],
+      "title": "Fundus photos  /  GRAPE P8",
+      "counts": "239 eyes / 134 people",
+      "detail": "Repeat: 171 eyes / 97 people",
+      "status": "P"
+    },
+    {
+      "key": "iris",
+      "rect": [
+        319,
+        111,
+        485,
+        172
+      ],
+      "color": [
+        0.8,
+        0.57,
+        0.25
+      ],
+      "title": "Iris images  /  UTIRIS NIR",
+      "counts": "156 eyes / 78 people",
+      "detail": "P2 strip panel; same-eye repeats",
+      "status": "P"
+    }
+  ],
+  "primary_dataset_selection": {
+    "brain": "QTIM: available MRI panel; Gaussian replacement retained.",
+    "face": "CelebA: primary face set; IMDb-WIKI remains supplementary.",
+    "fundus": "GRAPE P8: repeat acquisition exists; PAPILA remains supplementary.",
+    "iris": "UTIRIS NIR: protocol-primary set; VIS and UPOL remain supplementary."
+  },
+  "counts_scope": "Source-panel counts; endpoint eligibility varies. Fundus repeat count is stated separately. Map scalars summarize pooled source errors, not only the pictured axial slice.",
+  "panels": [
+    {
+      "source_row": 2,
+      "source_column": 0,
+      "source_clip": [
+        89.6615982055664,
+        334.0,
+        179.9215488932195,
+        406.0
+      ]
+    },
+    {
+      "source_row": 2,
+      "source_column": 1,
+      "source_clip": [
+        185.3371459344787,
+        334.0,
+        275.5970966221318,
+        406.0
+      ],
+      "display_annotation": "0.28"
+    },
+    {
+      "source_row": 2,
+      "source_column": 2,
+      "source_clip": [
+        281.012693663391,
+        334.0,
+        371.27264435104416,
+        406.0
+      ],
+      "display_annotation": "1.56"
+    },
+    {
+      "source_row": 2,
+      "source_column": 4,
+      "source_clip": [
+        472.3637891212155,
+        334.0,
+        562.6237398088687,
+        406.0
+      ],
+      "display_annotation": "1.99"
+    },
+    {
+      "source_row": 2,
+      "source_column": 5,
+      "source_clip": [
+        568.0393368501279,
+        334.0,
+        658.2992875377811,
+        406.0
+      ],
+      "display_annotation": "0.75"
+    },
+    {
+      "source_row": 2,
+      "source_column": 7,
+      "source_clip": [
+        759.3904323079524,
+        334.0,
+        849.6503829956056,
+        406.0
+      ]
+    },
+    {
+      "source_row": 0,
+      "source_column": 0,
+      "source_clip": [
+        105.22804260253906,
+        129.9906005859375,
+        164.988037109375,
+        201.9906005859375
+      ]
+    },
+    {
+      "source_row": 0,
+      "source_column": 1,
+      "source_clip": [
+        201.0,
+        130.1199951171875,
+        260.760009765625,
+        202.1199951171875
+      ],
+      "display_annotation": "1.30\n[1.26, 1.34]"
+    },
+    {
+      "source_row": 0,
+      "source_column": 2,
+      "source_clip": [
+        297.0,
+        130.1199951171875,
+        356.760009765625,
+        202.1199951171875
+      ],
+      "display_annotation": "0.99\n[0.94, 1.03]"
+    },
+    {
+      "source_row": 0,
+      "source_column": 4,
+      "source_clip": [
+        488.0,
+        130.1199951171875,
+        547.760009765625,
+        202.1199951171875
+      ],
+      "display_annotation": "2.02\n[2.00, 2.04]"
+    },
+    {
+      "source_row": 0,
+      "source_column": 5,
+      "source_clip": [
+        584.0,
+        130.1199951171875,
+        643.760009765625,
+        202.1199951171875
+      ],
+      "display_annotation": "0.54\n[0.53, 0.55]"
+    },
+    {
+      "source_row": 0,
+      "source_column": 7,
+      "source_clip": [
+        775.0,
+        130.1199951171875,
+        834.760009765625,
+        202.1199951171875
+      ]
+    },
+    {
+      "source_row": 3,
+      "source_column": 0,
+      "source_clip": [
+        98.86627197265625,
+        436.07415771484375,
+        170.86627197265625,
+        508.07415771484375
+      ]
+    },
+    {
+      "source_row": 3,
+      "source_column": 1,
+      "source_clip": [
+        195.0,
+        436.1199951171875,
+        267.0,
+        508.1199951171875
+      ],
+      "display_annotation": "0.49\n[0.40, 0.58]"
+    },
+    {
+      "source_row": 3,
+      "source_column": 2,
+      "source_clip": [
+        290.0,
+        436.1199951171875,
+        362.0,
+        508.1199951171875
+      ],
+      "display_annotation": "1.33\n[1.22, 1.44]"
+    },
+    {
+      "source_row": 3,
+      "source_column": 4,
+      "source_clip": [
+        482.0,
+        436.1199951171875,
+        554.0,
+        508.1199951171875
+      ],
+      "display_annotation": "2.01\n[1.90, 2.14]"
+    },
+    {
+      "source_row": 3,
+      "source_column": 5,
+      "source_clip": [
+        577.0,
+        436.1199951171875,
+        649.0,
+        508.1199951171875
+      ],
+      "display_annotation": "0.86\n[0.83, 0.88]"
+    },
+    {
+      "source_row": 3,
+      "source_column": 7,
+      "source_clip": [
+        769.0,
+        436.1199951171875,
+        841.0,
+        508.1199951171875
+      ]
+    },
+    {
+      "source_row": 5,
+      "source_column": 0,
+      "source_clip": [
+        89.6615982055664,
+        648.8851928710938,
+        180.381591796875,
+        702.8851928710938
+      ]
+    },
+    {
+      "source_row": 5,
+      "source_column": 1,
+      "source_clip": [
+        185.0,
+        649.8399658203125,
+        275.7200012207031,
+        703.1199951171875
+      ],
+      "display_annotation": "0.41\n[0.34, 0.47]"
+    },
+    {
+      "source_row": 5,
+      "source_column": 2,
+      "source_clip": [
+        281.0,
+        649.8399658203125,
+        371.7200012207031,
+        703.1199951171875
+      ],
+      "display_annotation": "1.26\n[1.12, 1.40]"
+    },
+    {
+      "source_row": 5,
+      "source_column": 4,
+      "source_clip": [
+        472.0,
+        649.8399658203125,
+        562.719970703125,
+        703.1199951171875
+      ],
+      "display_annotation": "2.00\n[1.82, 2.21]"
+    },
+    {
+      "source_row": 5,
+      "source_column": 5,
+      "source_clip": [
+        568.0,
+        649.8399658203125,
+        658.719970703125,
+        703.1199951171875
+      ],
+      "display_annotation": "0.50\n[0.47, 0.53]"
+    },
+    {
+      "source_row": 5,
+      "source_column": 7,
+      "source_clip": [
+        759.0,
+        649.8399658203125,
+        849.719970703125,
+        703.1199951171875
+      ]
+    }
+  ],
+  "panel_rendering": "Selected PDF clips rendered at 4x source resolution to avoid hidden off-clip form text; native labels/scalars are redrawn separately. No scientific map array is recomputed.",
+  "shared_ratio_scale": {
+    "vmin": 0,
+    "vcenter": 1,
+    "vmax": 2.4
+  },
+  "measurements": "Copied aggregate PDF maps and displayed rounded annotations; no scientific map or metric recomputed.",
+  "privacy": "No individual exemplar or participant identifier. Synthetic bust is decorative only.",
+  "output": {
+    "path": "paper/cvpr2027/fig/identity_ladder_provenance.pdf",
+    "sha256": "64be475a5b09a60bde4d27a49c5fa8376d7993b4f42b5ed89761f7d24a402645"
+  },
+  "shareable_png": {
+    "path": "paper/cvpr2027/fig/identity_ladder_provenance.png",
+    "sha256": "c0044eb48c32eccf3354033f4b58e8c2a109ac5c5d92fb8aa38d04b9ef5109e6",
+    "width_px": 1980,
+    "height_px": 2132
+  }
+}

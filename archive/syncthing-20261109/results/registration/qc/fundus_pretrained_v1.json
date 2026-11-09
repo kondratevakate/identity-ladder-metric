@@ -1,0 +1,16 @@
+{
+  "modality": "fundus",
+  "pilot_rows": 7,
+  "visual_acceptance": "NOT ESTABLISHED",
+  "gate": "NOT MET",
+  "model_sha256": "df9d28098d1d95347f96c6a2a425db3f9ab1683778173a22eca96f0e863758cf",
+  "plan_sha256": "29201d882961ce522cc5550555b79543913f5a8380aaf45c5e3894ab8f3aad03",
+  "records_sha256": "44d01cfc6499de7485371225b127b42a819a01ab54ff07b2c80fb03e3c75dca7",
+  "status": "development visually inspected; no acceptance established",
+  "reviewed_pilot_rows": 7,
+  "pass_count": 0,
+  "fail_count": 3,
+  "unreviewable_count": 4,
+  "review_sha256": "e4376d7f9fb28fd9cce4de35edf5f78e0bd7ada481988b4e64dcc9a0b59a581e",
+  "scope": "G5 homography only; G5S geometry saved separately, not visually accepted"
+}

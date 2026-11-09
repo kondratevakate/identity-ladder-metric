@@ -1,0 +1,21 @@
+{
+  "method": "I1 canonical-circle geometry diagnostic",
+  "data": "analytic grid only; no participant data",
+  "grid": 224,
+  "centre_xy": [
+    111.5,
+    111.5
+  ],
+  "limbus_radius": 80.0,
+  "crop_xyxy": [
+    136,
+    80,
+    200,
+    144
+  ],
+  "iris_pixels": 3444,
+  "crop_pixels": 4096,
+  "iris_fraction": 0.8408203125,
+  "scale": "raw proportion, not calibrated",
+  "interpretation": "Even ideal circular localization leaves part of this crop outside the iris. This is NOT a valid-source-support percentage: real sclera can have valid source support. No QC rule, ROI or gate denominator changed."
+}

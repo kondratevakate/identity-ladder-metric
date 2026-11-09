@@ -1,0 +1,89 @@
+{
+  "method": "SynthMorph affine",
+  "required_comparisons": 334,
+  "reviewed": 10,
+  "pass": 8,
+  "fail": 0,
+  "unreviewable": 2,
+  "not_reviewed": 324,
+  "kate_acceptance": "PENDING",
+  "gate": "NOT MET",
+  "definition": "Agent visual pass / intended comparisons, raw proportion higher better; every stratum must reach >=0.90 and Kate acceptance remains separate",
+  "strata": [
+    {
+      "box": "deep",
+      "branch": "template",
+      "intended": 72,
+      "reviewed": 2,
+      "pass_count": 2,
+      "fail": 0,
+      "unreviewable": 0,
+      "not_reviewed": 70,
+      "acceptance_fraction": 0.027777777777777776
+    },
+    {
+      "box": "deep",
+      "branch": "contralateral",
+      "intended": 72,
+      "reviewed": 2,
+      "pass_count": 2,
+      "fail": 0,
+      "unreviewable": 0,
+      "not_reviewed": 70,
+      "acceptance_fraction": 0.027777777777777776
+    },
+    {
+      "box": "deep",
+      "branch": "repeat",
+      "intended": 23,
+      "reviewed": 1,
+      "pass_count": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 22,
+      "acceptance_fraction": 0.0
+    },
+    {
+      "box": "parietal",
+      "branch": "template",
+      "intended": 72,
+      "reviewed": 2,
+      "pass_count": 2,
+      "fail": 0,
+      "unreviewable": 0,
+      "not_reviewed": 70,
+      "acceptance_fraction": 0.027777777777777776
+    },
+    {
+      "box": "parietal",
+      "branch": "contralateral",
+      "intended": 72,
+      "reviewed": 2,
+      "pass_count": 2,
+      "fail": 0,
+      "unreviewable": 0,
+      "not_reviewed": 70,
+      "acceptance_fraction": 0.027777777777777776
+    },
+    {
+      "box": "parietal",
+      "branch": "repeat",
+      "intended": 23,
+      "reviewed": 1,
+      "pass_count": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 22,
+      "acceptance_fraction": 0.0
+    }
+  ],
+  "phase_counts": {
+    "development": {
+      "pass": 4,
+      "unreviewable": 2
+    },
+    "validation": {
+      "pass": 4
+    }
+  }
+}

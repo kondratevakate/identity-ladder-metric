@@ -1,0 +1,410 @@
+{
+ "protocol": "docs/PROTOCOL_donor_ladder_face.md",
+ "version": "v6f",
+ "source": {
+  "celeba": {
+   "images": 202599,
+   "people": 10177,
+   "test_partition_images": 19962
+  },
+  "imdb": {
+   "crops": 460723,
+   "single_face_crops": 184624,
+   "people_single_face": 15520,
+   "kinship_pairs_wikidata": {
+    "parent-child": 726,
+    "sibling": 601
+   }
+  }
+ },
+ "flow": {
+  "celeba": {
+   "steps": [
+    {
+     "step": "sampled",
+     "pool": {
+      "images": 23505,
+      "people": 2500
+     },
+     "target": {
+      "images": 19962,
+      "people": 1000
+     }
+    },
+    {
+     "step": "landmarks",
+     "label": "no single face found (MediaPipe Face Landmarker)",
+     "excluded": {
+      "pool": {
+       "images": 81,
+       "people": 80
+      },
+      "target": {
+       "images": 157,
+       "people": 128
+      }
+     },
+     "remaining": {
+      "pool": {
+       "images": 23424,
+       "people": 2500
+      },
+      "target": {
+       "images": 19805,
+       "people": 1000
+      }
+     }
+    },
+    {
+     "step": "pose",
+     "label": "|yaw| or |pitch| >= 10 deg",
+     "excluded": {
+      "pool": {
+       "images": 4172,
+       "people": 2211
+      },
+      "target": {
+       "images": 11215,
+       "people": 980
+      }
+     },
+     "remaining": {
+      "pool": {
+       "images": 19252,
+       "people": 2483
+      },
+      "target": {
+       "images": 8590,
+       "people": 978
+      }
+     }
+    },
+    {
+     "step": "identity_inconsistent",
+     "label": "identity inconsistent (ArcFace cosine to own centroid < 0.3)",
+     "excluded": {
+      "pool": {
+       "images": 92,
+       "people": 46
+      },
+      "target": {
+       "images": 88,
+       "people": 58
+      }
+     },
+     "remaining": {
+      "pool": {
+       "images": 19160,
+       "people": 2479
+      },
+      "target": {
+       "images": 8502,
+       "people": 973
+      }
+     }
+    },
+    {
+     "step": "small_mask",
+     "label": "face-skin mask < 2000 px",
+     "excluded": {
+      "pool": {
+       "images": 0,
+       "people": 0
+      },
+      "target": {
+       "images": 1,
+       "people": 1
+      }
+     },
+     "remaining": {
+      "pool": {
+       "images": 19160,
+       "people": 2479
+      },
+      "target": {
+       "images": 8501,
+       "people": 973
+      }
+     }
+    },
+    {
+     "step": "duplicate_other_person",
+     "label": "duplicate of another person's image (r > 0.9)",
+     "excluded": {
+      "pool": {
+       "images": 20,
+       "people": 19
+      },
+      "target": {
+       "images": 49,
+       "people": 39
+      }
+     },
+     "remaining": {
+      "pool": {
+       "images": 19140,
+       "people": 2479
+      },
+      "target": {
+       "images": 8452,
+       "people": 973
+      }
+     }
+    },
+    {
+     "step": "template_correlation",
+     "label": "template fit failure (correlation < median - 3 MAD)",
+     "excluded": {
+      "pool": {
+       "images": 98,
+       "people": 94
+      },
+      "target": {
+       "images": 197,
+       "people": 146
+      }
+     },
+     "remaining": {
+      "pool": {
+       "images": 19042,
+       "people": 2478
+      },
+      "target": {
+       "images": 8255,
+       "people": 973
+      }
+     }
+    }
+   ],
+   "usable": {
+    "pool": {
+     "images": 19042,
+     "people": 2478
+    },
+    "target": {
+     "images": 8255,
+     "people": 973
+    }
+   },
+   "analysis": {
+    "targets_analysed": 921,
+    "pool_people": 1844,
+    "targets_with_sibling": null,
+    "neutral": 454,
+    "expressive": 467,
+    "target_people_without_usable_repeat": 52
+   }
+  },
+  "imdb": {
+   "steps": [
+    {
+     "step": "sampled",
+     "pool": {
+      "images": 21377,
+      "people": 3000
+     },
+     "target": {
+      "images": 30251,
+      "people": 1327
+     }
+    },
+    {
+     "step": "landmarks",
+     "label": "no single face found (MediaPipe Face Landmarker)",
+     "excluded": {
+      "pool": {
+       "images": 713,
+       "people": 636
+      },
+      "target": {
+       "images": 2580,
+       "people": 665
+      }
+     },
+     "remaining": {
+      "pool": {
+       "images": 20664,
+       "people": 2998
+      },
+      "target": {
+       "images": 27671,
+       "people": 1296
+      }
+     }
+    },
+    {
+     "step": "pose",
+     "label": "|yaw| or |pitch| >= 10 deg",
+     "excluded": {
+      "pool": {
+       "images": 5521,
+       "people": 2773
+      },
+      "target": {
+       "images": 18867,
+       "people": 1153
+      }
+     },
+     "remaining": {
+      "pool": {
+       "images": 15143,
+       "people": 2796
+      },
+      "target": {
+       "images": 8804,
+       "people": 1017
+      }
+     }
+    },
+    {
+     "step": "identity_inconsistent",
+     "label": "identity inconsistent (ArcFace cosine to own centroid < 0.3)",
+     "excluded": {
+      "pool": {
+       "images": 136,
+       "people": 68
+      },
+      "target": {
+       "images": 434,
+       "people": 239
+      }
+     },
+     "remaining": {
+      "pool": {
+       "images": 15007,
+       "people": 2782
+      },
+      "target": {
+       "images": 8370,
+       "people": 986
+      }
+     }
+    },
+    {
+     "step": "small_mask",
+     "label": "face-skin mask < 2000 px",
+     "excluded": {
+      "pool": {
+       "images": 4,
+       "people": 4
+      },
+      "target": {
+       "images": 3,
+       "people": 3
+      }
+     },
+     "remaining": {
+      "pool": {
+       "images": 15003,
+       "people": 2782
+      },
+      "target": {
+       "images": 8367,
+       "people": 986
+      }
+     }
+    },
+    {
+     "step": "duplicate_other_person",
+     "label": "duplicate of another person's image (r > 0.9)",
+     "excluded": {
+      "pool": {
+       "images": 44,
+       "people": 41
+      },
+      "target": {
+       "images": 113,
+       "people": 88
+      }
+     },
+     "remaining": {
+      "pool": {
+       "images": 14959,
+       "people": 2775
+      },
+      "target": {
+       "images": 8254,
+       "people": 971
+      }
+     }
+    },
+    {
+     "step": "template_correlation",
+     "label": "template fit failure (correlation < median - 3 MAD)",
+     "excluded": {
+      "pool": {
+       "images": 204,
+       "people": 196
+      },
+      "target": {
+       "images": 591,
+       "people": 277
+      }
+     },
+     "remaining": {
+      "pool": {
+       "images": 14755,
+       "people": 2752
+      },
+      "target": {
+       "images": 7663,
+       "people": 948
+      }
+     }
+    }
+   ],
+   "usable": {
+    "pool": {
+     "images": 14755,
+     "people": 2752
+    },
+    "target": {
+     "images": 7663,
+     "people": 948
+    }
+   },
+   "analysis": {
+    "targets_analysed": 678,
+    "pool_people": 1657,
+    "targets_with_sibling": 247,
+    "neutral": 381,
+    "expressive": 297,
+    "target_people_without_usable_repeat": 270
+   }
+  }
+ },
+ "pixel_masks": {
+  "celeba male": {
+   "images": 4862,
+   "glasses": 0.143,
+   "greyscale": 4,
+   "lips_removed": 0.0,
+   "facial_hair_gt10pct_chin": 0.0,
+   "median_fraction_of_face_removed": 0.0
+  },
+  "celeba female": {
+   "images": 6430,
+   "glasses": 0.041,
+   "greyscale": 0,
+   "lips_removed": 0.0,
+   "facial_hair_gt10pct_chin": 0.0,
+   "median_fraction_of_face_removed": 0.0
+  },
+  "imdb male": {
+   "images": 5321,
+   "glasses": 0.166,
+   "greyscale": 237,
+   "lips_removed": 0.0,
+   "facial_hair_gt10pct_chin": 0.0,
+   "median_fraction_of_face_removed": 0.0
+  },
+  "imdb female": {
+   "images": 4500,
+   "glasses": 0.064,
+   "greyscale": 119,
+   "lips_removed": 0.0,
+   "facial_hair_gt10pct_chin": 0.0,
+   "median_fraction_of_face_removed": 0.0
+  }
+ }
+}

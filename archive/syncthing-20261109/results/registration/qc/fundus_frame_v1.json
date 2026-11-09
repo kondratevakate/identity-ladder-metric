@@ -1,0 +1,74 @@
+{
+  "gate": "NOT MET",
+  "visual_acceptance": "NOT ESTABLISHED",
+  "method": "Amendment 2b disc-fovea frame",
+  "manifest_sha256": "2d8f42fe8259cf6ea683cf0bd4a8cad1e9307533043b2e921e9a59ce70a5a666",
+  "pilot_preparation": {
+    "prepared": 7
+  },
+  "strata": [
+    {
+      "stratum": "GRAPE | same_camera_1y+ | ordinary",
+      "intended": 71,
+      "reviewed": 0,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 0,
+      "not_reviewed": 71
+    },
+    {
+      "stratum": "GRAPE | same_camera_1y+ | reflected_input",
+      "intended": 71,
+      "reviewed": 0,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 0,
+      "not_reviewed": 71
+    },
+    {
+      "stratum": "GRAPE | other_camera | ordinary",
+      "intended": 152,
+      "reviewed": 0,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 0,
+      "not_reviewed": 152
+    },
+    {
+      "stratum": "GRAPE | other_camera | reflected_input",
+      "intended": 152,
+      "reviewed": 0,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 0,
+      "not_reviewed": 152
+    },
+    {
+      "stratum": "GRAPE | fellow_eye_same_visit | fellow_mirror",
+      "intended": 119,
+      "reviewed": 0,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 0,
+      "not_reviewed": 119
+    },
+    {
+      "stratum": "GRAPE | same_camera_<1y | ordinary",
+      "intended": 95,
+      "reviewed": 0,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 0,
+      "not_reviewed": 95
+    },
+    {
+      "stratum": "GRAPE | same_camera_<1y | reflected_input",
+      "intended": 95,
+      "reviewed": 0,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 0,
+      "not_reviewed": 95
+    }
+  ]
+}

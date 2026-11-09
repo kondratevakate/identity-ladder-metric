@@ -1,0 +1,32 @@
+{
+  "rigid": {
+    "transform_sha256": {
+      "forward": "0570ab49062adf8123d2cd6489bdeedc4a40872a705995439fc8a9a961a908f6",
+      "inverse": "7c8f72f814631b0925543106bdc5f28468f1b60bca622dc30684ac7a9d9a047e"
+    },
+    "forward_ras_determinant": 1.0000000170073133,
+    "physical_pull_determinant": 0.9999999735707921,
+    "inverse_linear_composition_max_abs_unitless": 1.3685691424569768e-07,
+    "inverse_translation_composition_norm_mm": 2.2879884193411023e-05,
+    "template_brain_voxels": 1882989,
+    "inside_native_fov": 1882989,
+    "native_fov_support_fraction": 1.0,
+    "definitions": "raw, uncalibrated; determinant positive excludes reflection/collapse; inverse error lower better; support higher better",
+    "visual_acceptance": "NOT ESTABLISHED"
+  },
+  "affine": {
+    "transform_sha256": {
+      "forward": "94f3931029943a1e37a9687aeaa42a08d60697fa524cc57ea21a53ee4d0b02e6",
+      "inverse": "3a85d2c56674307ed5ff24895909fb23fd1d2e12e6d4f165c2196b47c3e8b4ef"
+    },
+    "forward_ras_determinant": 1.3251772441894851,
+    "physical_pull_determinant": 0.7546160651325933,
+    "inverse_linear_composition_max_abs_unitless": 9.935681211103997e-08,
+    "inverse_translation_composition_norm_mm": 7.337318758883059e-06,
+    "template_brain_voxels": 1882989,
+    "inside_native_fov": 1882989,
+    "native_fov_support_fraction": 1.0,
+    "definitions": "raw, uncalibrated; determinant positive excludes reflection/collapse; inverse error lower better; support higher better",
+    "visual_acceptance": "NOT ESTABLISHED"
+  }
+}

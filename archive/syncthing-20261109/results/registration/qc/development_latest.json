@@ -1,0 +1,138 @@
+{
+  "gate": "NOT MET",
+  "visual_acceptance": "Development pilot: zero gate passes among 13 reviewed; full validation not run",
+  "manifest_sha256": "2d8f42fe8259cf6ea683cf0bd4a8cad1e9307533043b2e921e9a59ce70a5a666",
+  "strata": [
+    {
+      "stratum": "GRAPE | same_camera_1y+ | ordinary",
+      "intended": 71,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 70
+    },
+    {
+      "stratum": "GRAPE | same_camera_1y+ | reflected_input",
+      "intended": 71,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 70
+    },
+    {
+      "stratum": "GRAPE | other_camera | ordinary",
+      "intended": 152,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 151
+    },
+    {
+      "stratum": "GRAPE | other_camera | reflected_input",
+      "intended": 152,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 151
+    },
+    {
+      "stratum": "GRAPE | fellow_eye_same_visit | fellow_mirror",
+      "intended": 119,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 118
+    },
+    {
+      "stratum": "GRAPE | same_camera_<1y | ordinary",
+      "intended": 95,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 94
+    },
+    {
+      "stratum": "GRAPE | same_camera_<1y | reflected_input",
+      "intended": 95,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 94
+    },
+    {
+      "stratum": "UPOL | same_eye_same_sitting | ordinary",
+      "intended": 128,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 127
+    },
+    {
+      "stratum": "UPOL | same_eye_same_sitting | reflected_input",
+      "intended": 128,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 127
+    },
+    {
+      "stratum": "UPOL | fellow_eye_same_sitting | fellow_mirror",
+      "intended": 64,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 63
+    },
+    {
+      "stratum": "UTIRIS | same_eye_same_sitting | ordinary",
+      "intended": 156,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 155
+    },
+    {
+      "stratum": "UTIRIS | same_eye_same_sitting | reflected_input",
+      "intended": 156,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 155
+    },
+    {
+      "stratum": "UTIRIS | fellow_eye_same_sitting | fellow_mirror",
+      "intended": 78,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 77
+    }
+  ],
+  "pilot_preparation": {
+    "GRAPE_geometric_candidates": 6,
+    "GRAPE_no_fit": 1,
+    "iris_sheets_prepared": 6
+  },
+  "iterations": {
+    "GRAPE": "fundus v2",
+    "UPOL": "iris v6",
+    "UTIRIS": "iris v6"
+  },
+  "review_hashes": {
+    "registration-qc-iris-20261102-v6": "cc1dfbe37e51f6bebacf498257008eb305c51eb7ee3865d690f9f96e2fb27d82",
+    "registration-qc-fundus-20261102-v2": "d8e4c128c2549aa6b3214f33e9258acd7264d2db4d94b9c7f9c9e5f62ca52612"
+  }
+}

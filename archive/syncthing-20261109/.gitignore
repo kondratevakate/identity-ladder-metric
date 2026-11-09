@@ -1,0 +1,23 @@
+external/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Local LaTeX build products and downloaded reference templates
+paper/isbi2027/*.aux
+paper/isbi2027/*.bbl
+paper/isbi2027/*.blg
+paper/isbi2027/*.log
+paper/isbi2027/*.out
+paper/isbi2027/main.pdf
+paper/isbi2027/overleaf/*.aux
+paper/isbi2027/overleaf/*.bbl
+paper/isbi2027/overleaf/*.blg
+paper/isbi2027/overleaf/*.log
+paper/isbi2027/overleaf/*.out
+paper/isbi2027/overleaf/*.fls
+paper/isbi2027/overleaf/*.fdb_latexmk
+paper/isbi2027/overleaf/*.synctex.gz
+paper/isbi2027/overleaf/main.pdf
+paper/isbi2027/template/
+paper/isbi2027/template-download/

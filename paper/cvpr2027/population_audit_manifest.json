@@ -1,0 +1,141 @@
+{
+  "assessed_on": "2026-11-09",
+  "scope": "Existing experiments measure donor/reference and metric behavior in human-anatomy datasets. Model-output and population-stratified generator audits below are proposed extensions, not executed results.",
+  "population_audit_spec_sha256": "44073b12a8f2868d946227d01370cf947cf816b9a9d35fc673a714b51edf45b4",
+  "generator_sha256": "1a7f6ebbf69117e4229d23ac2810c2a65b1614e4dd3685f7083cc34ef94b84a3",
+  "sources": {
+    "docs/PROTOCOL_donor_ladder_brain.md": {
+      "path": "docs/PROTOCOL_donor_ladder_brain.md",
+      "sha256": "6d92452e38b318a6987c03d8ced2fe44189e056f0ac2791ae9f5c1c87f21a2bc",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "22ddf703267e9de631d28bbedd5d869d789e6de9"
+    },
+    "docs/PROTOCOL_donor_ladder_general.md": {
+      "path": "docs/PROTOCOL_donor_ladder_general.md",
+      "sha256": "3730e0cfe69948152586df96f46367ab96f61d7738ace99d40204ecce0d0f0b7",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "5da3433fd01b90aa882a5f4492d6db4bab0076f8"
+    },
+    "docs/PROTOCOL_face_metrics.md": {
+      "path": "docs/PROTOCOL_face_metrics.md",
+      "sha256": "2fdd13d5dd1a81ddf0d808deedae9909cbe26c66cea1cd37d548b3ac9ba7521d",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "f2ed748efd7ef7de5940f060cd4ff0f1f0d6580c"
+    },
+    "docs/PROTOCOL_iris_metrics.md": {
+      "path": "docs/PROTOCOL_iris_metrics.md",
+      "sha256": "ef77ae8974fb7080612706dbe55cb4f9df0d0cf8d718153f04c9df30acfef736",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "29e38c4a7d9225aa509b8316f5fb6dda20d2d91a"
+    },
+    "docs/REPRODUCTION_WORKFLOW.md": {
+      "path": "docs/REPRODUCTION_WORKFLOW.md",
+      "sha256": "d2b86d55b47281bfc2954580c36bb62d0e40da7fd4d8579e407276a3d7b58665",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "bccf8ca41f2e525cb4b23db063178ca542002b8c"
+    },
+    "results/brats_panel_checks_tm1.1.2.json": {
+      "path": "results/brats_panel_checks_tm1.1.2.json",
+      "sha256": "a8432803e5a12b2629951253e167da1dd08e3bd954b200f5a083e07afb833962",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "5eebee02a90c4105e40db03ad778298e0be51cc7"
+    },
+    "results/brats_panel_checks_tm1.9.0.json": {
+      "path": "results/brats_panel_checks_tm1.9.0.json",
+      "sha256": "f0c50110aaa299385ec0e5fc292ebcb6583e64fb97b0d3e64cc844e45667c039",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "5eebee02a90c4105e40db03ad778298e0be51cc7"
+    },
+    "results/donor_ladder_brain_haca3_stage1.json": {
+      "path": "results/donor_ladder_brain_haca3_stage1.json",
+      "sha256": "90953bb52568c37ab58729a5c5c56473caf97bcff0e51c24993d38b640732992",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "a48523dccd2b70dae2615717d62d8725e5183528"
+    },
+    "results/donor_ladder_brain_maps.json": {
+      "path": "results/donor_ladder_brain_maps.json",
+      "sha256": "4b64bbf265b748544edad13ddbcfb49aa541dceb91b970e9abf08b5d70e16d1c",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "d3df13c77056a14212da26902197411e67cf84fd"
+    },
+    "results/donor_ladder_brain_metrics.json": {
+      "path": "results/donor_ladder_brain_metrics.json",
+      "sha256": "6e33995b8a40de145fda81f76063d0652c42b839b22e5d00bdca749d0cfcfcb8",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "22ddf703267e9de631d28bbedd5d869d789e6de9"
+    },
+    "results/donor_ladder_brain_size.json": {
+      "path": "results/donor_ladder_brain_size.json",
+      "sha256": "9c3f6200e22686515e4d393ecefb6313b098bd08b9799bb19d6230e43f204fdc",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "a42572715f45c8cfd22acd965d578e15da701108"
+    },
+    "results/donor_ladder_metrics_correlation.json": {
+      "path": "results/donor_ladder_metrics_correlation.json",
+      "sha256": "51367dbc9d059285bb487764b8260db6db3688bf9514668ebfb1450e02d68524",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "d3df13c77056a14212da26902197411e67cf84fd"
+    },
+    "results/face_ladder_metrics.json": {
+      "path": "results/face_ladder_metrics.json",
+      "sha256": "3477dd2f0886c055a942dc5e04c4859b698b530d5fc2750d30833fb5d5e79692",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "f2ed748efd7ef7de5940f060cd4ff0f1f0d6580c"
+    },
+    "results/iris_ladder_metrics.json": {
+      "path": "results/iris_ladder_metrics.json",
+      "sha256": "5f0828e93a8d3bf216c0e493a166f7878a39bc90141c961dab1565dd4ebc3c69",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "29e38c4a7d9225aa509b8316f5fb6dda20d2d91a"
+    },
+    "results/label_robustness.json": {
+      "path": "results/label_robustness.json",
+      "sha256": "2f23961ddbb46fd629497492a54fdab8b0b841102c55039881ae40743573a1c8",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "f8151663103b160c952e3ad9d4814a352b1e4b5b"
+    },
+    "results/label_robustness_report.md": {
+      "path": "results/label_robustness_report.md",
+      "sha256": "fa14bb1a21cfc48dd0e1d9ca9f1bb50b8f486266377e21b9ff58e9f251077b67",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "f8151663103b160c952e3ad9d4814a352b1e4b5b"
+    },
+    "results/population_null_synthetic.json": {
+      "path": "results/population_null_synthetic.json",
+      "sha256": "4c1b2e71010d9dcac7dbd0f3faabb5a29e15855b97a7be7bb15d200c4ff04885",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "394913ac7e41b8c786dd0f9dbe380bd24d770bd3"
+    },
+    "results/pupil_ladder.json": {
+      "path": "results/pupil_ladder.json",
+      "sha256": "12d24185dbaa7554c6199f1a85afb1dd153aaa527abeb0cecf1c5a1803263c9a",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "8d6a41df98e0b5d7552ddb5ace752a2804c07daf"
+    },
+    "results/real_cases.json": {
+      "path": "results/real_cases.json",
+      "sha256": "202368b272de7bfbd9bfddca29a542b973876470c2832be50a2afb03670974a5",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "5cf2ee3a6905b255263301fc1a2dc763fbd5cf60"
+    },
+    "results/real_cases_parietal.json": {
+      "path": "results/real_cases_parietal.json",
+      "sha256": "b43ca58690758d9ba0dd5dcad552dc581a5bb1ec4f31d474dc05fd409618e255",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "5cf2ee3a6905b255263301fc1a2dc763fbd5cf60"
+    },
+    "results/toy_ladder.json": {
+      "path": "results/toy_ladder.json",
+      "sha256": "1b31f94e4482df24d689e18f0f7b222739287e4afa5cc2e16a81c8505349a808",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "5eebee02a90c4105e40db03ad778298e0be51cc7"
+    },
+    "src/brats_panel_checks.py": {
+      "path": "src/brats_panel_checks.py",
+      "sha256": "ecf4e6c8fd9dc5f3d4283a7cd44d84aae76573cbbf73e2616a60e98e4927e5b8",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "5eebee02a90c4105e40db03ad778298e0be51cc7"
+    }
+  },
+  "generated_model_outputs_evaluated": false
+}

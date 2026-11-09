@@ -1,0 +1,1524 @@
+{
+  "date": "2026-11-09",
+  "base_commit": "80a094c7c3cab36d51d0e290b0634cca0ccf8d36",
+  "evidence_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+  "generator": "paper/cvpr2027/prepare.py",
+  "generator_sha256": "b75dcf6623a94025bfd5ddb41c69d3d415ad47e9f0b7e34ea3c7a936e5b6f417",
+  "scope": "Saved aggregate evidence only; no raw human images or rows read; no experiments rerun.",
+  "sources": {
+    "donor_ladder_brain_metrics": {
+      "path": "results/donor_ladder_brain_metrics.json",
+      "sha256": "6e33995b8a40de145fda81f76063d0652c42b839b22e5d00bdca749d0cfcfcb8",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "22ddf703267e9de631d28bbedd5d869d789e6de9"
+    },
+    "donor_ladder_brain_bilateral": {
+      "path": "results/donor_ladder_brain_bilateral.json",
+      "sha256": "8d621d91ecb980c8d7b04d40c4591a371f1e884a61443d20aa29fd9cbc7e7172",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "a42572715f45c8cfd22acd965d578e15da701108"
+    },
+    "donor_ladder_brain_maps": {
+      "path": "results/donor_ladder_brain_maps.json",
+      "sha256": "4b64bbf265b748544edad13ddbcfb49aa541dceb91b970e9abf08b5d70e16d1c",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "d3df13c77056a14212da26902197411e67cf84fd"
+    },
+    "donor_ladder_brain_map_grid": {
+      "path": "results/donor_ladder_brain_map_grid.json",
+      "sha256": "171eee0203eabc7a4823c9ea7f6473eedf2137ec6c3c048e5d2ca5a39cb22a27",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "22ddf703267e9de631d28bbedd5d869d789e6de9"
+    },
+    "donor_ladder_brain_size": {
+      "path": "results/donor_ladder_brain_size.json",
+      "sha256": "9c3f6200e22686515e4d393ecefb6313b098bd08b9799bb19d6230e43f204fdc",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "a42572715f45c8cfd22acd965d578e15da701108"
+    },
+    "donor_ladder_brain_haca3_stage1": {
+      "path": "results/donor_ladder_brain_haca3_stage1.json",
+      "sha256": "90953bb52568c37ab58729a5c5c56473caf97bcff0e51c24993d38b640732992",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "a48523dccd2b70dae2615717d62d8725e5183528"
+    },
+    "donor_ladder_2d_p7": {
+      "path": "results/donor_ladder_2d_p7.json",
+      "sha256": "7ca0ff1c36c353490453e55a832060831fe28bce645c5dabad90406f6cbf9662",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "5da3433fd01b90aa882a5f4492d6db4bab0076f8"
+    },
+    "face_ladder_metrics": {
+      "path": "results/face_ladder_metrics.json",
+      "sha256": "3477dd2f0886c055a942dc5e04c4859b698b530d5fc2750d30833fb5d5e79692",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "f2ed748efd7ef7de5940f060cd4ff0f1f0d6580c"
+    },
+    "iris_ladder_metrics": {
+      "path": "results/iris_ladder_metrics.json",
+      "sha256": "5f0828e93a8d3bf216c0e493a166f7878a39bc90141c961dab1565dd4ebc3c69",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "29e38c4a7d9225aa509b8316f5fb6dda20d2d91a"
+    },
+    "donor_ladder_metrics_correlation": {
+      "path": "results/donor_ladder_metrics_correlation.json",
+      "sha256": "51367dbc9d059285bb487764b8260db6db3688bf9514668ebfb1450e02d68524",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "d3df13c77056a14212da26902197411e67cf84fd"
+    },
+    "population_null_synthetic": {
+      "path": "results/population_null_synthetic.json",
+      "sha256": "4c1b2e71010d9dcac7dbd0f3faabb5a29e15855b97a7be7bb15d200c4ff04885",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "394913ac7e41b8c786dd0f9dbe380bd24d770bd3"
+    },
+    "pupil_ladder": {
+      "path": "results/pupil_ladder.json",
+      "sha256": "12d24185dbaa7554c6199f1a85afb1dd153aaa527abeb0cecf1c5a1803263c9a",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "8d6a41df98e0b5d7552ddb5ace752a2804c07daf"
+    },
+    "label_robustness": {
+      "path": "results/label_robustness.json",
+      "sha256": "2f23961ddbb46fd629497492a54fdab8b0b841102c55039881ae40743573a1c8",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "f8151663103b160c952e3ad9d4814a352b1e4b5b"
+    },
+    "brats_panel_checks_tm1.1.2": {
+      "path": "results/brats_panel_checks_tm1.1.2.json",
+      "sha256": "a8432803e5a12b2629951253e167da1dd08e3bd954b200f5a083e07afb833962",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "5eebee02a90c4105e40db03ad778298e0be51cc7"
+    },
+    "brats_panel_checks_tm1.9.0": {
+      "path": "results/brats_panel_checks_tm1.9.0.json",
+      "sha256": "f0c50110aaa299385ec0e5fc292ebcb6583e64fb97b0d3e64cc844e45667c039",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "5eebee02a90c4105e40db03ad778298e0be51cc7"
+    },
+    "fundus_framefmt": {
+      "path": "results/donor_ladder_2d_facefmt.json",
+      "sha256": "365396632ad6c8a6aee98ca99892a89cb911ae910456452e20ad48c317b7238c",
+      "git_snapshot": "82ed7fe8a52e557854cf4cd2d02eb47d5803d7cb",
+      "producing_commit": "8faed50c27cfe0076d17094a97733064331605d0"
+    },
+    "fundus_metrics_v1": {
+      "path": "results/fundus_ladder_metrics.json",
+      "sha256": "73f1d778d70fd0b799648c4a336629e81cb6dfba42741e7bb00851d915bfffc0",
+      "git_snapshot": "82ed7fe8a52e557854cf4cd2d02eb47d5803d7cb",
+      "producing_commit": "b153fcea07bf7405d32b660da9013dbdedb210d2"
+    },
+    "care_iteration2": {
+      "path": "results/care_iteration2.json",
+      "sha256": "017f0d5d33b3afcb96c4827af14eae696c79337148b22b0bdab7d7caee784be9",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "87a95a1f66b2975b78ac22035610947d55c3c9d8"
+    }
+  },
+  "selected_records": {
+    "implementation_probes/1.1.2": {
+      "ssim_dimensionality": {
+        "ssim_original": 0.9561630487442017,
+        "ssim_after_permuting_first_spatial_axis": 0.9561630487442017,
+        "ssim_after_permuting_last_spatial_axis": 0.9966972470283508,
+        "per_slice_2d": true
+      },
+      "psnr_clamping": {
+        "psnr_reported": 12.316670417785645,
+        "psnr_eps_reported": 9.091104507446289,
+        "psnr_from_unclamped_mse": 9.091105014815378,
+        "psnr_from_clamped_mse": 12.316671422754716,
+        "share_of_fill_voxels_above_reference_max": 0.2005859375,
+        "plain_psnr_clamps_fill": true
+      },
+      "rank_tau": {
+        "mse": 1.0,
+        "psnr": 0.8909090909090909,
+        "psnr_eps": 1.0,
+        "psnr_01": 1.0,
+        "psnr_01_eps": 1.0,
+        "mae": 0.6727272727272727,
+        "msle": 0.8909090909090909,
+        "ssim": 0.6727272727272727
+      },
+      "n_constructed_fills": 11
+    },
+    "implementation_probes/1.9.0": {
+      "ssim_dimensionality": {
+        "ssim_original": 0.9561630487442017,
+        "ssim_after_permuting_first_spatial_axis": 0.9561630487442017,
+        "ssim_after_permuting_last_spatial_axis": 0.9966972470283508,
+        "per_slice_2d": true
+      },
+      "psnr_clamping": {
+        "psnr_reported": 12.316670417785645,
+        "psnr_eps_reported": 9.091104507446289,
+        "psnr_from_unclamped_mse": 9.091105014815378,
+        "psnr_from_clamped_mse": 12.316671422754716,
+        "share_of_fill_voxels_above_reference_max": 0.2005859375,
+        "plain_psnr_clamps_fill": true
+      },
+      "rank_tau": {
+        "mse": 1.0,
+        "psnr": 0.8909090909090909,
+        "psnr_eps": 1.0,
+        "psnr_01": 1.0,
+        "psnr_01_eps": 1.0,
+        "mae": 0.6727272727272727,
+        "msle": 0.8909090909090909,
+        "ssim": 0.6727272727272727
+      },
+      "n_constructed_fills": 11
+    },
+    "brain/mse": {
+      "dataset_mean": {
+        "R": 0.41271622379655726,
+        "ci95": [
+          0.3670336756756024,
+          0.44346784025329894
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          0.373385074126483,
+          0.44056696918916466
+        ],
+        "R_cells": 0.41274241570322384
+      },
+      "mirror": {
+        "R": 0.7172740661811635,
+        "ci95": [
+          0.6215780452827636,
+          0.7918077421332355
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          0.6938724681777629,
+          0.738779022342848
+        ],
+        "R_cells": 0.717201274776814
+      },
+      "wrong_detail": {
+        "R": 1.0056202787013278,
+        "ci95": [
+          0.9924089596665441,
+          1.0199622992878634
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          0.9939535071470884,
+          1.0179447966412813
+        ],
+        "R_cells": 1.0056638685094068
+      },
+      "noise": {
+        "R": 0.9205190726040025,
+        "ci95": [
+          0.8933775279166062,
+          0.9436833399191773
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          0.908737673254623,
+          0.9319769338215455
+        ],
+        "R_cells": 0.9205634114333174
+      }
+    },
+    "brain/ssim": {
+      "dataset_mean": {
+        "R": 0.7376404872912007,
+        "ci95": [
+          0.6797865987445691,
+          0.7841180443138506
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          0.7119834219087874,
+          0.7564848351458926
+        ],
+        "R_cells": 0.7376494881079259
+      },
+      "mirror": {
+        "R": 0.8225976070058083,
+        "ci95": [
+          0.7546125071310088,
+          0.8734832792479333
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          0.8040107076319865,
+          0.8374583672790944
+        ],
+        "R_cells": 0.8225601172937103
+      },
+      "wrong_detail": {
+        "R": 1.023102508129313,
+        "ci95": [
+          1.0143119521826356,
+          1.035767697975686
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          1.0185235331625677,
+          1.0281439042801634
+        ],
+        "R_cells": 1.0231110892997808
+      },
+      "noise": {
+        "R": 1.1317496738169763,
+        "ci95": [
+          1.0875075740920344,
+          1.1939680661655103
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          1.122098188314922,
+          1.1449317382315678
+        ],
+        "R_cells": 1.1317462635785633
+      }
+    },
+    "brain/acc_dataset": {
+      "dataset_mean": null,
+      "mirror": {
+        "R": 0.7521470559575815,
+        "ci95": [
+          0.6880293582774386,
+          0.8079598224365542
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          0.7410286614650737,
+          0.7626566935637435
+        ],
+        "R_cells": 0.7521142144143255
+      },
+      "wrong_detail": {
+        "R": 1.0026311514098027,
+        "ci95": [
+          0.9955449821245651,
+          1.0090240389966478
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          0.9985303704795132,
+          1.0066766583605806
+        ],
+        "R_cells": 1.0026299822331617
+      },
+      "noise": {
+        "R": 1.0028212886814423,
+        "ci95": [
+          1.0002914138510575,
+          1.0058091371117854
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          1.0014186058350583,
+          1.0041695741428043
+        ],
+        "R_cells": 1.0028185927474305
+      }
+    },
+    "brain/tm_like": {
+      "dataset_mean": {
+        "R": 0.7233945728562426,
+        "ci95": [
+          0.6415558244283986,
+          0.7781545323375536
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          0.6686154800298862,
+          0.7573476947648218
+        ],
+        "R_cells": 0.7233947238932221
+      },
+      "mirror": {
+        "R": 0.6667351814969097,
+        "ci95": [
+          0.5300863603109714,
+          0.7609024641282255
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          0.5968767467775404,
+          0.7087942295152219
+        ],
+        "R_cells": 0.6667081962591975
+      },
+      "wrong_detail": {
+        "R": 0.9973176466470862,
+        "ci95": [
+          0.9870113383408424,
+          1.0068189574713804
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          0.9915554027168263,
+          1.0032392760871867
+        ],
+        "R_cells": 0.9973358007763574
+      },
+      "noise": {
+        "R": 1.0751713935849498,
+        "ci95": [
+          1.0405201546667364,
+          1.121450921556081
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          1.0634425989717105,
+          1.092264560594267
+        ],
+        "R_cells": 1.0751800625156298
+      }
+    },
+    "brain/lddt_rep": {
+      "dataset_mean": {
+        "R": 0.3554769340967559,
+        "ci95": [
+          0.2540802114733014,
+          0.4296462022834604
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          0.28762116236410223,
+          0.40990527668889826
+        ],
+        "R_cells": 0.35548720333434997
+      },
+      "mirror": {
+        "R": 0.8898473855820452,
+        "ci95": [
+          0.8427355977197719,
+          0.9246471525847666
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          0.8746038532858237,
+          0.903689596292779
+        ],
+        "R_cells": 0.8898100494855349
+      },
+      "wrong_detail": {
+        "R": 1.0504761945298797,
+        "ci95": [
+          1.0295484077771184,
+          1.0795318840955972
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          1.0395927439017687,
+          1.0631608034404487
+        ],
+        "R_cells": 1.050509836370499
+      },
+      "noise": {
+        "R": 2.0730409547134023,
+        "ci95": [
+          1.9240415347817432,
+          2.272970446718923
+        ],
+        "n_targets": 221,
+        "n_families": 168,
+        "ci95_family_only": [
+          1.9823809306787323,
+          2.191637113404793
+        ],
+        "R_cells": 2.0730631197322342
+      }
+    },
+    "face/celeba/mse": {
+      "retest": {
+        "R": 0.6395125437323629,
+        "ci95": [
+          0.5965255996668128,
+          0.6775704663400473
+        ],
+        "n_targets": 921,
+        "n_families": 921,
+        "ci95_family_only": [
+          0.6193232014319429,
+          0.6579751019732962
+        ],
+        "R_cells": 0.6333646525603942
+      },
+      "mirror": {
+        "R": 0.47515278061192284,
+        "ci95": [
+          0.4003973797814293,
+          0.5560188364072778
+        ],
+        "n_targets": 921,
+        "n_families": 921,
+        "ci95_family_only": [
+          0.4509317841048987,
+          0.5010676267495576
+        ],
+        "R_cells": 0.4707861428255602
+      },
+      "dataset_mean": {
+        "R": 0.4990358298896453,
+        "ci95": [
+          0.4879094034604597,
+          0.5040404836882969
+        ],
+        "n_targets": 921,
+        "n_families": 921,
+        "ci95_family_only": [
+          0.4931219924783795,
+          0.504473215970571
+        ],
+        "R_cells": 0.4959970151887084
+      },
+      "lookalike": {
+        "R": 0.39947643934945276,
+        "ci95": [
+          0.3570298191732154,
+          0.4470206236027868
+        ],
+        "n_targets": 921,
+        "n_families": 921,
+        "ci95_family_only": [
+          0.3935400096553966,
+          0.4056617944975845
+        ],
+        "R_cells": 0.3975676228003961
+      }
+    },
+    "face/celeba/ssim": {
+      "retest": {
+        "R": 0.8282421829580532,
+        "ci95": [
+          0.8065937178993544,
+          0.8428763793403117
+        ],
+        "n_targets": 921,
+        "n_families": 921,
+        "ci95_family_only": [
+          0.8168719357238264,
+          0.8392555716438711
+        ],
+        "R_cells": 0.8258242636080562
+      },
+      "mirror": {
+        "R": 0.6928279469420958,
+        "ci95": [
+          0.6536386163228018,
+          0.7284096179350963
+        ],
+        "n_targets": 921,
+        "n_families": 921,
+        "ci95_family_only": [
+          0.6790186381307727,
+          0.7061972087586416
+        ],
+        "R_cells": 0.6920246224532373
+      },
+      "dataset_mean": {
+        "R": 0.8441394958263047,
+        "ci95": [
+          0.8033443932490815,
+          0.8762834519666833
+        ],
+        "n_targets": 921,
+        "n_families": 921,
+        "ci95_family_only": [
+          0.8392432223639247,
+          0.8490371804175221
+        ],
+        "R_cells": 0.842829589725161
+      },
+      "lookalike": {
+        "R": 0.7259040479841427,
+        "ci95": [
+          0.698770527292196,
+          0.7536017309796843
+        ],
+        "n_targets": 921,
+        "n_families": 921,
+        "ci95_family_only": [
+          0.7208148634264694,
+          0.7308776122779111
+        ],
+        "R_cells": 0.7253840296442005
+      }
+    },
+    "face/celeba/arcface_cos": {
+      "retest": {
+        "R": 0.35360417323807647,
+        "ci95": [
+          0.341269589492075,
+          0.3615225196983599
+        ],
+        "n_targets": 921,
+        "n_families": 921,
+        "ci95_family_only": [
+          0.34358376870977014,
+          0.3633707405449772
+        ],
+        "R_cells": 0.3516554359598519
+      },
+      "mirror": null,
+      "dataset_mean": null,
+      "lookalike": {
+        "R": 0.9829554867063631,
+        "ci95": [
+          0.9803109045171886,
+          0.9859839107713257
+        ],
+        "n_targets": 921,
+        "n_families": 921,
+        "ci95_family_only": [
+          0.9814060797598586,
+          0.984614005897544
+        ],
+        "R_cells": 0.9830278816183322
+      }
+    },
+    "face/imdb/mse": {
+      "retest": {
+        "R": 0.6903354125493375,
+        "ci95": [
+          0.6496007522830166,
+          0.7269937313230247
+        ],
+        "n_targets": 678,
+        "n_families": 453,
+        "ci95_family_only": [
+          0.6689970014155786,
+          0.7123190509951327
+        ],
+        "R_cells": 0.6860172296247369
+      },
+      "mirror": {
+        "R": 0.5285598774831088,
+        "ci95": [
+          0.4397685034028762,
+          0.6271362298988633
+        ],
+        "n_targets": 678,
+        "n_families": 453,
+        "ci95_family_only": [
+          0.496555734184418,
+          0.5608054972799434
+        ],
+        "R_cells": 0.5263826890129473
+      },
+      "dataset_mean": {
+        "R": 0.498466958317627,
+        "ci95": [
+          0.4848949430535587,
+          0.5044102688315423
+        ],
+        "n_targets": 678,
+        "n_families": 453,
+        "ci95_family_only": [
+          0.49210395984072586,
+          0.504671817703505
+        ],
+        "R_cells": 0.4950089149292409
+      },
+      "lookalike": {
+        "R": 0.39695090708893177,
+        "ci95": [
+          0.36757876258143907,
+          0.4306987722300404
+        ],
+        "n_targets": 678,
+        "n_families": 453,
+        "ci95_family_only": [
+          0.3907073820628212,
+          0.4031569827559034
+        ],
+        "R_cells": 0.3958208948462603
+      }
+    },
+    "face/imdb/ssim": {
+      "retest": {
+        "R": 0.8559576038649673,
+        "ci95": [
+          0.8385439029662033,
+          0.8709770295247028
+        ],
+        "n_targets": 678,
+        "n_families": 453,
+        "ci95_family_only": [
+          0.8441932866312147,
+          0.8678943880936391
+        ],
+        "R_cells": 0.854848203492463
+      },
+      "mirror": {
+        "R": 0.7385395161188721,
+        "ci95": [
+          0.7008270263674709,
+          0.7739790867517542
+        ],
+        "n_targets": 678,
+        "n_families": 453,
+        "ci95_family_only": [
+          0.723237064886209,
+          0.7546116380595753
+        ],
+        "R_cells": 0.7376555129697575
+      },
+      "dataset_mean": {
+        "R": 0.8593761304619748,
+        "ci95": [
+          0.8228338131336609,
+          0.8916659974353811
+        ],
+        "n_targets": 678,
+        "n_families": 453,
+        "ci95_family_only": [
+          0.8538411013299175,
+          0.8649499172259344
+        ],
+        "R_cells": 0.8572836110727304
+      },
+      "lookalike": {
+        "R": 0.7433984061882093,
+        "ci95": [
+          0.7269889768638675,
+          0.7587407251332898
+        ],
+        "n_targets": 678,
+        "n_families": 453,
+        "ci95_family_only": [
+          0.7379620418182998,
+          0.7487499119886194
+        ],
+        "R_cells": 0.7424997672791173
+      }
+    },
+    "face/imdb/arcface_cos": {
+      "retest": {
+        "R": 0.39614608794103356,
+        "ci95": [
+          0.37739321068001036,
+          0.40668919804607057
+        ],
+        "n_targets": 678,
+        "n_families": 453,
+        "ci95_family_only": [
+          0.3813549567751438,
+          0.4104513542213331
+        ],
+        "R_cells": 0.3925391050269175
+      },
+      "mirror": null,
+      "dataset_mean": null,
+      "lookalike": {
+        "R": 0.9838065231201021,
+        "ci95": [
+          0.9807117173562794,
+          0.9864876437196396
+        ],
+        "n_targets": 678,
+        "n_families": 453,
+        "ci95_family_only": [
+          0.9817543195072977,
+          0.9858026910464628
+        ],
+        "R_cells": 0.9836150261887052
+      }
+    },
+    "iris/UTIRIS_NIR/ratio": {
+      "repeat": {
+        "ratio": 0.407,
+        "ci95": [
+          0.345,
+          0.475
+        ],
+        "targets": 156,
+        "persons": 78
+      },
+      "fellow": {
+        "ratio": 1.256,
+        "ci95": [
+          1.123,
+          1.395
+        ],
+        "targets": 156,
+        "persons": 78,
+        "directions": {
+          "R eye as target": {
+            "ratio": 1.305,
+            "targets": 78
+          },
+          "L eye as target": {
+            "ratio": 1.21,
+            "targets": 78
+          }
+        }
+      },
+      "lookalike": {
+        "ratio": 0.599,
+        "ci95": [
+          0.54,
+          0.66
+        ],
+        "targets": 156,
+        "persons": 78
+      },
+      "stranger": {
+        "ratio": 2.001,
+        "ci95": [
+          1.816,
+          2.207
+        ],
+        "targets": 156,
+        "persons": 78
+      }
+    },
+    "iris/UTIRIS_VIS/ratio": {
+      "repeat": {
+        "ratio": 0.569,
+        "ci95": [
+          0.503,
+          0.64
+        ],
+        "targets": 157,
+        "persons": 79
+      },
+      "fellow": {
+        "ratio": 1.293,
+        "ci95": [
+          1.211,
+          1.375
+        ],
+        "targets": 158,
+        "persons": 79,
+        "directions": {
+          "R eye as target": {
+            "ratio": 1.303,
+            "targets": 79
+          },
+          "L eye as target": {
+            "ratio": 1.283,
+            "targets": 79
+          }
+        }
+      },
+      "lookalike": {
+        "ratio": 0.861,
+        "ci95": [
+          0.826,
+          0.898
+        ],
+        "targets": 158,
+        "persons": 79
+      },
+      "stranger": {
+        "ratio": 2.018,
+        "ci95": [
+          1.884,
+          2.176
+        ],
+        "targets": 158,
+        "persons": 79
+      }
+    },
+    "iris/UPOL/ratio": {
+      "repeat": {
+        "ratio": 0.177,
+        "ci95": [
+          0.154,
+          0.2
+        ],
+        "targets": 128,
+        "persons": 64
+      },
+      "fellow": {
+        "ratio": 1.118,
+        "ci95": [
+          1.037,
+          1.198
+        ],
+        "targets": 128,
+        "persons": 64,
+        "directions": {
+          "R eye as target": {
+            "ratio": 1.108,
+            "targets": 64
+          },
+          "L eye as target": {
+            "ratio": 1.128,
+            "targets": 64
+          }
+        }
+      },
+      "lookalike": {
+        "ratio": 0.841,
+        "ci95": [
+          0.798,
+          0.882
+        ],
+        "targets": 128,
+        "persons": 64
+      },
+      "stranger": {
+        "ratio": 2.138,
+        "ci95": [
+          2.007,
+          2.281
+        ],
+        "targets": 128,
+        "persons": 64
+      }
+    },
+    "fundus/GRAPE/framefmt": {
+      "repeat": {
+        "ratio": 0.489,
+        "ci95": [
+          0.404,
+          0.585
+        ],
+        "targets": 171,
+        "persons": 97,
+        "split_half_r": 0.88
+      },
+      "fellow": {
+        "ratio": 1.33,
+        "ci95": [
+          1.224,
+          1.437
+        ],
+        "targets": 210,
+        "persons": 105,
+        "split_half_r": 0.67,
+        "directions": {
+          "R eye as target": {
+            "ratio": 1.352,
+            "targets": 105
+          },
+          "L eye as target": {
+            "ratio": 1.308,
+            "targets": 105
+          }
+        }
+      },
+      "lookalike": {
+        "ratio": 0.856,
+        "ci95": [
+          0.832,
+          0.88
+        ],
+        "targets": 239,
+        "persons": 134,
+        "split_half_r": 0.94
+      },
+      "stranger": {
+        "ratio": 2.012,
+        "ci95": [
+          1.897,
+          2.14
+        ],
+        "targets": 239,
+        "persons": 134,
+        "split_half_r": -0.09
+      }
+    },
+    "fundus/PAPILA/framefmt": {
+      "repeat": null,
+      "fellow": {
+        "ratio": 1.467,
+        "ci95": [
+          1.422,
+          1.512
+        ],
+        "targets": 488,
+        "persons": 244,
+        "split_half_r": 0.98,
+        "directions": {
+          "R eye as target": {
+            "ratio": 1.451,
+            "targets": 244
+          },
+          "L eye as target": {
+            "ratio": 1.482,
+            "targets": 244
+          }
+        }
+      },
+      "lookalike": {
+        "ratio": 0.935,
+        "ci95": [
+          0.914,
+          0.955
+        ],
+        "targets": 488,
+        "persons": 244,
+        "split_half_r": 0.98
+      },
+      "stranger": {
+        "ratio": 1.992,
+        "ci95": [
+          1.941,
+          2.049
+        ],
+        "targets": 488,
+        "persons": 244,
+        "split_half_r": -0.26
+      }
+    },
+    "fundus/metric_registry": {
+      "mse": {
+        "group": "A fidelity",
+        "column": "mse",
+        "status": "computed"
+      },
+      "rmse": {
+        "group": "A fidelity",
+        "column": "rmse",
+        "status": "computed"
+      },
+      "psnr": {
+        "group": "A fidelity",
+        "column": "psnr",
+        "status": "computed"
+      },
+      "mae": {
+        "group": "A fidelity",
+        "column": "mae",
+        "status": "computed"
+      },
+      "ssim": {
+        "group": "A fidelity",
+        "column": "ssim",
+        "status": "computed"
+      },
+      "ms_ssim": {
+        "group": "A fidelity",
+        "column": "ms_ssim",
+        "status": "computed"
+      },
+      "lpips": {
+        "group": "A fidelity",
+        "column": null,
+        "status": "blocked",
+        "reason": "needs ImageNet network weights; none on this machine, a download needs Kate's approval"
+      },
+      "acc_dataset": {
+        "group": "A anomaly",
+        "column": "acc_dataset",
+        "status": "computed"
+      },
+      "acc_matched": {
+        "group": "A anomaly",
+        "column": "acc_cohort",
+        "status": "computed"
+      },
+      "amplitude_dataset": {
+        "group": "A anomaly",
+        "column": "ampdev_dataset",
+        "status": "computed"
+      },
+      "amplitude_matched": {
+        "group": "A anomaly",
+        "column": "ampdev_cohort",
+        "status": "computed"
+      },
+      "lddt": {
+        "group": "B structure",
+        "column": "lddt",
+        "status": "computed"
+      },
+      "intensity_persistence": {
+        "group": "B structure",
+        "column": "persistence",
+        "status": "computed"
+      },
+      "betti_matching_matched": {
+        "group": "B structure",
+        "column": null,
+        "status": "blocked",
+        "reason": "needs the Betti-matching library (induced matchings); a home-made version would not be the published metric"
+      },
+      "betti_matching_unmatched": {
+        "group": "B structure",
+        "column": null,
+        "status": "blocked",
+        "reason": "needs the Betti-matching library (induced matchings); a home-made version would not be the published metric"
+      },
+      "id_angle": {
+        "group": "B identity",
+        "column": null,
+        "status": "blocked",
+        "reason": "no fundus encoder weights on this machine (RETFound is gated); the GRAPE RETFound features shipped with the re-identification repository are pickles from an external source and are not unpickled; PAPILA has none"
+      },
+      "id_norm": {
+        "group": "B identity",
+        "column": null,
+        "status": "blocked",
+        "reason": "no fundus encoder weights on this machine (RETFound is gated); the GRAPE RETFound features shipped with the re-identification repository are pickles from an external source and are not unpickled; PAPILA has none"
+      },
+      "id_pfe": {
+        "group": "B identity",
+        "column": null,
+        "status": "blocked",
+        "reason": "no fundus encoder weights on this machine (RETFound is gated); the GRAPE RETFound features shipped with the re-identification repository are pickles from an external source and are not unpickled; PAPILA has none; PFE also needs an uncertainty head"
+      },
+      "id_plda": {
+        "group": "B identity",
+        "column": null,
+        "status": "blocked",
+        "reason": "no fundus encoder weights on this machine (RETFound is gated); the GRAPE RETFound features shipped with the re-identification repository are pickles from an external source and are not unpickled; PAPILA has none; PLDA also needs a fitted model"
+      },
+      "latent_pullback": {
+        "group": "B latent",
+        "column": null,
+        "status": "blocked",
+        "reason": "no generative fundus model; LDDMM between 16 px windows is a pairwise registration (stop rule)"
+      },
+      "latent_fisher_rao": {
+        "group": "B latent",
+        "column": null,
+        "status": "blocked",
+        "reason": "no generative fundus model; LDDMM between 16 px windows is a pairwise registration (stop rule)"
+      },
+      "latent_lddmm": {
+        "group": "B latent",
+        "column": null,
+        "status": "blocked",
+        "reason": "no generative fundus model; LDDMM between 16 px windows is a pairwise registration (stop rule)"
+      },
+      "plausibility": {
+        "group": "C reference-free",
+        "column": null,
+        "status": "blocked",
+        "reason": "set-level reference-free metric with no per-target value; not run on 16 px window fills; needs a trained density model"
+      },
+      "fid": {
+        "group": "C reference-free",
+        "column": null,
+        "status": "blocked",
+        "reason": "set-level reference-free metric with no per-target value; not run on 16 px window fills; needs Inception weights"
+      },
+      "fwd": {
+        "group": "C reference-free",
+        "column": null,
+        "status": "blocked",
+        "reason": "set-level reference-free metric with no per-target value; not run on 16 px window fills"
+      },
+      "topology_distance": {
+        "group": "C reference-free",
+        "column": null,
+        "status": "blocked",
+        "reason": "set-level reference-free metric with no per-target value; not run on 16 px window fills"
+      }
+    },
+    "iris/metric_registry": {
+      "mse": {
+        "group": "A fidelity",
+        "column": "mse",
+        "status": "computed"
+      },
+      "rmse": {
+        "group": "A fidelity",
+        "column": "rmse",
+        "status": "computed"
+      },
+      "psnr": {
+        "group": "A fidelity",
+        "column": "psnr",
+        "status": "computed"
+      },
+      "mae": {
+        "group": "A fidelity",
+        "column": "mae",
+        "status": "computed"
+      },
+      "ssim": {
+        "group": "A fidelity",
+        "column": "ssim",
+        "status": "computed"
+      },
+      "ms_ssim": {
+        "group": "A fidelity",
+        "column": "ms_ssim",
+        "status": "computed"
+      },
+      "lpips": {
+        "group": "A fidelity",
+        "column": null,
+        "status": "blocked",
+        "reason": "needs ImageNet network weights; none on this machine, a download needs Kate's approval"
+      },
+      "acc_dataset": {
+        "group": "A anomaly",
+        "column": "acc_dataset",
+        "status": "computed"
+      },
+      "acc_matched": {
+        "group": "A anomaly",
+        "column": null,
+        "status": "blocked",
+        "reason": "no sex or age metadata in UTIRIS or UPOL (protocol: matched mean unavailable)"
+      },
+      "amplitude_dataset": {
+        "group": "A anomaly",
+        "column": "ampdev_dataset",
+        "status": "computed"
+      },
+      "amplitude_matched": {
+        "group": "A anomaly",
+        "column": null,
+        "status": "blocked",
+        "reason": "no sex or age metadata in UTIRIS or UPOL (protocol: matched mean unavailable)"
+      },
+      "lddt": {
+        "group": "B structure",
+        "column": "lddt",
+        "status": "computed"
+      },
+      "intensity_persistence": {
+        "group": "B structure",
+        "column": "persistence",
+        "status": "computed"
+      },
+      "betti_matching_matched": {
+        "group": "B structure",
+        "column": null,
+        "status": "blocked",
+        "reason": "needs the Betti-matching library (induced matchings); a home-made version would not be the published metric"
+      },
+      "betti_matching_unmatched": {
+        "group": "B structure",
+        "column": null,
+        "status": "blocked",
+        "reason": "needs the Betti-matching library (induced matchings); a home-made version would not be the published metric"
+      },
+      "id_angle": {
+        "group": "B identity",
+        "column": null,
+        "status": "blocked",
+        "reason": "no deep iris encoder weights on this machine; the classical iris code (Hamming distance) is not an embedding and has no angle, norm, PFE or PLDA form"
+      },
+      "id_norm": {
+        "group": "B identity",
+        "column": null,
+        "status": "blocked",
+        "reason": "no deep iris encoder weights on this machine; the classical iris code (Hamming distance) is not an embedding and has no angle, norm, PFE or PLDA form"
+      },
+      "id_pfe": {
+        "group": "B identity",
+        "column": null,
+        "status": "blocked",
+        "reason": "no deep iris encoder weights on this machine; the classical iris code (Hamming distance) is not an embedding and has no angle, norm, PFE or PLDA form; PFE also needs an uncertainty head"
+      },
+      "id_plda": {
+        "group": "B identity",
+        "column": null,
+        "status": "blocked",
+        "reason": "no deep iris encoder weights on this machine; the classical iris code (Hamming distance) is not an embedding and has no angle, norm, PFE or PLDA form; PLDA also needs a fitted model"
+      },
+      "latent_pullback": {
+        "group": "B latent",
+        "column": null,
+        "status": "blocked",
+        "reason": "no generative iris model; LDDMM between 16 px windows is a pairwise registration (stop rule)"
+      },
+      "latent_fisher_rao": {
+        "group": "B latent",
+        "column": null,
+        "status": "blocked",
+        "reason": "no generative iris model; LDDMM between 16 px windows is a pairwise registration (stop rule)"
+      },
+      "latent_lddmm": {
+        "group": "B latent",
+        "column": null,
+        "status": "blocked",
+        "reason": "no generative iris model; LDDMM between 16 px windows is a pairwise registration (stop rule)"
+      },
+      "plausibility": {
+        "group": "C reference-free",
+        "column": null,
+        "status": "blocked",
+        "reason": "set-level reference-free metric with no per-target value; not run on 16 px window fills; needs a trained density model"
+      },
+      "fid": {
+        "group": "C reference-free",
+        "column": null,
+        "status": "blocked",
+        "reason": "set-level reference-free metric with no per-target value; not run on 16 px window fills; needs Inception weights"
+      },
+      "fwd": {
+        "group": "C reference-free",
+        "column": null,
+        "status": "blocked",
+        "reason": "set-level reference-free metric with no per-target value; not run on 16 px window fills"
+      },
+      "topology_distance": {
+        "group": "C reference-free",
+        "column": null,
+        "status": "blocked",
+        "reason": "set-level reference-free metric with no per-target value; not run on 16 px window fills"
+      }
+    },
+    "care/aggregation_status_counts": {
+      "matched": 36,
+      "mismatch": 63,
+      "unavailable": 1,
+      "blocked_coverage": 8
+    },
+    "brain/tests/mse": {
+      "T1": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.19654970812861733,
+        "share_targets_pass": 1.0,
+        "p_one_sided": 1.1920928955078125e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      },
+      "T2": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": -0.006310966617431335,
+        "share_targets_pass": 0.2608695652173913,
+        "p_one_sided": 0.9986368417739868,
+        "p_holm": 1.0,
+        "pass_holm_0.05": false
+      },
+      "T3a": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.4771934802314577,
+        "share_targets_pass": 1.0,
+        "p_one_sided": 1.1920928955078125e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      },
+      "T3b": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.43186777880410654,
+        "share_targets_pass": 1.0,
+        "p_one_sided": 1.1920928955078125e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      }
+    },
+    "brain/tests/ssim": {
+      "T1": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.3565916662991934,
+        "share_targets_pass": 1.0,
+        "p_one_sided": 1.1920928955078125e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      },
+      "T2": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.0005525882336014414,
+        "share_targets_pass": 0.5652173913043478,
+        "p_one_sided": 0.3769923448562622,
+        "p_holm": 1.0,
+        "pass_holm_0.05": false
+      },
+      "T3a": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.5006667445459249,
+        "share_targets_pass": 1.0,
+        "p_one_sided": 1.1920928955078125e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      },
+      "T3b": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.5482323257473923,
+        "share_targets_pass": 1.0,
+        "p_one_sided": 1.1920928955078125e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      }
+    },
+    "brain/tests/acc_dataset": {
+      "T1": {
+        "status": "not run (no pairs)"
+      },
+      "T2": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": -3.6894593660379185e-12,
+        "share_targets_pass": 0.43478260869565216,
+        "p_one_sided": 0.47027742862701416,
+        "p_holm": 1.0,
+        "pass_holm_0.05": false
+      },
+      "T3a": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.8575900257725554,
+        "share_targets_pass": 1.0,
+        "p_one_sided": 1.1920928955078125e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      },
+      "T3b": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.8531779984329276,
+        "share_targets_pass": 1.0,
+        "p_one_sided": 1.1920928955078125e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      }
+    },
+    "brain/tests/tm_like": {
+      "T1": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.20995629838123434,
+        "share_targets_pass": 0.9565217391304348,
+        "p_one_sided": 3.5762786865234375e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      },
+      "T2": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": -0.003741499729903349,
+        "share_targets_pass": 0.43478260869565216,
+        "p_one_sided": 0.8766254186630249,
+        "p_holm": 1.0,
+        "pass_holm_0.05": false
+      },
+      "T3a": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.2817472487883945,
+        "share_targets_pass": 1.0,
+        "p_one_sided": 1.1920928955078125e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      },
+      "T3b": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.3029001114702243,
+        "share_targets_pass": 1.0,
+        "p_one_sided": 1.1920928955078125e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      }
+    },
+    "brain/tests/lddt_rep": {
+      "T1": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.05581570740288984,
+        "share_targets_pass": 1.0,
+        "p_one_sided": 1.1920928955078125e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      },
+      "T2": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": -0.012995173863003404,
+        "share_targets_pass": 0.0,
+        "p_one_sided": 1.0,
+        "p_holm": 1.0,
+        "pass_holm_0.05": false
+      },
+      "T3a": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.1671802571406208,
+        "share_targets_pass": 1.0,
+        "p_one_sided": 1.1920928955078125e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      },
+      "T3b": {
+        "n_targets": 23,
+        "n_families": 23,
+        "mean_diff": 0.3215207023609171,
+        "share_targets_pass": 1.0,
+        "p_one_sided": 1.1920928955078125e-07,
+        "p_holm": 6.556510925292969e-06,
+        "pass_holm_0.05": true
+      }
+    }
+  },
+  "figures": {
+    "audit_profiles.pdf": {
+      "generator": "paper/cvpr2027/prepare.py",
+      "generator_sha256": "b75dcf6623a94025bfd5ddb41c69d3d415ad47e9f0b7e34ea3c7a936e5b6f417",
+      "assembly_base_commit": "80a094c7c3cab36d51d0e290b0634cca0ccf8d36",
+      "inputs": [
+        {
+          "path": "results/donor_ladder_brain_metrics.json",
+          "sha256": "6e33995b8a40de145fda81f76063d0652c42b839b22e5d00bdca749d0cfcfcb8",
+          "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+          "producing_commit": "22ddf703267e9de631d28bbedd5d869d789e6de9"
+        },
+        {
+          "path": "results/face_ladder_metrics.json",
+          "sha256": "3477dd2f0886c055a942dc5e04c4859b698b530d5fc2750d30833fb5d5e79692",
+          "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+          "producing_commit": "f2ed748efd7ef7de5940f060cd4ff0f1f0d6580c"
+        },
+        {
+          "path": "results/iris_ladder_metrics.json",
+          "sha256": "5f0828e93a8d3bf216c0e493a166f7878a39bc90141c961dab1565dd4ebc3c69",
+          "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+          "producing_commit": "29e38c4a7d9225aa509b8316f5fb6dda20d2d91a"
+        }
+      ],
+      "sha256": "aa6c43b8adf903d132be1d5afc61bd835b3cc9423bc4e23e1c0356d3b95615fc"
+    },
+    "brain_gaussian_maps.pdf": {
+      "path": "results/figures/fig_ladder_maps_common.pdf",
+      "sha256": "58719ecae7ab8f05855eb938e192d74cfd60bffa604d5605a844773e8e56322b",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "22ddf703267e9de631d28bbedd5d869d789e6de9",
+      "copied_sha256": "58719ecae7ab8f05855eb938e192d74cfd60bffa604d5605a844773e8e56322b"
+    },
+    "metric_correlations.pdf": {
+      "path": "results/figures/fig_metrics_correlation.pdf",
+      "sha256": "cfe599cdfad97701cb1cb647d797104de48e09759123068d9afcd8d50a9ac703",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "d3df13c77056a14212da26902197411e67cf84fd",
+      "copied_sha256": "cfe599cdfad97701cb1cb647d797104de48e09759123068d9afcd8d50a9ac703"
+    },
+    "size_shell_sensitivity.pdf": {
+      "path": "results/figures/fig_size_shell_dependence.pdf",
+      "sha256": "713bd3b53b01407fc439c023806b537350be6c6a0a141dfb02251de94647fa4f",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "a42572715f45c8cfd22acd965d578e15da701108",
+      "copied_sha256": "713bd3b53b01407fc439c023806b537350be6c6a0a141dfb02251de94647fa4f"
+    }
+  },
+  "population_audit": {
+    "path": "paper/cvpr2027/population_audit.json",
+    "sha256": "44073b12a8f2868d946227d01370cf947cf816b9a9d35fc673a714b51edf45b4",
+    "scope": "Authored qualitative assessment, not an experimental completion percentage."
+  }
+}

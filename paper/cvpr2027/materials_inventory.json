@@ -1,0 +1,2278 @@
+{
+  "snapshot": "80a094c7c3cab36d51d0e290b0634cca0ccf8d36",
+  "scope": "Tracked material inventory; no private participant data opened.",
+  "counts": {
+    "Supporting material": 56,
+    "Face donor ladder": 54,
+    "Iris": 23,
+    "CARE reproduction": 16,
+    "Brain donor ladder": 15,
+    "Fundus and earlier 2D": 20,
+    "Real-case demonstrations": 11,
+    "Registration": 24,
+    "Related ISBI": 8,
+    "Metric board": 3,
+    "Earlier pilots": 4,
+    "Official evaluator probes": 2,
+    "Cross-modality exploration": 18,
+    "Metric comparison": 9,
+    "Mechanism controls": 57,
+    "Withdrawn MRI results": 2
+  },
+  "artifacts": [
+    {
+      "path": "docs/ANALYSIS_cross_modality.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 10779,
+      "sha256": "8e9fdbcc9a75f6ee834f3401abc6fefa53e5f96b8267c103c3bf5efe785ecf75"
+    },
+    {
+      "path": "docs/DATASETS.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 70882,
+      "sha256": "f57f81539b75bb8afa6e3bb84644250c77a0533fdf2a38713a866e850169b230"
+    },
+    {
+      "path": "docs/DECISION_TREES.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 13932,
+      "sha256": "65ae07a2d2bc55bd8fa03bb48e331bfce4a784c0f78e8512c53d7d685b052216"
+    },
+    {
+      "path": "docs/Experiment_Plan_Available_Data.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 15886,
+      "sha256": "5cc21296e5ace555ba376785bfae1175a5a712441bef85950f657253abc4d7d7"
+    },
+    {
+      "path": "docs/FACE_ID_LESSONS.md",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 16575,
+      "sha256": "c9bf73bb4ef8294cc4a5fbb67d6615a7d3279e9d72942c8da281a542dd57bec2"
+    },
+    {
+      "path": "docs/HANDOFF.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 58182,
+      "sha256": "b357fc94d39fbcf9fc1db861fc32b2f0726a2f416b401b1163e77b6e94e741bb"
+    },
+    {
+      "path": "docs/HANDOFF_face_metrics.md",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 2470,
+      "sha256": "c3083741872ecbf214ee07800327ab9718c69e1533feba9f910d914db1aaf45f"
+    },
+    {
+      "path": "docs/HANDOFF_iris_metrics.md",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 5735,
+      "sha256": "400eda2d5d91cc0bf2d4f58c938930905dc6122f17bea359b6684090df1a73b9"
+    },
+    {
+      "path": "docs/LITERATURE_closest_work_2026-11-02.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 9203,
+      "sha256": "aa21af1fd837984c909f815b67ce220cc6b144acf2b1aec741666539b4e37fb7"
+    },
+    {
+      "path": "docs/PROTOCOL_2d_ladder.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 22395,
+      "sha256": "abf60092b79e7a915034e0ea0b487c20d5cff953b565aeb6dd566e53280cf7f5"
+    },
+    {
+      "path": "docs/PROTOCOL_care_reproduction.md",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 5426,
+      "sha256": "696f1093394844bf323ca7f934352e142743e2722702e29931fa1c7a6ef8d796"
+    },
+    {
+      "path": "docs/PROTOCOL_care_reproduction_amendment1.md",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 1994,
+      "sha256": "51bf25e01dcfa28b0358d414fc782e96b21ccb9988fbff0c0df95662d456503f"
+    },
+    {
+      "path": "docs/PROTOCOL_care_reproduction_amendment2.md",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 3250,
+      "sha256": "51cea41e8263df5b1e1137bdc989e01920532d44783fc56417312c63bb318020"
+    },
+    {
+      "path": "docs/PROTOCOL_donor_ladder_brain.md",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 76750,
+      "sha256": "65bac2657c13f0032037b3879dad46474671af95012638e38c99465d7a85370b"
+    },
+    {
+      "path": "docs/PROTOCOL_donor_ladder_face.md",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 30501,
+      "sha256": "e89b35dce0a42787497b11c153fdc810dee2305782aa75529c1dd4838d18efa4"
+    },
+    {
+      "path": "docs/PROTOCOL_donor_ladder_fundus.md",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 5181,
+      "sha256": "1a150ee1d8ef5e1698121b3eccc260e722c17d6a770295532c1128db0478991f"
+    },
+    {
+      "path": "docs/PROTOCOL_donor_ladder_general.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 25538,
+      "sha256": "3730e0cfe69948152586df96f46367ab96f61d7738ace99d40204ecce0d0f0b7"
+    },
+    {
+      "path": "docs/PROTOCOL_donor_ladder_robustness.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 6229,
+      "sha256": "69635b7629f3ce9dc56432b8be09babd96645f7385ee5381247e5cb4185acb9a"
+    },
+    {
+      "path": "docs/PROTOCOL_face_metrics.md",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 29118,
+      "sha256": "ec66c0b62f2ea7cefce96ed4b6a1883dbb0c2a5da1ec929da4b3c1d521633b1e"
+    },
+    {
+      "path": "docs/PROTOCOL_iris_metrics.md",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 30701,
+      "sha256": "f64e118c3b62444cfc79f72af56caa03b8e9c195aac6ec66f862a59fd18d7798"
+    },
+    {
+      "path": "docs/PROTOCOL_real_cases.md",
+      "family": "Real-case demonstrations",
+      "placement": "Supplementary preparation history; fixed examples are not cohort validation",
+      "bytes": 41001,
+      "sha256": "c76b7524248788f0e36a33589dc05ba046c66141b4ec6bd3404859e234ab95b7"
+    },
+    {
+      "path": "docs/PROTOCOL_registration.md",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 29570,
+      "sha256": "0a14e2c1e99c79ce7877f9b0ca033eec4a83d0f0051f982acd4a17480f2a2d5b"
+    },
+    {
+      "path": "docs/REGISTRATION_QC_HANDOFF.md",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 4919,
+      "sha256": "5d764dcc618841122819ac33917afa00bfa46078c3c7d0f8c4f8c0fa0edbfd56"
+    },
+    {
+      "path": "docs/REPRODUCTION_BACKLOG.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 92497,
+      "sha256": "047fe31444b6d72f0f219d7091dae79d6b41b4bea907ddb9b6e83f768a0996a8"
+    },
+    {
+      "path": "docs/REPRODUCTION_WORKFLOW.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 2842,
+      "sha256": "d2b86d55b47281bfc2954580c36bb62d0e40da7fd4d8579e407276a3d7b58665"
+    },
+    {
+      "path": "docs/REVIEW_care_reproduction.md",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 5458,
+      "sha256": "0583d7b3e53ea1eda9ab8d58076428979f88c20910addda8c29bc240a0e84301"
+    },
+    {
+      "path": "docs/Research_Plan_Identity_Ladder_Metric.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 75900,
+      "sha256": "c6615e14c7684ad00651787f86fc0a7f527e78681b7dcdbf03544f4782558ce0"
+    },
+    {
+      "path": "docs/figures_draft.md",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 2163,
+      "sha256": "72077b4210b1441fe52df36dff11f698716669b7c3ecbec020fdc6a04e076b22"
+    },
+    {
+      "path": "paper/isbi2027/README.md",
+      "family": "Related ISBI",
+      "placement": "Related-work/overlap review; source preserved, not copied as a new contribution",
+      "bytes": 1831,
+      "sha256": "8a84dd81a99252a831acc882f5666ccd041a33459af85b4435b8dab0328aa67d"
+    },
+    {
+      "path": "paper/isbi2027/overleaf/fig_cases.pdf",
+      "family": "Related ISBI",
+      "placement": "Related-work/overlap review; source preserved, not copied as a new contribution",
+      "bytes": 91904,
+      "sha256": "dc532ba3aa2969488bd702536781543c62eedb6aa6e86cc3c014c0a85f25f486"
+    },
+    {
+      "path": "paper/isbi2027/overleaf/fig_ladder.pdf",
+      "family": "Related ISBI",
+      "placement": "Related-work/overlap review; source preserved, not copied as a new contribution",
+      "bytes": 48661,
+      "sha256": "790b71e6ca7efa8f3f263fcf3d48c57838b5a975de9f4c45c6547dc57306f87f"
+    },
+    {
+      "path": "paper/isbi2027/overleaf/fig_ladder.png",
+      "family": "Related ISBI",
+      "placement": "Related-work/overlap review; source preserved, not copied as a new contribution",
+      "bytes": 88514,
+      "sha256": "b309a30a5acc67cf72deef798b0e45019e7d07bc9b78327fd83057c79a01ec1c"
+    },
+    {
+      "path": "paper/isbi2027/overleaf/fig_real_case.pdf",
+      "family": "Related ISBI",
+      "placement": "Related-work/overlap review; source preserved, not copied as a new contribution",
+      "bytes": 85820,
+      "sha256": "00150caf2ebb1ddd1a024cc4f0dda86827b2de326c44bf954b29dcb3dec84af6"
+    },
+    {
+      "path": "paper/isbi2027/overleaf/fig_real_theory.pdf",
+      "family": "Related ISBI",
+      "placement": "Related-work/overlap review; source preserved, not copied as a new contribution",
+      "bytes": 48597,
+      "sha256": "90d756ef18bec805b8a21113c337a7a2a2a32311c5e1336d71b4baea0b0f46eb"
+    },
+    {
+      "path": "paper/isbi2027/overleaf/main.tex",
+      "family": "Related ISBI",
+      "placement": "Related-work/overlap review; source preserved, not copied as a new contribution",
+      "bytes": 16703,
+      "sha256": "ec6a316dac6b1c4fa9b77df103835fde46fbba1bca18b1ed4720754d6702065d"
+    },
+    {
+      "path": "paper/isbi2027/overleaf/refs.bib",
+      "family": "Related ISBI",
+      "placement": "Related-work/overlap review; source preserved, not copied as a new contribution",
+      "bytes": 14356,
+      "sha256": "122717fa99890d0f124b9092720a15a814abd178bdda54064566a64f6b1661dc"
+    },
+    {
+      "path": "results/METRICS_STATUS.csv",
+      "family": "Metric board",
+      "placement": "Operational generated view; not an additional experiment or independent result",
+      "bytes": 29738,
+      "sha256": "8d2d663c06e5a62a5a969f16d715b0e136a13407186b9dce3607851c84a8648d"
+    },
+    {
+      "path": "results/METRICS_STATUS.json",
+      "family": "Metric board",
+      "placement": "Operational generated view; not an additional experiment or independent result",
+      "bytes": 73070,
+      "sha256": "354a65f7812992f7ffbcc884e82723f2f9dff5ad7c1f930ee00a8d17bf17e287"
+    },
+    {
+      "path": "results/METRICS_STATUS.md",
+      "family": "Metric board",
+      "placement": "Operational generated view; not an additional experiment or independent result",
+      "bytes": 24793,
+      "sha256": "9cb342da4e61c729fb040e8d48ae237026293c919b147171a79ee306aaee854f"
+    },
+    {
+      "path": "results/all_ladder_metrics.csv",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 158795,
+      "sha256": "fa6eea88aef9b46b9f8d232c2778167b71749ba272ca07b5d9bbb280df334c17"
+    },
+    {
+      "path": "results/audit_2026-10-23.json",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 33976,
+      "sha256": "5133269c97d7e90fde1c365795850feb17c355682bfbffa5176c7455796cf111"
+    },
+    {
+      "path": "results/audit_2026-11-01.json",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 46408,
+      "sha256": "84ebb6caaa2acb1089e554deeb1d160bd3fa40eda09d256fec9984fcc295ab2d"
+    },
+    {
+      "path": "results/baseline_v0.json",
+      "family": "Earlier pilots",
+      "placement": "Historical context; acquisition/protocol confounding prevents promotion to current primary results",
+      "bytes": 436988,
+      "sha256": "5fb3913ed334eb4202527a8f565e359a25c9f6878f851199df03458d654b7e44"
+    },
+    {
+      "path": "results/brats_metrics_table.csv",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 10683,
+      "sha256": "b11625dd157d17222be71c770c9c3a82cc79d6f24eaf7db5ba4691558123b3ee"
+    },
+    {
+      "path": "results/brats_panel_checks_tm1.1.2.json",
+      "family": "Official evaluator probes",
+      "placement": "Main implementation audit and supplement; synthetic code behavior, no model ranking or organizer-server validation",
+      "bytes": 4782,
+      "sha256": "a8432803e5a12b2629951253e167da1dd08e3bd954b200f5a083e07afb833962"
+    },
+    {
+      "path": "results/brats_panel_checks_tm1.9.0.json",
+      "family": "Official evaluator probes",
+      "placement": "Main implementation audit and supplement; synthetic code behavior, no model ranking or organizer-server validation",
+      "bytes": 4782,
+      "sha256": "f0c50110aaa299385ec0e5fc292ebcb6583e64fb97b0d3e64cc844e45667c039"
+    },
+    {
+      "path": "results/care_iteration2.json",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 65573,
+      "sha256": "017f0d5d33b3afcb96c4827af14eae696c79337148b22b0bdab7d7caee784be9"
+    },
+    {
+      "path": "results/care_iteration2_inputs.json",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 360,
+      "sha256": "da7adec380b59cca343323871354c27f56a2b1b38cb14f07fd0c345fb68ca905"
+    },
+    {
+      "path": "results/care_iteration2_report.md",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 11701,
+      "sha256": "51069bf5d7e29eb46f9cbb58894f9b28d637962e3edae889000714a5e8bc0949"
+    },
+    {
+      "path": "results/care_iteration2_state.json",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 476,
+      "sha256": "9613b04f47876d6c4555e9b03e2c73dbf3b18e01deb2d5663cde46d27b5789bf"
+    },
+    {
+      "path": "results/care_iteration2_table.csv",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 14329,
+      "sha256": "d46c101201730018c2629b420166828701a573645c88bf133cdedef56b24328f"
+    },
+    {
+      "path": "results/care_reproduction.json",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 82385,
+      "sha256": "0186fc64d1f567c7ad99e947803f9f0d92a027b29de11886da0a23a0b58654ae"
+    },
+    {
+      "path": "results/care_reproduction_all_phases_posthoc.json",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 7178,
+      "sha256": "2db56aee0d755a4440701d17d592863546eb3c64d1f28f74dcc972efa1861373"
+    },
+    {
+      "path": "results/care_reproduction_all_phases_posthoc_report.md",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 1885,
+      "sha256": "01a0bcb118e449f0afc9fa969d48ad597870bf0f8b5f5af765ced9884b28dae9"
+    },
+    {
+      "path": "results/care_reproduction_amendment1_inputs.json",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 245,
+      "sha256": "1923e3abb0a78924689f76cece6c1ba4895dfe20902317b04d3b91abfefb622e"
+    },
+    {
+      "path": "results/care_reproduction_inputs.json",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 15216,
+      "sha256": "e9e56145cd0a3b3c182b9474d830d454ebf8f121f8dd624366b15f5baa5e1be6"
+    },
+    {
+      "path": "results/care_reproduction_report.md",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 4398,
+      "sha256": "67645ec28ff43e1db128e0ea7c46e8af87e007e4d147fc3c58777c934885ebae"
+    },
+    {
+      "path": "results/care_reproduction_table.csv",
+      "family": "CARE reproduction",
+      "placement": "Related work and supplementary aggregation audit; not an image-level reconstruction rerun",
+      "bytes": 11576,
+      "sha256": "531966f9b031b92e38c8e9cdfeddf7a49ec6d57a08dd896698f67f5ae6cbcd23"
+    },
+    {
+      "path": "results/code_provenance.json",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 679,
+      "sha256": "0ab1e6dcfba5dd95c93093cffbfc9761c6e6f80a6507cb39e4d108de287946be"
+    },
+    {
+      "path": "results/cross_modality/agreement.json",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 15671,
+      "sha256": "123f5892bb976c7ec292bc50e1644b1fca8d1beba8e6bb8373e746c1a4fee3e3"
+    },
+    {
+      "path": "results/cross_modality/agreement.png",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 442348,
+      "sha256": "326ce0c60dc6f4a752a29928a412e4b5b98809fb4ad323e784817f8a38ad143f"
+    },
+    {
+      "path": "results/cross_modality/cal_brain.json",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 163555,
+      "sha256": "23e39ed0ee0cf55161efbcb91e0e737f98425dac647270de6a43528251c1f3ba"
+    },
+    {
+      "path": "results/cross_modality/cal_c_all.json",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 62981,
+      "sha256": "91207553bef8128a2700561308ebd384cbe4845de02bfb6d6c492634fa18fe1b"
+    },
+    {
+      "path": "results/cross_modality/cal_faces.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 309801,
+      "sha256": "460213b84c67b30563e61299f33fbe277cd5bf170a5fd9cbc50bbf068ea2f7ef"
+    },
+    {
+      "path": "results/cross_modality/cal_tiles.png",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 436585,
+      "sha256": "df7f6069ef7d5009a33f81cc0bc0c2a20568f226c1a9091dcdc0a8b6ca75793a"
+    },
+    {
+      "path": "results/cross_modality/common_all.json",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 247492,
+      "sha256": "8f96e7b40b1fab03e049761f749e6731f6e53375289f8d3c5a7ad16c2bca45db"
+    },
+    {
+      "path": "results/cross_modality/corr_all.json",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 61846,
+      "sha256": "3758965fdbea4d8a78e0c492ed3dc8e35a62e959c293230a769ced82e564a37e"
+    },
+    {
+      "path": "results/cross_modality/data.json",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 263342,
+      "sha256": "7b5b340a4a0acc5dc73a5b9f846d6aa7de9e83740d30c8944471ed87657c779a"
+    },
+    {
+      "path": "results/cross_modality/dataset_card.json",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 5899,
+      "sha256": "c3b148a5ef3604d98fc1dd344a089135f82ac63070ca5d2dbb47c4ecaae2619d"
+    },
+    {
+      "path": "results/cross_modality/dataset_card.png",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 130612,
+      "sha256": "63afe77797dc3ff2f3cbc1e9d1101cd53e83ba67e12a565fbb349a3c5d03ddff"
+    },
+    {
+      "path": "results/cross_modality/generative_status.json",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 3390,
+      "sha256": "ffdaf4f73798b3c00bcc2690f443c98732b8c7693ebb1961a9101532a24d07aa"
+    },
+    {
+      "path": "results/cross_modality/generative_tiles.png",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 600017,
+      "sha256": "52589ba8f37d9fb916a7126d09a007c44017b853872061fa7072733433efdb56"
+    },
+    {
+      "path": "results/cross_modality/rank_tiles.png",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 1031333,
+      "sha256": "01c6c0eded6221c3c5dac3525dde689406f31d44a955e6e86c29a6055b6b849b"
+    },
+    {
+      "path": "results/cross_modality/rank_tiles_by_dataset.png",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 1317983,
+      "sha256": "b5763b69f0f42e16b019f43f0f5a617b275e39ce535c02b91624a06f4833879c"
+    },
+    {
+      "path": "results/cross_modality/ranks_all.json",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 31806,
+      "sha256": "3b70f0fd44c76d798039469ec68a336734f724286d9b9e2cb78619c1cfefc400"
+    },
+    {
+      "path": "results/cross_modality/ranks_generative.json",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 12950,
+      "sha256": "40549a2c7c70dda9a6a3ad69e670d8be7b38df7eae9e768e5de1ac070a5e1919"
+    },
+    {
+      "path": "results/cross_modality/tests_all.json",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 152363,
+      "sha256": "16a374b94327578565b5007fffb276b21ca1c810044526e498ef1e009d2b48cc"
+    },
+    {
+      "path": "results/cross_modality/values_generative.json",
+      "family": "Cross-modality exploration",
+      "placement": "Supplementary exploratory context; no universal fused identity score",
+      "bytes": 111632,
+      "sha256": "96cf69ff23f9e4b05a0a6c6ce67e06bfd1790a5fe3aa9c680611b76443813c75"
+    },
+    {
+      "path": "results/donor_ladder_2d.json",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 348955,
+      "sha256": "7675e30fea4f4ab08b05b08537a7934c5145064cd3ec9c1f8c95f8a97e03ac06"
+    },
+    {
+      "path": "results/donor_ladder_2d_p7.json",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 720854,
+      "sha256": "7ca0ff1c36c353490453e55a832060831fe28bce645c5dabad90406f6cbf9662"
+    },
+    {
+      "path": "results/donor_ladder_brain.json",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 37168,
+      "sha256": "e2105d5ab56816a33fbdfb0dd267b47d7f687bcf1b79654296f13e13f24ad9ff"
+    },
+    {
+      "path": "results/donor_ladder_brain_bilateral.json",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 237334,
+      "sha256": "8d621d91ecb980c8d7b04d40c4591a371f1e884a61443d20aa29fd9cbc7e7172"
+    },
+    {
+      "path": "results/donor_ladder_brain_haca3_stage1.json",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 5908,
+      "sha256": "90953bb52568c37ab58729a5c5c56473caf97bcff0e51c24993d38b640732992"
+    },
+    {
+      "path": "results/donor_ladder_brain_ixi.json",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 554210,
+      "sha256": "1e94b898a66c1ef9d0a6c8297b51ff8cc02ac74968e31da16e423f45ec2b8116"
+    },
+    {
+      "path": "results/donor_ladder_brain_map_grid.json",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 3596,
+      "sha256": "171eee0203eabc7a4823c9ea7f6473eedf2137ec6c3c048e5d2ca5a39cb22a27"
+    },
+    {
+      "path": "results/donor_ladder_brain_maps.json",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 2102,
+      "sha256": "4b64bbf265b748544edad13ddbcfb49aa541dceb91b970e9abf08b5d70e16d1c"
+    },
+    {
+      "path": "results/donor_ladder_brain_metrics.json",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 3522456,
+      "sha256": "6e33995b8a40de145fda81f76063d0652c42b839b22e5d00bdca749d0cfcfcb8"
+    },
+    {
+      "path": "results/donor_ladder_brain_metrics_size.json",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 2743894,
+      "sha256": "b8a76e7385388ff7b64d9f1d39f4352d0cd60de4ab75468c0687c2e5e57d6497"
+    },
+    {
+      "path": "results/donor_ladder_brain_metrics_t23.json",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 316045,
+      "sha256": "b3b01a0fee09092623c07d08fdedf338c2c4b14dc65fa3f3b0ad7c0cabd9d576"
+    },
+    {
+      "path": "results/donor_ladder_brain_metrics_t23_v5.json",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 118471,
+      "sha256": "1ddd9b0312fedbf801aa4433862d2920fcfe48c385e403b03c9df9d9cbe17d1c"
+    },
+    {
+      "path": "results/donor_ladder_brain_seg_gcp_run.json",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 1207,
+      "sha256": "63194b2890eb30906558982025ec846433f0d7150c2390032b778b665c809572"
+    },
+    {
+      "path": "results/donor_ladder_brain_size.json",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 72557,
+      "sha256": "9c3f6200e22686515e4d393ecefb6313b098bd08b9799bb19d6230e43f204fdc"
+    },
+    {
+      "path": "results/donor_ladder_face.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 2719,
+      "sha256": "8b927fb5a19dba674bee9d0c6fb09784d45ce4c81e812fd3f69b9d191874af94"
+    },
+    {
+      "path": "results/donor_ladder_face_v2.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 2703,
+      "sha256": "1c4500c7e36d8d12fbb824ec0085670499cbc352683301d71ad4980013c47e2a"
+    },
+    {
+      "path": "results/donor_ladder_face_v3.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 2716,
+      "sha256": "574a1003c627c105c8ff73ebe176cefa7a1669c2eeb36028cfabeb23fdf87d9c"
+    },
+    {
+      "path": "results/donor_ladder_face_v4.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 4030,
+      "sha256": "661f7a53217d116e62fda147093191d1440eca880b131badd2c09a2e03496fa6"
+    },
+    {
+      "path": "results/donor_ladder_face_v5.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 5120,
+      "sha256": "91fa20c183ab7ff8bd0473d3e4d2315d8f07bc2c500763ba22eddb927061b07b"
+    },
+    {
+      "path": "results/donor_ladder_face_v5_prefix.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 5116,
+      "sha256": "35d410f70c1811eb66a2253d0cdbde2767168c7c99243c751b752901f6a2eb43"
+    },
+    {
+      "path": "results/donor_ladder_face_v6.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 5116,
+      "sha256": "df9bd6a1e4d762db2273d605c1056aec8d7cea64ac6064a48902c18583f4dade"
+    },
+    {
+      "path": "results/donor_ladder_face_v6f.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 5152,
+      "sha256": "b550a0d20ba9921b772da287faafcb78b9e1728d9266912f47abdf2d8518e543"
+    },
+    {
+      "path": "results/donor_ladder_fundus.json",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 43413,
+      "sha256": "bcaa0bb0f9f5c1cadf1f3f12f2ae626372c6ba817e9a97853d8b6f7c38b04e5f"
+    },
+    {
+      "path": "results/donor_ladder_metrics_correlation.json",
+      "family": "Metric comparison",
+      "placement": "Main profiles and supplementary dependence; do not count monotone variants as independent evidence",
+      "bytes": 12252,
+      "sha256": "51367dbc9d059285bb487764b8260db6db3688bf9514668ebfb1450e02d68524"
+    },
+    {
+      "path": "results/face_flow_v5.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 6661,
+      "sha256": "f64144a86f470e4a32e0b140f10ee3453bd20bcadcd90f830690cacbea67af0d"
+    },
+    {
+      "path": "results/face_flow_v6.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 7881,
+      "sha256": "4a692c39bd81c17542332a574f531c7f089453bf6c67d949da87bde668d11e41"
+    },
+    {
+      "path": "results/face_flow_v6f.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 7882,
+      "sha256": "61c1d391310ae9e1461f3e9e031a944fc5f1677f93e41fdf04120ae710abbb4c"
+    },
+    {
+      "path": "results/face_ladder_metrics.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 810934,
+      "sha256": "6e9e8381af2a98a247fa9d744f868bce19e7a5c4af38e639b5faaeb97a6bb054"
+    },
+    {
+      "path": "results/face_ladder_sizes.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 405710,
+      "sha256": "94806d52513c3f7b78192647ffd9c7a4e9e9de6c094cedd30020a38f983fcf6e"
+    },
+    {
+      "path": "results/face_masks_v6.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 1137,
+      "sha256": "7ae8d77590d55fce9f5f15285eea2106d5bd0d9d2f5fd09c7200873f7f055650"
+    },
+    {
+      "path": "results/face_masks_v6f.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 1110,
+      "sha256": "3ff081f5d166b7af1e2f605b8278922f2ef8acd4c954b7ac2a69bc7970bf2853"
+    },
+    {
+      "path": "results/face_masks_v7.json",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 1112,
+      "sha256": "d7959bdce0c0160446ed37719b735c40bf397120bdfce010bb8dcdcd664a2a07"
+    },
+    {
+      "path": "results/figures/all_brats_metrics_base.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 27414,
+      "sha256": "2c8540e74b6ad361cac28ae68c6f06cde84fa8493892442ebf0717c0d1b34cf8"
+    },
+    {
+      "path": "results/figures/all_brats_metrics_base.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 191084,
+      "sha256": "7dcaa5edb3b492872fcfc6d213e24bcd8d19201037cfa1b1a2627c28fc47c7fb"
+    },
+    {
+      "path": "results/figures/all_brats_metrics_low_h.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 27395,
+      "sha256": "4791b78d0f38c8011aed229c72b3182b4806431bb1c9c5516cc5d0961f20b948"
+    },
+    {
+      "path": "results/figures/all_brats_metrics_low_h.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 190881,
+      "sha256": "034b1175588ee4af05ef852585175badec5e8e997fc45822949fa465f069c84a"
+    },
+    {
+      "path": "results/figures/fig_brain_metrics_t23.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 25245,
+      "sha256": "6ef68661432deb0acb0bc07772a3c9a0fe3127a174c0acab6dbcd3763ef6a158"
+    },
+    {
+      "path": "results/figures/fig_brain_metrics_t23.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 122282,
+      "sha256": "462638252afff6a37b476e6bcea7f1ac5096920c8f2859223d94c35505aafdf2"
+    },
+    {
+      "path": "results/figures/fig_brain_window_sizes.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 32144,
+      "sha256": "1156e5e8a81b5a8c6f5652c24d47a45fdd40bb6225c637c0a9e4d2b0d29c4a09"
+    },
+    {
+      "path": "results/figures/fig_brain_window_sizes.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 156293,
+      "sha256": "aa47ca6a2849d295c4bfd815567ce766bf12c2b1658d696b4a095f3bfab75a55"
+    },
+    {
+      "path": "results/figures/fig_donor_ladder_fundus.pdf",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 60773,
+      "sha256": "3cdf765e9b848026b0f48dce9f58e26d3f01c51f9a01cd2179a90ab79cd83cc8"
+    },
+    {
+      "path": "results/figures/fig_donor_ladder_fundus.png",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 283224,
+      "sha256": "952ac1ee8365f42a1bc74fb12003752c29ef0db505589a1e2ddebaeba1605e6e"
+    },
+    {
+      "path": "results/figures/fig_donor_ladder_overlay.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 50785,
+      "sha256": "691d0f987aabd76b05a48b7a925253da9cfbee268808df2eb6033a4d67b3402c"
+    },
+    {
+      "path": "results/figures/fig_donor_ladder_overlay.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 146933,
+      "sha256": "a37c0359b4b26201308c1577af89ee73e2afba8479b4e228c6e7f6203365639b"
+    },
+    {
+      "path": "results/figures/fig_face_flow_v5.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 31981,
+      "sha256": "52a01ace1c2520f1961ed4081ad424a4deefef2c8098a82d377f1a0a0486f1c4"
+    },
+    {
+      "path": "results/figures/fig_face_flow_v5.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 624903,
+      "sha256": "37124cd489f7b184857fa5011b05c32e1dc83c4bcf41778b6c35c3b9b7205660"
+    },
+    {
+      "path": "results/figures/fig_face_flow_v6.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 33765,
+      "sha256": "68f42bbd03817f010d64ec4672e08cbd143f2d1421d1661c7967483ebeef50d5"
+    },
+    {
+      "path": "results/figures/fig_face_flow_v6.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 654638,
+      "sha256": "c2bc095f5a8c17cd78d5a1cd25abe08497caf53460fc2bc3627806a0668d84c3"
+    },
+    {
+      "path": "results/figures/fig_face_flow_v6f.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 33809,
+      "sha256": "91f00f5fccea426493c4664dbff8738aef1d74cc1df6220c515b44aa8bf1364d"
+    },
+    {
+      "path": "results/figures/fig_face_flow_v6f.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 656347,
+      "sha256": "8779d5a2ff97485d4e6396343167f8898f85a082e493fe727cbb11b7221775c2"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 681320,
+      "sha256": "f84afdb9c5fc15b4442dadc8d74c799bd86a631c3c298f3e832ae9c0380a79d2"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 827160,
+      "sha256": "85867829247ac869607dd02a3435726845a288f2833ab5a72f2b852ada72cdaf"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps_v2.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 713246,
+      "sha256": "39bb1ef1fb38060021f0b2381ac241674ac2be5333685c3c9fa35c74d27711b1"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps_v2.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 854000,
+      "sha256": "472312f05202d7fadd12d7789a5956820658c53a77a08acee0843643095e4d9c"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps_v3.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 434594,
+      "sha256": "a99dd52b83baa270b1b3ff6e6c865291e4816343be3e8448dd30f555cc3d62d5"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps_v3.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 603795,
+      "sha256": "b8abf2cdcb6ea0a4f9a77e1b410f1919afea5920e64fdd35cc93fafae5c39f82"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps_v4.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 446343,
+      "sha256": "b4c7e671f09a258bd7f9d0fc65dd5026e26c694b047009e0572276c4045b86fd"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps_v4.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 625751,
+      "sha256": "963d6646705e05abf0512286916d9e2e9fb1f6dade7b391dddde1af686450566"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps_v5.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 429178,
+      "sha256": "1c98b578951dcff6cc52aabbde47d8f9d45642219d351780d2b7c8c737823bd7"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps_v5.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 602738,
+      "sha256": "d36b96bb74a79ebe9302abf964822553aa5a3bda55285565a148fa4516d5362c"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps_v6.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 490361,
+      "sha256": "0af121bef9444aeb71728866e93a76dfb74a49b2a4b0c35e7764a90e9e98945f"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps_v6.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 677871,
+      "sha256": "e380844e1003a9f59db5c46643e14ffe92a99126e4a976425f679ea3071eefe1"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps_v6f.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 488453,
+      "sha256": "dc9d124441a3a67d6ea2a4bc2b2458f1f463cbe05829f0066ffe2f82f41a8ae7"
+    },
+    {
+      "path": "results/figures/fig_face_ladder_maps_v6f.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 672644,
+      "sha256": "1180c4fd6daf2fd3b34b86a9aa37d8230e3a5e0495a3de284d5cf9760743b704"
+    },
+    {
+      "path": "results/figures/fig_face_metrics_blocks.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 75673,
+      "sha256": "5848fcba52cc47d5fe02f2488b74c4ced8481c8f5986669d45da6001c9c0337e"
+    },
+    {
+      "path": "results/figures/fig_face_metrics_blocks.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 706808,
+      "sha256": "83c3fd94d3680973b11f0ac7a058e32ae7310410a4e86c1a26ff619b938b7e1c"
+    },
+    {
+      "path": "results/figures/fig_face_metrics_blocks_full.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 91788,
+      "sha256": "8278e6dc3c8ca7508cdc6ca256a581363132459d996e6feb1c9bde824f444764"
+    },
+    {
+      "path": "results/figures/fig_face_metrics_blocks_full.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 754235,
+      "sha256": "3b0d344f70bf41c8d585070273db52cd74cd11e17ffcec071808f0cfedd861ec"
+    },
+    {
+      "path": "results/figures/fig_face_metrics_expected.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 44457,
+      "sha256": "03c355a799d19ba1b193e92d112fb0b3b971571d44978bc06eb9c0544cf90bd8"
+    },
+    {
+      "path": "results/figures/fig_face_metrics_expected.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 446475,
+      "sha256": "6d763e7d5ac85b0033bcf2e9eafe2b3211c5d466e7d34b9fc40d33582cd164ec"
+    },
+    {
+      "path": "results/figures/fig_face_metrics_shrink_table.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 37088,
+      "sha256": "e750aea508d696c43ae3c7ec094f0e7fdd4ecc5690d908feac057b9ce7cea217"
+    },
+    {
+      "path": "results/figures/fig_face_metrics_shrink_table.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 431382,
+      "sha256": "d73f2930411d2bd0e979b7bb4b3f5439717ef7cfab5217dfca9d9f5d6ece96a9"
+    },
+    {
+      "path": "results/figures/fig_face_window_sizes.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 36892,
+      "sha256": "bcab46456066af90a8664061498703b6a3da50533fcabc7a64622ff0ec696825"
+    },
+    {
+      "path": "results/figures/fig_face_window_sizes.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 360019,
+      "sha256": "72bf53441fa1287c79b0353383b09b1ecbdd7c14431bd8cf3fe71d190c2abc07"
+    },
+    {
+      "path": "results/figures/fig_iris_donor_ladder.pdf",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 36260,
+      "sha256": "d7ba7196c4034c7a6ca1da50aac1988de6e2d2300bc705840f79845a3dbde54c"
+    },
+    {
+      "path": "results/figures/fig_iris_donor_ladder.png",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 401546,
+      "sha256": "88be9c420842ae27903d412ed7235f9f259b25c11c1cd6e2e153ed6dee52f13e"
+    },
+    {
+      "path": "results/figures/fig_iris_maps_common.pdf",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 994914,
+      "sha256": "21523a57087f3b34aeb87a0ac1cefbaa64c7cded09fa6ed6e15767049f3ea886"
+    },
+    {
+      "path": "results/figures/fig_iris_maps_common.png",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 1246614,
+      "sha256": "86b1bfae5804764692ff107ad54eae20a5db9fbf2821a108b9192b99304fb140"
+    },
+    {
+      "path": "results/figures/fig_iris_metrics_blocks.pdf",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 49834,
+      "sha256": "f15be9d54c126ebb44f94691cacf13e6250672338cb2d32da7ca364c468d2a03"
+    },
+    {
+      "path": "results/figures/fig_iris_metrics_blocks.png",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 305219,
+      "sha256": "755da07826be93801942185c1d0e0867a95d79eb9e180c0ccf1b04e1fc87fe0c"
+    },
+    {
+      "path": "results/figures/fig_iris_metrics_blocks_full.pdf",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 98504,
+      "sha256": "850917ff234cdb8a2513df4bae02ba05166604a67c5e37f58aa8fb1d6b504bb0"
+    },
+    {
+      "path": "results/figures/fig_iris_metrics_blocks_full.png",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 683426,
+      "sha256": "896ca6f1255a7c3783388617a07db635fa62c46bf5b67e031f3c9bada36d032e"
+    },
+    {
+      "path": "results/figures/fig_iris_metrics_ratio.pdf",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 28828,
+      "sha256": "ee52f795f511315df2caf650b2a407ee54b33d0ec6af0e8a58fdb8dee53dcc2f"
+    },
+    {
+      "path": "results/figures/fig_iris_metrics_ratio.png",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 120435,
+      "sha256": "e82998df95334ce7eaca38e4c2799072981dd5ae29679e5e33e11fff706da667"
+    },
+    {
+      "path": "results/figures/fig_iris_p3_blocks.pdf",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 45200,
+      "sha256": "85bbe3ce779163371dd4860fed8be9ed176ba97ebed19e2d77798260a106536f"
+    },
+    {
+      "path": "results/figures/fig_iris_p3_blocks.png",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 298191,
+      "sha256": "06059bfed107dd88db51e0be7c7b2aa03ea567cdcbc364313751f5fedf0c3354"
+    },
+    {
+      "path": "results/figures/fig_iris_p3_setlevel.pdf",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 30857,
+      "sha256": "8f1e5d80e843222289ff15c897d7be58240e9768c5ba1ce17bf7fa01915c8f74"
+    },
+    {
+      "path": "results/figures/fig_iris_p3_setlevel.png",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 146846,
+      "sha256": "b80d61fc04fd2295e065def70fb600e74ab66b7b0dfd7f08ef991aaa1d77ae17"
+    },
+    {
+      "path": "results/figures/fig_iris_window_f8.pdf",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 61702,
+      "sha256": "e3035acd9e0da84b366e2716fc945b744ebe1935b8b69fabddab1abdc1fb9721"
+    },
+    {
+      "path": "results/figures/fig_iris_window_f8.png",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 491868,
+      "sha256": "3fc3ec7bcb46e0ec704280890c4ed6ed2e0c63326d0f274b3f5cd2ebb30a0fb5"
+    },
+    {
+      "path": "results/figures/fig_ladder.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 54485,
+      "sha256": "873cd586258618df01b9beed03b66f844551bbdd16b7bce0d4fa6b97cd818e48"
+    },
+    {
+      "path": "results/figures/fig_ladder.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 192215,
+      "sha256": "c81a1d9bf567b6eec4c88af124b6c53c648306fc8992163a2891282ee6cc4230"
+    },
+    {
+      "path": "results/figures/fig_ladder2d_maps_p7_common.pdf",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 105652,
+      "sha256": "7725ac3e785650ef49e6b52f4849c44f57289513dfc0432426e1fd1c299e360f"
+    },
+    {
+      "path": "results/figures/fig_ladder2d_maps_p7_common.png",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 191652,
+      "sha256": "07f2a20a76b222b4b797ca7be9aaf2a3e023e8ddbd9d27b076415e8c326e68d2"
+    },
+    {
+      "path": "results/figures/fig_ladder2d_maps_p7_contrast.pdf",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 126884,
+      "sha256": "77f1a058f1f56e742d94cc62d5d5639fecff181289d3bc0d036d381196b81c6c"
+    },
+    {
+      "path": "results/figures/fig_ladder2d_maps_p7_contrast.png",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 253651,
+      "sha256": "c76d5c5427b066c99f54616d1eac5bc7aa17c7eeb7f102a098732f5fea55bdb7"
+    },
+    {
+      "path": "results/figures/fig_ladder2d_sensitivity.pdf",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 50594,
+      "sha256": "c807a324cc586897458510e9d71af27776d4b1c12e4f84f774a35fdde40f89a8"
+    },
+    {
+      "path": "results/figures/fig_ladder2d_sensitivity.png",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 155869,
+      "sha256": "c1c587f2f586a0d841e90877952e7a587a6de2030d6556ed626406ba49e9707e"
+    },
+    {
+      "path": "results/figures/fig_ladder_maps_common.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 167232,
+      "sha256": "58719ecae7ab8f05855eb938e192d74cfd60bffa604d5605a844773e8e56322b"
+    },
+    {
+      "path": "results/figures/fig_ladder_maps_common.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 272560,
+      "sha256": "9260153921027e3c13051d11dfa46d0031e7c80e3e0e1781f73a35ce10606c63"
+    },
+    {
+      "path": "results/figures/fig_ladder_maps_contrast.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 184826,
+      "sha256": "640d886179b27baed1e7ae2c3f31aea257f291b55eb403ccb1755c9999afc5d4"
+    },
+    {
+      "path": "results/figures/fig_ladder_maps_contrast.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 320995,
+      "sha256": "3b4a7343df81d37f869f9166c24ecedd35286996c51ce0e88ed9deebc4bb9b8d"
+    },
+    {
+      "path": "results/figures/fig_ladder_maps_core.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 113880,
+      "sha256": "bcf86a3c205c9430ff5bd6e2c36d17088332bb78f1753f4979805968c2d819a4"
+    },
+    {
+      "path": "results/figures/fig_ladder_maps_core.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 138541,
+      "sha256": "c4457ad5b4aa169954b3590706f8a6d16efc9ef6c3a64f51e905e1e17fc1322c"
+    },
+    {
+      "path": "results/figures/fig_metrics_blocks.pdf",
+      "family": "Metric comparison",
+      "placement": "Main profiles and supplementary dependence; do not count monotone variants as independent evidence",
+      "bytes": 61815,
+      "sha256": "ad70b37f91b3635ebb245958fbd5798facdad4716f1f45fd68d593bc15c7e69d"
+    },
+    {
+      "path": "results/figures/fig_metrics_blocks.png",
+      "family": "Metric comparison",
+      "placement": "Main profiles and supplementary dependence; do not count monotone variants as independent evidence",
+      "bytes": 530255,
+      "sha256": "5e6c78359a6e8112ba61a9334d23be0773ee7d37b410783970c33a68d3a07f1c"
+    },
+    {
+      "path": "results/figures/fig_metrics_blocks_full.pdf",
+      "family": "Metric comparison",
+      "placement": "Main profiles and supplementary dependence; do not count monotone variants as independent evidence",
+      "bytes": 98872,
+      "sha256": "6e83a28cfee32238eeaa4e1528dee7209ebf8a7bd3317bb6e721cac7040d5d29"
+    },
+    {
+      "path": "results/figures/fig_metrics_blocks_full.png",
+      "family": "Metric comparison",
+      "placement": "Main profiles and supplementary dependence; do not count monotone variants as independent evidence",
+      "bytes": 590495,
+      "sha256": "f46dca4a17e293200313cbccffce7d3f4d9f2eff3923cf302cc94904d1997f19"
+    },
+    {
+      "path": "results/figures/fig_metrics_correlation.pdf",
+      "family": "Metric comparison",
+      "placement": "Main profiles and supplementary dependence; do not count monotone variants as independent evidence",
+      "bytes": 37313,
+      "sha256": "cfe599cdfad97701cb1cb647d797104de48e09759123068d9afcd8d50a9ac703"
+    },
+    {
+      "path": "results/figures/fig_metrics_correlation.png",
+      "family": "Metric comparison",
+      "placement": "Main profiles and supplementary dependence; do not count monotone variants as independent evidence",
+      "bytes": 384460,
+      "sha256": "684f96874729b63a4009a28286f50c741617f0a34e844fb766a1311a6b0eac1e"
+    },
+    {
+      "path": "results/figures/fig_metrics_expected.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 29024,
+      "sha256": "b63be74bbb1faf5034d3c73701faba4b2be4a232028e46c36e944a586e922173"
+    },
+    {
+      "path": "results/figures/fig_metrics_expected.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 242005,
+      "sha256": "10293b5653ab24bd0e2ea297263efe7d2c1bef77747c0492ac4c88c60252413f"
+    },
+    {
+      "path": "results/figures/fig_metrics_expected_full.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 31421,
+      "sha256": "ce82a73d8240e41a11d505bfd60d65e5584fb5e3f4e2bd35cbfb513d4b92adc8"
+    },
+    {
+      "path": "results/figures/fig_metrics_expected_full.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 254012,
+      "sha256": "52c38313df6a4743f674be0c107c7567b07a59f96d97cc74a8d68d5f968b6fbe"
+    },
+    {
+      "path": "results/figures/fig_metrics_ladder.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 86115,
+      "sha256": "d1f9b927a029f39bed6de2e777fd44e52a889daa886a4b1c49c02d1ea3dcdbd5"
+    },
+    {
+      "path": "results/figures/fig_metrics_ladder.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 625243,
+      "sha256": "1d88384d27b672030b4d625703f1901fbff98a1835ce74c9fd6e38d27ad11e9a"
+    },
+    {
+      "path": "results/figures/fig_metrics_polar.pdf",
+      "family": "Metric comparison",
+      "placement": "Main profiles and supplementary dependence; do not count monotone variants as independent evidence",
+      "bytes": 83873,
+      "sha256": "b14697850c1bd487a03473c9ab78acd228c556bb9913cdaee5873d65909a8e76"
+    },
+    {
+      "path": "results/figures/fig_metrics_polar.png",
+      "family": "Metric comparison",
+      "placement": "Main profiles and supplementary dependence; do not count monotone variants as independent evidence",
+      "bytes": 866331,
+      "sha256": "dbd078d5a109e0229a971d6c334e38bca4c14799e74ff69d2688484d0e9921a4"
+    },
+    {
+      "path": "results/figures/fig_metrics_shrink_table.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 31497,
+      "sha256": "fa13020b76b0461c5323703f9203b4ce50f8f39f9a814872ff51526bb836deb4"
+    },
+    {
+      "path": "results/figures/fig_metrics_shrink_table.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 215610,
+      "sha256": "29e44a4e8c7dccb0b34011d128b8bdc574f8461b9dc21886de7234bfb3e10b95"
+    },
+    {
+      "path": "results/figures/fig_real_case_parietal.png",
+      "family": "Real-case demonstrations",
+      "placement": "Supplementary preparation history; fixed examples are not cohort validation",
+      "bytes": 110645,
+      "sha256": "1c6b29263d3245a09ab578b540690f753552f9181dff4a0c21ee9167a3619e19"
+    },
+    {
+      "path": "results/figures/fig_real_case_parietal_v2.pdf",
+      "family": "Real-case demonstrations",
+      "placement": "Supplementary preparation history; fixed examples are not cohort validation",
+      "bytes": 100561,
+      "sha256": "66a83c4372f639d99ec5e28aa053fbbcd661be010aed4a1b5de14c0f580eae78"
+    },
+    {
+      "path": "results/figures/fig_real_case_parietal_v2.png",
+      "family": "Real-case demonstrations",
+      "placement": "Supplementary preparation history; fixed examples are not cohort validation",
+      "bytes": 128577,
+      "sha256": "6b78b3cdb0c283b25a20ac14a357050f2e90ba8399d9ef670b96e4e381ea40f5"
+    },
+    {
+      "path": "results/figures/fig_real_case_theory.png",
+      "family": "Real-case demonstrations",
+      "placement": "Supplementary preparation history; fixed examples are not cohort validation",
+      "bytes": 146199,
+      "sha256": "3855caacc32181453436ee3a080727cf047702bc258929c5c2a0ce14c526e755"
+    },
+    {
+      "path": "results/figures/fig_real_theory_v2_parietal.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 54507,
+      "sha256": "321bee0d8c82fda546fd353c3b371ba64217c787b2006fb8ae33b93eec74e0d1"
+    },
+    {
+      "path": "results/figures/fig_real_theory_v2_parietal.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 198208,
+      "sha256": "28b7f09094ad003b9a9de5f1ad254299b743a598704713be22ab22ac3cc5b0e8"
+    },
+    {
+      "path": "results/figures/fig_real_theory_v2_random_patches.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 54572,
+      "sha256": "54038fe4b883a3ce3107939f0e85a3c78e96801fb7eb7bb6e2316d7a4bb6312a"
+    },
+    {
+      "path": "results/figures/fig_real_theory_v2_random_patches.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 199474,
+      "sha256": "e9b4d8eae6c223726cb761e78ec7c35cfc4051aee68f4fdf7d74764d8b4553aa"
+    },
+    {
+      "path": "results/figures/fig_size_shell_dependence.pdf",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 66212,
+      "sha256": "713bd3b53b01407fc439c023806b537350be6c6a0a141dfb02251de94647fa4f"
+    },
+    {
+      "path": "results/figures/fig_size_shell_dependence.png",
+      "family": "Brain donor ladder",
+      "placement": "Main brain results and supplementary maps/sensitivity; status per source",
+      "bytes": 257533,
+      "sha256": "3e44ba857b6f6471c48cccb744b46981c10cf391218a8b3f8e0032e0c764818f"
+    },
+    {
+      "path": "results/figures/fig_variability_maps.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 169459,
+      "sha256": "d033f3cb9d0e2f24092e3a4ea6642132b41303be9c407a7617a096362078b8c5"
+    },
+    {
+      "path": "results/figures/fig_variability_maps.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 228875,
+      "sha256": "8966bc062be907f8b1a5cc496aa9208678439f95203f59f5f1a5c1ecf73880e2"
+    },
+    {
+      "path": "results/figures/identity_ladder.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 24198,
+      "sha256": "84b276a2ad3b1629856f2ff77c6c5ed534e533b4ecf29ed4fe4ccb6c9becba23"
+    },
+    {
+      "path": "results/figures/identity_ladder.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 135443,
+      "sha256": "bbabafe6b3728cae499c6991d51a0498c6841f2318a332676a16498650449687"
+    },
+    {
+      "path": "results/figures/identity_ladder_faces.pdf",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 1546038,
+      "sha256": "215ed9c3da05d4867cedb3aa938ed45056bc0a62bfccaf8de7d3d8eae5208756"
+    },
+    {
+      "path": "results/figures/identity_ladder_faces.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 1089295,
+      "sha256": "75aaf2d937171253a1dec84fa1704a15510380ec7cf20dd15f1e347046f473f3"
+    },
+    {
+      "path": "results/figures/identity_ladder_faces_photo.png",
+      "family": "Face donor ladder",
+      "placement": "Main face panel; historical/synthetic drawings distinguished from measured v6f",
+      "bytes": 1912838,
+      "sha256": "598867d2d066dd61a8d063c7b0b3a98fe88f9282417ef3b8edea91da49652c3f"
+    },
+    {
+      "path": "results/figures/label_fixed_example.pdf",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 243210,
+      "sha256": "c9af4b21f10f6f7b6aebf283503848d50b80cf4380f3c7eebb2d57f89b4c57dc"
+    },
+    {
+      "path": "results/figures/label_fixed_example.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 266451,
+      "sha256": "155fcf26a28c64091a34bcfbf919c131a8e6087f2d1f6594ce5329882f5c1ea4"
+    },
+    {
+      "path": "results/figures/label_fixed_example_folding.pdf",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 93397,
+      "sha256": "4b58895f64e49c2d8e6dc5d27a11010663546e1cc19e0251891109578abf6b25"
+    },
+    {
+      "path": "results/figures/label_fixed_example_folding.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 140658,
+      "sha256": "07b3fd9ac7ba5c7fb7d60f6264231d946590c9af41e8ca7cc6721e9c2f58d5e6"
+    },
+    {
+      "path": "results/figures/label_hemisphere_locations.pdf",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 40155,
+      "sha256": "9480c718fb37a70a35bc443e2b8746d25e8906a24dbd05e7406a747f04581a23"
+    },
+    {
+      "path": "results/figures/label_hemisphere_locations.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 119381,
+      "sha256": "80f1eedc8db68ad58b8f4e9fce80175ed270deea1c062dee66395ad052c05bfb"
+    },
+    {
+      "path": "results/figures/label_paired_dz_all_metrics.pdf",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 36340,
+      "sha256": "efd7df9f15edd37087f7a706627d04c2189b1f3747449c2fc3eb5fa196279682"
+    },
+    {
+      "path": "results/figures/label_paired_dz_all_metrics.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 265423,
+      "sha256": "cb042770d5b2669be24a7ddc08eff292c08a7737a1b6255f4cb35591fced957b"
+    },
+    {
+      "path": "results/figures/label_paired_mz_all_metrics.pdf",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 36257,
+      "sha256": "6fb6674cfd394cef36f44abb76ad956112a6b98a88ce3eb10fc05dced99fb29e"
+    },
+    {
+      "path": "results/figures/label_paired_mz_all_metrics.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 264925,
+      "sha256": "1497ba1f1995207b647f72a46aa3c3962065b2c35a944b8a8a80adcad7bb7d42"
+    },
+    {
+      "path": "results/figures/label_robustness_all_metrics.pdf",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 36713,
+      "sha256": "25885495ab996e0cddb46a42b1a3b8097962bfd35d9ea562f25a169478837db7"
+    },
+    {
+      "path": "results/figures/label_robustness_all_metrics.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 254772,
+      "sha256": "08316c637a2a92b404dfcba029c5c4afe42fa963388124ec7b67c5b41e95143c"
+    },
+    {
+      "path": "results/figures/mixing_eyes.pdf",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 102745,
+      "sha256": "bee27cc992d9d216f9fd3e7eed2d5e5ca6d625777469562d101081c343ffb4e4"
+    },
+    {
+      "path": "results/figures/mixing_eyes.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 658925,
+      "sha256": "f85c2b529f6c8f3cc32be866314279e7b351aab48d47cdda3144e75cba875b88"
+    },
+    {
+      "path": "results/figures/mixing_tissue.pdf",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 58895,
+      "sha256": "2fa2d16706136b8be8358b91a6ac9f736078441ffbcb37cf1963a6639eb3b2dc"
+    },
+    {
+      "path": "results/figures/mixing_tissue.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 545849,
+      "sha256": "54c5848fe95acc6cc12a235f84df9d0d8668bf569ac06f11c45aff7e3aef52b7"
+    },
+    {
+      "path": "results/figures/population_null_all_metrics.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 326364,
+      "sha256": "2cbfb4d073a3b00c33f17d52ad3d5f28f5ceda2b610054d491271747242160f5"
+    },
+    {
+      "path": "results/figures/population_null_shape_metrics.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 248470,
+      "sha256": "948c4b4019c37394411eb7c4b31db8ff7b7c8a5401e9a79498ca7644ed8c9b9e"
+    },
+    {
+      "path": "results/figures/pupil_all_metrics.pdf",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 29721,
+      "sha256": "40736c26ce748ea4cad9e1a04c2545d6ed0f23978b703af478b23897e09264e6"
+    },
+    {
+      "path": "results/figures/pupil_all_metrics.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 195651,
+      "sha256": "9d7da8644e832efcea9629c31a719997d87c448f81827220efd45f3ce8fa6382"
+    },
+    {
+      "path": "results/figures/pupil_fixed_example.pdf",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 134012,
+      "sha256": "557878ef0f059781c097678011567350e392357107ab3df33e7a6745a3be0ae1"
+    },
+    {
+      "path": "results/figures/pupil_fixed_example.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 244039,
+      "sha256": "6280704809083e0c05cd97c3db9e753409b0c2b5e49b1f7706bb1a314477cef2"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eye_01.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 298864,
+      "sha256": "9b8d95cfe61dcff1f3e5ba504962ae62219b9772d0eafc9af6405b9249f2ee28"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eye_02.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 295934,
+      "sha256": "a9ab405458daf070bc471625f246961c3c3cc1523dcea4d16fe538525aed04fc"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eye_03.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 298860,
+      "sha256": "3739f21d5d156a9d5ee776d265b2fdaf70da94ec986682690ea26adb6d846ab6"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eye_04.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 298771,
+      "sha256": "b1530e0cd38d807894cee02ad80b6fbc7ff61ed2c78eb05dc003c1cd887edfb4"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eye_05.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 299419,
+      "sha256": "77a1371f0314bf738040ace939d239229c7236aba8a2cc5dc75b7d17cf884d4b"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eye_06.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 298945,
+      "sha256": "c394cf41684aff3ce1d9c8b80d2f8e49406faeff1d28fa3088335a79b772cb6c"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eye_07.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 297935,
+      "sha256": "6ef76ef243c1f66cace306584669d49acbda5ee2218a72ccd8a2014b4e4ea992"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eye_08.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 302347,
+      "sha256": "9afb01311d607c1f027d1a99b191d0915284518944dc9204a6be652eb90ead41"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eye_09.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 298027,
+      "sha256": "6cd3877e667a8b7aa2ef166b44d3e0c6ecb25b24df9fcbb5d2ba0ea2b98b02c1"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eye_10.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 293681,
+      "sha256": "f7807b99a99b1cf12b1a3a88cf5074a08e868415b58bdc0028721e5f0f921ef2"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eye_11.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 299995,
+      "sha256": "599a49d8e15003127c35b133c35aec37e748246d8580ef4001534bc99992202c"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eye_12.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 296037,
+      "sha256": "0e1ea29b422fe2c552e74a9bcc702f5304014120879382d5f67a46c4b7acd31d"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eyes_gallery_1.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 723531,
+      "sha256": "1157498d1666d50558ca7f412fe968f3a553732a961c03200c4caa6855a2aac8"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/eyes_gallery_2.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 723764,
+      "sha256": "ba6f9605efb6b81d5afe7ce70eb25ade83d44218372cb09eed7d022d89dd1034"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/tissue_01.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 97520,
+      "sha256": "aa215e645acdd1cbd82893c6da5732218fb04d4b02c54daa26c39a6df752331b"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/tissue_02.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 97567,
+      "sha256": "0ae0abf23dadf1e51785824af42c38ffedd5678d20d9e7181ce8538e4e163db9"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/tissue_03.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 98393,
+      "sha256": "b77f0fa951693117f52643e64865489949e35952f2ba83248b2cceb6e2fdf29a"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/tissue_04.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 97792,
+      "sha256": "f520ce4fa1994e2976581af1cc8a3292ccd661bda5c44972702d018f6f134211"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/tissue_05.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 97991,
+      "sha256": "a9e716e6ab932aa2b75f9c07454e62f87ff3a3816eaf60aebda259d25c7c31a3"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/tissue_06.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 97246,
+      "sha256": "1a38393c5799344bffc6825ef5deb719a3c272d97437ac2253005d98174397f2"
+    },
+    {
+      "path": "results/figures/synthetic_atlas/tissue_gallery.png",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 349587,
+      "sha256": "2caa0ba28b867287c537432281bfcad78bbab11ff5099ffa5b24dfe627ab9467"
+    },
+    {
+      "path": "results/figures/visual_eyes_rebuilt.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 110148,
+      "sha256": "2b2c3323c4fd579622b7e72b7456cc37331d9848e8b9ed46910fbfa2a7fd26e9"
+    },
+    {
+      "path": "results/figures/visual_eyes_rebuilt.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 232397,
+      "sha256": "4b0ed32546785a18767e3c626ae3b18de7a069d7e473a44341265404bf5355c1"
+    },
+    {
+      "path": "results/figures/visual_tissue_rebuilt.pdf",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 136190,
+      "sha256": "9fd77631a4b4fd93546b8426bdd680ce0af700fb85386249579acd0d65f92c5a"
+    },
+    {
+      "path": "results/figures/visual_tissue_rebuilt.png",
+      "family": "Supporting material",
+      "placement": "Methods/provenance/reference context; review separately before making an empirical claim",
+      "bytes": 269858,
+      "sha256": "cd0f0a9bc7bf6dfd75ae3652d76e59efe788a5af72754e5bb0d9071448f39180"
+    },
+    {
+      "path": "results/grape_calibration.json",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 8962,
+      "sha256": "0dee49d8329e8b9bfd3c636db2075e7a09d8fe45bef30714108070cb91be7553"
+    },
+    {
+      "path": "results/grape_mirror_interval.json",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 1074,
+      "sha256": "c34975f7cc70e3717a37f0ca7e3b73f05dd0bbb1b5ad451485a0a90d8bd7fb8c"
+    },
+    {
+      "path": "results/grape_repro.json",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 9467,
+      "sha256": "741a3c1be24bdb00fef8e34d81c1a3f89f74307cc08d499c8f4a495be8c11992"
+    },
+    {
+      "path": "results/image_ladder.json",
+      "family": "Earlier pilots",
+      "placement": "Historical context; acquisition/protocol confounding prevents promotion to current primary results",
+      "bytes": 11655,
+      "sha256": "a3c7807e8f7ce57ceb1dcec60fbf1b216d046c24e4e743417d6f089252f485ed"
+    },
+    {
+      "path": "results/iris_calibration.json",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 20987,
+      "sha256": "83c7bb20959342fa9746541db0726edb26ac6bb3b59a23a4c8551bc20671c7d0"
+    },
+    {
+      "path": "results/iris_codes.json",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 11814,
+      "sha256": "1f4c32cc756dda5f99a8ec57d4f813d75893d86c136d42350d06cfde05c106f8"
+    },
+    {
+      "path": "results/iris_ladder_metrics.json",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 1119283,
+      "sha256": "c42fb1071d07f785f67c8aab672380442d59d483c62bb6a0abe04537ccc7a794"
+    },
+    {
+      "path": "results/iris_ladder_metrics_w10.json",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 325142,
+      "sha256": "4fb6b67eb76cd8c4626cc8139b842764aa376ba019584f3eef6b676a76349fda"
+    },
+    {
+      "path": "results/label_ladder.json",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 62823,
+      "sha256": "41767f1f8a96f6c5d9f0c6f2852af2599e865249a1ffabc0e2dcf811800e5d50"
+    },
+    {
+      "path": "results/label_paired_twin_summary.csv",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 18176,
+      "sha256": "1bb225fd5a433489e161c8ac462666cb5935276e28abfc9f77d3d5c96a1cde69"
+    },
+    {
+      "path": "results/label_robustness.json",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 1029190,
+      "sha256": "2f23961ddbb46fd629497492a54fdab8b0b841102c55039881ae40743573a1c8"
+    },
+    {
+      "path": "results/label_robustness_report.md",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 5660,
+      "sha256": "fa14bb1a21cfc48dd0e1d9ca9f1bb50b8f486266377e21b9ff58e9f251077b67"
+    },
+    {
+      "path": "results/label_robustness_summary.csv",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 73260,
+      "sha256": "54bb7c9b0e92e69c65af02c04383011ede93ab15a994adfb73fa543bba7b4bbc"
+    },
+    {
+      "path": "results/ladder2d.json",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 167276,
+      "sha256": "f628dc07aff5b1183f2ecb2dca113877f60caa1d6760d89983c74162fd8ee55f"
+    },
+    {
+      "path": "results/ladder2d_brats_baseline.csv",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 8664,
+      "sha256": "c4dc6cde25c5551e6d13a21a3f2bbebc8f9ea46bc6a4a3117711ef0c700690bd"
+    },
+    {
+      "path": "results/ladder2d_brats_baseline.json",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 31469,
+      "sha256": "89be6ac5225bac018b603c239c91425e77a0ed85c876540520e136b1f4aad62b"
+    },
+    {
+      "path": "results/ladder2d_brats_baseline.md",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 2440,
+      "sha256": "71198a5b3842f636623cdcda560ddc6ff5e4bdb95b31fa3c6c1be003bebc2b7f"
+    },
+    {
+      "path": "results/ladder2d_manifest.json",
+      "family": "Fundus and earlier 2D",
+      "placement": "Main P8/P9 frozen aggregate; P7 and unregistered pilots retained as historical evidence",
+      "bytes": 2509,
+      "sha256": "e65d15339df869849c5d839511806ce0c8da519b636198d20cd12165fab2079c"
+    },
+    {
+      "path": "results/population_null_report.md",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 5534,
+      "sha256": "923892778a41fa618faace89338cfca20d003b14127c9ccaef8c191d79546962"
+    },
+    {
+      "path": "results/population_null_summary.csv",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 63449,
+      "sha256": "55871f135684f9f1675e59e891dee287d743082f24bd0a7ffd388d93b0144908"
+    },
+    {
+      "path": "results/population_null_synthetic.json",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 1414855,
+      "sha256": "4c1b2e71010d9dcac7dbd0f3faabb5a29e15855b97a7be7bb15d200c4ff04885"
+    },
+    {
+      "path": "results/pupil_ladder.json",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 58785,
+      "sha256": "12d24185dbaa7554c6199f1a85afb1dd153aaa527abeb0cecf1c5a1803263c9a"
+    },
+    {
+      "path": "results/pupil_ladder_summary.csv",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 5142,
+      "sha256": "ee5d8c69585a0fb37ab7f30cfd676fb8ed1e672e5ef91db55fe0f2de818b9b02"
+    },
+    {
+      "path": "results/pupil_report.md",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 4781,
+      "sha256": "3785b4e6fc0e80cca6f9644d6ad0f1628257b21f3bddd50017f17f9b8c8d1be4"
+    },
+    {
+      "path": "results/real_atlas_iris.json",
+      "family": "Iris",
+      "placement": "Manuscript frozen P2 evidence; newer P3/window exports are available for separate integration review",
+      "bytes": 5659,
+      "sha256": "45cbbe8094311a91900946216a26a948e46a8c6dc28a01c5362bb473544dd2b5"
+    },
+    {
+      "path": "results/real_atlas_mri.json",
+      "family": "Real-case demonstrations",
+      "placement": "Supplementary preparation history; fixed examples are not cohort validation",
+      "bytes": 4942,
+      "sha256": "575012a245ae2f88e1fac6263b53f41c4c4ba9092575bb69f75f68966e03043a"
+    },
+    {
+      "path": "results/real_cases.json",
+      "family": "Withdrawn MRI results",
+      "placement": "Excluded: source explicitly invalidates c/rho/label results after the intensity-scaling failure; not provisional support",
+      "bytes": 73300,
+      "sha256": "202368b272de7bfbd9bfddca29a542b973876470c2832be50a2afb03670974a5"
+    },
+    {
+      "path": "results/real_cases_data_qc_summary.json",
+      "family": "Real-case demonstrations",
+      "placement": "Supplementary preparation history; fixed examples are not cohort validation",
+      "bytes": 4217,
+      "sha256": "ff2dec1b6ea09deccce571a3d53774cc0cce23457570eaf1d297aed8c811ebed"
+    },
+    {
+      "path": "results/real_cases_manifest.json",
+      "family": "Real-case demonstrations",
+      "placement": "Supplementary preparation history; fixed examples are not cohort validation",
+      "bytes": 1777,
+      "sha256": "cab15bcdbef3b2b938c7ed75c94cf28625cfe3a6aa6b2ecb3dfce145cd82f667"
+    },
+    {
+      "path": "results/real_cases_manifest_parietal.json",
+      "family": "Real-case demonstrations",
+      "placement": "Supplementary preparation history; fixed examples are not cohort validation",
+      "bytes": 1777,
+      "sha256": "c35c075f3c29dc1497827ad4361e247165ea8eb315e1e619cf7c12fd63b8545c"
+    },
+    {
+      "path": "results/real_cases_parietal.json",
+      "family": "Withdrawn MRI results",
+      "placement": "Excluded: source explicitly invalidates c/rho/label results after the intensity-scaling failure; not provisional support",
+      "bytes": 53578,
+      "sha256": "b43ca58690758d9ba0dd5dcad552dc581a5bb1ec4f31d474dc05fd409618e255"
+    },
+    {
+      "path": "results/real_detail_methods.json",
+      "family": "Real-case demonstrations",
+      "placement": "Supplementary preparation history; fixed examples are not cohort validation",
+      "bytes": 2332,
+      "sha256": "26dc0ecd22381510b59b06dd13e1d69713626d0bc303805a7f78afada25fb4e3"
+    },
+    {
+      "path": "results/registration/GRAPE_G0.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 9466,
+      "sha256": "e5074dd326058d0a999fd070d531e7f4fd435f3b6b666f586d710ed87f9a5e2f"
+    },
+    {
+      "path": "results/registration/GRAPE_G1.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 8895,
+      "sha256": "df0b7b055852600b03e04a374056aeaa9b3ab61affcc3f49361d4e0fa01588c1"
+    },
+    {
+      "path": "results/registration/GRAPE_G2.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 3933,
+      "sha256": "ab5dfa7b6c39007b7c1e105b96d62ccf331bd31fe978ee64945843aa6dfddbfc"
+    },
+    {
+      "path": "results/registration/GRAPE_H1.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 7583,
+      "sha256": "8b340ec3f9ee7462db18a044847996649cd674dd0c5f3320b6f32795d01a68ec"
+    },
+    {
+      "path": "results/registration/GRAPE_H2.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 7692,
+      "sha256": "93f858d54d75a81d3b4f69497f2cfff584d34aec3dad7f118578788bc8c24303"
+    },
+    {
+      "path": "results/registration/UPOL_H1.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 3843,
+      "sha256": "46e6d8f176455ba6521530ca9685319a55de428524a7fe91a1ba8eada8a75286"
+    },
+    {
+      "path": "results/registration/UPOL_I0.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 8281,
+      "sha256": "eed56d67cecd6fb21ce2e4ddf54573c3f922d0dc942a6d019eb39b9095b94d96"
+    },
+    {
+      "path": "results/registration/UPOL_I1.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 3851,
+      "sha256": "67b15872a60d6d525e43d96df1769a219438bf5a4766f3fbee33a13e620e09ad"
+    },
+    {
+      "path": "results/registration/UPOL_I2.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 3841,
+      "sha256": "0aebfca4ab69e7df49c8627002dd68fef284e6bd5c508763e85ba5c2f4dca790"
+    },
+    {
+      "path": "results/registration/UPOL_I3.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 3651,
+      "sha256": "47c5733622c312e1de092f10fb08ae31711e24d2f87b2521de8874033971dfff"
+    },
+    {
+      "path": "results/registration/UPOL_I4.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 3651,
+      "sha256": "5f89075b9244b75aa4c181a3d3f4fdadcab45f4406d4a41c20b54626618c320b"
+    },
+    {
+      "path": "results/registration/UPOL_I5.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 3836,
+      "sha256": "428720b1548e9d3026fdeb94533c9caaa4f4cde2bb1a03393afd9b4bc19c243e"
+    },
+    {
+      "path": "results/registration/UTIRIS_H1.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 8730,
+      "sha256": "8458ba496ca68edfb56a3e5c4ee4dd69f042891b5e191a63058b377bf53135ce"
+    },
+    {
+      "path": "results/registration/UTIRIS_I0.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 8439,
+      "sha256": "d42d58191b7ad008331f876ad9eeb823aec3fbb40557dfed5d950f080c20994c"
+    },
+    {
+      "path": "results/registration/UTIRIS_I1.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 8726,
+      "sha256": "49966d7ac368d00aa8e55e59ef90568e2374e0b96f8a899036095a8e3be820d8"
+    },
+    {
+      "path": "results/registration/UTIRIS_I2.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 8741,
+      "sha256": "89dbb16b5c7a2794f36d35d0822ffcef7bcff37aeca9f48ce57b2044540dd475"
+    },
+    {
+      "path": "results/registration/UTIRIS_I3.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 7167,
+      "sha256": "2e07fcfa360e4fd288694ef9a82adcbded37c36484bd06a21f32df4650141229"
+    },
+    {
+      "path": "results/registration/UTIRIS_I4.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 7491,
+      "sha256": "4bd9f1f68bde2f8aa29396cb437a2454ab424226945de8ce41aa65f4088f2e1f"
+    },
+    {
+      "path": "results/registration/UTIRIS_I5.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 7330,
+      "sha256": "d85e797a6853d65cdb5522744d6aa08cab77b51398b518674b0f68424fad0661"
+    },
+    {
+      "path": "results/registration/comparison.csv",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 7367,
+      "sha256": "28aa1a1437042610c2c69129e9bc584bc0d2c15e54e0e62206d4752fad227b69"
+    },
+    {
+      "path": "results/registration/comparison.md",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 16066,
+      "sha256": "fe423e9450938a3ab598fb7d1fa861d9bb9d86173e932c8d9746a98c087a7f6c"
+    },
+    {
+      "path": "results/registration/manifest.json",
+      "family": "Registration",
+      "placement": "Methods, source-version interpretation and limitations; unresolved gate retained",
+      "bytes": 22822,
+      "sha256": "103dacac76fd3ee2b1e279ceb673d40cd8e42a0d011a8ed32951ab9207d792ea"
+    },
+    {
+      "path": "results/simon_e0.json",
+      "family": "Earlier pilots",
+      "placement": "Historical context; acquisition/protocol confounding prevents promotion to current primary results",
+      "bytes": 36783,
+      "sha256": "b30cb5baa3bd37e0dc99fb8e0d649fd0ec9c5d601565881e938c56b2a473a4db"
+    },
+    {
+      "path": "results/simon_e0_per_structure.csv",
+      "family": "Earlier pilots",
+      "placement": "Historical context; acquisition/protocol confounding prevents promotion to current primary results",
+      "bytes": 10593,
+      "sha256": "35875adcc7e0daa01b20666f928c9cabf1829868769dfe4d75e46ab4b98af43d"
+    },
+    {
+      "path": "results/synthetic_atlas_eyes.json",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 126158,
+      "sha256": "9e2edf2de0f0cc7eb3a919637699c4c92b3854d482cd752cf4e333ebff3d5be4"
+    },
+    {
+      "path": "results/synthetic_atlas_tissue.json",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 30768,
+      "sha256": "6c9fac03dc384ce6d7924078cbf2cb933e3a2699f7ff23cb11dde44947bd3038"
+    },
+    {
+      "path": "results/toy_ladder.json",
+      "family": "Mechanism controls",
+      "placement": "Supplementary synthetic controls; toy evidence, no biological validation",
+      "bytes": 76542,
+      "sha256": "1b31f94e4482df24d689e18f0f7b222739287e4afa5cc2e16a81c8505349a808"
+    },
+    {
+      "path": "results/visual_rebuild_manifest.json",
+      "family": "Real-case demonstrations",
+      "placement": "Supplementary preparation history; fixed examples are not cohort validation",
+      "bytes": 1270,
+      "sha256": "23a290a10607b0d8d56cb65e4f2a8b969b99788542878924cfd71b1eec3d22a6"
+    }
+  ]
+}

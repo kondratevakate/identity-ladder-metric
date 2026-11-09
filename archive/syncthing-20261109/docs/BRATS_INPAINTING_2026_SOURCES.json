@@ -1,0 +1,135 @@
+{
+  "checked_date": "2026-11-02",
+  "catalog_url": "https://papers.miccai.org/miccai-2026-sat/categories/#brats-inpainting",
+  "coverage": "16 camera-ready PDFs; methods, reported results and evaluation boundaries; not an exhaustive formula or code audit",
+  "sources": [
+    {
+      "id": "002",
+      "title": "Enhanced 3D U-Net for BraTS Local Synthesis: Attention, Deep Supervision, and Edge-Aware Inpainting",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_002.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_002.pdf",
+      "pages": 12,
+      "sha256": "c765b2498ca789f05f2dbb9da48d820ac8f15addefe41c1d51c1da1c3f53448a"
+    },
+    {
+      "id": "003",
+      "title": "Zero-Shot Brain MRI Inpainting with 2.5D Unconditional Flow Priors",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_003.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_003.pdf",
+      "pages": 12,
+      "sha256": "a878589c3bd93f9277adb3fb0a7ee08e610c162652c5c095b9fb884ba3a6478e"
+    },
+    {
+      "id": "004",
+      "title": "Conditional Flow Matching for Local Synthesis of Healthy Brain Tissue in 3D MRI",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_004.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_004.pdf",
+      "pages": 12,
+      "sha256": "fcafe776d1f6abb183fab096578c1f71b0788cca8b9a40ed21af3946576cd99d"
+    },
+    {
+      "id": "005",
+      "title": "Dynamic Shape-Aware Mask-Augmented Conditional 3D Pix2Pix for Healthy Tissue Inpainting in Brain MRI",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_005.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_005.pdf",
+      "pages": 13,
+      "sha256": "abfcfcfb03d9dfe8273e368c20068a615a0c701fabf9262470afd691cba9035d"
+    },
+    {
+      "id": "007",
+      "title": "Anatomy-Aware Healthy Brain Inpainting: Integrating Tissue Guidance Across Inputs, Features, and Objectives",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_007.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_007.pdf",
+      "pages": 11,
+      "sha256": "1be2947e16e2fd9215f40c8669545a6e664fb06d3ea6fe1e35f9a9e1ad3738e5"
+    },
+    {
+      "id": "008",
+      "title": "Now You Have My Healthy Attention: A U-DiT for Brain-MRI Inpainting",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_008.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_008.pdf",
+      "pages": 13,
+      "sha256": "ff245b58ba391796f3fc771fa436cb03dd98ca46c7e39039e520bceb7e14ed62"
+    },
+    {
+      "id": "009",
+      "title": "An SSIM-Prioritized 3D Attention U-Net for Synthetic Brain Inpainting",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_009.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_009.pdf",
+      "pages": 10,
+      "sha256": "cd368620163001e4eecfd256012dc0bfaa7cb13c16f9f028aa7de47314bdd1d4"
+    },
+    {
+      "id": "010",
+      "title": "Mask-Guided 3D U-Net with Component-Wise Tiled Inference for Healthy Brain Tissue Inpainting",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_010.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_010.pdf",
+      "pages": 11,
+      "sha256": "d81b4e68fa082ea3749b9c1e7fb7e5364dcc6dd2cc3a60310c9e34132d1fcb0c"
+    },
+    {
+      "id": "011",
+      "title": "Geometry-Aware Conditional 3D Wavelet Diffusion for Pseudo-Healthy Brain MRI Inpainting",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_011.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_011.pdf",
+      "pages": 12,
+      "sha256": "feab989ee2e1db484fa28a82505bfe27c38a558f3a94b69688bb06ba83254df5"
+    },
+    {
+      "id": "013",
+      "title": "RARF: Region-Aware Rectified Flows for 3D Brain MRI Inpainting",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_013.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_013.pdf",
+      "pages": 12,
+      "sha256": "718aa34e6b52765962d5b1b121884be7c9ed3f85932c1110be61deb46ceea900"
+    },
+    {
+      "id": "014",
+      "title": "Glioma Inpainting in Brain MRI via 3D Region Aware Diffusion",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_014.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_014.pdf",
+      "pages": 12,
+      "sha256": "8bb91ad1122cd6acdaa3051c918380bb2e6a92f8a2ae7bd0a662bba18acedb2c"
+    },
+    {
+      "id": "016",
+      "title": "Sharpening the Ensemble: An SSIM-Aligned Residual Refiner for Brain-MRI Inpainting Post-Processing",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_016.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_016.pdf",
+      "pages": 12,
+      "sha256": "d35a83aac328e6a0e248714b846d3bbfde5f89064e47b64507c89ff26db24a46"
+    },
+    {
+      "id": "017",
+      "title": "A Mask-Gated 3D U-Net with Void-Size Conditioning for Healthy Tissue Inpainting in Brain MRI",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_017.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_017.pdf",
+      "pages": 15,
+      "sha256": "28aa465e0b6e6435bb7153902999db5264558aed7a6037eed92bd3c996c25bf0"
+    },
+    {
+      "id": "018",
+      "title": "CATCH: Counterfactual Anatomical Tissue Inpainting with Conditional Haar Diffusion",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_018.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_018.pdf",
+      "pages": 12,
+      "sha256": "f661eaa4226622c886815930a9bbcf802f76703ca27bba70d3e507f407c9c8d7"
+    },
+    {
+      "id": "019",
+      "title": "Retrieval-Augmented Wavelet Diffusion for Local Synthesis of Healthy Brain Tissue",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_019.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_019.pdf",
+      "pages": 15,
+      "sha256": "05d6b0488701b93de461c8d3670b7479b715bbf306ec30ad43a3d19693c8b8b8"
+    },
+    {
+      "id": "020",
+      "title": "RESIN: Residual Synthesis for Healthy-Tissue Inpainting in Brain MRI",
+      "url": "https://papers.miccai.org/miccai-2026-sat/BraTS_Inpainting_020.html",
+      "pdf": "https://papers.miccai.org/miccai-2026-sat/paper/BraTS_Inpainting_020.pdf",
+      "pages": 10,
+      "sha256": "2d001c1a1c1b34cb51eb2be10977cc1167dfd1812cc127351728e072d2d456cc"
+    }
+  ]
+}

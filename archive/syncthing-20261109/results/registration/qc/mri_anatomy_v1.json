@@ -1,0 +1,12 @@
+{
+  "prepared_sheets": 2,
+  "inspected_sheets": 2,
+  "data": "one existing QTIM development scan; deep and parietal boxes",
+  "scope": "supplementary views of existing four decisions; counts are not additive",
+  "method": "saved affine and SyN, exact reflected SyN; common intensity display window",
+  "visual_acceptance": "NOT ESTABLISHED",
+  "gate": "NOT MET",
+  "review_sha256": "021f49c2ceb00166b5b1e13fd766164a98675c11a00af01661c7611aacd99509",
+  "plan_sha256": "ba52ab07052309fa694e2376c1d129d8a662f448a36ef61ccaaa9b2bf48e1674",
+  "code_sha256": "e29584fea9d7b77219af21718bcda8a721993354de644e44bc95e627aac1244c"
+}

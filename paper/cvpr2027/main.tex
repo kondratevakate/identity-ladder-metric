@@ -1,9 +1,10 @@
-% CVPR 2027 paper, built on the official author kit (cvpr-org/author-kit, release CVPR2027-v1, commit a236934).
+% CVPR 2027 paper; cvpr.sty matches the official CVPR2027-v1 ZIP linked by the author guide.
 % Follow-up to the ISBI 2027 submission (paper/isbi2027/, do not edit).
 % Writing rules: one sentence per line, English, no em dashes, subject first, one claim per sentence,
 % define every term before its first use, every number cites its results file.
 
 \documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage[T1]{fontenc}
 
 %%%%%%%%% PAPER TYPE  - PLEASE UPDATE FOR FINAL VERSION
 % \usepackage{cvpr}              % To produce the CAMERA-READY version
@@ -30,7 +31,8 @@
 \def\confYear{2027}
 
 %%%%%%%%% TITLE - PLEASE UPDATE
-\title{Which evaluations miss the loss of individual detail? \\ A donor-ladder audit of averaged fills}
+\title{Identity Ladder: Population References for\\
+Inpainting and Conditional Generation}
 
 %%%%%%%%% AUTHORS - anonymous in review mode
 \author{Anonymous \confName~submission}
@@ -38,10 +40,29 @@
 \begin{document}
 \maketitle
 \input{sec/0_abstract}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig/identity_ladder_provenance_v2.pdf}
+\caption{\textbf{Source cohorts and population-reference error maps.}
+\textbf{a,} Cohorts and counts; eligibility varies by comparison, with GRAPE repeat coverage shown separately.
+\textbf{b,} Observed donor controls: local squared-error ratios against an independent mean fill ($Q=1$).
+References are population means or an independent MRI template.
+Pooled numbers differ from the anchored window-level tables; recorded intervals appear where available.
+Context-selected means use 16 donors; V is row-scaled.
+Rows use modality-specific display sizes.
+The pale MRI outline and shared crop are display-only; brain windows are Gaussian.
+Fundus uses GRAPE P8 and iris uses P2.
+F denotes source-frame approval; P denotes provisional evidence.
+The bust is decorative and synthetic; secondary datasets and display provenance remain in the supplement.}
+\label{fig:atlas}
+\end{figure*}
 \input{sec/1_intro}
+\input{sec/2_related}
 \input{sec/3_methods}
 \input{sec/4_results}
 \input{sec/5_synthesis}
+\clearpage
+\input{sec/6_llm}
 {
     \small
     \bibliographystyle{ieeenat_fullname}

@@ -1,0 +1,50 @@
+{
+  "manifest_sha256": "ffb5a2cf66010e7071c1054ba08690a0d5e3eb01ac57c9ddd7c52b8168682461",
+  "selection_sha256": "cb264436a1346f6a83b17e7d3abd8f3bc27ac10174ad89c8d7339eec421f7f31",
+  "code_sha256": "f4b0bc9ad7aa9e5427c5fe8aa82440abf309e28dc95970409c2ff2fc05751f03",
+  "gate": "NOT MET",
+  "visual_acceptance": "NOT ESTABLISHED",
+  "unique_targets": 72,
+  "unique_families": 68,
+  "family_overlap_between_sets": 4,
+  "required_comparisons": 334,
+  "unavailable_repeat_rows": 98,
+  "rows_by_phase": {
+    "validation": 328,
+    "development": 6
+  },
+  "strata": [
+    {
+      "box": "deep",
+      "branch": "template",
+      "intended": 72
+    },
+    {
+      "box": "deep",
+      "branch": "contralateral",
+      "intended": 72
+    },
+    {
+      "box": "parietal",
+      "branch": "template",
+      "intended": 72
+    },
+    {
+      "box": "parietal",
+      "branch": "contralateral",
+      "intended": 72
+    },
+    {
+      "box": "deep",
+      "branch": "repeat",
+      "intended": 23
+    },
+    {
+      "box": "parietal",
+      "branch": "repeat",
+      "intended": 23
+    }
+  ],
+  "review_status": "Manifest freeze only; existing one-scan review is retained separately and is not counted twice.",
+  "scope": "target QC only. All 244 selected source scans, including donor/pool scans, remain required before scoring."
+}

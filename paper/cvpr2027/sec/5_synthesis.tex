@@ -1,3 +1,45 @@
-\section{Cross-modality synthesis}
+\section{From reference audits to model audits}
 \label{sec:synthesis}
-\TODO{Where averages beat related individuals; where the oracle bound sits; which metrics separate averaging from detail.}
+The existing experiments characterize reference candidates and metric behavior.
+Table~\ref{tab:decision} separates that evidence from the proposed audit of conditional generation across populations.
+Coverage describes what has been investigated, not a percentage of a model-evaluation problem solved.
+
+\paragraph{What the references establish.}
+Means, attenuation, incorrect residuals, and repeats expose different interpretations of a similarity score.
+Symmetry supplies a comparison condition rather than an identity label: a face reflection shares capture conditions, a fellow iris changes the biometric instance, and hemispheres require correspondence.
+Cross-anatomy observations stress these interpretations without establishing a universal ordering or transfer to every inpainting task.
+
+\paragraph{How model behavior could be tested.}
+For a fixed context and mask, generated outputs can be compared with the same ladder controls using Eq.~\ref{eq:population-audit}.
+Repeating this comparison within target strata could reveal whether a model's scores approach global or matched means, retain target-aligned variation, or respond to acquisition differently between groups.
+The context must support the claimed detail: a conditional mean can be a legitimate prediction when the withheld content is ambiguous.
+Residual correlation misses positive amplitude shrinkage, and stranger calibration supplies no new anatomical information.
+The profile therefore retains complementary controls rather than identifying one coordinate with preserved identity.
+
+\paragraph{Population and sampling interpretation.}
+Global and matched references answer different questions; group-specific normalization alone can conceal raw gaps or differences in reference variance.
+A group contrast characterizes the model--metric system; attribution requires checking reference, acquisition and task-composition effects.
+Mask difficulty, location, acquisition, donor-pool size and missing outputs must remain visible in a comparison.
+Repeated outputs distinguish variation across targets from variation across seeds for one context; reduced variance alone does not establish mode collapse.
+Group gaps require independent-unit uncertainty and an explicit target population, and do not by themselves establish causal discrimination or fairness.
+Actual generator outputs, an independent anatomy or task criterion, and held-out validation are needed to test these proposed interpretations.
+
+\paragraph{Limitations and evidence coverage.}
+Registration and acquisition remain central confounders in the brain and fundus panels.
+Source protocols have advanced beyond some accessible outputs, and preprocessing versions must not be merged by name.
+The evidence freeze predates receipt of the base face pipeline and full iris P3 aggregates; integration remains pending.
+Lid-shadow information, changing support and selection on usable windows can affect iris comparisons.
+The current residual and rank coordinates have not been validated as a fused identity score.
+Results at one window size do not establish stability over the latest object-relative size grid.
+
+\paragraph{Ethics and data.}
+The manuscript preparation uses existing aggregate outputs and does not read or redistribute participant images or identifiers.
+The anatomical map illustrations are population summaries or templates, not individual exemplars.
+Iris images and private row tables remain outside the public repository.
+The preparation record does not establish the original dataset consent or the institutional basis for each secondary analysis.
+Those dataset-specific approval, exemption and consent statements require author confirmation before a submission-ready ethics declaration can be made.
+
+\section{Conclusion}
+Identity Ladder supplies population references for interpreting similarity in inpainting and a defined extension to audits of conditional generation.
+The measured controls probe responses to detail loss, incorrect detail and acquisition variation; generated-output profiles across target strata remain to be tested.
+Broader applications require an appropriate identity unit, conditioning contract and reference population, preserving the distinction between a proposed audit and demonstrated model behavior.

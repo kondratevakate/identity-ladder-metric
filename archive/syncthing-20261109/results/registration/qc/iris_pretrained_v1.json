@@ -1,0 +1,16 @@
+{
+  "modality": "iris",
+  "pilot_rows": 6,
+  "visual_acceptance": "NOT ESTABLISHED",
+  "gate": "NOT MET",
+  "model_sha256": "1228a1c760791749fceeedf9322e24f098aac80234368e1beee156e1e8fa57e7",
+  "plan_sha256": "3fc4d54526b6d36e2f493612ed3cae8924438ab05d3cce98bd27fe789cda4676",
+  "records_sha256": "6455ed212ebb45bafa2b2045bc85b616a05e72eff7b737d371aabb0289e3d8a5",
+  "status": "development visually inspected; no acceptance established",
+  "reviewed_pilot_rows": 6,
+  "pass_count": 0,
+  "fail_count": 0,
+  "unreviewable_count": 6,
+  "review_sha256": "e0351394eb1e78848630826a4d0f5b3997569860135c28cd8a9ebe22cf9b6f4b",
+  "scope": "segmentation feasibility only; registration NOT RUN"
+}

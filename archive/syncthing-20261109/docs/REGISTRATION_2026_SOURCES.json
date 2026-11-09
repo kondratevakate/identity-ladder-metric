@@ -1,0 +1,78 @@
+{
+  "checked_date": "2026-11-03",
+  "scope": "Targeted evidence screen, not systematic review or SOTA ranking",
+  "sources": [
+    {
+      "title": "M2CG",
+      "venue": "MICCAI 2026 main",
+      "pdf_url": "https://papers.miccai.org/miccai-2026/paper/5386_paper.pdf",
+      "private_filename": "5386.pdf",
+      "sha256": "9c69bb3504841ac37af920de51fd85912854fe580348644f55edc1e95ce9129a",
+      "pages": 11,
+      "evidence": "Methods/experimental sections inspected; not independently reproduced"
+    },
+    {
+      "title": "Anatomy- and Site-Guided 3D Patch Diffusion",
+      "venue": "MICCAI 2026 main",
+      "pdf_url": "https://papers.miccai.org/miccai-2026/paper/3157_paper.pdf",
+      "private_filename": "3157.pdf",
+      "sha256": "8d9f0b286d1d0267944c2f70d115b3c546b94bd0e8f614c639e2a852965cd30f",
+      "pages": 11,
+      "evidence": "Methods/experimental sections inspected; not independently reproduced"
+    },
+    {
+      "title": "Point-Wise Correspondences",
+      "venue": "MICCAI 2026 main",
+      "pdf_url": "https://papers.miccai.org/miccai-2026/paper/5323_paper.pdf",
+      "private_filename": "5323.pdf",
+      "sha256": "a8f2a66c0fd33ee86bb4f35beadbaf41645ed757c6ce7ea0fef290e5a68ff535",
+      "pages": 10,
+      "evidence": "Methods/experimental sections inspected; not independently reproduced"
+    },
+    {
+      "title": "Simulation evaluation and meta-ablation",
+      "venue": "MICCAI 2026 main",
+      "pdf_url": "https://papers.miccai.org/miccai-2026/paper/5527_paper.pdf",
+      "private_filename": "5527.pdf",
+      "sha256": "b89a41d8ffb9245289e0c53934da035da953a996acf46e596de422217aa8dfc6",
+      "pages": 10,
+      "evidence": "Methods/experimental sections inspected; not independently reproduced"
+    },
+    {
+      "title": "UniVessel",
+      "venue": "MICCAI 2026 main",
+      "pdf_url": "https://papers.miccai.org/miccai-2026/paper/1262_paper.pdf",
+      "private_filename": "1262.pdf",
+      "sha256": "216d5d1a82728c9def923dcc4975f05f3daffeeb0439beb9847be2c2bb91ad34",
+      "pages": 11,
+      "evidence": "Methods/experimental sections inspected; not independently reproduced"
+    },
+    {
+      "title": "SPEAR",
+      "venue": "MICCAI 2026 main",
+      "pdf_url": "https://papers.miccai.org/miccai-2026/paper/4287_paper.pdf",
+      "private_filename": "4287.pdf",
+      "sha256": "78611736bb9da5446927ba1e84874dffbac19fe627981d6f46e7e1545a9462f7",
+      "pages": 10,
+      "evidence": "Methods/experimental sections inspected; not independently reproduced"
+    },
+    {
+      "title": "YADO",
+      "venue": "ECCV 2026 main",
+      "pdf_url": "https://srassmann.github.io/assets/files/2026_ECCV_YADO.pdf",
+      "private_filename": "eccv-yado-author.pdf",
+      "sha256": "879cb16e52ac0c328aa40fec5e60b9a0ac3aee8f52e8b90b004fb4533bc19cb8",
+      "pages": 58,
+      "evidence": "Methods/experimental sections inspected; not independently reproduced"
+    },
+    {
+      "title": "When Humans Judge Irises",
+      "venue": "WACV 2026 GAPBio workshop",
+      "pdf_url": "https://openaccess.thecvf.com/content/WACV2026W/GAPBio/papers/Mitcheff_When_Humans_Judge_Irises_Pupil_Size_Normalization_as_an_Aid_WACVW_2026_paper.pdf",
+      "private_filename": "wacvw-iris.pdf",
+      "sha256": "18f91a7d4986e3fba8255ef37904aa43fcb8507aefd9756d102ff9a406b8a566",
+      "pages": 9,
+      "evidence": "Methods/experimental sections inspected; not independently reproduced"
+    }
+  ]
+}
