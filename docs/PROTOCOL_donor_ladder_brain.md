@@ -917,3 +917,25 @@ both datasets and in every view (QTIM random cubes: ssim 0.58 against 0.76 and 0
 0.38). In the QTIM deep box it reaches the repeat level on MSE (R 0.03 [-0.14, 0.13]).
 Averaging scaffold-selected donors is rewarded by every tier-1 metric, more than averaging all donors. The same
 pattern that E3 of Amendment 11 tests for the mean of 2 and the dataset mean holds here.
+
+**C. Betti matching 2.5D (10 Nov 2026; recorded before any value).** Kate's decision after the 3D agreement check
+(quoted by the ISBI paper session): "2.5D on 3 slices". The 3D check result above stays as recorded.
+- Library and settings unchanged from fundus Amendment 9.15 and iris P3: the 2D Betti-matching library at commit
+  3e7eca26, sublevel filtration, absolute, matched and unmatched parts by `iris_ladder_metrics_extra.betti_parts`
+  (dims 0 and 1, essential classes with death mapped to 1). Lower = closer for both parts.
+- Slices: the three central orthogonal slices (16 x 16) of each 16 mm random cube, chosen exactly as brain LPIPS
+  chooses them (`central_slices`). A slice is scored only if every one of its pixels is in E; otherwise that slice
+  is missing (never 0). z clipped to [-3, 3] and mapped to [0, 1]. Cube value = the mean over the scored slices,
+  NaN when none is scored; the count of scored slices is kept.
+- Cells: topology subset S, as fundus: per target, 2 of the 32 random positions where the target cube lies wholly
+  inside its own mask on both sides, drawn with seed [20261102, target]; both sides; every rung of the tier-1 rows
+  for those cells (16 reference strangers included, for the R anchor). Fills, donors, E and seeds come from
+  `run_position_at` unchanged (hook `betti25d`). The frozen boxes are not scored here.
+- Datasets: QTIM, then IXI, one job at a time on the laptop CPU; no cloud.
+- Summary: R with the dataset's anchor (QTIM repeat; IXI other side), family-bootstrap intervals, tests T1 to T3
+  (IXI: T2, T3a and T3b) on the L+R view of S. Keys `betti_matched` and `betti_unmatched`. Private rows in
+  `donor-ladder-brain-betti25d-20261110-v1/`; public `results/donor_ladder_brain_betti25d.json`.
+- Order: smoke on 3 targets with timing and a QC sheet of the scored slices (target and fills), looked at before
+  the full run.
+- Expectations, unchanged from B: noise and the dataset mean are far (noise adds features, smoothing removes them);
+  the own other side may come ahead of the repeat (session intensity offset); reported, not repaired.
