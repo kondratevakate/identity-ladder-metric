@@ -138,7 +138,8 @@ def test_summary_figure_values_equal_the_tables():
     c = load("common_all.json")["datasets"]
     g = load("values_generative.json")["values"]
     mse_rows = [{r: v["R_self"][r]["mse"][0] for r in v["R_self"] if "mse" in v["R_self"][r]} for v in c.values()]
-    fid_rows = [{r: x["ratio_to_stranger"] for r, x in b["rungs"].items()}   # set ratio: anchor-free, brain included
+    fid_rows = [{r: (x["ratio_to_stranger"] if x["n"] / b["rungs"]["stranger"]["n"] >= 0.5 else None)
+                 for r, x in b["rungs"].items()}   # set ratio, anchor-free; sets under half the stranger set left out
                 for k, b in g.items() if k.startswith("fid|")]
     pers = {d: {r: v["R_self"][r]["persistence"][0] for r in v["R_self"] if "persistence" in v["R_self"][r]}
             for d, v in c.items()}
@@ -166,18 +167,32 @@ def test_summary_panel_a_equals_rank_table_gaps():
     with the stranger. Recomputed from ranks_all.json and ranks_generative.json."""
     a = load("fig_metric_summary_R.json")["panel_A"]
     ranks = {**load("ranks_all.json"), **load("ranks_generative.json")}
+    g = load("values_generative.json")["values"]
+
+    def ok(key, rung):   # set-level rule: sets under half the stranger set are left out
+        if key.split("|")[0] not in ("fid", "fwd"):
+            return True
+        r = g[key]["rungs"]
+        return r[rung]["n"] / r["stranger"]["n"] >= 0.5
     for metric, got in a.items():
         xs, ys = [], []
         for key, v in ranks.items():
             if key.split("|")[0] != metric:
                 continue
             ref = "repeat" if "repeat" in v else ("other_side" if "other_side" in v else None)
-            if ref is None:
+            if ref is None or not ok(key, ref):
                 continue
             n = max(v.values())
             if "stranger" in v:
                 xs.append((v["stranger"] - v[ref]) / (n - 1))
-            if "shrink_ref" in v:
+            if "shrink_ref" in v and ok(key, "shrink_ref"):
                 ys.append((v["shrink_ref"] - v[ref]) / (n - 1))
         assert abs(got["y_shrunk_gap"] - sum(ys) / len(ys)) < 1e-3 and got["n_y"] == len(ys), metric
         assert abs(got["x_stranger_gap"] - sum(xs) / len(xs)) < 1e-3 and got["n_x"] == len(xs), metric
+
+
+def test_summary_small_sets_left_out_of_set_level_means():
+    """QTIM's repeat set (138 windows vs 1326 strangers) inflates FID; it is listed as left out, never averaged."""
+    rule = load("fig_metric_summary_R.json")["set_level_rule"]
+    assert rule["min_set_fraction_of_stranger"] == 0.5
+    assert "fid|QTIM:repeat" in rule["left_out"] and "fid|GRAPE:repeat" not in rule["left_out"]

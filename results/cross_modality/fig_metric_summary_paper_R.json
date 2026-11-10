@@ -185,12 +185,12 @@
    "IMDb-WIKI",
    "QTIM"
   ],
-  "ref": 1.853,
+  "ref": 0.929,
   "lookalike_oracle": 1.379,
-  "relative": 1.642,
+  "relative": null,
   "dataset_mean": 27.119,
   "stranger": 1.0,
-  "shrink_ref": 3.381,
+  "shrink_ref": 2.554,
   "lookalike16": 10.545,
   "wrong_detail": 1.566,
   "noise": 15.732
@@ -207,15 +207,32 @@
    "IMDb-WIKI",
    "QTIM"
   ],
-  "ref": 1.134,
+  "ref": 0.572,
   "lookalike_oracle": 13.544,
-  "relative": 1.785,
+  "relative": null,
   "dataset_mean": 170.533,
   "stranger": 1.0,
-  "shrink_ref": 30.891,
+  "shrink_ref": 34.344,
   "lookalike16": 159.215,
   "wrong_detail": 40.699,
   "noise": 168.433
+ },
+ "set_level_rule": {
+  "min_set_fraction_of_stranger": 0.5,
+  "left_out": [
+   "fid|CelebA:other_side",
+   "fid|GRAPE:cohort_mean",
+   "fid|IMDb-WIKI:other_side",
+   "fid|IMDb-WIKI:relative",
+   "fid|QTIM:repeat",
+   "fid|QTIM:shrink_ref",
+   "fwd|CelebA:other_side",
+   "fwd|GRAPE:cohort_mean",
+   "fwd|IMDb-WIKI:other_side",
+   "fwd|IMDb-WIKI:relative",
+   "fwd|QTIM:repeat",
+   "fwd|QTIM:shrink_ref"
+  ]
  },
  "panel_A": {
   "mse": {
@@ -267,16 +284,16 @@
    "n_y": 8
   },
   "fid": {
-   "x_stranger_gap": 0.018,
-   "y_shrunk_gap": 0.415,
-   "n_x": 8,
-   "n_y": 8
+   "x_stranger_gap": 0.1,
+   "y_shrunk_gap": 0.458,
+   "n_x": 7,
+   "n_y": 7
   },
   "fwd": {
-   "x_stranger_gap": 0.059,
-   "y_shrunk_gap": 0.479,
-   "n_x": 8,
-   "n_y": 8
+   "x_stranger_gap": 0.099,
+   "y_shrunk_gap": 0.516,
+   "n_x": 7,
+   "n_y": 7
   }
  }
 }

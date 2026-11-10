@@ -88,6 +88,23 @@ gen = json.load(open(os.path.join(CM, "values_generative.json")))["values"]
 FLOOR = 0.2  # axis start; a value below would be drawn at the floor with an open marker (none at present)
 
 
+SET_LEVEL = ("fid", "fwd")
+MIN_SET_FRACTION = 0.5   # set-level rule (10 Nov, post hoc): FID / FWD of a rung count only if its set has at least
+# half the windows of that dataset's stranger set; FID is biased upward for small sets (QTIM repeat: 138 of 1326
+# windows, ratio 8.3). Size-matched subsampling would need the per-window features, held by the modality pipelines.
+
+
+def size_ok(metric, d, rung):
+    """False when a set-level rung's set is smaller than MIN_SET_FRACTION of the stranger set (left out, never zero)."""
+    if metric not in SET_LEVEL:
+        return True
+    blk = gen.get(f"{metric}|{d}", {}).get("rungs", {})
+    r, st = blk.get(rung), blk.get("stranger")
+    if not r or not st or not isinstance(r.get("n"), (int, float)) or not isinstance(st.get("n"), (int, float)):
+        return True
+    return r["n"] / st["n"] >= MIN_SET_FRACTION
+
+
 def r_values(metric):
     """Mean over datasets of each rung's value on the stranger scale, merging the sources by dataset: common_all R_self
     where it has the metric, otherwise the generative block's value. Per-image generative values count only when
@@ -104,7 +121,8 @@ def r_values(metric):
         if m != metric or d in rows:
             continue
         if blk.get("scale") == "ratio to stranger set" or blk.get("anchor") == "self":
-            rows[d] = {r: x.get("R", x.get("ratio_to_stranger")) for r, x in blk["rungs"].items()}
+            rows[d] = {r: (x.get("R", x.get("ratio_to_stranger")) if size_ok(metric, d, r) else None)
+                       for r, x in blk["rungs"].items()}
     vals = {k: [] for k, *_ in RUNGS}
     used = []
     for d, row in rows.items():
@@ -126,14 +144,14 @@ def panel_a(metric):
     ladder length; mean over the datasets that have the rungs. Returns x, y and the number of datasets for each."""
     xs, ys = [], []
     for key, v in ranks.items():
-        m, _ = key.split("|")
+        m, d = key.split("|")
         ref = "repeat" if "repeat" in v else ("other_side" if "other_side" in v else None)
-        if m != metric or ref is None:
+        if m != metric or ref is None or not size_ok(m, d, ref):
             continue
         n = max(v.values())
         if "stranger" in v:
             xs.append((v["stranger"] - v[ref]) / (n - 1))
-        if "shrink_ref" in v:
+        if "shrink_ref" in v and size_ok(m, d, "shrink_ref"):
             ys.append((v["shrink_ref"] - v[ref]) / (n - 1))
     return (float(np.mean(xs)) if xs else np.nan, float(np.mean(ys)) if ys else np.nan, len(xs), len(ys))
 
@@ -142,6 +160,9 @@ rdata = {m: r_values(m) for _, _, mets in GROUPS for m, _ in mets}
 adata = {m: panel_a(m) for _, _, mets in GROUPS for m, _ in mets}
 out = {m: {"n_datasets": len(ds), "datasets": ds, **{k: (None if np.isnan(x) else round(x, 3)) for k, x in p.items()}}
        for m, (p, ds) in rdata.items()}
+out["set_level_rule"] = {"min_set_fraction_of_stranger": MIN_SET_FRACTION,
+                         "left_out": sorted(f"{k}:{r}" for k, b in gen.items() if k.split("|")[0] in SET_LEVEL
+                                            for r in b["rungs"] if not size_ok(k.split("|")[0], k.split("|")[1], r))}
 out["panel_A"] = {m: {"x_stranger_gap": round(a[0], 3), "y_shrunk_gap": round(a[1], 3), "n_x": a[2], "n_y": a[3]}
                   for m, a in adata.items()}
 json.dump(out, open(OUT + "_R.json", "w"), indent=1)
@@ -293,12 +314,13 @@ fig.text(0.01, 0.008,
          "B: R = (d(fill) - d(target)) / (d(16 strangers) - d(target)), mean over datasets; per-image metrics on a linear "
          "axis, FID/FWD on a log axis.\n"
          "* Look-alikes: oracle = chosen with the hidden truth (upper bound); mean of k look-alikes (k = 16) on brain, fundus "
-         "and iris (not faces). True person = repeat scan, or the other side where there is no repeat (PAPILA, IXI). Brain LPIPS and "
-         "persistence are repeat-anchored and left out of B's means; FID/FWD ratios include brain.\n"
+         "and iris (not faces). True person = repeat scan, or the other side where there is no repeat (PAPILA, IXI).\n"
+         "Brain LPIPS, Betti and persistence (and IXI Betti) are on other anchors and left out of B's means; FID/FWD ratios "
+         "include brain; set-level rungs with under half the stranger set's windows are left out (QTIM repeat).\n"
          "Data: QTIM and IXI brain, CelebA, IMDb-WIKI, GRAPE, PAPILA, UTIRIS NIR/VIS, UPOL; brain, fundus, iris pre-QC. Source: "
          "results/cross_modality/common_all.json, values_generative.json, ranks_all.json, ranks_generative.json.",
          fontsize=F(7.8), color="#666")
-fig.subplots_adjust(left=0.06, right=0.98, top=0.9, bottom=0.27)
+fig.subplots_adjust(left=0.06, right=0.98, top=0.9, bottom=0.28)
 fig.savefig(OUT + ".png", dpi=160)
 fig.savefig(OUT + ".pdf")
 print("saved")

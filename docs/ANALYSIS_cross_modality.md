@@ -108,7 +108,11 @@ metrics. Metrics: rho for each dataset, mean over datasets. ArcFace left out (5 
   but not panel B's means; Betti 3D not available (libraries disagreed, Amendment 24 B). Fig. 2 (`summary_figure.py`):
   panel A y is now the shrunk-true-person rank gap (Kate: the dataset-mean axis put every metric in the wanted corner);
   no metric reaches the "both" corner. Panel B merges sources by dataset (persistence 7, was 5) and counts brain in
-  FID / FWD ratios (8), where the small brain repeat set (138 cells) inflates FID (repeat / stranger 8.3).
+  FID / FWD ratios (8). Set-level rule (post hoc, 10 Nov): a rung's FID / FWD counts only if its set has at least half
+  the stranger set's windows (FID is biased upward for small sets; QTIM repeat 138 of 1326 windows gave 8.3). Left
+  out: QTIM repeat and shrunk repeat, face other side, IMDb sibling, GRAPE sex-age mean (listed in
+  `fig_metric_summary_R.json`). Size-matched subsampling would need the per-window features (modality pipelines).
+  True person FID 0.93, FWD 0.57 of the stranger set.
 
 ## 5. Window size follows the object (Kate, 8 Nov 2026: "да переделай честно")
 One pixel window covers a different share of each object (brain about 1/10 of its length, faces 0.4 inter-ocular
