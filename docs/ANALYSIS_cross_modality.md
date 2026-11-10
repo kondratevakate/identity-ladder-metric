@@ -112,7 +112,11 @@ metrics. Metrics: rho for each dataset, mean over datasets. ArcFace left out (5 
   the stranger set's windows (FID is biased upward for small sets; QTIM repeat 138 of 1326 windows gave 8.3). Left
   out: QTIM repeat and shrunk repeat, face other side, IMDb sibling, GRAPE sex-age mean (listed in
   `fig_metric_summary_R.json`). Size-matched subsampling would need the per-window features (modality pipelines).
-  True person FID 0.93, FWD 0.57 of the stranger set.
+  Then (ISBI paper session, 10 Nov) brain excluded from Fig. 2's FID / FWD in both panels: its repeat set (138
+  windows) is about 10x smaller than its stranger set and FID is biased upward for small sets; brain FID / FWD stay
+  in the tables and tiles (`generative_status.json` `set_level_caution`). Fig. 2 FID / FWD over 7 datasets: true
+  person 0.93 / 0.57, shrunk true person 2.55 / 34.3, dataset mean 16.4 / 185.6, noise 12.5 / 183.5 (stranger 1).
+  Set-level comparisons need size-matched sets.
 
 ## 5. Window size follows the object (Kate, 8 Nov 2026: "да переделай честно")
 One pixel window covers a different share of each object (brain about 1/10 of its length, faces 0.4 inter-ocular

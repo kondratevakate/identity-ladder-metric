@@ -174,7 +174,7 @@
   "noise": 3.897
  },
  "fid": {
-  "n_datasets": 8,
+  "n_datasets": 7,
   "datasets": [
    "GRAPE",
    "PAPILA",
@@ -182,21 +182,20 @@
    "UTIRIS VIS",
    "UPOL",
    "CelebA",
-   "IMDb-WIKI",
-   "QTIM"
+   "IMDb-WIKI"
   ],
   "ref": 0.929,
-  "lookalike_oracle": 1.379,
+  "lookalike_oracle": 1.391,
   "relative": null,
-  "dataset_mean": 27.119,
+  "dataset_mean": 16.362,
   "stranger": 1.0,
   "shrink_ref": 2.554,
   "lookalike16": 10.545,
-  "wrong_detail": 1.566,
-  "noise": 15.732
+  "wrong_detail": 1.287,
+  "noise": 12.462
  },
  "fwd": {
-  "n_datasets": 8,
+  "n_datasets": 7,
   "datasets": [
    "GRAPE",
    "PAPILA",
@@ -204,34 +203,52 @@
    "UTIRIS VIS",
    "UPOL",
    "CelebA",
-   "IMDb-WIKI",
-   "QTIM"
+   "IMDb-WIKI"
   ],
   "ref": 0.572,
-  "lookalike_oracle": 13.544,
+  "lookalike_oracle": 15.364,
   "relative": null,
-  "dataset_mean": 170.533,
+  "dataset_mean": 185.55,
   "stranger": 1.0,
   "shrink_ref": 34.344,
   "lookalike16": 159.215,
-  "wrong_detail": 40.699,
-  "noise": 168.433
+  "wrong_detail": 45.531,
+  "noise": 183.542
  },
  "set_level_rule": {
   "min_set_fraction_of_stranger": 0.5,
+  "datasets_excluded": {
+   "QTIM": "brain excluded from FID/FWD: its repeat set (138 windows) is about 10x smaller than its stranger set, and FID is biased upward for small sets"
+  },
   "left_out": [
    "fid|CelebA:other_side",
    "fid|GRAPE:cohort_mean",
    "fid|IMDb-WIKI:other_side",
    "fid|IMDb-WIKI:relative",
+   "fid|QTIM:cohort_mean",
+   "fid|QTIM:dataset_mean",
+   "fid|QTIM:lookalike",
+   "fid|QTIM:lookalike_oracle",
+   "fid|QTIM:mean_k2",
+   "fid|QTIM:noise",
    "fid|QTIM:repeat",
    "fid|QTIM:shrink_ref",
+   "fid|QTIM:stranger",
+   "fid|QTIM:wrong_detail",
    "fwd|CelebA:other_side",
    "fwd|GRAPE:cohort_mean",
    "fwd|IMDb-WIKI:other_side",
    "fwd|IMDb-WIKI:relative",
+   "fwd|QTIM:cohort_mean",
+   "fwd|QTIM:dataset_mean",
+   "fwd|QTIM:lookalike",
+   "fwd|QTIM:lookalike_oracle",
+   "fwd|QTIM:mean_k2",
+   "fwd|QTIM:noise",
    "fwd|QTIM:repeat",
-   "fwd|QTIM:shrink_ref"
+   "fwd|QTIM:shrink_ref",
+   "fwd|QTIM:stranger",
+   "fwd|QTIM:wrong_detail"
   ]
  },
  "panel_A": {

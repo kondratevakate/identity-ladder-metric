@@ -167,6 +167,9 @@ if "IXI" in ANCHOR:
     ANCHOR["IXI"] = "other_side"   # IXI R: own other side 0, strangers 1 (no repeat scans)
 ranks, values = {}, {}
 status = {"method": __doc__.strip(), "not_run": NOT_RUN, "not_run_metrics": NOT_RUN_METRICS, "anchor": ANCHOR, "excluded_set_level_rungs": EXCLUDED_SET,
+          "set_level_caution": {"QTIM": "brain FID/FWD kept in the tables but excluded from Fig. 2: its repeat set (138 "
+                                        "windows) is about 10x smaller than its stranger set, and FID is biased upward "
+                                        "for small sets"},
           "present": {}}
 for d, (R, S) in src.items():
     status["present"][d] = []

@@ -140,7 +140,7 @@ def test_summary_figure_values_equal_the_tables():
     mse_rows = [{r: v["R_self"][r]["mse"][0] for r in v["R_self"] if "mse" in v["R_self"][r]} for v in c.values()]
     fid_rows = [{r: (x["ratio_to_stranger"] if x["n"] / b["rungs"]["stranger"]["n"] >= 0.5 else None)
                  for r, x in b["rungs"].items()}   # set ratio, anchor-free; sets under half the stranger set left out
-                for k, b in g.items() if k.startswith("fid|")]
+                for k, b in g.items() if k.startswith("fid|") and k != "fid|QTIM"]   # brain excluded (small repeat set)
     pers = {d: {r: v["R_self"][r]["persistence"][0] for r in v["R_self"] if "persistence" in v["R_self"][r]}
             for d, v in c.items()}
     pers = {d: r for d, r in pers.items() if r}
@@ -169,9 +169,11 @@ def test_summary_panel_a_equals_rank_table_gaps():
     ranks = {**load("ranks_all.json"), **load("ranks_generative.json")}
     g = load("values_generative.json")["values"]
 
-    def ok(key, rung):   # set-level rule: sets under half the stranger set are left out
+    def ok(key, rung):   # set-level rule: sets under half the stranger set are left out; brain excluded
         if key.split("|")[0] not in ("fid", "fwd"):
             return True
+        if key.endswith("|QTIM"):
+            return False
         r = g[key]["rungs"]
         return r[rung]["n"] / r["stranger"]["n"] >= 0.5
     for metric, got in a.items():
@@ -196,3 +198,6 @@ def test_summary_small_sets_left_out_of_set_level_means():
     rule = load("fig_metric_summary_R.json")["set_level_rule"]
     assert rule["min_set_fraction_of_stranger"] == 0.5
     assert "fid|QTIM:repeat" in rule["left_out"] and "fid|GRAPE:repeat" not in rule["left_out"]
+    assert "QTIM" in rule["datasets_excluded"]
+    fig = load("fig_metric_summary_R.json")
+    assert "QTIM" not in fig["fid"]["datasets"] and "QTIM" not in fig["fwd"]["datasets"]

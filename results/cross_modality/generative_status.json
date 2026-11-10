@@ -32,6 +32,9 @@
    "cotwin": "set nearly coincides with the target set by construction (Amendment 22)"
   }
  },
+ "set_level_caution": {
+  "QTIM": "brain FID/FWD kept in the tables but excluded from Fig. 2: its repeat set (138 windows) is about 10x smaller than its stranger set, and FID is biased upward for small sets"
+ },
  "present": {
   "GRAPE": [
    "lpips_alex",
