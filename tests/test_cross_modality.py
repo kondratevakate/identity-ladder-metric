@@ -150,3 +150,25 @@ def test_summary_figure_values_equal_the_tables():
 def test_summary_figure_paper_variant_plots_the_same_values():
     assert load("fig_metric_summary_paper_R.json") == load("fig_metric_summary_R.json")
     assert os.path.exists(os.path.join(OUT, "fig_metric_summary_paper.pdf"))
+
+
+def test_summary_panel_a_equals_rank_table_gaps():
+    """Panel A y = mean over datasets of (shrunk true person - true person) rank gap / (ladder length - 1); x the same
+    with the stranger. Recomputed from ranks_all.json and ranks_generative.json."""
+    a = load("fig_metric_summary_R.json")["panel_A"]
+    ranks = {**load("ranks_all.json"), **load("ranks_generative.json")}
+    for metric, got in a.items():
+        xs, ys = [], []
+        for key, v in ranks.items():
+            if key.split("|")[0] != metric:
+                continue
+            ref = "repeat" if "repeat" in v else ("other_side" if "other_side" in v else None)
+            if ref is None:
+                continue
+            n = max(v.values())
+            if "stranger" in v:
+                xs.append((v["stranger"] - v[ref]) / (n - 1))
+            if "shrink_ref" in v:
+                ys.append((v["shrink_ref"] - v[ref]) / (n - 1))
+        assert abs(got["y_shrunk_gap"] - sum(ys) / len(ys)) < 1e-3 and got["n_y"] == len(ys), metric
+        assert abs(got["x_stranger_gap"] - sum(xs) / len(xs)) < 1e-3 and got["n_x"] == len(xs), metric

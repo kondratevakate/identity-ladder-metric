@@ -1,10 +1,11 @@
 """Two views of the same rank tables, side by side.
 
-Left: one point per metric. x = how far the metric puts a stranger beyond the true person; y = how far it puts the
-dataset mean (crude averaging) beyond the true person. Both are gaps in the metric's own ordering of the ladder,
-divided by the ladder length, mean over datasets.
-Right: one strip per metric with the positions of the true person, the true person shrunk toward the mean (control
-T2), the dataset mean and a stranger in that ordering (0 = closest to the target, 1 = furthest).
+Left (A): one point per metric. x = how far the metric puts a stranger beyond the true person; y = how far it puts
+the true person shrunk toward the dataset mean (subtle averaging, control T2) beyond the true person. Both are gaps
+in the metric's own ordering of the ladder, divided by the ladder length, per dataset, then mean over the datasets
+that have both rungs (Kate, 10 Nov: the earlier y, the crude dataset mean, put nearly every metric in the wanted
+corner, which said nothing about subtle averaging). Shaded corner "both": x >= 0.4 and y >= 0.25.
+Right (B): R on the distance scale per rung, mean over datasets (see r_values).
 Source: committed rank tables results/cross_modality/ranks_all.json and ranks_generative.json (aggregates only);
 panel B values from common_all.json and values_generative.json, written next to the figure as <stem>_R.json.
 Written by the ISBI paper session (Kate saw this version on 9 Nov and asked for FID/FWD on a log axis, the other
@@ -119,49 +120,67 @@ def r_values(metric):
     return {k: (float(np.mean(v)) if v else np.nan) for k, v in vals.items()}, len(used)
 
 
+def panel_a(metric):
+    """Panel A point: per dataset, (stranger - true person) and (shrunk true person - true person) rank gaps over the
+    ladder length; mean over the datasets that have the rungs. Returns x, y and the number of datasets for each."""
+    xs, ys = [], []
+    for key, v in ranks.items():
+        m, _ = key.split("|")
+        ref = "repeat" if "repeat" in v else ("other_side" if "other_side" in v else None)
+        if m != metric or ref is None:
+            continue
+        n = max(v.values())
+        if "stranger" in v:
+            xs.append((v["stranger"] - v[ref]) / (n - 1))
+        if "shrink_ref" in v:
+            ys.append((v["shrink_ref"] - v[ref]) / (n - 1))
+    return (float(np.mean(xs)) if xs else np.nan, float(np.mean(ys)) if ys else np.nan, len(xs), len(ys))
+
+
 rdata = {m: r_values(m) for _, _, mets in GROUPS for m, _ in mets}
-json.dump({m: {"n_datasets": n, **{k: (None if np.isnan(x) else round(x, 3)) for k, x in p.items()}}
-           for m, (p, n) in rdata.items()}, open(OUT + "_R.json", "w"), indent=1)
+adata = {m: panel_a(m) for _, _, mets in GROUPS for m, _ in mets}
+out = {m: {"n_datasets": n, **{k: (None if np.isnan(x) else round(x, 3)) for k, x in p.items()}}
+       for m, (p, n) in rdata.items()}
+out["panel_A"] = {m: {"x_stranger_gap": round(a[0], 3), "y_shrunk_gap": round(a[1], 3), "n_x": a[2], "n_y": a[3]}
+                  for m, a in adata.items()}
+json.dump(out, open(OUT + "_R.json", "w"), indent=1)
 
 plt.rcParams.update({"font.size": F(10.5)})
-fig = plt.figure(figsize=(17, 10.5) if not PAPER else (7.0, 5.4))
+fig = plt.figure(figsize=(17, 12) if not PAPER else (7.0, 6.2))
 gs = fig.add_gridspec(1, 2, width_ratios=[1, 1.3] if not PAPER else [1, 1.12], wspace=0.36 if not PAPER else 0.5)
 
-# ---- left: crude averaging map ----
+# ---- left: sees the person (x) and rejects subtle averaging (y) ----
 ax = fig.add_subplot(gs[0])
 ax.axhline(0, color="#ccc", lw=1)
 ax.axvline(0, color="#ccc", lw=1)
-ax.add_patch(plt.Rectangle((0, 0), 1.05, 1.05, color="#1baf7a", alpha=0.07, lw=0))
-ax.text(1.02, 1.02, "wanted corner:\nsees the person\nand rejects the mean" if not PAPER else "wanted corner", ha="right",
-        va="top", fontsize=F(9), color="#226b4f")
-if not PAPER:
-    ax.text(-0.13, 0.72, "rejects the mean\nbut blind to the person", ha="left", va="top", fontsize=F(9), color="#777")
-    ax.text(1.02, -0.27, "sees the person\nbut accepts the mean", ha="right", va="bottom", fontsize=F(9), color="#777")
-LAB = {"mse": (8, -12), "ssim": (-38, 6), "tm_like": (8, 3), "lddt": (8, -4), "lpips_alex": (-88, 2),
-       "lpips_vgg": (8, -4), "betti_matched": (8, -12), "persistence": (-80, 5), "fid": (8, 0), "fwd": (8, -10)}
+YLO, YHI = -0.4, 0.75
+ax.add_patch(plt.Rectangle((0.4, 0.25), 0.65, YHI - 0.25, color="#1baf7a", alpha=0.10, lw=0))
+ax.text(1.02, YHI - 0.02, "both", ha="right", va="top", fontsize=F(9), color="#226b4f", fontweight="bold")
+ax.text(-0.13, YHI - 0.02, "rejects averaging,\nblind to\nthe person", ha="left", va="top", fontsize=F(9), color="#999")
+ax.text(1.02, YLO + 0.02, "sees the person,\nrewards averaging", ha="right", va="bottom", fontsize=F(9), color="#999")
+LAB = {"mse": (9, -8), "ssim": (9, -16), "tm_like": (9, 5), "lddt": (9, -6), "lpips_alex": (9, -7),
+       "lpips_vgg": (-80, 6), "betti_matched": (-118, -5), "persistence": (-98, -5), "fid": (9, -5), "fwd": (9, -5)}
 if PAPER:   # label offsets in points for the 7 in figure
-    LAB = {"mse": (4, -7), "ssim": (-27, 3), "tm_like": (4, -1), "lddt": (4, -3), "lpips_alex": (4, -8),
-           "lpips_vgg": (-46, 3), "betti_matched": (4, -9), "persistence": (-48, 2), "fid": (4, -1), "fwd": (4, -8)}
+    LAB = {"mse": (5, -5), "ssim": (5, -10), "tm_like": (5, 3), "lddt": (-25, -4), "lpips_alex": (5, -5),
+           "lpips_vgg": (-46, 4), "betti_matched": (-66, -4), "persistence": (-56, -4), "fid": (5, -4), "fwd": (5, -4)}
 for _, mk, mets in GROUPS:
     for m, lab in mets:
-        p, _ = data[m]
-        x, y = p["stranger"] - p["ref"], p["dataset_mean"] - p["ref"]
+        x, y = adata[m][0], adata[m][1]
         ax.scatter(x, y, s=S(95), marker=mk, color="#333", edgecolor="white", linewidth=1.5 if not PAPER else 0.6, zorder=3)
         ax.annotate(lab, (x, y), xytext=LAB.get(m, (8, 3)), textcoords="offset points", fontsize=F(9.5), color="#222")
 ax.set_xlim(-0.15, 1.05)
-ax.set_ylim(-0.3, 1.05)
-ax.set_xlabel("Sees the person  →\nhow much further the stranger is than the true person" if not PAPER
+ax.set_ylim(YLO, YHI)
+ax.set_xlabel("Sees the person  →\nhow much further the stranger is than the true person (rank gap)" if not PAPER
               else "sees the person →\n(stranger − true person, rank gap)")
-ax.set_ylabel("Rejects the dataset mean  →\nhow much further the mean is than the true person" if not PAPER
-              else "rejects the mean →\n(dataset mean − true person, rank gap)")
-ax.set_title("A. Crude averaging: is the dataset mean pushed away?" if not PAPER else "A. Is the dataset mean pushed away?",
-             loc="left", fontsize=F(11.5))
+ax.set_ylabel("rejects subtle averaging →\n(shrunk true person − true person, rank gap)")
+ax.set_title("A. Does the metric see the person and reject subtle averaging?" if not PAPER
+             else "A. Does the metric see the person\nand reject subtle averaging?", loc="left", fontsize=F(11.5))
 for s in ("top", "right"):
     ax.spines[s].set_visible(False)
 ax.grid(color="#f0f0f0", zorder=0)
 handles = [plt.Line2D([], [], color="#333", marker=mk, ls="", ms=(9 if not PAPER else 5), markeredgecolor="white") for _, mk, _ in GROUPS]
 if not PAPER:   # in the paper the marker shapes are explained in the caption
-    ax.legend(handles, [h.split("\n")[0] for h, *_ in GROUPS], loc="lower left", ncol=1, frameon=True,
+    ax.legend(handles, [h.split("\n")[0] for h, *_ in GROUPS], loc="center left", ncol=1, frameon=True,
               framealpha=0.9, edgecolor="#ddd", fontsize=F(9))
 
 # ---- right: strips; per-image metrics on a linear scale, set-level FID/FWD on a log scale ----
@@ -169,6 +188,8 @@ PAPER_HEAD = {GROUPS[0][0]: "Error / similarity", GROUPS[1][0]: "Deep features",
               GROUPS[3][0]: "Set level"}
 PAPER_LEG = {"ref": "true person", "relative": "sibling", "shrink_ref": "shrunk true person",
              "lookalike16": "mean of k look-alikes*"}   # Kate's legend wording for the paper
+ROW = 1.2   # row step: 20% more than the first version, so stacked markers read as one row (Kate, 10 Nov)
+LEG_MS = float(np.sqrt(S(105)))   # legend markers the same size as the plotted ones (scatter s is area in pt^2)
 XMAX = 2.0  # linear panel shows 0..2 strangers; a larger value sits at the edge with its number
 
 
@@ -202,7 +223,7 @@ def strips(axx, groups, tx, x0, x1, step):
                                  fontsize=F(8.5), color="#444")
             yt.append(y)
             yl.append(f"{lab}  ({nds} datasets)" if not PAPER else f"{lab} ({nds})")
-            y -= 1
+            y -= ROW
     axx.set_yticks(yt)
     axx.set_yticklabels(yl, fontsize=F(10))
     axx.tick_params(axis="y", length=0, pad=8 if not PAPER else 3)
@@ -240,7 +261,8 @@ cx.set_xlabel("FID / FWD: set distance divided by the stranger set's distance (l
 bx = cx  # legends go under the last axis
 for row, (title, ypos) in enumerate([] if PAPER else [("Ladder:", -0.62), ("Checks:", -0.95)]):
     sel = [r for r in RUNGS if r[4] == row]
-    hh = [plt.Line2D([], [], color=c, marker=mk, ls="", ms=(9 if not PAPER else 5), markeredgecolor="white") for _, _, c, mk, _ in sel]
+    hh = [plt.Line2D([], [], color=c, marker=mk, ls="", ms=LEG_MS, markeredgecolor="white",
+              markeredgewidth=1.5 if not PAPER else 0.6) for _, _, c, mk, _ in sel]
     lg = bx.legend(hh, [l for _, l, *_ in sel], loc="upper left", bbox_to_anchor=(-0.05, ypos), ncol=len(sel),
                    frameon=False, fontsize=F(9.5), handletextpad=0.3, columnspacing=1.1, title=title,
                    alignment="left")
@@ -251,7 +273,8 @@ for row, (title, ypos) in enumerate([] if PAPER else [("Ladder:", -0.62), ("Chec
 if PAPER:   # one legend across the bottom of the page-wide figure; caption text lives in LaTeX
     for row, (title, yy) in enumerate([("Ladder:", 0.075), ("Checks:", 0.02)]):
         sel = [r for r in RUNGS if r[4] == row]
-        hh = [plt.Line2D([], [], color=c, marker=mk, ls="", ms=5, markeredgecolor="white") for _, _, c, mk, _ in sel]
+        hh = [plt.Line2D([], [], color=c, marker=mk, ls="", ms=LEG_MS, markeredgecolor="white",
+              markeredgewidth=1.5 if not PAPER else 0.6) for _, _, c, mk, _ in sel]
         fig.text(0.01, yy + 0.012, title, fontsize=F(9), fontweight="bold", va="center")
         fig.legend(hh, [PAPER_LEG.get(k, l) for k, l, *_ in sel], loc="center left", bbox_to_anchor=(0.085, yy + 0.012), ncol=len(sel),
                    frameon=False, fontsize=F(9), handletextpad=0.2, columnspacing=0.8)
@@ -264,15 +287,16 @@ fig.suptitle("Metrics see the person or reject averaging; the shrunk true person
              fontsize=F(13.5), x=0.5, y=0.99)
 fig.text(0.01, 0.008,
          "A: per metric, from its ordering of the ladder (rank gaps / ladder length, mean over datasets): stranger minus "
-         "true person (x), dataset mean minus true person (y). B: R = (d(fill) - d(target)) / (d(16 strangers) - "
-         "d(target)), mean over datasets; per-image metrics on a linear axis, FID/FWD on a log axis.\n"
+         "true person (x), true person shrunk to the mean minus true person (y); shaded: x >= 0.4 and y >= 0.25.\n"
+         "B: R = (d(fill) - d(target)) / (d(16 strangers) - d(target)), mean over datasets; per-image metrics on a linear "
+         "axis, FID/FWD on a log axis.\n"
          "* Look-alikes: oracle = chosen with the hidden truth (upper bound); mean of k look-alikes (k = 16) on brain, fundus "
          "and iris (not faces). True person = repeat scan, or the other side where there is no repeat (PAPILA, IXI). Brain LPIPS and "
          "persistence are repeat-anchored and left out of B's means.\n"
          "Data: QTIM and IXI brain, CelebA, IMDb-WIKI, GRAPE, PAPILA, UTIRIS NIR/VIS, UPOL; brain, fundus, iris pre-QC. Source: "
          "results/cross_modality/common_all.json, values_generative.json, ranks_all.json, ranks_generative.json.",
          fontsize=F(7.8), color="#666")
-fig.subplots_adjust(left=0.06, right=0.98, top=0.9, bottom=0.25)
+fig.subplots_adjust(left=0.06, right=0.98, top=0.9, bottom=0.27)
 fig.savefig(OUT + ".png", dpi=160)
 fig.savefig(OUT + ".pdf")
 print("saved")

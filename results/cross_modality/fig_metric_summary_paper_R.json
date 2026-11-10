@@ -118,5 +118,67 @@
   "lookalike16": 159.215,
   "wrong_detail": 45.531,
   "noise": 183.542
+ },
+ "panel_A": {
+  "mse": {
+   "x_stranger_gap": 0.597,
+   "y_shrunk_gap": -0.212,
+   "n_x": 9,
+   "n_y": 9
+  },
+  "ssim": {
+   "x_stranger_gap": 0.609,
+   "y_shrunk_gap": -0.129,
+   "n_x": 9,
+   "n_y": 9
+  },
+  "tm_like": {
+   "x_stranger_gap": 0.771,
+   "y_shrunk_gap": -0.121,
+   "n_x": 7,
+   "n_y": 7
+  },
+  "lddt": {
+   "x_stranger_gap": 0.469,
+   "y_shrunk_gap": -0.265,
+   "n_x": 9,
+   "n_y": 9
+  },
+  "lpips_alex": {
+   "x_stranger_gap": 0.675,
+   "y_shrunk_gap": 0.024,
+   "n_x": 8,
+   "n_y": 8
+  },
+  "lpips_vgg": {
+   "x_stranger_gap": 0.664,
+   "y_shrunk_gap": 0.051,
+   "n_x": 8,
+   "n_y": 8
+  },
+  "betti_matched": {
+   "x_stranger_gap": 0.514,
+   "y_shrunk_gap": -0.027,
+   "n_x": 7,
+   "n_y": 7
+  },
+  "persistence": {
+   "x_stranger_gap": 0.581,
+   "y_shrunk_gap": -0.094,
+   "n_x": 8,
+   "n_y": 8
+  },
+  "fid": {
+   "x_stranger_gap": 0.018,
+   "y_shrunk_gap": 0.415,
+   "n_x": 8,
+   "n_y": 8
+  },
+  "fwd": {
+   "x_stranger_gap": 0.059,
+   "y_shrunk_gap": 0.479,
+   "n_x": 8,
+   "n_y": 8
+  }
  }
 }
