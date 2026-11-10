@@ -7,7 +7,7 @@
   "dataset_mean": 0.502,
   "stranger": 1.0,
   "shrink_ref": 0.29,
-  "lookalike16": 0.344,
+  "lookalike16": 0.351,
   "wrong_detail": 1.002,
   "noise": 0.856
  },
@@ -19,7 +19,7 @@
   "dataset_mean": 0.835,
   "stranger": 1.0,
   "shrink_ref": 0.596,
-  "lookalike16": 0.731,
+  "lookalike16": 0.728,
   "wrong_detail": 1.005,
   "noise": 1.027
  },
@@ -31,7 +31,7 @@
   "dataset_mean": 0.795,
   "stranger": 1.0,
   "shrink_ref": 0.541,
-  "lookalike16": 0.675,
+  "lookalike16": 0.69,
   "wrong_detail": 0.977,
   "noise": 0.954
  },
@@ -43,7 +43,7 @@
   "dataset_mean": 0.62,
   "stranger": 1.0,
   "shrink_ref": 0.519,
-  "lookalike16": 0.604,
+  "lookalike16": 0.602,
   "wrong_detail": 1.096,
   "noise": 1.759
  },

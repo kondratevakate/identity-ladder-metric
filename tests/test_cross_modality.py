@@ -76,10 +76,10 @@ def test_every_tile_column_has_a_drawn_thumbnail():
 def test_lookalike16_is_na_with_reason_never_a_value():
     c = load("common_all.json")
     na = c["not_available"]["lookalike16"]
-    for d in ("QTIM", "CelebA", "IMDb-WIKI"):
+    for d in ("CelebA", "IMDb-WIKI"):
         assert d in na and na[d]
         assert "lookalike16" not in c["datasets"][d]["R_self"], d
-    for d in ("GRAPE", "PAPILA", "UTIRIS NIR", "UTIRIS VIS", "UPOL"):
+    for d in ("QTIM", "IXI", "GRAPE", "PAPILA", "UTIRIS NIR", "UTIRIS VIS", "UPOL"):
         assert "lookalike16" in c["datasets"][d]["R_self"], d
 
 
@@ -95,7 +95,7 @@ def test_generative_values_match_ranks_and_mark_anchor():
 def test_ixi_in_frame_with_na_rungs_never_values():
     c = load("common_all.json")
     raw = c["datasets"]["IXI"]["raw"]
-    for r in ("repeat", "relative", "cohort_mean", "lookalike16"):
+    for r in ("repeat", "relative", "cohort_mean"):
         assert r not in raw, r
         assert c["not_available"][r]["IXI"], r
     assert "other_side" in raw and "stranger" in raw

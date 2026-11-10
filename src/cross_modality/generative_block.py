@@ -39,10 +39,10 @@ MET = [("lpips_alex", "LPIPS (AlexNet)", "per target"), ("lpips_vgg", "LPIPS (VG
        ("fid", "FID (set level)", "set"), ("fwd", "FWD (set level)", "set")]
 NOT_RUN = {"IXI": "IXI (brain Amendment 23) scores tier-1 pixel metrics only; LPIPS, Betti, persistence, FID, FWD not run"}
 NA16 = {"lookalike16": {   # same reasons as common_frame.py NOT_AVAILABLE; n/a, never a value
-    "QTIM": "dropped by the brain protocol (PROTOCOL_donor_ladder_brain.md, block 5: k = 4, 8, 16 and the 16-look-alike mean)",
+    "QTIM": "brain lookalike16 (commit d02cade) is scored on tier-1 pixel metrics only, not on these",
     "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
     "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
-    "IXI": "not defined in brain Amendment 23"}}
+    "IXI": "brain lookalike16 (commit d02cade) is scored on tier-1 pixel metrics only, not on these"}}
 NOT_RUN_METRICS = {"QTIM": ("betti_matched", "betti_unmatched", "fid", "fwd"),
                    "IXI": ("lpips_alex", "lpips_vgg", "betti_matched", "betti_unmatched", "persistence", "fid", "fwd")}
 # Brain set level: the own-other-side and relative sets are drawn from the same scans as the target set, so their FID
@@ -143,8 +143,8 @@ if os.path.exists(b5p):
     S = {m: {r: {"value": e[m], "n_cells": e["n_cells"]} for r, e in sl.items()} for m in ("fid", "fwd")}
     NOT_RUN_METRICS["QTIM"] = ("betti_matched", "betti_unmatched")
 src["QTIM"] = (R, S)
-NOT_RUN["QTIM"] = "brain: " + "; ".join(f"{k}: {v}" for k, v in brain["not_run"].items()
-                                        if k == "betti_matching_3d" or (k == "fid_fwd_topology_distance" and not S))
+NOT_RUN["QTIM"] = ("brain: Betti matching 3D not computed: the 3D library disagrees with the 2D library on 3 of 4 "
+                   "check slices (brain session, 10 Nov); Kate decides the next step")
 
 ANCHOR = {d: "self" for d in src}
 ANCHOR["QTIM"] = "repeat"   # brain Amendment 20 R: repeat scan 0, strangers 1 (an affine map of the self scale)

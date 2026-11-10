@@ -25,6 +25,7 @@ RUNGS = ["repeat", "other_side", "relative", "lookalike_oracle", "lookalike", "l
          "stranger_same_centre", "stranger_other_centre"]
 SRC = {
     "QTIM": dict(path=P + "donor-ladder-brain-metrics-20261106-v3/rows.csv.gz", cell=["target", "patch", "side"], unit="target",
+                 extra=P + "donor-ladder-brain-lookalike16-20261109-v1/parts/p*.csv.gz",   # lookalike16 (d02cade)
                  ren={"mirror": "other_side"}, filt=lambda r: r[r.patch < 32]),
     "CelebA": dict(path=P + "face-ladder-metrics-20261106-v1/rows_v6f.csv.gz", cell=["target", "patch"], unit="family",
                    ren={"mirror": "other_side"}, filt=lambda r: r[r.src == "celeba"]),
@@ -60,15 +61,14 @@ def ixi_rows(r):
 
 
 SRC["IXI"] = dict(path=P + "ixi-ladder-20261109-v1/parts/p*.csv.gz", cell=["target", "patch", "side"], unit="target",
+                  extra=P + "ixi-ladder-20261109-v1/lookalike16_parts/parts/p*.csv.gz",   # lookalike16 (d02cade)
                   ren={"mirror": "other_side"}, filt=ixi_rows)
 rng = np.random.default_rng(20261106)
 # Rungs a dataset's own protocol does not define: n/a with the reason, never a value (lookalike16 = mean of the 16
 # nearest look-alikes, fundus and iris only).
 NOT_AVAILABLE = {"lookalike16": {
-    "QTIM": "dropped by the brain protocol (PROTOCOL_donor_ladder_brain.md, block 5: k = 4, 8, 16 and the 16-look-alike mean)",
     "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows",
-    "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows",
-    "IXI": "not defined in brain Amendment 23"},
+    "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows"},
     **{r: {"IXI": "no repeat, no families in IXI (donor_ladder_brain_ixi.json not_available)"}
        for r in ("repeat", "relative")},
     "cohort_mean": {"IXI": "no sex-age mean in IXI; its age-matched mean (age only) is not put in this column"},
@@ -79,6 +79,15 @@ out = {"method": __doc__.strip(), "not_available": NOT_AVAILABLE, "metrics": ALL
                                                                          **{m: "raw" for m in RAW}}, "datasets": {}}
 for name, s in SRC.items():
     need = set(s["cell"] + [s["unit"], "fill", "src", "amplitude"] + ALL)
+    if s.get("extra"):   # extra rung rows written later by the owning pipeline (same cells, new fill)
+        import glob
+        files = sorted(glob.glob(s["extra"]))
+        if not files:
+            raise SystemExit(f"{name}: no extra rows at {s['extra']}")
+        x = pd.concat([pd.read_csv(f, usecols=lambda c: c in need) for f in files], ignore_index=True)
+        x = x[x.fill == "lookalike16"]
+    else:
+        x = None
     if "*" in s["path"]:
         import glob
         files = sorted(glob.glob(s["path"]))
@@ -87,6 +96,8 @@ for name, s in SRC.items():
         r = pd.concat([pd.read_csv(f, usecols=lambda c: c in need) for f in files], ignore_index=True)
     else:
         r = pd.read_csv(s["path"], usecols=lambda c: c in need)
+    if x is not None:
+        r = pd.concat([r, x], ignore_index=True)
     if s["filt"]:
         r = s["filt"](r)
     if "ampdev_dataset" not in r.columns and "amplitude" in r.columns:

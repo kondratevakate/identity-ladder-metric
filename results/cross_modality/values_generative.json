@@ -3,15 +3,15 @@
  "anchor_note": "self: R = (d(rung) - d(self)) / (d(16 strangers) - d(self)); repeat (brain): the same with the repeat scan in place of self",
  "not_available": {
   "lookalike16": {
-   "QTIM": "dropped by the brain protocol (PROTOCOL_donor_ladder_brain.md, block 5: k = 4, 8, 16 and the 16-look-alike mean)",
+   "QTIM": "brain lookalike16 (commit d02cade) is scored on tier-1 pixel metrics only, not on these",
    "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
    "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
-   "IXI": "not defined in brain Amendment 23"
+   "IXI": "brain lookalike16 (commit d02cade) is scored on tier-1 pixel metrics only, not on these"
   }
  },
  "not_run": {
   "IXI": "IXI (brain Amendment 23) scores tier-1 pixel metrics only; LPIPS, Betti, persistence, FID, FWD not run",
-  "QTIM": "brain: betti_matching_3d: needs a C++ build of Betti-Matching-3D (no compiler here; Linux VM)"
+  "QTIM": "brain: Betti matching 3D not computed: the 3D library disagrees with the 2D library on 3 of 4 check slices (brain session, 10 Nov); Kate decides the next step"
  },
  "values": {
   "lpips_alex|GRAPE": {

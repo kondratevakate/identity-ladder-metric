@@ -40,7 +40,7 @@ RUNGS = [  # (key, label, colour, marker, legend row); palette slots validated; 
     ("dataset_mean", "dataset mean", "#eb6834", "s", 0),
     ("stranger", "stranger", "#555555", "X", 0),
     ("shrink_ref", "true person shrunk to the mean", "#1baf7a", "D", 1),
-    ("lookalike16", "mean of k look-alikes* (fundus, iris)", "#6250d6", "h", 1),
+    ("lookalike16", "mean of k look-alikes* (not faces)", "#6250d6", "h", 1),
     ("wrong_detail", "wrong detail", "#e87ba4", "v", 1),
     ("noise", "white noise", "#e34948", "P", 1),
 ]
@@ -220,8 +220,8 @@ fig.text(0.01, 0.008,
          "A: per metric, from its ordering of the ladder (rank gaps / ladder length, mean over datasets): stranger minus "
          "true person (x), dataset mean minus true person (y). B: R = (d(fill) - d(target)) / (d(16 strangers) - "
          "d(target)), mean over datasets; per-image metrics on a linear axis, FID/FWD on a log axis.\n"
-         "* Look-alikes: oracle = chosen with the hidden truth (upper bound); mean of k look-alikes (k = 16) on fundus and "
-         "iris only. True person = repeat scan, or the other side where there is no repeat (PAPILA, IXI). Brain LPIPS and "
+         "* Look-alikes: oracle = chosen with the hidden truth (upper bound); mean of k look-alikes (k = 16) on brain, fundus "
+         "and iris (not faces). True person = repeat scan, or the other side where there is no repeat (PAPILA, IXI). Brain LPIPS and "
          "persistence are repeat-anchored and left out of B's means.\n"
          "Data: QTIM and IXI brain, CelebA, IMDb-WIKI, GRAPE, PAPILA, UTIRIS NIR/VIS, UPOL; brain, fundus, iris pre-QC. Source: "
          "results/cross_modality/common_all.json, values_generative.json, ranks_all.json, ranks_generative.json.",

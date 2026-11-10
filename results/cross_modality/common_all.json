@@ -2,10 +2,8 @@
  "method": "One comparison frame for all datasets, from existing private rows (aggregates only, no IDs).\n\nR_self = (mean d(rung) - d(self)) / (mean d(16 strangers) - d(self)), means over (target, window) cells,\nd = distance (similarities negated: d(self) = -1; errors: d(self) = 0). Same function for every dataset.\nMetrics with no finite self value (PSNR) or no closeness orientation (amplitude deviation) are reported in\ntheir own units: PSNR as dB minus the strangers' dB, amplitude deviation |1 - amplitude| as a raw mean.\nInterval: bootstrap over persons/families (brain: targets, no family column in rows), 1000 reps.",
  "not_available": {
   "lookalike16": {
-   "QTIM": "dropped by the brain protocol (PROTOCOL_donor_ladder_brain.md, block 5: k = 4, 8, 16 and the 16-look-alike mean)",
    "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows",
-   "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows",
-   "IXI": "not defined in brain Amendment 23"
+   "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows"
   },
   "repeat": {
    "IXI": "no repeat, no families in IXI (donor_ladder_brain_ixi.json not_available)"
@@ -574,6 +572,98 @@
       0.7593,
       0.7554,
       0.7627,
+      221
+     ]
+    },
+    "lookalike16": {
+     "mse": [
+      0.3749,
+      0.3696,
+      0.3803,
+      221
+     ],
+     "rmse": [
+      0.6032,
+      0.5991,
+      0.6072,
+      221
+     ],
+     "mae": [
+      0.6029,
+      0.5979,
+      0.6077,
+      221
+     ],
+     "psnr": [
+      4.5443,
+      4.4878,
+      4.603,
+      221
+     ],
+     "psnr_fixed": [
+      4.5412,
+      4.4847,
+      4.6,
+      221
+     ],
+     "ssim": [
+      0.7214,
+      0.7167,
+      0.7261,
+      221
+     ],
+     "pearson": [
+      0.5003,
+      0.496,
+      0.5044,
+      221
+     ],
+     "acc_dataset": [
+      0.5607,
+      0.556,
+      0.5651,
+      221
+     ],
+     "acc_cohort": [
+      0.5597,
+      0.555,
+      0.5641,
+      221
+     ],
+     "ampdev_dataset": [
+      0.5812,
+      0.5748,
+      0.5873,
+      221
+     ],
+     "lddt": [
+      0.6083,
+      0.6029,
+      0.6136,
+      221
+     ],
+     "lddt_rep": [
+      0.7013,
+      0.697,
+      0.7056,
+      221
+     ],
+     "tm_like": [
+      0.7486,
+      0.743,
+      0.7538,
+      221
+     ],
+     "gdt_like": [
+      0.6893,
+      0.6834,
+      0.6947,
+      221
+     ],
+     "rmse_rep": [
+      0.6002,
+      0.5962,
+      0.6041,
       221
      ]
     },
@@ -1668,6 +1758,98 @@
       1.9482,
       1.93544,
       1.96195,
+      221
+     ]
+    },
+    "lookalike16": {
+     "mse": [
+      0.20664,
+      0.20223,
+      0.21175,
+      221
+     ],
+     "rmse": [
+      0.43031,
+      0.42602,
+      0.43515,
+      221
+     ],
+     "mae": [
+      0.32917,
+      0.32566,
+      0.33292,
+      221
+     ],
+     "psnr": [
+      18.87691,
+      18.81677,
+      18.93317,
+      221
+     ],
+     "psnr_fixed": [
+      25.94025,
+      25.8471,
+      26.02602,
+      221
+     ],
+     "ssim": [
+      0.47648,
+      0.47173,
+      0.48101,
+      221
+     ],
+     "pearson": [
+      0.69974,
+      0.69608,
+      0.70334,
+      221
+     ],
+     "acc_dataset": [
+      0.4407,
+      0.43616,
+      0.44512,
+      221
+     ],
+     "acc_cohort": [
+      0.45004,
+      0.44532,
+      0.45477,
+      221
+     ],
+     "ampdev_dataset": [
+      0.58119,
+      0.57477,
+      0.58731,
+      221
+     ],
+     "lddt": [
+      0.87527,
+      0.87336,
+      0.87711,
+      221
+     ],
+     "lddt_rep": [
+      0.7505,
+      0.74789,
+      0.75307,
+      221
+     ],
+     "tm_like": [
+      0.564,
+      0.56015,
+      0.56745,
+      221
+     ],
+     "gdt_like": [
+      0.66781,
+      0.66431,
+      0.67093,
+      221
+     ],
+     "rmse_rep": [
+      1.54002,
+      1.52493,
+      1.55676,
       221
      ]
     },
@@ -17897,6 +18079,68 @@
       100
      ]
     },
+    "lookalike16": {
+     "mse": [
+      0.3625,
+      0.349,
+      0.3759,
+      100
+     ],
+     "rmse": [
+      0.5934,
+      0.5834,
+      0.6032,
+      100
+     ],
+     "mae": [
+      0.5939,
+      0.5822,
+      0.6053,
+      100
+     ],
+     "psnr": [
+      4.7011,
+      4.5632,
+      4.839,
+      100
+     ],
+     "psnr_fixed": [
+      4.6929,
+      4.5555,
+      4.8306,
+      100
+     ],
+     "ssim": [
+      0.7175,
+      0.7081,
+      0.7267,
+      100
+     ],
+     "pearson": [
+      0.5157,
+      0.5086,
+      0.5221,
+      100
+     ],
+     "acc_dataset": [
+      0.5787,
+      0.5711,
+      0.5857,
+      100
+     ],
+     "ampdev_dataset": [
+      0.5636,
+      0.5476,
+      0.5771,
+      100
+     ],
+     "lddt": [
+      0.5813,
+      0.5683,
+      0.5932,
+      100
+     ]
+    },
     "mean_k2": {
      "mse": [
       0.749,
@@ -18572,6 +18816,68 @@
       0.87465,
       0.87145,
       0.87785,
+      100
+     ]
+    },
+    "lookalike16": {
+     "mse": [
+      0.19038,
+      0.17934,
+      0.2026,
+      100
+     ],
+     "rmse": [
+      0.40914,
+      0.39824,
+      0.42081,
+      100
+     ],
+     "mae": [
+      0.31443,
+      0.30557,
+      0.32355,
+      100
+     ],
+     "psnr": [
+      18.05117,
+      17.90794,
+      18.18614,
+      100
+     ],
+     "psnr_fixed": [
+      26.45976,
+      26.21077,
+      26.68477,
+      100
+     ],
+     "ssim": [
+      0.50166,
+      0.49239,
+      0.51063,
+      100
+     ],
+     "pearson": [
+      0.69684,
+      0.69053,
+      0.70322,
+      100
+     ],
+     "acc_dataset": [
+      0.42485,
+      0.41783,
+      0.43167,
+      100
+     ],
+     "ampdev_dataset": [
+      0.56358,
+      0.54758,
+      0.57712,
+      100
+     ],
+     "lddt": [
+      0.90904,
+      0.90556,
+      0.91253,
       100
      ]
     },

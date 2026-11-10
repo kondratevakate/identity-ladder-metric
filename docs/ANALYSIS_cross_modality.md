@@ -98,6 +98,10 @@ metrics. Metrics: rho for each dataset, mean over datasets. ArcFace left out (5 
   other dataset (no site column). IXI MSE R: same site 0.87, other site 1.06, so part of "stranger" distance is the
   scanner. The summary figure (`summary_figure.py`, `fig_metric_summary.{png,pdf}`, values in
   `fig_metric_summary_R.json`, test that they equal the tables) now lives here; it leaves the IXI-only site rungs out.
+- 10 Nov, brain mean of 16 look-alikes (commit d02cade; masked mean of the 16 donors nearest by the k = 1 scaffold
+  distance, no new search; tier-1 metrics) added for QTIM and IXI from its private rows; brain n/a removed. Self-scale
+  MSE R 0.37 (QTIM) and 0.36 (IXI); raw MSE equals the brain file. Earlier values unchanged. Brain Betti 3D stays not
+  run: the 3D library disagrees with the 2D library on 3 of 4 check slices (Kate decides).
 
 ## 5. Window size follows the object (Kate, 8 Nov 2026: "да переделай честно")
 One pixel window covers a different share of each object (brain about 1/10 of its length, faces 0.4 inter-ocular
