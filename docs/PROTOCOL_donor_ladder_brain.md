@@ -939,3 +939,32 @@ pattern that E3 of Amendment 11 tests for the mean of 2 and the dataset mean hol
   the full run.
 - Expectations, unchanged from B: noise and the dataset mean are far (noise adds features, smoothing removes them);
   the own other side may come ahead of the repeat (session intensity offset); reported, not repaired.
+
+Amendment 24C, result (10 Nov 2026; pre-QC). `src/donor_ladder_brain_betti25d.py` (hook `betti25d` in
+`donor_ladder_brain_metrics_t23.py`); output `results/donor_ladder_brain_betti25d.json`, keys `betti_matched` and
+`betti_unmatched`.
+- Smoke: 3 QTIM targets with a repeat, 6 cells, 1.2 min. QC sheet of the scored slices, looked at: every column
+  is the right fill (the repeat almost copies the target; the dataset mean is smooth; noise is random), and every
+  slice lies inside the brain.
+- Full run: every target had whole cubes. QTIM 221 targets, 442 cells, 27,144 rows, 36 min; IXI 100 targets, 200
+  cells, 11,600 rows, 60 min. Every row was scored on 3 slices, so none is missing.
+- One fix at the summary step, before any number was read: the two parts were added to `LOWER_BETTER`. Without it,
+  the tests treated a larger value as closer; R is unaffected because the sign cancels in its ratio. A test
+  covers it.
+- QTIM, random cubes L+R, R (repeat 0, stranger 1), matched / unmatched:
+  - own other side 0.53 [0.44, 0.62] / 0.81;
+  - look-alike 0.36 / 0.60; best look-alike 0.21 / 0.39;
+  - dataset mean 0.30 [0.19, 0.37] / 0.75 [0.70, 0.80];
+  - mean of 2: 0.68 / 0.63;
+  - wrong detail 1.08 / 1.11;
+  - noise 2.21 / 14.4.
+- QTIM tests: T1, T3a and T3b pass (Holm) for both parts; T2 fails (shrinkage toward the mean is not penalised).
+- IXI, other side as the anchor: stranger 0.95 / 0.94; dataset mean -0.15 / -0.66; noise 3.9 / 111. T3a and T3b
+  pass; T2 fails.
+- Expectations:
+  - met: noise is far;
+  - not met: the dataset mean is not far. On both parts it is closer than a stranger, and on the matched part
+    closer than the own other side. Smoothing removes features and leaves fewer to mismatch;
+  - not seen: the own other side does not come ahead of the repeat here, unlike persistence in Amendment 20;
+    the repeat is the closest rung.
+- Reported, not repaired.

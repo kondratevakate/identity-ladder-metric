@@ -52,7 +52,7 @@ def test_set_crops_are_central_squares_and_invalid_when_they_leave_e():
 def test_lpips_net_is_explicit_and_hooks_are_named():
     with pytest.raises(ValueError):
         T._lpips("squeeze")
-    assert set(T.EXTRAS) == {"t23", "vgg_set"}
+    assert set(T.EXTRAS) == {"t23", "vgg_set", "betti25d"}
     assert T.extra_vgg_set(np.zeros((32, 32, 24)), np.zeros((32, 32, 24)), np.zeros((32, 32, 24), bool), None) == {}
 
 

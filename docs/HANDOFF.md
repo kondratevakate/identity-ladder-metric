@@ -104,7 +104,9 @@ Per modality (current state as reported)
   - 10 Nov, Amendment 24: mean of 16 look-alikes for QTIM and IXI in `results/donor_ladder_brain_lookalike16.json`
     (key `lookalike16`; closer than the single look-alike and the dataset mean on every tier-1 metric). Betti matching
     3D stopped at the 2D agreement check (3 of 4 slice pairs differ); no 3D values, Kate decides between aligning the
-    construction, "not comparable", or 2.5D with the 2D library.
+    construction, "not comparable", or 2.5D with the 2D library. Kate chose 2.5D: done (Amendment 24C,
+    `results/donor_ladder_brain_betti25d.json`, keys `betti_matched` / `betti_unmatched`; QTIM T1/T3 pass, dataset
+    mean not far).
   - Limitations (not tonight): Betti matching 3D (C++ build, Linux VM); Brain-ID identity; Topology Distance at set
     level; latent metrics (GPU). Persistence in the deep box puts the own other side closer than the repeat (R -0.55):
     reported, not repaired.

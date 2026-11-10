@@ -40,7 +40,8 @@ PROTEIN = ("tm_like", "gdt_like", "lddt_rep", "rmse_rep")   # Amendment 12, grou
 REP_MULT = (0.5, 1.0, 2.0, 4.0)                              # multiples of the repeat-scan tolerance
 MIN_REP_PAIRS = 5
 METRICS = ("mse", "rmse", "mae", "psnr", "psnr_fixed", "ssim", "pearson", "acc_dataset", "acc_cohort", "lddt") + PROTEIN
-LOWER_BETTER = {"mse", "rmse", "mae", "rmse_rep", "lpips", "persistence_w1", "lpips_vgg"}   # Amendments 20, 22
+LOWER_BETTER = {"mse", "rmse", "mae", "rmse_rep", "lpips", "persistence_w1", "lpips_vgg",   # Amendments 20, 22
+                "betti_matched", "betti_unmatched"}                                    # Amendment 24C
 DESCRIPTIVE = ("amplitude", "mse_allvox", "n_vox")
 TESTS = {"T1": ("repeat", "dataset_mean"), "T2": ("repeat", "shrink_repeat"),
          "T3a": ("repeat", "wrong_detail"), "T3b": ("repeat", "noise")}

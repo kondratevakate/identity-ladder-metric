@@ -167,7 +167,30 @@ def extra_vgg_set(x, f, e, mu_c):
     return {"lpips_vgg": lp, "lpips_vgg_slices": n_sl, "_xc": xc, "_fc": fc, "_ok": ok}
 
 
-EXTRAS = {"t23": extra, "vgg_set": extra_vgg_set}     # run_position tier23 hook name -> function
+def betti_25d(x, f, e):
+    """Amendment 24C: Betti matching (2D library 3e7eca26, the fundus / iris settings and formula) on the central
+    orthogonal slices lying wholly inside e, as LPIPS; the mean of the matched and unmatched parts over the scored
+    slices; (NaN, NaN, 0, []) when none is scored (missing, never 0)."""
+    import iris_ladder_metrics_extra as IX
+    if IX.BETTI_DIR not in sys.path:
+        sys.path.insert(0, IX.BETTI_DIR)
+    pairs = [(IX.to_unit(a).astype(np.float64), IX.to_unit(b).astype(np.float64))
+             for (a, ea), (b, _) in zip(central_slices(x, e), central_slices(f, e)) if ea.all()]
+    if not pairs:
+        return np.nan, np.nan, 0, []
+    parts = np.array([IX.betti_parts(a, b) for a, b in pairs])
+    return float(parts[:, 0].mean()), float(parts[:, 1].mean()), len(pairs), pairs
+
+
+def extra_betti25d(x, f, e, mu_c):
+    m, u, n, pairs = betti_25d(x, f, e)
+    out = {"betti_matched": m, "betti_unmatched": u, "betti_slices": n}
+    if os.environ.get("BETTI25D_QC") == "1" and pairs:                       # smoke only: slices for the QC sheet
+        out["_qc"] = np.array(pairs, np.float32)
+    return out
+
+
+EXTRAS = {"t23": extra, "vgg_set": extra_vgg_set, "betti25d": extra_betti25d}   # tier23 hook name -> function
 
 
 PRIVATE = os.path.join(M.B.PROJ, "donor-ladder-brain-metrics-20261107-v4")
