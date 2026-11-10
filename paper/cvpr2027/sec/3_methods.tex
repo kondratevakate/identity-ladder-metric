@@ -107,6 +107,23 @@ The recorded one-sided tests ask whether the repeat is better than the mean (T1)
 The brain and iris sources retain their own Holm correction families.
 Failure to establish one directional test is not proof of equivalence or of its reverse.
 
+Table~\ref{tab:datasets} lists the nine image sets, their status, and where each ladder sits.
+
+\begin{table*}[t]
+\centering
+\caption{\textbf{Datasets and where their ladders sit.} Ratios are the squared error of a rung divided by that of the dataset mean (1 = dataset mean, about 2 = stranger), from one computation for every dataset; n/a = rung absent, never zero.
+QC: preprocessing frame approved by visual quality control; pre-QC: provisional.
+Source: \src{results/cross_modality/dataset_card.json}.}
+\label{tab:datasets}
+\small
+\begin{tabular}{@{}lllrrrrrrr@{}}
+\toprule
+Dataset & Modality & Status & Persons & Targets & Rungs & Repeat & Other side & Look-alike & Stranger \\
+\midrule
+\input{tab/dataset_card}
+\end{tabular}
+\end{table*}
+
 \subsection{Brain MRI (QTIM)}
 \label{sec:m-brain}
 The QTIM panel~\cite{qtim2026,strike2019} contains 221 prepared targets from 168 families, including 23 repeat acquisitions.
