@@ -20,7 +20,7 @@ def test_every_aggregate_has_its_generating_script():
     made_by = {"common_all.json": "common_frame.py", "tests_all.json": "tests_uniform.py", "cal_faces.json": "cal_uniform.py",
                "cal_brain.json": "cal_uniform.py", "cal_c_all.json": "cal_tiles.py", "ranks_all.json": "rank_tiles.py",
                "agreement.json": "agreement.py", "corr_all.json": "explore_corr.py", "data.json": "build_data.py",
-               "dataset_card.json": "dataset_card.py", "ranks_generative.json": "generative_block.py", "values_generative.json": "generative_block.py", "fig_metric_summary_R.json": "summary_figure.py",
+               "dataset_card.json": "dataset_card.py", "ranks_generative.json": "generative_block.py", "values_generative.json": "generative_block.py", "fig_metric_summary_R.json": "summary_figure.py", "fig_metric_summary_paper_R.json": "summary_figure.py",
                "generative_status.json": "generative_block.py"}
     for f in os.listdir(OUT):
         if f.endswith(".json"):
@@ -145,3 +145,8 @@ def test_summary_figure_values_equal_the_tables():
             want = _mean_R(rows, rung)
             got = fig[metric][rung]
             assert (want is None and got is None) or abs(got - want) < 1e-3, (metric, rung, got, want)
+
+
+def test_summary_figure_paper_variant_plots_the_same_values():
+    assert load("fig_metric_summary_paper_R.json") == load("fig_metric_summary_R.json")
+    assert os.path.exists(os.path.join(OUT, "fig_metric_summary_paper.pdf"))
