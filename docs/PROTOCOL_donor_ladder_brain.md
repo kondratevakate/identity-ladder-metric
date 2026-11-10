@@ -881,3 +881,39 @@ for fundus and iris (cross-modality key `lookalike16`).
 - Expectations (stated now): Betti matching ranks noise far (it adds features; passes T3b) and the dataset mean far
   (smoothing removes features). It may, like persistence in Amendment 20, put the own other side ahead of the
   repeat because of the session intensity offset; that is reported, not repaired.
+
+Amendment 24 B, agreement check (10 Nov 2026, 01:56 to 02:02 UTC): failed, so the full run was not started.
+Betti-Matching-3D was built at commit db623be7 (21 Mar 2026), Release, pybind module, on an n2-standard-8 spot VM in
+europe-west1-b (cheapest allowed EU region by the 9 Nov catalog table). That VM and its disk were deleted at
+02:02 UTC; cost about USD 0.01 (estimate). The library uses a sublevel filtration; one cube takes 27 ms. It does not
+return the essential 0-dim class as a pair.
+The check used 2 QTIM targets with whole-mask cubes at position 0. Each gave 2 pairs of central 16 x 16 axial
+slices (target against a stranger, and target against its own other side), z clipped to [-3, 3] and mapped to
+[0, 1]. The 2D library (Betti-matching 3e7eca26, `betti_parts`) was compared with the 3D library on the same slices,
+given as 16 x 16 x 1 volumes and as plain 2D arrays (the two forms gave identical values), dims 0 and 1, with and
+without the essential-class term. Matched / unmatched parts, 2D library against 3D library with the essential term:
+- pair 1: 0.2367 / 0.0585 against 0.1686 / 0.0592;
+- pair 2: 0.0333 / 0.0152 against 0.0333 / 0.0152 (identical);
+- pair 3: 0.1034 / 0.0265 against 0.1099 / 0.0240;
+- pair 4: 0.0454 / 0.0665 against 0.0288 / 0.0719.
+The essential term does not explain the differences: 3 of 4 pairs differ by 1 to 30% in the matched part and up to
+10% in the unmatched part. The two libraries therefore build different matchings on the same image. A plausible
+cause, not tested, is the cubical-complex construction (voxels as vertices or as top cells, connectivity).
+Per the rule above, the 3D values are not comparable with the fundus and iris Betti values and are not computed.
+Code of the check: `gcp/betti3d/` (laptop and VM parts). Options for Kate: (1) find and align the construction,
+then rerun the check; (2) report brain Betti matching as not comparable across libraries; (3) use the 2D library
+on the three central slices of each cube (2.5D, like LPIPS), which matches fundus and iris by construction.
+
+Amendment 24 A, result (10 Nov 2026; pre-QC). `src/donor_ladder_brain_lookalike16.py`, output
+`results/donor_ladder_brain_lookalike16.json`. Reproduction gate passed in both datasets: the nearest of the 16 equals
+the committed k = 1 look-alike on every metric (max difference 0; QTIM 29,954 rows, IXI 13,570). Every target had
+16 eligible donors. The full runs took 18.9 min (QTIM) and 2.5 min (IXI) on 3 workers; the 162 min of the smoke
+include the laptop sleeping overnight.
+The expectation is met in both datasets: in the random cubes (L+R) the MSE R of the 16-look-alike mean is below
+that of the single look-alike and of the dataset mean. QTIM: 0.26 [0.21, 0.30] against 0.52 and 0.41. IXI (other
+side as the anchor): -0.89 against -0.43 and -0.46.
+Beyond the stated expectation, the mean of 16 look-alikes is also closer than both on SSIM, pearson and lddt, in
+both datasets and in every view (QTIM random cubes: ssim 0.58 against 0.76 and 0.74; lddt 0.33 against 0.76 and
+0.38). In the QTIM deep box it reaches the repeat level on MSE (R 0.03 [-0.14, 0.13]).
+Averaging scaffold-selected donors is rewarded by every tier-1 metric, more than averaging all donors. The same
+pattern that E3 of Amendment 11 tests for the mean of 2 and the dataset mean holds here.

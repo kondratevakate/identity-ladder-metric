@@ -101,6 +101,10 @@ Per modality (current state as reported)
     paragraph at the end of Amendment 22 (noise is not the worst on FWD: reported). IXI (Amendment 23): 100 scans
     prepared on a GCP VM, D7 QC passed (5c0055b); ladder done (`results/donor_ladder_brain_ixi.json`, E1-E4 met,
     result paragraph at the end of Amendment 23); dataset card and rank tables: explorer's scripts.
+  - 10 Nov, Amendment 24: mean of 16 look-alikes for QTIM and IXI in `results/donor_ladder_brain_lookalike16.json`
+    (key `lookalike16`; closer than the single look-alike and the dataset mean on every tier-1 metric). Betti matching
+    3D stopped at the 2D agreement check (3 of 4 slice pairs differ); no 3D values, Kate decides between aligning the
+    construction, "not comparable", or 2.5D with the 2D library.
   - Limitations (not tonight): Betti matching 3D (C++ build, Linux VM); Brain-ID identity; Topology Distance at set
     level; latent metrics (GPU). Persistence in the deep box puts the own other side closer than the repeat (R -0.55):
     reported, not repaired.
