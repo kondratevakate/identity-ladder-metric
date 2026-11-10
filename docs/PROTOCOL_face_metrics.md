@@ -326,3 +326,25 @@ allows copies for internal use at a single site; a cloud copy needs Kate's expli
   (869972 rows reproduce v1 exactly; VGG scored exactly the 593018 AlexNet rows). Rung order Spearman vs AlexNet
   0.95 (CelebA) and 0.96 (IMDb-WIKI), above the 0.9 written expectation. VGG compresses the scale (white noise R 1.35 /
   1.25 against 2.74 / 2.19) and, unlike AlexNet, places the dataset mean below the stranger (R 0.87 / 0.90).
+
+## Amendment F2.2 (9 Nov 2026, rung "mean of 16 look-alikes"; recorded before any of its results)
+
+Kate ("запускай", 9 Nov, relayed by the ISBI session): add the rung that fundus and iris have, key `lookalike16`.
+- Fill: per target and window, the 16 pool donors nearest to the target in the context ring (the look-alike search of
+  F1 unchanged: masked ring distance, brain masked_dist rule, eligibility = window at least 50% inside the donor's
+  mask; ranking by distance, ties by pool order), averaged pixel-wise over the donors valid there (masked mean, as
+  `mean_k2` and iris `lookalike16`). Missing if fewer than 16 donors are eligible. Same frame (v6f), windows (16 px,
+  18 positions), pool, E rule and missing rule as F1/F2. The candidates are not stored; they are recomputed by the
+  same distance, so the search cost equals that of the existing k = 1 look-alike.
+- Metrics: the tier-1 panel (F1), the F2 panel (identity metrics missing: not one person) and LPIPS VGG (F2.1).
+- Gates: in each pass the k = 1 look-alike is recomputed next to the new fill and must equal the stored rows (tier-1:
+  every metric within 1e-9 of v1; F2: MSE within 1e-5 of v1 and the F2 metrics within 1e-9; LPIPS AlexNet and
+  VGG within 1e-5, since the pairs are batched differently than in the stored runs; every stored row found); the rank-1 donor of the 16 must be the k = 1 donor. Otherwise nothing is written.
+- Outputs: private `face-ladder-lookalike16-20261109-v1/`; public sibling block `rung_lookalike16` in
+  `results/face_ladder_metrics.json`, `views[src].ladder_R[metric].lookalike16` (R with the F1 scale, computed with the
+  stored rows of all other rungs), plus raw means; all other blocks unchanged.
+- Expectation, written now: like the other averages, the mean of 16 look-alikes is smoother than any single donor, so
+  for pixel metrics (MSE, MAE) it lies closer to the target than the k = 1 look-alike and the stranger; for structure
+  and perceptual metrics (SSIM, LPIPS) it may rank behind the k = 1 look-alike, as the dataset mean does.
+- Compute: laptop CPU, one worker at a time behind the RAM guard; smoke on 4 targets per source with timing and a QC
+  sheet (target, k = 1 look-alike, mean of 16) before the full run.

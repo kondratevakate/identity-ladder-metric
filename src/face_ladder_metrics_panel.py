@@ -54,6 +54,8 @@ LOWER = {"lpips", "ampdev_dataset", "ampdev_cohort", "persistence", "betti_match
          "plausibility"}
 SELF_ZERO = LOWER - {"plausibility"}
 SELF_PER_ROW = {"id_plda": "id_plda_self", "plausibility": "plausibility_self"}   # d(self) differs per target / cell
+# fills added by a later amendment have no v1 row; they are exempt from the v1 MSE check, never the v1 fills (F2.2)
+REPRO_EXEMPT = frozenset()
 
 BLOCK_PFE = ("needs a per-image variance from a trained PFE uncertainty head (Shi and Jain 2019, arXiv:1904.09658); "
              "none exists for the InsightFace w600k_r50 backbone; training one is a separate project")
@@ -455,7 +457,7 @@ def score_position(args):
             f = np.asarray(f, np.float32)
             mse = float(np.mean((f[e].astype(np.float64) - xw[e]) ** 2))
             ref = v1_mse.get((ti, name))
-            if ref is None or not np.isclose(mse, ref, rtol=0, atol=1e-5):
+            if name not in REPRO_EXEMPT and (ref is None or not np.isclose(mse, ref, rtol=0, atol=1e-5)):
                 worst = np.inf if ref is None else max(worst, abs(mse - ref))
             ff, ef = np.zeros_like(xt_full), np.zeros(xt_full.shape, bool)
             ff[sl], ef[sl] = f, e
@@ -647,7 +649,7 @@ def score_vgg(args):
             f = np.asarray(f, np.float32)
             mse = float(np.mean((f[e].astype(np.float64) - xw[e]) ** 2))
             ref = v1_mse.get((ti, name))
-            if ref is None or not np.isclose(mse, ref, rtol=0, atol=1e-5):
+            if name not in REPRO_EXEMPT and (ref is None or not np.isclose(mse, ref, rtol=0, atol=1e-5)):
                 worst = np.inf if ref is None else max(worst, abs(mse - ref))
             if e.all():
                 lp_pairs.append((xw, f))
