@@ -2,7 +2,7 @@
  "mse": {
   "ref": 0.404,
   "lookalike_oracle": 0.279,
-  "lookalike16": 0.351,
+  "lookalike16": 0.331,
   "dataset_mean": 0.502,
   "stranger": 1.0,
   "shrink_ref": 0.29,
@@ -12,7 +12,7 @@
  "ssim": {
   "ref": 0.628,
   "lookalike_oracle": 0.654,
-  "lookalike16": 0.728,
+  "lookalike16": 0.701,
   "dataset_mean": 0.835,
   "stranger": 1.0,
   "shrink_ref": 0.596,
@@ -22,7 +22,7 @@
  "tm_like": {
   "ref": 0.583,
   "lookalike_oracle": 0.562,
-  "lookalike16": 0.69,
+  "lookalike16": 0.632,
   "dataset_mean": 0.795,
   "stranger": 1.0,
   "shrink_ref": 0.541,
@@ -32,7 +32,7 @@
  "lddt": {
   "ref": 0.656,
   "lookalike_oracle": 0.702,
-  "lookalike16": 0.602,
+  "lookalike16": 0.591,
   "dataset_mean": 0.62,
   "stranger": 1.0,
   "shrink_ref": 0.519,
@@ -42,7 +42,7 @@
  "lpips_alex": {
   "ref": 0.428,
   "lookalike_oracle": 0.413,
-  "lookalike16": 0.617,
+  "lookalike16": 0.637,
   "dataset_mean": 0.898,
   "stranger": 1.0,
   "shrink_ref": 0.465,
@@ -52,7 +52,7 @@
  "lpips_vgg": {
   "ref": 0.558,
   "lookalike_oracle": 0.697,
-  "lookalike16": 0.939,
+  "lookalike16": 0.873,
   "dataset_mean": 1.094,
   "stranger": 1.0,
   "shrink_ref": 0.57,
@@ -62,7 +62,7 @@
  "betti_matched": {
   "ref": 0.482,
   "lookalike_oracle": 0.318,
-  "lookalike16": 0.461,
+  "lookalike16": 0.446,
   "dataset_mean": 0.494,
   "stranger": 1.0,
   "shrink_ref": 0.426,
@@ -72,7 +72,7 @@
  "persistence": {
   "ref": 0.715,
   "lookalike_oracle": 0.686,
-  "lookalike16": 0.771,
+  "lookalike16": 0.756,
   "dataset_mean": 0.819,
   "stranger": 1.0,
   "shrink_ref": 0.691,

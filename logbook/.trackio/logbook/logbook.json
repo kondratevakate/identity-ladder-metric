@@ -9,7 +9,7 @@
     "identity-ladder",
     "claims"
   ],
-  "updated_at": "2026-11-10T08:48:34+00:00",
+  "updated_at": "2026-11-10T10:06:57+00:00",
   "root": {
     "slug": "index",
     "title": "Identity Ladder (CVPR 2027): claims logbook",
@@ -108,8 +108,8 @@
     "total_size": 0,
     "bucket_id": null
   },
-  "agent_view_tokens": 7940,
+  "agent_view_tokens": 7941,
   "trace_view_tokens": 10,
   "workspace_view_tokens": 8,
-  "revision": "b10d036cbbcdc518e408"
+  "revision": "5ac0ba0bf16db1a45d21"
 }

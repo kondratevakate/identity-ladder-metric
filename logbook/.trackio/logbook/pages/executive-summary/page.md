@@ -3,7 +3,7 @@
 
 ---
 <!-- trackio-cell
-{"type": "markdown", "id": "cell_e97dbbc5328e", "created_at": "2026-11-10T08:48:25+00:00", "title": "Executive summary", "pinned": true, "pinned_at": "2026-11-10T08:48:25+00:00"}
+{"type": "markdown", "id": "cell_bf41258fcb30", "created_at": "2026-11-10T10:06:52+00:00", "title": "Executive summary", "pinned": true, "pinned_at": "2026-11-10T10:06:52+00:00"}
 -->
 **69 of 69 printed numbers equal their result files** (within the
 printed precision) and still appear in the cited section of the paper.

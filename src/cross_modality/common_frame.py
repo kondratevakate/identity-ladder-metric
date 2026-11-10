@@ -28,8 +28,10 @@ SRC = {
                  extra=P + "donor-ladder-brain-lookalike16-20261109-v1/parts/p*.csv.gz",   # lookalike16 (d02cade)
                  ren={"mirror": "other_side"}, filt=lambda r: r[r.patch < 32]),
     "CelebA": dict(path=P + "face-ladder-metrics-20261106-v1/rows_v6f.csv.gz", cell=["target", "patch"], unit="family",
+                   extra=P + "face-ladder-lookalike16-20261109-v1/rows_t1_v6f.csv.gz",   # lookalike16 (F2.2, ab9aaf0)
                    ren={"mirror": "other_side"}, filt=lambda r: r[r.src == "celeba"]),
     "IMDb-WIKI": dict(path=P + "face-ladder-metrics-20261106-v1/rows_v6f.csv.gz", cell=["target", "patch"], unit="family",
+                      extra=P + "face-ladder-lookalike16-20261109-v1/rows_t1_v6f.csv.gz",   # lookalike16 (F2.2, ab9aaf0)
                       ren={"mirror": "other_side"}, filt=lambda r: r[r.src == "imdb"]),
     "GRAPE": dict(path=P + "fundus-ladder-metrics-20261106-v1/rows_GRAPE_p8_full.csv.gz", cell=["unit", "patch"], unit="person",
                   ren={"fellow": "other_side", "sexage": "cohort_mean"}, filt=None),
@@ -67,8 +69,7 @@ rng = np.random.default_rng(20261106)
 # Rungs a dataset's own protocol does not define: n/a with the reason, never a value (lookalike16 = mean of the 16
 # nearest look-alikes, fundus and iris only).
 NOT_AVAILABLE = {"lookalike16": {
-    "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows",
-    "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows"},
+},   # brain (d02cade) and faces (F2.2, ab9aaf0) added; all nine sets have it
     **{r: {"IXI": "no repeat, no families in IXI (donor_ladder_brain_ixi.json not_available)"}
        for r in ("repeat", "relative")},
     "cohort_mean": {"IXI": "no sex-age mean in IXI; its age-matched mean (age only) is not put in this column"},

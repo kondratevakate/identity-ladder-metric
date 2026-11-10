@@ -3,7 +3,7 @@
 
 ---
 <!-- trackio-cell
-{"type": "markdown", "id": "cell_f48c36d0274e", "created_at": "2026-11-10T08:48:27+00:00", "title": "Brain T2: shrunk repeat"}
+{"type": "markdown", "id": "cell_112d55bb7384", "created_at": "2026-11-10T10:06:53+00:00", "title": "Brain T2: shrunk repeat"}
 -->
 **PROVISIONAL (PRE-QC).** The repeat shrunk toward the mean scores closer than the repeat itself under MSE and repeat-tolerance lDDT.
 
@@ -27,7 +27,7 @@ Text issues:
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_286665b52ba5", "created_at": "2026-11-10T08:48:27+00:00", "title": "C2 machine-readable", "language": "python"}
+{"type": "code", "id": "cell_467241249fd3", "created_at": "2026-11-10T10:06:53+00:00", "title": "C2 machine-readable", "language": "python"}
 -->
 ````python title=claims.py
 """Claims the CVPR 2027 paper makes, each tied to the result file and key its numbers come from.

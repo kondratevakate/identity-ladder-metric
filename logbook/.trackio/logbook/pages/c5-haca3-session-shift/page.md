@@ -3,7 +3,7 @@
 
 ---
 <!-- trackio-cell
-{"type": "markdown", "id": "cell_38bf0c5efa23", "created_at": "2026-11-10T08:48:30+00:00", "title": "HACA3+ session shift"}
+{"type": "markdown", "id": "cell_1251caa30a20", "created_at": "2026-11-10T10:06:55+00:00", "title": "HACA3+ session shift"}
 -->
 **PROVISIONAL (PRE-QC).** HACA3+ stage 1 reduces the deep-region and parietal session shift across 23 paired scans; a contrast sensitivity, not an identity endpoint (visual verdict pending in the source).
 
@@ -26,7 +26,7 @@ Text issues:
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_c602d6684f60", "created_at": "2026-11-10T08:48:30+00:00", "title": "C5 machine-readable", "language": "python"}
+{"type": "code", "id": "cell_fe6da3ab7b8e", "created_at": "2026-11-10T10:06:55+00:00", "title": "C5 machine-readable", "language": "python"}
 -->
 ````python title=claims.py
 """Claims the CVPR 2027 paper makes, each tied to the result file and key its numbers come from.

@@ -55,7 +55,7 @@ RUNGS = [  # (key, label, colour, marker, legend row); palette slots validated; 
     ("dataset_mean", "dataset mean", "#eb6834", "s", 0),
     ("stranger", "stranger", "#555555", "X", 0),
     ("shrink_ref", "true person shrunk to the mean", "#1baf7a", "D", 1),
-    ("lookalike16", "mean of k look-alikes* (not faces)", "#6250d6", "h", 1),
+    ("lookalike16", "mean of k look-alikes*", "#6250d6", "h", 1),
     ("wrong_detail", "wrong detail", "#e87ba4", "v", 1),
     ("noise", "white noise", "#e34948", "P", 1),
 ]
@@ -322,8 +322,7 @@ fig.text(0.01, 0.008,
          "true person (x), true person shrunk to the mean minus true person (y); shaded: x >= 0.4 and y >= 0.25.\n"
          "B: R = (d(fill) - d(target)) / (d(16 strangers) - d(target)), mean over datasets; per-image metrics on a linear "
          "axis, FID/FWD on a log axis.\n"
-         "* Look-alikes: oracle = chosen with the hidden truth (upper bound); mean of k look-alikes (k = 16) on brain, fundus "
-         "and iris (not faces). True person = repeat scan, or the other side where there is no repeat (PAPILA, IXI).\n"
+         "* Look-alikes: oracle = chosen with the hidden truth (upper bound); mean of k look-alikes (k = 16), all nine sets. True person = repeat scan, or the other side where there is no repeat (PAPILA, IXI).\n"
          "Brain LPIPS, Betti and persistence (and IXI Betti) are on other anchors and left out of B's means. Brain is excluded "
          "from FID/FWD (its repeat set is about 10x smaller than its stranger set; FID is biased upward for small sets), and\n"
          "set-level rungs with under half the stranger set's windows are left out.\n"

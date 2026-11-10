@@ -3,7 +3,7 @@
 
 ---
 <!-- trackio-cell
-{"type": "markdown", "id": "cell_983ff3ffaa05", "created_at": "2026-11-10T08:48:34+00:00", "title": "Window size keeps the rung order"}
+{"type": "markdown", "id": "cell_b3092dfe1119", "created_at": "2026-11-10T10:06:57+00:00", "title": "Window size keeps the rung order"}
 -->
 **PROVISIONAL (PRE-QC).** Window sizes set as a fraction of the object keep the rung order; fundus has no window-size sweep.
 
@@ -23,7 +23,7 @@ Text issues:
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_3e06bad0d448", "created_at": "2026-11-10T08:48:34+00:00", "title": "C12 machine-readable", "language": "python"}
+{"type": "code", "id": "cell_d1a847dfd46e", "created_at": "2026-11-10T10:06:57+00:00", "title": "C12 machine-readable", "language": "python"}
 -->
 ````python title=claims.py
 """Claims the CVPR 2027 paper makes, each tied to the result file and key its numbers come from.

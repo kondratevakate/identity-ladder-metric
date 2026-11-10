@@ -3,7 +3,7 @@
 
 ---
 <!-- trackio-cell
-{"type": "markdown", "id": "cell_619176aeb8a0", "created_at": "2026-11-10T08:48:26+00:00", "title": "Brain MSE: mean and mirror"}
+{"type": "markdown", "id": "cell_986721429952", "created_at": "2026-11-10T10:06:53+00:00", "title": "Brain MSE: mean and mirror"}
 -->
 **PROVISIONAL (PRE-QC).** In the brain panel, MSE places the dataset mean at 0.413 and the mirror at 0.717 on the repeat-zero, stranger-one scale.
 
@@ -23,7 +23,7 @@ Text issues:
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_20f2c7a48e0d", "created_at": "2026-11-10T08:48:26+00:00", "title": "C1 machine-readable", "language": "python"}
+{"type": "code", "id": "cell_e35f8d264f51", "created_at": "2026-11-10T10:06:53+00:00", "title": "C1 machine-readable", "language": "python"}
 -->
 ````python title=claims.py
 """Claims the CVPR 2027 paper makes, each tied to the result file and key its numbers come from.

@@ -3,7 +3,7 @@
 
 ---
 <!-- trackio-cell
-{"type": "markdown", "id": "cell_3925da6ef7f8", "created_at": "2026-11-10T08:48:31+00:00", "title": "Face donor: pixel vs identity"}
+{"type": "markdown", "id": "cell_27f59bde6e42", "created_at": "2026-11-10T10:06:56+00:00", "title": "Face donor: pixel vs identity"}
 -->
 **VERIFIED.** A locally selected face donor is close under pixel error but near the unrelated reference under a whole-image ArcFace reference.
 
@@ -11,10 +11,10 @@ Scale and n: self-anchored R (target 0, 16 strangers 1); different spatial scope
 
 | Printed | File value | Match | In text | Source (key) | Commit |
 | --- | --- | --- | --- | --- | --- |
-| CelebA donor MSE: 0.399 | 0.3995 | yes | 0_abstract.tex | `results/face_ladder_metrics.json` (views/celeba/ladder_R/mse/lookalike/R) | e4a301d 2026-11-09 |
-| CelebA donor ArcFace: 0.983 | 0.983 | yes | 0_abstract.tex | `results/face_ladder_metrics.json` (views/celeba/ladder_R/arcface_cos/lookalike/R) | e4a301d 2026-11-09 |
-| IMDb-WIKI donor MSE: 0.397 | 0.397 | yes | 4_results.tex | `results/face_ladder_metrics.json` (views/imdb/ladder_R/mse/lookalike/R) | e4a301d 2026-11-09 |
-| IMDb-WIKI donor ArcFace: 0.984 | 0.9838 | yes | 4_results.tex | `results/face_ladder_metrics.json` (views/imdb/ladder_R/arcface_cos/lookalike/R) | e4a301d 2026-11-09 |
+| CelebA donor MSE: 0.399 | 0.3995 | yes | 0_abstract.tex | `results/face_ladder_metrics.json` (views/celeba/ladder_R/mse/lookalike/R) | ab9aaf0 2026-11-10 |
+| CelebA donor ArcFace: 0.983 | 0.983 | yes | 0_abstract.tex | `results/face_ladder_metrics.json` (views/celeba/ladder_R/arcface_cos/lookalike/R) | ab9aaf0 2026-11-10 |
+| IMDb-WIKI donor MSE: 0.397 | 0.397 | yes | 4_results.tex | `results/face_ladder_metrics.json` (views/imdb/ladder_R/mse/lookalike/R) | ab9aaf0 2026-11-10 |
+| IMDb-WIKI donor ArcFace: 0.984 | 0.9838 | yes | 4_results.tex | `results/face_ladder_metrics.json` (views/imdb/ladder_R/arcface_cos/lookalike/R) | ab9aaf0 2026-11-10 |
 
 Check: the printed number equals the file value within half a unit of its last printed digit, and the printed
 snippet is present in the cited .tex section (`logbook/claims.py`, test `tests/test_logbook_claims.py`).
@@ -25,7 +25,7 @@ Text issues:
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_1eeabb4d0b4d", "created_at": "2026-11-10T08:48:31+00:00", "title": "C7 machine-readable", "language": "python"}
+{"type": "code", "id": "cell_ed753d64e6ee", "created_at": "2026-11-10T10:06:56+00:00", "title": "C7 machine-readable", "language": "python"}
 -->
 ````python title=claims.py
 """Claims the CVPR 2027 paper makes, each tied to the result file and key its numbers come from.

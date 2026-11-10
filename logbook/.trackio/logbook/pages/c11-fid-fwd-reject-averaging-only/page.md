@@ -3,7 +3,7 @@
 
 ---
 <!-- trackio-cell
-{"type": "markdown", "id": "cell_07e6fae59b88", "created_at": "2026-11-10T08:48:33+00:00", "title": "FID/FWD reject averaging only"}
+{"type": "markdown", "id": "cell_b031400b38f3", "created_at": "2026-11-10T10:06:57+00:00", "title": "FID/FWD reject averaging only"}
 -->
 **PROVISIONAL (PRE-QC).** Set-level FID and FWD reject averaging strongly but cannot tell the person from a stranger.
 
@@ -28,7 +28,7 @@ Text issues:
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_92d068e9e534", "created_at": "2026-11-10T08:48:34+00:00", "title": "C11 machine-readable", "language": "python"}
+{"type": "code", "id": "cell_b58969181c82", "created_at": "2026-11-10T10:06:57+00:00", "title": "C11 machine-readable", "language": "python"}
 -->
 ````python title=claims.py
 """Claims the CVPR 2027 paper makes, each tied to the result file and key its numbers come from.

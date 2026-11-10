@@ -3,7 +3,7 @@
 
 ---
 <!-- trackio-cell
-{"type": "markdown", "id": "cell_a3fa5429032e", "created_at": "2026-11-10T08:48:31+00:00", "title": "Fundus and iris cohorts"}
+{"type": "markdown", "id": "cell_c4defbd56833", "created_at": "2026-11-10T10:06:55+00:00", "title": "Fundus and iris cohorts"}
 -->
 **PROVISIONAL (PRE-QC).** The fundus and iris panels contain the stated eyes and people, with endpoint-specific coverage.
 
@@ -33,7 +33,7 @@ Text issues:
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_f95203d0796b", "created_at": "2026-11-10T08:48:31+00:00", "title": "C6 machine-readable", "language": "python"}
+{"type": "code", "id": "cell_7952047a737e", "created_at": "2026-11-10T10:06:55+00:00", "title": "C6 machine-readable", "language": "python"}
 -->
 ````python title=claims.py
 """Claims the CVPR 2027 paper makes, each tied to the result file and key its numbers come from.

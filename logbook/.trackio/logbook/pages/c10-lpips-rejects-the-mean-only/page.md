@@ -3,7 +3,7 @@
 
 ---
 <!-- trackio-cell
-{"type": "markdown", "id": "cell_95d43ebe6736", "created_at": "2026-11-10T08:48:33+00:00", "title": "LPIPS rejects the mean only"}
+{"type": "markdown", "id": "cell_2879cb860e9b", "created_at": "2026-11-10T10:06:56+00:00", "title": "LPIPS rejects the mean only"}
 -->
 **PROVISIONAL (PRE-QC).** LPIPS rejects the crude dataset mean but keeps the shrunk true person beside the true person.
 
@@ -27,7 +27,7 @@ Text issues:
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_8ad484d9bf2c", "created_at": "2026-11-10T08:48:33+00:00", "title": "C10 machine-readable", "language": "python"}
+{"type": "code", "id": "cell_de08567ed858", "created_at": "2026-11-10T10:06:56+00:00", "title": "C10 machine-readable", "language": "python"}
 -->
 ````python title=claims.py
 """Claims the CVPR 2027 paper makes, each tied to the result file and key its numbers come from.

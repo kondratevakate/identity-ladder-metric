@@ -40,8 +40,6 @@ MET = [("lpips_alex", "LPIPS (AlexNet)", "per target"), ("lpips_vgg", "LPIPS (VG
 NOT_RUN = {"IXI": "IXI (brain Amendment 23): LPIPS, persistence, FID, FWD not run (tier-1 and Betti 2.5D only)"}
 NA16 = {"lookalike16": {   # same reasons as common_frame.py NOT_AVAILABLE; n/a, never a value
     "QTIM": "brain lookalike16 (commit d02cade) is scored on tier-1 pixel metrics only, not on these",
-    "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
-    "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
     "IXI": "brain lookalike16 (commit d02cade) is scored on tier-1 pixel metrics only, not on these"}}
 NOT_RUN_METRICS = {"QTIM": ("fid", "fwd"),
                    "IXI": ("lpips_alex", "lpips_vgg", "persistence", "fid", "fwd")}
@@ -126,6 +124,14 @@ for key, d in (("celeba", "CelebA"), ("imdb", "IMDb-WIKI")):
                                                     "betti_unmatched": "betti_unmatched", "persistence": "persistence"})
     if face_vgg:
         R.update(from_ladder(face_vgg["views"][key]["ladder_R"], {"lpips_vgg": "lpips_vgg"}))
+    l16 = face_all.get("rung_lookalike16")   # F2.2 (ab9aaf0): mean of 16 look-alikes on the same metrics
+    if l16:
+        names = {"lpips": "lpips_alex", "lpips_vgg": "lpips_vgg", "betti_matched": "betti_matched",
+                 "betti_unmatched": "betti_unmatched", "persistence": "persistence"}
+        for old, new in names.items():
+            e = l16["views"][key]["ladder_R"].get(old)   # one rung per metric here: the entry itself
+            if new in R and isinstance(e, dict) and e.get("R") is not None:
+                R[new]["lookalike16"] = e
     sl = {r: e for r, e in face["set_level"][key].items() if not r.startswith("_") and r != "target"}
     S = {m: pool_relative({r: {"value": e[m], "R": e[m], "n_targets": e.get("n_cells", 1)} for r, e in sl.items()
                            if e.get(m) is not None}) for m in ("fid", "fwd")}

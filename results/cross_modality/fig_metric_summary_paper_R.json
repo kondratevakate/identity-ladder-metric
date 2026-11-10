@@ -18,7 +18,7 @@
   "dataset_mean": 0.502,
   "stranger": 1.0,
   "shrink_ref": 0.29,
-  "lookalike16": 0.351,
+  "lookalike16": 0.331,
   "wrong_detail": 1.002,
   "noise": 0.856
  },
@@ -41,7 +41,7 @@
   "dataset_mean": 0.835,
   "stranger": 1.0,
   "shrink_ref": 0.596,
-  "lookalike16": 0.728,
+  "lookalike16": 0.701,
   "wrong_detail": 1.005,
   "noise": 1.027
  },
@@ -62,7 +62,7 @@
   "dataset_mean": 0.795,
   "stranger": 1.0,
   "shrink_ref": 0.541,
-  "lookalike16": 0.69,
+  "lookalike16": 0.632,
   "wrong_detail": 0.977,
   "noise": 0.954
  },
@@ -85,7 +85,7 @@
   "dataset_mean": 0.62,
   "stranger": 1.0,
   "shrink_ref": 0.519,
-  "lookalike16": 0.602,
+  "lookalike16": 0.591,
   "wrong_detail": 1.096,
   "noise": 1.759
  },
@@ -106,7 +106,7 @@
   "dataset_mean": 0.898,
   "stranger": 1.0,
   "shrink_ref": 0.465,
-  "lookalike16": 0.617,
+  "lookalike16": 0.637,
   "wrong_detail": 0.945,
   "noise": 1.835
  },
@@ -127,7 +127,7 @@
   "dataset_mean": 1.094,
   "stranger": 1.0,
   "shrink_ref": 0.57,
-  "lookalike16": 0.939,
+  "lookalike16": 0.873,
   "wrong_detail": 0.973,
   "noise": 1.518
  },
@@ -148,7 +148,7 @@
   "dataset_mean": 0.494,
   "stranger": 1.0,
   "shrink_ref": 0.426,
-  "lookalike16": 0.461,
+  "lookalike16": 0.446,
   "wrong_detail": 1.16,
   "noise": 1.664
  },
@@ -169,7 +169,7 @@
   "dataset_mean": 0.819,
   "stranger": 1.0,
   "shrink_ref": 0.691,
-  "lookalike16": 0.771,
+  "lookalike16": 0.756,
   "wrong_detail": 1.085,
   "noise": 3.897
  },
@@ -253,50 +253,50 @@
  },
  "panel_A": {
   "mse": {
-   "x_stranger_gap": 0.597,
-   "y_shrunk_gap": -0.212,
+   "x_stranger_gap": 0.588,
+   "y_shrunk_gap": -0.205,
    "n_x": 9,
    "n_y": 9
   },
   "ssim": {
-   "x_stranger_gap": 0.609,
-   "y_shrunk_gap": -0.129,
+   "x_stranger_gap": 0.602,
+   "y_shrunk_gap": -0.125,
    "n_x": 9,
    "n_y": 9
   },
   "tm_like": {
-   "x_stranger_gap": 0.771,
-   "y_shrunk_gap": -0.121,
+   "x_stranger_gap": 0.76,
+   "y_shrunk_gap": -0.114,
    "n_x": 7,
    "n_y": 7
   },
   "lddt": {
-   "x_stranger_gap": 0.469,
-   "y_shrunk_gap": -0.265,
+   "x_stranger_gap": 0.465,
+   "y_shrunk_gap": -0.256,
    "n_x": 9,
    "n_y": 9
   },
   "lpips_alex": {
-   "x_stranger_gap": 0.675,
-   "y_shrunk_gap": 0.024,
+   "x_stranger_gap": 0.664,
+   "y_shrunk_gap": 0.022,
    "n_x": 8,
    "n_y": 8
   },
   "lpips_vgg": {
-   "x_stranger_gap": 0.664,
-   "y_shrunk_gap": 0.051,
+   "x_stranger_gap": 0.652,
+   "y_shrunk_gap": 0.054,
    "n_x": 8,
    "n_y": 8
   },
   "betti_matched": {
-   "x_stranger_gap": 0.519,
-   "y_shrunk_gap": -0.025,
+   "x_stranger_gap": 0.515,
+   "y_shrunk_gap": -0.022,
    "n_x": 9,
    "n_y": 9
   },
   "persistence": {
-   "x_stranger_gap": 0.581,
-   "y_shrunk_gap": -0.094,
+   "x_stranger_gap": 0.576,
+   "y_shrunk_gap": -0.088,
    "n_x": 8,
    "n_y": 8
   },

@@ -3,7 +3,7 @@
 
 ---
 <!-- trackio-cell
-{"type": "markdown", "id": "cell_955f129a0a67", "created_at": "2026-11-10T08:48:29+00:00", "title": "IXI scanner site"}
+{"type": "markdown", "id": "cell_4ce65d8c7fc7", "created_at": "2026-11-10T10:06:54+00:00", "title": "IXI scanner site"}
 -->
 **PROVISIONAL (PRE-QC).** In IXI a stranger from the same scanner site is closer than one from another site, so part of the unrelated reference is acquisition.
 
@@ -27,7 +27,7 @@ Text issues:
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_c75e749970b2", "created_at": "2026-11-10T08:48:29+00:00", "title": "C4 machine-readable", "language": "python"}
+{"type": "code", "id": "cell_bc19aa3ab0fc", "created_at": "2026-11-10T10:06:54+00:00", "title": "C4 machine-readable", "language": "python"}
 -->
 ````python title=claims.py
 """Claims the CVPR 2027 paper makes, each tied to the result file and key its numbers come from.

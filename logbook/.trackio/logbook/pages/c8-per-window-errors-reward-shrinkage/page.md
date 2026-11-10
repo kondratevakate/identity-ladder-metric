@@ -3,7 +3,7 @@
 
 ---
 <!-- trackio-cell
-{"type": "markdown", "id": "cell_e6397f1abf07", "created_at": "2026-11-10T08:48:32+00:00", "title": "Per-window errors reward shrinkage"}
+{"type": "markdown", "id": "cell_ad92bdb6049a", "created_at": "2026-11-10T10:06:56+00:00", "title": "Per-window errors reward shrinkage"}
 -->
 **PROVISIONAL (PRE-QC).** Per-window error and similarity metrics see the person but place a mean-shrunk copy of the target closer than the true person.
 
@@ -26,7 +26,7 @@ Text issues:
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_7178f8f2d196", "created_at": "2026-11-10T08:48:32+00:00", "title": "C8 machine-readable", "language": "python"}
+{"type": "code", "id": "cell_68e9a9a4b172", "created_at": "2026-11-10T10:06:56+00:00", "title": "C8 machine-readable", "language": "python"}
 -->
 ````python title=claims.py
 """Claims the CVPR 2027 paper makes, each tied to the result file and key its numbers come from.

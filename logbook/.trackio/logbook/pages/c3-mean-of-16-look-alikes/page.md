@@ -3,7 +3,7 @@
 
 ---
 <!-- trackio-cell
-{"type": "markdown", "id": "cell_caef230b68c7", "created_at": "2026-11-10T08:48:28+00:00", "title": "Mean of 16 look-alikes"}
+{"type": "markdown", "id": "cell_a31ea4f5ac86", "created_at": "2026-11-10T10:06:54+00:00", "title": "Mean of 16 look-alikes"}
 -->
 **PROVISIONAL (PRE-QC).** Averaging 16 context-selected strangers comes close to the repeat in brain MRI, in QTIM and IXI.
 
@@ -32,7 +32,7 @@ Text issues:
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_20145265d214", "created_at": "2026-11-10T08:48:28+00:00", "title": "C3 machine-readable", "language": "python"}
+{"type": "code", "id": "cell_8243d718e23e", "created_at": "2026-11-10T10:06:54+00:00", "title": "C3 machine-readable", "language": "python"}
 -->
 ````python title=claims.py
 """Claims the CVPR 2027 paper makes, each tied to the result file and key its numbers come from.

@@ -3,7 +3,7 @@
 
 ---
 <!-- trackio-cell
-{"type": "markdown", "id": "cell_3c4d26a71ecc", "created_at": "2026-11-10T08:48:32+00:00", "title": "Protein-style scores track MSE"}
+{"type": "markdown", "id": "cell_94c656baa96b", "created_at": "2026-11-10T10:06:56+00:00", "title": "Protein-style scores track MSE"}
 -->
 **PROVISIONAL (PRE-QC).** TM-like, GDT-like and superposed RMSE order the rungs almost as MSE does.
 
@@ -11,9 +11,9 @@ Scale and n: Spearman rho of rung order, mean over datasets (agreement.json metr
 
 | Printed | File value | Match | In text | Source (key) | Commit |
 | --- | --- | --- | --- | --- | --- |
-| TM-like vs MSE (low end): 0.96 | 0.964 | yes | 4_results.tex | `results/cross_modality/agreement.json` (metric_matrix[mse][tm_like]) | 40ff9bd 2026-11-10 |
-| RMSE/rep vs MSE (high end): 0.99 | 0.986 | yes | 4_results.tex | `results/cross_modality/agreement.json` (metric_matrix[mse][rmse_rep]) | 40ff9bd 2026-11-10 |
-| GDT-like vs MSE (inside range): 0.97 | 0.97 | yes | n/a | `results/cross_modality/agreement.json` (metric_matrix[mse][gdt_like]) | 40ff9bd 2026-11-10 |
+| TM-like vs MSE (low end): 0.96 | 0.965 | yes | 4_results.tex | `results/cross_modality/agreement.json` (metric_matrix[mse][tm_like]) | 40ff9bd 2026-11-10 |
+| RMSE/rep vs MSE (high end): 0.99 | 0.987 | yes | 4_results.tex | `results/cross_modality/agreement.json` (metric_matrix[mse][rmse_rep]) | 40ff9bd 2026-11-10 |
+| GDT-like vs MSE (inside range): 0.97 | 0.972 | yes | n/a | `results/cross_modality/agreement.json` (metric_matrix[mse][gdt_like]) | 40ff9bd 2026-11-10 |
 
 Check: the printed number equals the file value within half a unit of its last printed digit, and the printed
 snippet is present in the cited .tex section (`logbook/claims.py`, test `tests/test_logbook_claims.py`).
@@ -24,7 +24,7 @@ Text issues:
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_0c6f0504e345", "created_at": "2026-11-10T08:48:32+00:00", "title": "C9 machine-readable", "language": "python"}
+{"type": "code", "id": "cell_921b4ba88cd2", "created_at": "2026-11-10T10:06:56+00:00", "title": "C9 machine-readable", "language": "python"}
 -->
 ````python title=claims.py
 """Claims the CVPR 2027 paper makes, each tied to the result file and key its numbers come from.
@@ -276,7 +276,7 @@ def run_all():
  {
   "label": "TM-like vs MSE (low end)",
   "text": "0.96",
-  "value": 0.964,
+  "value": 0.965,
   "match": true,
   "in_text": true,
   "tex": "paper/cvpr2027/sec/4_results.tex",
@@ -287,7 +287,7 @@ def run_all():
  {
   "label": "RMSE/rep vs MSE (high end)",
   "text": "0.99",
-  "value": 0.986,
+  "value": 0.987,
   "match": true,
   "in_text": true,
   "tex": "paper/cvpr2027/sec/4_results.tex",
@@ -298,7 +298,7 @@ def run_all():
  {
   "label": "GDT-like vs MSE (inside range)",
   "text": "0.97",
-  "value": 0.97,
+  "value": 0.972,
   "match": true,
   "in_text": null,
   "tex": null,

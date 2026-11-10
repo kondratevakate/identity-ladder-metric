@@ -1,10 +1,7 @@
 {
  "method": "One comparison frame for all datasets, from existing private rows (aggregates only, no IDs).\n\nR_self = (mean d(rung) - d(self)) / (mean d(16 strangers) - d(self)), means over (target, window) cells,\nd = distance (similarities negated: d(self) = -1; errors: d(self) = 0). Same function for every dataset.\nMetrics with no finite self value (PSNR) or no closeness orientation (amplitude deviation) are reported in\ntheir own units: PSNR as dB minus the strangers' dB, amplitude deviation |1 - amplitude| as a raw mean.\nInterval: bootstrap over persons/families (brain: targets, no family column in rows), 1000 reps.",
  "not_available": {
-  "lookalike16": {
-   "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows",
-   "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md); no such fill in the face rows"
-  },
+  "lookalike16": {},
   "repeat": {
    "IXI": "no repeat, no families in IXI (donor_ladder_brain_ixi.json not_available)"
   },
@@ -2895,6 +2892,98 @@
       921
      ]
     },
+    "lookalike16": {
+     "mse": [
+      0.2551,
+      0.2505,
+      0.2596,
+      921
+     ],
+     "rmse": [
+      0.4969,
+      0.4929,
+      0.5008,
+      921
+     ],
+     "mae": [
+      0.4872,
+      0.4832,
+      0.4911,
+      921
+     ],
+     "psnr": [
+      6.4432,
+      6.3689,
+      6.5247,
+      921
+     ],
+     "psnr_fixed": [
+      6.2272,
+      6.1583,
+      6.2987,
+      921
+     ],
+     "ssim": [
+      0.5898,
+      0.5838,
+      0.5957,
+      921
+     ],
+     "pearson": [
+      0.3077,
+      0.3011,
+      0.3147,
+      921
+     ],
+     "acc_dataset": [
+      0.33,
+      0.3247,
+      0.3358,
+      921
+     ],
+     "acc_cohort": [
+      0.3562,
+      0.3508,
+      0.3625,
+      921
+     ],
+     "ampdev_dataset": [
+      0.4199,
+      0.4163,
+      0.4235,
+      921
+     ],
+     "lddt": [
+      0.5408,
+      0.5344,
+      0.5473,
+      921
+     ],
+     "lddt_rep": [
+      0.439,
+      0.4316,
+      0.4466,
+      921
+     ],
+     "tm_like": [
+      0.4834,
+      0.478,
+      0.4886,
+      921
+     ],
+     "gdt_like": [
+      0.4075,
+      0.4014,
+      0.4134,
+      921
+     ],
+     "rmse_rep": [
+      0.4967,
+      0.4926,
+      0.5006,
+      921
+     ]
+    },
     "cohort_mean": {
      "mse": [
       0.4726,
@@ -3918,6 +4007,98 @@
       0.02233,
       0.02084,
       0.02379,
+      921
+     ]
+    },
+    "lookalike16": {
+     "mse": [
+      0.30477,
+      0.29729,
+      0.31191,
+      921
+     ],
+     "rmse": [
+      0.50554,
+      0.49956,
+      0.51144,
+      921
+     ],
+     "mae": [
+      0.3945,
+      0.38952,
+      0.39935,
+      921
+     ],
+     "psnr": [
+      17.42424,
+      17.33392,
+      17.51571,
+      921
+     ],
+     "psnr_fixed": [
+      24.83199,
+      24.72997,
+      24.93708,
+      921
+     ],
+     "ssim": [
+      0.52022,
+      0.51391,
+      0.52646,
+      921
+     ],
+     "pearson": [
+      0.80976,
+      0.8045,
+      0.81481,
+      921
+     ],
+     "acc_dataset": [
+      0.67015,
+      0.66438,
+      0.67522,
+      921
+     ],
+     "acc_cohort": [
+      0.6441,
+      0.63769,
+      0.64954,
+      921
+     ],
+     "ampdev_dataset": [
+      0.4199,
+      0.4163,
+      0.42351,
+      921
+     ],
+     "lddt": [
+      0.88152,
+      0.87946,
+      0.88356,
+      921
+     ],
+     "lddt_rep": [
+      0.94932,
+      0.94807,
+      0.95053,
+      921
+     ],
+     "tm_like": [
+      0.8169,
+      0.81432,
+      0.81982,
+      921
+     ],
+     "gdt_like": [
+      0.88684,
+      0.88469,
+      0.88919,
+      921
+     ],
+     "rmse_rep": [
+      0.58651,
+      0.57929,
+      0.59333,
       921
      ]
     },
@@ -5067,6 +5248,98 @@
       453
      ]
     },
+    "lookalike16": {
+     "mse": [
+      0.2682,
+      0.2627,
+      0.2733,
+      453
+     ],
+     "rmse": [
+      0.5112,
+      0.5062,
+      0.5159,
+      453
+     ],
+     "mae": [
+      0.4992,
+      0.4942,
+      0.5038,
+      453
+     ],
+     "psnr": [
+      6.1152,
+      6.0209,
+      6.2167,
+      453
+     ],
+     "psnr_fixed": [
+      5.9491,
+      5.8684,
+      6.0366,
+      453
+     ],
+     "ssim": [
+      0.6227,
+      0.6152,
+      0.63,
+      453
+     ],
+     "pearson": [
+      0.3466,
+      0.3384,
+      0.3544,
+      453
+     ],
+     "acc_dataset": [
+      0.3646,
+      0.3581,
+      0.3713,
+      453
+     ],
+     "acc_cohort": [
+      0.3903,
+      0.3831,
+      0.3974,
+      437
+     ],
+     "ampdev_dataset": [
+      0.4419,
+      0.437,
+      0.4468,
+      453
+     ],
+     "lddt": [
+      0.5649,
+      0.5564,
+      0.5737,
+      453
+     ],
+     "lddt_rep": [
+      0.4568,
+      0.4468,
+      0.467,
+      453
+     ],
+     "tm_like": [
+      0.4916,
+      0.4852,
+      0.4975,
+      453
+     ],
+     "gdt_like": [
+      0.4163,
+      0.4091,
+      0.4231,
+      453
+     ],
+     "rmse_rep": [
+      0.5115,
+      0.5066,
+      0.5164,
+      453
+     ]
+    },
     "cohort_mean": {
      "mse": [
       0.4795,
@@ -6188,6 +6461,98 @@
       0.02221,
       0.02062,
       0.02386,
+      453
+     ]
+    },
+    "lookalike16": {
+     "mse": [
+      0.33986,
+      0.33084,
+      0.3488,
+      453
+     ],
+     "rmse": [
+      0.5372,
+      0.5298,
+      0.54422,
+      453
+     ],
+     "mae": [
+      0.4185,
+      0.41258,
+      0.424,
+      453
+     ],
+     "psnr": [
+      16.97419,
+      16.87138,
+      17.0817,
+      453
+     ],
+     "psnr_fixed": [
+      24.249,
+      24.12975,
+      24.37797,
+      453
+     ],
+     "ssim": [
+      0.47793,
+      0.47028,
+      0.48629,
+      453
+     ],
+     "pearson": [
+      0.77478,
+      0.76802,
+      0.78138,
+      453
+     ],
+     "acc_dataset": [
+      0.63666,
+      0.63011,
+      0.64335,
+      453
+     ],
+     "acc_cohort": [
+      0.61887,
+      0.61153,
+      0.62611,
+      437
+     ],
+     "ampdev_dataset": [
+      0.44188,
+      0.437,
+      0.4468,
+      453
+     ],
+     "lddt": [
+      0.8651,
+      0.86186,
+      0.86815,
+      453
+     ],
+     "lddt_rep": [
+      0.94602,
+      0.94417,
+      0.94775,
+      453
+     ],
+     "tm_like": [
+      0.81759,
+      0.81452,
+      0.82085,
+      453
+     ],
+     "gdt_like": [
+      0.88738,
+      0.88493,
+      0.89005,
+      453
+     ],
+     "rmse_rep": [
+      0.58389,
+      0.57565,
+      0.59177,
       453
      ]
     },

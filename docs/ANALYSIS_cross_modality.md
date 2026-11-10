@@ -117,6 +117,10 @@ metrics. Metrics: rho for each dataset, mean over datasets. ArcFace left out (5 
   in the tables and tiles (`generative_status.json` `set_level_caution`). Fig. 2 FID / FWD over 7 datasets: true
   person 0.93 / 0.57, shrunk true person 2.55 / 34.3, dataset mean 16.4 / 185.6, noise 12.5 / 183.5 (stranger 1).
   Set-level comparisons need size-matched sets.
+- 10 Nov, faces mean of 16 look-alikes (F2.2, commit ab9aaf0) added to the common frame (tier-1 rows) and the
+  generative block (LPIPS, persistence, Betti); the rung now covers all nine sets. Common-frame face values are the
+  cell mean (CelebA 0.255, IMDb-WIKI 0.268; the face file's R_cells), earlier values unchanged. Fig. 2 versions:
+  v2 (A and B split), B v3 (stacked, fixed lanes), v4 (A left, stacked B right, compact labels; Kate's layout).
 
 ## 5. Window size follows the object (Kate, 8 Nov 2026: "да переделай честно")
 One pixel window covers a different share of each object (brain about 1/10 of its length, faces 0.4 inter-ocular

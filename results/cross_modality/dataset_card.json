@@ -44,6 +44,7 @@
     "other side",
     "best look-alike",
     "look-alike",
+    "mean of 16",
     "sex-age mean",
     "mean of 2",
     "dataset mean",
@@ -52,7 +53,7 @@
     "wrong detail",
     "noise"
    ],
-   "n_rungs": 11,
+   "n_rungs": 12,
    "V_dataset_mean_mse": 0.592,
    "ratio_repeat": 1.28,
    "ratio_other_side": 0.95,
@@ -73,6 +74,7 @@
     "relative",
     "best look-alike",
     "look-alike",
+    "mean of 16",
     "sex-age mean",
     "mean of 2",
     "dataset mean",
@@ -81,7 +83,7 @@
     "wrong detail",
     "noise"
    ],
-   "n_rungs": 12,
+   "n_rungs": 13,
    "V_dataset_mean_mse": 0.627,
    "ratio_repeat": 1.39,
    "ratio_other_side": 1.06,
