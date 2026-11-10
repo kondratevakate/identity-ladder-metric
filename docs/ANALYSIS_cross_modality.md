@@ -102,6 +102,13 @@ metrics. Metrics: rho for each dataset, mean over datasets. ArcFace left out (5 
   distance, no new search; tier-1 metrics) added for QTIM and IXI from its private rows; brain n/a removed. Self-scale
   MSE R 0.37 (QTIM) and 0.36 (IXI); raw MSE equals the brain file. Earlier values unchanged. Brain Betti 3D stays not
   run: the 3D library disagrees with the 2D library on 3 of 4 check slices (Kate decides).
+- 10 Nov, brain Betti matching 2.5D (commit c710455, Kate's choice; the 2D library of fundus 9.15 and iris P3 on the 3
+  central slices of each random cube, topology subset S, random patches both sides) for QTIM and IXI in the generative
+  block. QTIM R is repeat-anchored and IXI R other-side-anchored, so both enter ranks, agreement and Fig. 2 panel A
+  but not panel B's means; Betti 3D not available (libraries disagreed, Amendment 24 B). Fig. 2 (`summary_figure.py`):
+  panel A y is now the shrunk-true-person rank gap (Kate: the dataset-mean axis put every metric in the wanted corner);
+  no metric reaches the "both" corner. Panel B merges sources by dataset (persistence 7, was 5) and counts brain in
+  FID / FWD ratios (8), where the small brain repeat set (138 cells) inflates FID (repeat / stranger 8.3).
 
 ## 5. Window size follows the object (Kate, 8 Nov 2026: "да переделай честно")
 One pixel window covers a different share of each object (brain about 1/10 of its length, faces 0.4 inter-ocular

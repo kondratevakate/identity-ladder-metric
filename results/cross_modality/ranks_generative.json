@@ -678,6 +678,34 @@
   "dataset_mean": 11,
   "noise": 12
  },
+ "betti_matched|QTIM": {
+  "repeat": 1,
+  "shrink_ref": 2,
+  "lookalike_oracle": 3,
+  "dataset_mean": 4,
+  "lookalike": 5,
+  "cohort_mean": 6,
+  "other_side": 7,
+  "mean_k2": 8,
+  "relative": 9,
+  "stranger": 10,
+  "wrong_detail": 11,
+  "noise": 12
+ },
+ "betti_unmatched|QTIM": {
+  "shrink_ref": 1,
+  "repeat": 2,
+  "lookalike_oracle": 3,
+  "lookalike": 4,
+  "cohort_mean": 5,
+  "mean_k2": 6,
+  "dataset_mean": 7,
+  "other_side": 8,
+  "relative": 9,
+  "stranger": 10,
+  "wrong_detail": 11,
+  "noise": 12
+ },
  "persistence|QTIM": {
   "other_side": 1,
   "lookalike_oracle": 2,
@@ -715,5 +743,27 @@
   "cohort_mean": 8,
   "noise": 9,
   "dataset_mean": 10
+ },
+ "betti_matched|IXI": {
+  "lookalike_oracle": 1,
+  "lookalike": 2,
+  "dataset_mean": 3,
+  "shrink_ref": 4,
+  "other_side": 5,
+  "mean_k2": 6,
+  "stranger": 7,
+  "wrong_detail": 8,
+  "noise": 9
+ },
+ "betti_unmatched|IXI": {
+  "lookalike_oracle": 1,
+  "shrink_ref": 2,
+  "lookalike": 3,
+  "dataset_mean": 4,
+  "mean_k2": 5,
+  "other_side": 6,
+  "stranger": 7,
+  "wrong_detail": 8,
+  "noise": 9
  }
 }

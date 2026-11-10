@@ -37,14 +37,14 @@ MET = [("lpips_alex", "LPIPS (AlexNet)", "per target"), ("lpips_vgg", "LPIPS (VG
        ("betti_matched", "Betti matching, matched", "per target"), ("betti_unmatched", "Betti matching, unmatched", "per target"),
        ("persistence", "intensity persistence", "per target"), ("iriscode_hd", "iris code Hamming distance", "per target"),
        ("fid", "FID (set level)", "set"), ("fwd", "FWD (set level)", "set")]
-NOT_RUN = {"IXI": "IXI (brain Amendment 23) scores tier-1 pixel metrics only; LPIPS, Betti, persistence, FID, FWD not run"}
+NOT_RUN = {"IXI": "IXI (brain Amendment 23): LPIPS, persistence, FID, FWD not run (tier-1 and Betti 2.5D only)"}
 NA16 = {"lookalike16": {   # same reasons as common_frame.py NOT_AVAILABLE; n/a, never a value
     "QTIM": "brain lookalike16 (commit d02cade) is scored on tier-1 pixel metrics only, not on these",
     "CelebA": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
     "IMDb-WIKI": "not defined in the face protocol (PROTOCOL_face_metrics.md)",
     "IXI": "brain lookalike16 (commit d02cade) is scored on tier-1 pixel metrics only, not on these"}}
-NOT_RUN_METRICS = {"QTIM": ("betti_matched", "betti_unmatched", "fid", "fwd"),
-                   "IXI": ("lpips_alex", "lpips_vgg", "betti_matched", "betti_unmatched", "persistence", "fid", "fwd")}
+NOT_RUN_METRICS = {"QTIM": ("fid", "fwd"),
+                   "IXI": ("lpips_alex", "lpips_vgg", "persistence", "fid", "fwd")}
 # Brain set level: the own-other-side and relative sets are drawn from the same scans as the target set, so their FID
 # and FWD are ~0 by construction (brain Amendment 22 note); left out of the set-level ranks, never read as identity.
 EXCLUDED_SET = {"QTIM": {r: "set nearly coincides with the target set by construction (Amendment 22)"
@@ -53,7 +53,7 @@ EXCLUDED_SET = {"QTIM": {r: "set nearly coincides with the target set by constru
 
 def ren(f, has_repeat):
     f = {"fellow": "other_side", "mirror": "other_side", "sexage": "cohort_mean"}.get(f, f)
-    if f == ("shrink_repeat" if has_repeat else "shrink_fellow"):
+    if (f == "shrink_repeat") if has_repeat else (f in ("shrink_fellow", "shrink_mirror")):
         return "shrink_ref"
     return f
 
@@ -141,13 +141,30 @@ if os.path.exists(b5p):
     sl = {r: e for r, e in b5["set_level"]["deep/LR"].items()
           if not r.startswith("_") and r not in EXCLUDED_SET.get("QTIM", {}) and e.get("fid") is not None}
     S = {m: {r: {"value": e[m], "n_cells": e["n_cells"]} for r, e in sl.items()} for m in ("fid", "fwd")}
+    NOT_RUN_METRICS["QTIM"] = ()
+# Brain Betti matching 2.5D (commit c710455, Kate's choice): the 2D library of fundus 9.15 / iris P3 on the 3 central
+# slices of each random cube, topology subset S; random patches, both sides (not the deep box of the other brain rows).
+# Betti 3D is not available: the 3D library disagreed with the 2D one (Amendment 24 B).
+B25 = os.path.join(HERE, "results", "donor_ladder_brain_betti25d.json")
+IXI_R = {}
+if os.path.exists(B25):
+    b25 = json.load(open(B25))["datasets"]
+    R.update(from_ladder(b25["qtim"]["views"]["random_patches/LR"]["ladder_R"],
+                         {"betti_matched": "betti_matched", "betti_unmatched": "betti_unmatched"}))
+    IXI_R = from_ladder(b25["ixi"]["views"]["random_patches/LR"]["ladder_R"],
+                        {"betti_matched": "betti_matched", "betti_unmatched": "betti_unmatched"})
+else:
     NOT_RUN_METRICS["QTIM"] = ("betti_matched", "betti_unmatched")
+    NOT_RUN_METRICS["IXI"] += ("betti_matched", "betti_unmatched")
 src["QTIM"] = (R, S)
-NOT_RUN["QTIM"] = ("brain: Betti matching 3D not computed: the 3D library disagrees with the 2D library on 3 of 4 "
-                   "check slices (brain session, 10 Nov); Kate decides the next step")
+if IXI_R:
+    src["IXI"] = (IXI_R, {})
+NOT_RUN["QTIM"] = "brain: Betti matching 3D not available (3D and 2D libraries disagreed, Amendment 24 B); 2.5D used"
 
 ANCHOR = {d: "self" for d in src}
 ANCHOR["QTIM"] = "repeat"   # brain Amendment 20 R: repeat scan 0, strangers 1 (an affine map of the self scale)
+if "IXI" in ANCHOR:
+    ANCHOR["IXI"] = "other_side"   # IXI R: own other side 0, strangers 1 (no repeat scans)
 ranks, values = {}, {}
 status = {"method": __doc__.strip(), "not_run": NOT_RUN, "not_run_metrics": NOT_RUN_METRICS, "anchor": ANCHOR, "excluded_set_level_rungs": EXCLUDED_SET,
           "present": {}}
@@ -220,7 +237,7 @@ for k, b in rows:
 ax.text(-7.0, y + 1.8, "Same columns and colours as the main rank tiles (1 = what the metric calls closest). Per-target metrics are "
         "ranked by R_self,\nset-level FID and FWD by their per-rung set value. Fundus 9.15, iris P3, faces F2 and F2.1 (LPIPS VGG), "
         "brain Amendments 20 and 22\n(deep box, both sides; repeat-anchored R; set level leaves out own other side and relative, "
-        "near 0 by construction). Grey rows: not computed, reason given. All pre-QC except faces.",
+        "near 0 by construction; Betti 2.5D on random cubes, IXI other-side R). Grey rows: not computed, reason given. All pre-QC except faces.",
         fontsize=7, color="#333", va="center")
 ax.set_xlim(-7.2, len(COLS) + 0.2)
 ax.set_ylim(y + 3.2, -5.2)

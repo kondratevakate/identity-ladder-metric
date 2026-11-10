@@ -56,7 +56,7 @@ def test_generative_brain_and_faces_present():
         assert "lpips_alex" in status["present"][d], d
     for r in ("other_side", "relative"):   # brain sets that coincide with the target set by construction
         assert r not in load("ranks_generative.json").get("fid|QTIM", {}), r
-    assert "betti_matched" not in status["present"]["QTIM"]   # Betti 3D not built: not run, never a value
+    assert "betti_matched" in status["present"]["QTIM"]   # Betti 2.5D (c710455); 3D not available
 
 
 def test_tile_ranks_are_permutations():
@@ -87,7 +87,8 @@ def test_generative_values_match_ranks_and_mark_anchor():
     v = load("values_generative.json")["values"]
     for key, rank in load("ranks_generative.json").items():
         assert set(v[key]["rungs"]) == set(rank), key
-        assert v[key]["anchor"] == ("repeat" if key.endswith("|QTIM") else "self"), key
+        want = "repeat" if key.endswith("|QTIM") else ("other_side" if key.endswith("|IXI") else "self")
+        assert v[key]["anchor"] == want, key
         for r, rec in v[key]["rungs"].items():
             assert rec.get("ci95", rec.get("ratio_ci95")) is not None and rec["n"] is not None, (key, r)
 
@@ -107,7 +108,7 @@ def test_ixi_in_frame_with_na_rungs_never_values():
 def test_ixi_generative_not_run_with_reason():
     v = load("values_generative.json")
     assert v["not_run"]["IXI"]
-    assert not [k for k in v["values"] if k.endswith("|IXI")]
+    assert not [k for k in v["values"] if k.endswith("|IXI") and not k.startswith("betti_")]
 
 
 def test_centre_strangers_ixi_only_and_na_elsewhere():
