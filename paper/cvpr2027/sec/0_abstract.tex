@@ -6,6 +6,7 @@ They separate reference distortion, residual magnitude, target alignment, and ac
 In the provisional brain panel, mean squared error places the dataset mean at 0.413 and the mirror at 0.717 on a repeat-zero, stranger-one scale.
 In CelebA, a selected donor scores 0.399 under local pixel error but 0.983 under a whole-image identity reference on self-zero scales.
 The comparison changes spatial scope and is not a generated-composite identity result.
+Across nine image sets, per-window errors recognise the person but place a mean-shrunk copy of the target closer than its own repeat, while set-level FID and FWD reject averaging but cannot tell the person from a stranger.
 Masked Gaussian maps localize differences, and validity masks retain missing support as missing.
 We propose applying the same controls to generated completions within prespecified target populations, reporting raw, common-reference, and matched-reference profiles with coverage and uncertainty.
 Target strata, donor cohorts, and acquisition domains remain distinct.
