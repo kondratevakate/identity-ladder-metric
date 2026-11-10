@@ -89,24 +89,25 @@ FLOOR = 0.2  # axis start; a value below would be drawn at the floor with an ope
 
 
 def r_values(metric):
-    """Mean over self-anchored datasets of each rung's R (or set ratio). Brain generative rows are repeat-anchored
-    (not on the self scale) and are left out; common_all rows are self-anchored for every dataset."""
-    vals = {k: [] for k, *_ in RUNGS}
-    used = []
-    srcs = []
-    for key, blk in gen.items():
-        m, d = key.split("|")
-        if m == metric and blk.get("anchor") == "self":
-            srcs.append((d, {r: (x.get("R", x.get("ratio_to_stranger"))) for r, x in blk["rungs"].items()}))
-    alt = []  # common_all is self-anchored for every dataset; use it when it covers more datasets (persistence)
+    """Mean over datasets of each rung's value on the stranger scale, merging the sources by dataset: common_all R_self
+    where it has the metric, otherwise the generative block's value. Per-image generative values count only when
+    self-anchored (brain R is on the repeat scale, so brain LPIPS and persistence are left out); set-level FID / FWD are
+    ratios to the stranger set and do not depend on that anchor, so brain counts there. Returns (means, datasets)."""
+    rows = {}
     for d, blk in common.items():
         R = blk.get("R_self", {})
         row = {r: R[r][metric][0] for r in R if isinstance(R[r], dict) and metric in R[r]}
         if row:
-            alt.append((d, row))
-    if len(alt) > len(srcs):
-        srcs = alt
-    for d, row in srcs:
+            rows[d] = row
+    for key, blk in gen.items():
+        m, d = key.split("|")
+        if m != metric or d in rows:
+            continue
+        if blk.get("scale") == "ratio to stranger set" or blk.get("anchor") == "self":
+            rows[d] = {r: x.get("R", x.get("ratio_to_stranger")) for r, x in blk["rungs"].items()}
+    vals = {k: [] for k, *_ in RUNGS}
+    used = []
+    for d, row in rows.items():
         ref = "repeat" if "repeat" in row else ("other_side" if "other_side" in row else None)
         if ref is None:
             continue
@@ -117,7 +118,7 @@ def r_values(metric):
                 vals[k].append(1.0)  # by definition of the scale
             elif src in row and row[src] is not None:
                 vals[k].append(float(row[src]))
-    return {k: (float(np.mean(v)) if v else np.nan) for k, v in vals.items()}, len(used)
+    return {k: (float(np.mean(v)) if v else np.nan) for k, v in vals.items()}, used
 
 
 def panel_a(metric):
@@ -139,8 +140,8 @@ def panel_a(metric):
 
 rdata = {m: r_values(m) for _, _, mets in GROUPS for m, _ in mets}
 adata = {m: panel_a(m) for _, _, mets in GROUPS for m, _ in mets}
-out = {m: {"n_datasets": n, **{k: (None if np.isnan(x) else round(x, 3)) for k, x in p.items()}}
-       for m, (p, n) in rdata.items()}
+out = {m: {"n_datasets": len(ds), "datasets": ds, **{k: (None if np.isnan(x) else round(x, 3)) for k, x in p.items()}}
+       for m, (p, ds) in rdata.items()}
 out["panel_A"] = {m: {"x_stranger_gap": round(a[0], 3), "y_shrunk_gap": round(a[1], 3), "n_x": a[2], "n_y": a[3]}
                   for m, a in adata.items()}
 json.dump(out, open(OUT + "_R.json", "w"), indent=1)
@@ -203,7 +204,8 @@ def strips(axx, groups, tx, x0, x1, step):
                  color="#222")
         y -= 0.75 if "\n" in head else 0.55
         for m, lab in mets:
-            p, nds = rdata[m]
+            p, ds_used = rdata[m]
+            nds = len(ds_used)
             axx.plot([x0, x1], [y, y], color="#eeeeee", lw=6 if not PAPER else 3.5, solid_capstyle="round", zorder=1)
             placed = []
             for k, _, col, mk, _row in RUNGS:
@@ -292,7 +294,7 @@ fig.text(0.01, 0.008,
          "axis, FID/FWD on a log axis.\n"
          "* Look-alikes: oracle = chosen with the hidden truth (upper bound); mean of k look-alikes (k = 16) on brain, fundus "
          "and iris (not faces). True person = repeat scan, or the other side where there is no repeat (PAPILA, IXI). Brain LPIPS and "
-         "persistence are repeat-anchored and left out of B's means.\n"
+         "persistence are repeat-anchored and left out of B's means; FID/FWD ratios include brain.\n"
          "Data: QTIM and IXI brain, CelebA, IMDb-WIKI, GRAPE, PAPILA, UTIRIS NIR/VIS, UPOL; brain, fundus, iris pre-QC. Source: "
          "results/cross_modality/common_all.json, values_generative.json, ranks_all.json, ranks_generative.json.",
          fontsize=F(7.8), color="#666")

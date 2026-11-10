@@ -1,6 +1,17 @@
 {
  "mse": {
   "n_datasets": 9,
+  "datasets": [
+   "QTIM",
+   "CelebA",
+   "IMDb-WIKI",
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "IXI"
+  ],
   "ref": 0.404,
   "lookalike_oracle": 0.279,
   "relative": 0.876,
@@ -13,6 +24,17 @@
  },
  "ssim": {
   "n_datasets": 9,
+  "datasets": [
+   "QTIM",
+   "CelebA",
+   "IMDb-WIKI",
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "IXI"
+  ],
   "ref": 0.628,
   "lookalike_oracle": 0.654,
   "relative": 0.949,
@@ -25,6 +47,15 @@
  },
  "tm_like": {
   "n_datasets": 7,
+  "datasets": [
+   "QTIM",
+   "CelebA",
+   "IMDb-WIKI",
+   "GRAPE",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL"
+  ],
   "ref": 0.583,
   "lookalike_oracle": 0.562,
   "relative": 0.941,
@@ -37,6 +68,17 @@
  },
  "lddt": {
   "n_datasets": 9,
+  "datasets": [
+   "QTIM",
+   "CelebA",
+   "IMDb-WIKI",
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "IXI"
+  ],
   "ref": 0.656,
   "lookalike_oracle": 0.702,
   "relative": 0.955,
@@ -49,6 +91,15 @@
  },
  "lpips_alex": {
   "n_datasets": 7,
+  "datasets": [
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "CelebA",
+   "IMDb-WIKI"
+  ],
   "ref": 0.428,
   "lookalike_oracle": 0.413,
   "relative": 0.876,
@@ -61,6 +112,15 @@
  },
  "lpips_vgg": {
   "n_datasets": 7,
+  "datasets": [
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "CelebA",
+   "IMDb-WIKI"
+  ],
   "ref": 0.558,
   "lookalike_oracle": 0.697,
   "relative": 0.928,
@@ -73,6 +133,15 @@
  },
  "betti_matched": {
   "n_datasets": 7,
+  "datasets": [
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "CelebA",
+   "IMDb-WIKI"
+  ],
   "ref": 0.482,
   "lookalike_oracle": 0.318,
   "relative": 0.732,
@@ -84,40 +153,69 @@
   "noise": 1.664
  },
  "persistence": {
-  "n_datasets": 5,
-  "ref": 0.644,
-  "lookalike_oracle": 0.704,
-  "relative": null,
-  "dataset_mean": 0.811,
+  "n_datasets": 7,
+  "datasets": [
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "CelebA",
+   "IMDb-WIKI"
+  ],
+  "ref": 0.715,
+  "lookalike_oracle": 0.686,
+  "relative": 0.93,
+  "dataset_mean": 0.819,
   "stranger": 1.0,
-  "shrink_ref": 0.644,
+  "shrink_ref": 0.691,
   "lookalike16": 0.771,
-  "wrong_detail": 1.093,
-  "noise": 3.441
+  "wrong_detail": 1.085,
+  "noise": 3.897
  },
  "fid": {
-  "n_datasets": 7,
-  "ref": 0.929,
-  "lookalike_oracle": 1.391,
+  "n_datasets": 8,
+  "datasets": [
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "CelebA",
+   "IMDb-WIKI",
+   "QTIM"
+  ],
+  "ref": 1.853,
+  "lookalike_oracle": 1.379,
   "relative": 1.642,
-  "dataset_mean": 16.362,
+  "dataset_mean": 27.119,
   "stranger": 1.0,
-  "shrink_ref": 2.554,
+  "shrink_ref": 3.381,
   "lookalike16": 10.545,
-  "wrong_detail": 1.287,
-  "noise": 12.462
+  "wrong_detail": 1.566,
+  "noise": 15.732
  },
  "fwd": {
-  "n_datasets": 7,
-  "ref": 0.572,
-  "lookalike_oracle": 15.364,
+  "n_datasets": 8,
+  "datasets": [
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "CelebA",
+   "IMDb-WIKI",
+   "QTIM"
+  ],
+  "ref": 1.134,
+  "lookalike_oracle": 13.544,
   "relative": 1.785,
-  "dataset_mean": 185.55,
+  "dataset_mean": 170.533,
   "stranger": 1.0,
-  "shrink_ref": 34.344,
+  "shrink_ref": 30.891,
   "lookalike16": 159.215,
-  "wrong_detail": 45.531,
-  "noise": 183.542
+  "wrong_detail": 40.699,
+  "noise": 168.433
  },
  "panel_A": {
   "mse": {

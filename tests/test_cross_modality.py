@@ -137,9 +137,17 @@ def test_summary_figure_values_equal_the_tables():
     c = load("common_all.json")["datasets"]
     g = load("values_generative.json")["values"]
     mse_rows = [{r: v["R_self"][r]["mse"][0] for r in v["R_self"] if "mse" in v["R_self"][r]} for v in c.values()]
-    fid_rows = [{r: x["ratio_to_stranger"] for r, x in b["rungs"].items()}
-                for k, b in g.items() if k.startswith("fid|") and b["anchor"] == "self"]
-    for metric, rows in (("mse", mse_rows), ("fid", fid_rows)):
+    fid_rows = [{r: x["ratio_to_stranger"] for r, x in b["rungs"].items()}   # set ratio: anchor-free, brain included
+                for k, b in g.items() if k.startswith("fid|")]
+    pers = {d: {r: v["R_self"][r]["persistence"][0] for r in v["R_self"] if "persistence" in v["R_self"][r]}
+            for d, v in c.items()}
+    pers = {d: r for d, r in pers.items() if r}
+    for k, b in g.items():   # faces persistence exists only in the generative block (self-anchored)
+        d = k.split("|")[1]
+        if k.startswith("persistence|") and b["anchor"] == "self" and d not in pers:
+            pers[d] = {r: x["R"] for r, x in b["rungs"].items()}
+    pers_rows = list(pers.values())
+    for metric, rows in (("mse", mse_rows), ("fid", fid_rows), ("persistence", pers_rows)):
         assert fig[metric]["n_datasets"] == len([r for r in rows if "repeat" in r or "other_side" in r]), metric
         for rung in ("ref", "dataset_mean", "shrink_ref", "noise"):
             want = _mean_R(rows, rung)
