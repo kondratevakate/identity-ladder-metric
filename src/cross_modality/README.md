@@ -24,6 +24,7 @@ Run order (`OUT=results/cross_modality`; Python with `-I`):
 | 11c | `summary_figure_v2.py OUT/fig_metric_summary_R.json OUT/fig_metric_summary_v2` | Fig. 2 v2 split: `_A` scatter (3.3 in) and `_B` strips (7 in), group colours, no sibling |
 | 11d | `summary_figure_v3b.py OUT/fig_metric_summary_R.json OUT/fig_metric_summary_v3` | Fig. 2 B v3: panels stacked on one aligned x axis, one fixed lane per rung, set level last on its own log axis |
 | 11e | `summary_figure_v4.py OUT/fig_metric_summary_R.json OUT/fig_metric_summary_v4` | Fig. 2 v4: A left, stacked B right with fixed lanes, compact labels |
+| 11f | `summary_figure_v5.py OUT/fig_metric_summary_R.json OUT/fig_metric_summary_v5` | Fig. 2 v5: v4 with B marker colour = value (green target to red stranger, validated ramp), shapes = rungs |
 | 12 | `build_data.py OUT`, then `build_explorer.py OUT page.html` | explorer page (published privately as a claude.ai artifact) |
 
 Validation recorded when written: R_self equals the fundus and iris files exactly and the face file within 0.01;

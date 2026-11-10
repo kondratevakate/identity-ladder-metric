@@ -20,7 +20,7 @@ def test_every_aggregate_has_its_generating_script():
     made_by = {"common_all.json": "common_frame.py", "tests_all.json": "tests_uniform.py", "cal_faces.json": "cal_uniform.py",
                "cal_brain.json": "cal_uniform.py", "cal_c_all.json": "cal_tiles.py", "ranks_all.json": "rank_tiles.py",
                "agreement.json": "agreement.py", "corr_all.json": "explore_corr.py", "data.json": "build_data.py",
-               "dataset_card.json": "dataset_card.py", "ranks_generative.json": "generative_block.py", "values_generative.json": "generative_block.py", "fig_metric_summary_R.json": "summary_figure.py", "fig_metric_summary_paper_R.json": "summary_figure.py", "fig_metric_summary_v2_plotted.json": "summary_figure_v2.py", "fig_metric_summary_v3_B_plotted.json": "summary_figure_v3b.py", "fig_metric_summary_v4_plotted.json": "summary_figure_v4.py",
+               "dataset_card.json": "dataset_card.py", "ranks_generative.json": "generative_block.py", "values_generative.json": "generative_block.py", "fig_metric_summary_R.json": "summary_figure.py", "fig_metric_summary_paper_R.json": "summary_figure.py", "fig_metric_summary_v2_plotted.json": "summary_figure_v2.py", "fig_metric_summary_v3_B_plotted.json": "summary_figure_v3b.py", "fig_metric_summary_v4_plotted.json": "summary_figure_v4.py", "fig_metric_summary_v5_plotted.json": "summary_figure_v5.py",
                "generative_status.json": "generative_block.py"}
     for f in os.listdir(OUT):
         if f.endswith(".json"):
@@ -228,6 +228,18 @@ def test_summary_v3b_plots_the_table_values_without_sibling():
 def test_summary_v4_plots_the_table_values_without_sibling():
     """Fig. 2 v4 (A left, stacked B right) plots exactly fig_metric_summary_R.json; no sibling."""
     p = load("fig_metric_summary_v4_plotted.json")
+    r = load("fig_metric_summary_R.json")
+    for m, (x, y) in p["panel_A"].items():
+        assert x == r["panel_A"][m]["x_stranger_gap"] and y == r["panel_A"][m]["y_shrunk_gap"], m
+    for m, rungs in p["panel_B"].items():
+        assert "relative" not in rungs, m
+        for k, v in rungs.items():
+            assert v == r[m][k], (m, k)
+
+
+def test_summary_v5_plots_the_table_values_without_sibling():
+    """Fig. 2 v5 (v4 with value-coloured B markers) plots exactly fig_metric_summary_R.json; no sibling."""
+    p = load("fig_metric_summary_v5_plotted.json")
     r = load("fig_metric_summary_R.json")
     for m, (x, y) in p["panel_A"].items():
         assert x == r["panel_A"][m]["x_stranger_gap"] and y == r["panel_A"][m]["y_shrunk_gap"], m
