@@ -40,6 +40,10 @@ for k, im in src.items():
 b = box(top)
 th["noise"] = fill(np.clip(rng.normal(b.mean(), b.std(), b.shape), 0, 1))
 th["shrink_ref"] = fill(0.5 * box(C["L0"]) + 0.5 * box(mean))
+# scanner-site strangers (IXI only), illustration: another stranger as is, and one with a contrast change standing in
+# for a different scanner
+th["stranger_same_centre"] = fill(box(strangers[5]))
+th["stranger_other_centre"] = fill(np.clip(0.5 + 1.35 * (box(strangers[9]) - 0.5) + 0.06, 0, 1))
 # crop to the eye region around the box, draw the box outline in red
 pad_y, pad_x = int(0.06 * h), int(0.07 * w)
 cy, cx = slice(int(y0 * h) - pad_y, int(y1 * h) + pad_y), slice(int(x0 * w) - pad_x, int(x1 * w) + pad_x)

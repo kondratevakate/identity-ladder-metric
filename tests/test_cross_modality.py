@@ -20,7 +20,7 @@ def test_every_aggregate_has_its_generating_script():
     made_by = {"common_all.json": "common_frame.py", "tests_all.json": "tests_uniform.py", "cal_faces.json": "cal_uniform.py",
                "cal_brain.json": "cal_uniform.py", "cal_c_all.json": "cal_tiles.py", "ranks_all.json": "rank_tiles.py",
                "agreement.json": "agreement.py", "corr_all.json": "explore_corr.py", "data.json": "build_data.py",
-               "dataset_card.json": "dataset_card.py", "ranks_generative.json": "generative_block.py", "values_generative.json": "generative_block.py",
+               "dataset_card.json": "dataset_card.py", "ranks_generative.json": "generative_block.py", "values_generative.json": "generative_block.py", "fig_metric_summary_R.json": "summary_figure.py",
                "generative_status.json": "generative_block.py"}
     for f in os.listdir(OUT):
         if f.endswith(".json"):
@@ -68,7 +68,8 @@ def test_every_tile_column_has_a_drawn_thumbnail():
     import numpy as np
     keys = set(np.load(os.path.join(OUT, "drawn_face_thumbs.npz")).files)
     for col in ("repeat", "other_side", "relative", "lookalike_oracle", "lookalike", "lookalike16", "cohort_mean",
-                "mean_k2", "dataset_mean", "stranger", "shrink_ref", "wrong_detail", "noise"):
+                "mean_k2", "dataset_mean", "stranger", "stranger_same_centre", "stranger_other_centre", "shrink_ref",
+                "wrong_detail", "noise"):
         assert col in keys, col
 
 
@@ -107,3 +108,40 @@ def test_ixi_generative_not_run_with_reason():
     v = load("values_generative.json")
     assert v["not_run"]["IXI"]
     assert not [k for k in v["values"] if k.endswith("|IXI")]
+
+
+def test_centre_strangers_ixi_only_and_na_elsewhere():
+    c = load("common_all.json")
+    for r in ("stranger_same_centre", "stranger_other_centre"):
+        assert r in c["datasets"]["IXI"]["R_self"], r
+        for d in c["datasets"]:
+            if d != "IXI":
+                assert r not in c["datasets"][d]["raw"] and c["not_available"][r][d], (r, d)
+
+
+def _mean_R(rows, rung):
+    vals = []
+    for row in rows:
+        ref = "repeat" if "repeat" in row else ("other_side" if "other_side" in row else None)
+        if ref is None:
+            continue
+        src = ref if rung == "ref" else rung
+        if src in row and row[src] is not None:
+            vals.append(row[src])
+    return sum(vals) / len(vals) if vals else None
+
+
+def test_summary_figure_values_equal_the_tables():
+    """fig_metric_summary_R.json (what panel B plots) recomputed from common_all.json and values_generative.json."""
+    fig = load("fig_metric_summary_R.json")
+    c = load("common_all.json")["datasets"]
+    g = load("values_generative.json")["values"]
+    mse_rows = [{r: v["R_self"][r]["mse"][0] for r in v["R_self"] if "mse" in v["R_self"][r]} for v in c.values()]
+    fid_rows = [{r: x["ratio_to_stranger"] for r, x in b["rungs"].items()}
+                for k, b in g.items() if k.startswith("fid|") and b["anchor"] == "self"]
+    for metric, rows in (("mse", mse_rows), ("fid", fid_rows)):
+        assert fig[metric]["n_datasets"] == len([r for r in rows if "repeat" in r or "other_side" in r]), metric
+        for rung in ("ref", "dataset_mean", "shrink_ref", "noise"):
+            want = _mean_R(rows, rung)
+            got = fig[metric][rung]
+            assert (want is None and got is None) or abs(got - want) < 1e-3, (metric, rung, got, want)

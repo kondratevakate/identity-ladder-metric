@@ -1,0 +1,122 @@
+{
+ "mse": {
+  "n_datasets": 9,
+  "ref": 0.404,
+  "lookalike_oracle": 0.279,
+  "relative": 0.876,
+  "dataset_mean": 0.502,
+  "stranger": 1.0,
+  "shrink_ref": 0.29,
+  "lookalike16": 0.344,
+  "wrong_detail": 1.002,
+  "noise": 0.856
+ },
+ "ssim": {
+  "n_datasets": 9,
+  "ref": 0.628,
+  "lookalike_oracle": 0.654,
+  "relative": 0.949,
+  "dataset_mean": 0.835,
+  "stranger": 1.0,
+  "shrink_ref": 0.596,
+  "lookalike16": 0.731,
+  "wrong_detail": 1.005,
+  "noise": 1.027
+ },
+ "tm_like": {
+  "n_datasets": 7,
+  "ref": 0.583,
+  "lookalike_oracle": 0.562,
+  "relative": 0.941,
+  "dataset_mean": 0.795,
+  "stranger": 1.0,
+  "shrink_ref": 0.541,
+  "lookalike16": 0.675,
+  "wrong_detail": 0.977,
+  "noise": 0.954
+ },
+ "lddt": {
+  "n_datasets": 9,
+  "ref": 0.656,
+  "lookalike_oracle": 0.702,
+  "relative": 0.955,
+  "dataset_mean": 0.62,
+  "stranger": 1.0,
+  "shrink_ref": 0.519,
+  "lookalike16": 0.604,
+  "wrong_detail": 1.096,
+  "noise": 1.759
+ },
+ "lpips_alex": {
+  "n_datasets": 7,
+  "ref": 0.428,
+  "lookalike_oracle": 0.413,
+  "relative": 0.876,
+  "dataset_mean": 0.898,
+  "stranger": 1.0,
+  "shrink_ref": 0.465,
+  "lookalike16": 0.617,
+  "wrong_detail": 0.945,
+  "noise": 1.835
+ },
+ "lpips_vgg": {
+  "n_datasets": 7,
+  "ref": 0.558,
+  "lookalike_oracle": 0.697,
+  "relative": 0.928,
+  "dataset_mean": 1.094,
+  "stranger": 1.0,
+  "shrink_ref": 0.57,
+  "lookalike16": 0.939,
+  "wrong_detail": 0.973,
+  "noise": 1.518
+ },
+ "betti_matched": {
+  "n_datasets": 7,
+  "ref": 0.482,
+  "lookalike_oracle": 0.318,
+  "relative": 0.732,
+  "dataset_mean": 0.494,
+  "stranger": 1.0,
+  "shrink_ref": 0.426,
+  "lookalike16": 0.461,
+  "wrong_detail": 1.16,
+  "noise": 1.664
+ },
+ "persistence": {
+  "n_datasets": 5,
+  "ref": 0.644,
+  "lookalike_oracle": 0.704,
+  "relative": null,
+  "dataset_mean": 0.811,
+  "stranger": 1.0,
+  "shrink_ref": 0.644,
+  "lookalike16": 0.771,
+  "wrong_detail": 1.093,
+  "noise": 3.441
+ },
+ "fid": {
+  "n_datasets": 7,
+  "ref": 0.929,
+  "lookalike_oracle": 1.391,
+  "relative": 1.642,
+  "dataset_mean": 16.362,
+  "stranger": 1.0,
+  "shrink_ref": 2.554,
+  "lookalike16": 10.545,
+  "wrong_detail": 1.287,
+  "noise": 12.462
+ },
+ "fwd": {
+  "n_datasets": 7,
+  "ref": 0.572,
+  "lookalike_oracle": 15.364,
+  "relative": 1.785,
+  "dataset_mean": 185.55,
+  "stranger": 1.0,
+  "shrink_ref": 34.344,
+  "lookalike16": 159.215,
+  "wrong_detail": 45.531,
+  "noise": 183.542
+ }
+}

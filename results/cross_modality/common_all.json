@@ -15,6 +15,26 @@
   },
   "cohort_mean": {
    "IXI": "no sex-age mean in IXI; its age-matched mean (age only) is not put in this column"
+  },
+  "stranger_same_centre": {
+   "QTIM": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "CelebA": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "IMDb-WIKI": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "GRAPE": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "PAPILA": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "UTIRIS NIR": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "UTIRIS VIS": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "UPOL": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung"
+  },
+  "stranger_other_centre": {
+   "QTIM": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "CelebA": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "IMDb-WIKI": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "GRAPE": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "PAPILA": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "UTIRIS NIR": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "UTIRIS VIS": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung",
+   "UPOL": "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung"
   }
  },
  "metrics": [
@@ -50,7 +70,9 @@
   "dataset_mean",
   "wrong_detail",
   "noise",
-  "shrink_ref"
+  "shrink_ref",
+  "stranger_same_centre",
+  "stranger_other_centre"
  ],
  "kind": {
   "ssim": "R",
@@ -18179,6 +18201,130 @@
       100
      ]
     },
+    "stranger_same_centre": {
+     "mse": [
+      0.8738,
+      0.8442,
+      0.8989,
+      100
+     ],
+     "rmse": [
+      0.9312,
+      0.9158,
+      0.9443,
+      100
+     ],
+     "mae": [
+      0.8994,
+      0.8824,
+      0.9141,
+      100
+     ],
+     "psnr": [
+      0.662,
+      0.5367,
+      0.8018,
+      100
+     ],
+     "psnr_fixed": [
+      0.6626,
+      0.5368,
+      0.8033,
+      100
+     ],
+     "ssim": [
+      0.9609,
+      0.9536,
+      0.9671,
+      100
+     ],
+     "pearson": [
+      0.9716,
+      0.9637,
+      0.9783,
+      100
+     ],
+     "acc_dataset": [
+      0.9673,
+      0.9615,
+      0.9725,
+      100
+     ],
+     "ampdev_dataset": [
+      0.1717,
+      0.1634,
+      0.18,
+      100
+     ],
+     "lddt": [
+      0.9893,
+      0.9752,
+      1.0023,
+      100
+     ]
+    },
+    "stranger_other_centre": {
+     "mse": [
+      1.0589,
+      1.049,
+      1.0716,
+      100
+     ],
+     "rmse": [
+      1.0324,
+      1.0272,
+      1.0391,
+      100
+     ],
+     "mae": [
+      1.057,
+      1.0516,
+      1.0636,
+      100
+     ],
+     "psnr": [
+      -0.315,
+      -0.3787,
+      -0.2651,
+      100
+     ],
+     "psnr_fixed": [
+      -0.313,
+      -0.3764,
+      -0.2628,
+      100
+     ],
+     "ssim": [
+      1.0214,
+      1.0187,
+      1.0245,
+      100
+     ],
+     "pearson": [
+      1.0147,
+      1.011,
+      1.019,
+      100
+     ],
+     "acc_dataset": [
+      1.0194,
+      1.0164,
+      1.0233,
+      100
+     ],
+     "ampdev_dataset": [
+      0.2203,
+      0.2092,
+      0.2349,
+      100
+     ],
+     "lddt": [
+      0.9817,
+      0.9726,
+      0.992,
+      100
+     ]
+    },
     "_strangers": {
      "mse": [
       1.0,
@@ -18730,6 +18876,130 @@
       0.90482,
       0.90112,
       0.90863,
+      100
+     ]
+    },
+    "stranger_same_centre": {
+     "mse": [
+      0.45895,
+      0.43682,
+      0.48116,
+      100
+     ],
+     "rmse": [
+      0.64205,
+      0.62703,
+      0.65659,
+      100
+     ],
+     "mae": [
+      0.47619,
+      0.46474,
+      0.48791,
+      100
+     ],
+     "psnr": [
+      14.01204,
+      13.89689,
+      14.11926,
+      100
+     ],
+     "psnr_fixed": [
+      22.42944,
+      22.22896,
+      22.63143,
+      100
+     ],
+     "ssim": [
+      0.33259,
+      0.32541,
+      0.3395,
+      100
+     ],
+     "pearson": [
+      0.4288,
+      0.42198,
+      0.43603,
+      100
+     ],
+     "acc_dataset": [
+      0.03853,
+      0.03224,
+      0.0456,
+      100
+     ],
+     "ampdev_dataset": [
+      0.17167,
+      0.16342,
+      0.18003,
+      100
+     ],
+     "lddt": [
+      0.84519,
+      0.84108,
+      0.84965,
+      100
+     ]
+    },
+    "stranger_other_centre": {
+     "mse": [
+      0.55618,
+      0.54232,
+      0.57268,
+      100
+     ],
+     "rmse": [
+      0.71184,
+      0.70356,
+      0.72097,
+      100
+     ],
+     "mae": [
+      0.5596,
+      0.55254,
+      0.56737,
+      100
+     ],
+     "psnr": [
+      13.03511,
+      12.86245,
+      13.18488,
+      100
+     ],
+     "psnr_fixed": [
+      21.45386,
+      21.34414,
+      21.55182,
+      100
+     ],
+     "ssim": [
+      0.29058,
+      0.28604,
+      0.29487,
+      100
+     ],
+     "pearson": [
+      0.40346,
+      0.39809,
+      0.40866,
+      100
+     ],
+     "acc_dataset": [
+      -0.01328,
+      -0.01683,
+      -0.01019,
+      100
+     ],
+     "ampdev_dataset": [
+      0.22034,
+      0.2092,
+      0.23486,
+      100
+     ],
+     "lddt": [
+      0.84639,
+      0.84452,
+      0.84825,
       100
      ]
     },

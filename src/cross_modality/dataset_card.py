@@ -33,7 +33,8 @@ MOD = {"QTIM": "brain MRI", "CelebA": "face photo", "IMDb-WIKI": "face photo", "
        "IXI": "brain MRI"}
 RUNG_SHORT = {"repeat": "repeat", "other_side": "other side", "relative": "relative", "lookalike_oracle": "best look-alike",
               "lookalike": "look-alike", "lookalike16": "mean of 16", "cohort_mean": "sex-age mean", "mean_k2": "mean of 2", "dataset_mean": "dataset mean",
-              "stranger": "stranger", "shrink_ref": "shrunk ref.", "wrong_detail": "wrong detail", "noise": "noise"}
+              "stranger": "stranger", "stranger_same_centre": "stranger same site", "stranger_other_centre": "stranger other site",
+              "shrink_ref": "shrunk ref.", "wrong_detail": "wrong detail", "noise": "noise"}
 NA = "n/a"
 
 

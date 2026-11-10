@@ -21,7 +21,8 @@ RAW = ["ampdev_dataset", "ampdev_cohort"]
 ALL = ERR[:3] + DB + ["ssim", "ms_ssim", "pearson", "acc_dataset", "acc_cohort", "ampdev_dataset", "ampdev_cohort",
                       "lddt", "lddt_rep", "tm_like", "gdt_like", "rmse_rep", "persistence", "arcface_cos"]
 STR = [f"str{j:02d}" for j in range(16)]
-RUNGS = ["repeat", "other_side", "relative", "lookalike_oracle", "lookalike", "lookalike16", "cohort_mean", "mean_k2", "dataset_mean", "wrong_detail", "noise", "shrink_ref"]
+RUNGS = ["repeat", "other_side", "relative", "lookalike_oracle", "lookalike", "lookalike16", "cohort_mean", "mean_k2", "dataset_mean", "wrong_detail", "noise", "shrink_ref",
+         "stranger_same_centre", "stranger_other_centre"]
 SRC = {
     "QTIM": dict(path=P + "donor-ladder-brain-metrics-20261106-v3/rows.csv.gz", cell=["target", "patch", "side"], unit="target",
                  ren={"mirror": "other_side"}, filt=lambda r: r[r.patch < 32]),
@@ -42,9 +43,24 @@ for _ds, _f in (("UTIRIS NIR", "UTIRIS_NIR"), ("UTIRIS VIS", "UTIRIS_VIS"), ("UP
 # last so the bootstrap draws of the datasets above stay unchanged. Rungs and metrics IXI marks n/a are dropped here.
 IXI_NA_RUNGS = ("repeat", "sibling", "cotwin", "cohort_mean", "shrink_repeat")
 IXI_NA_METRICS = ("acc_cohort", "tm_like", "gdt_like", "lddt_rep", "rmse_rep")
+
+
+def ixi_rows(r):
+    """IXI random patches without its n/a rungs and metrics, plus the same-centre and other-centre stranger rungs:
+    per cell, the mean of each metric over the (up to) 16 drawn strangers of that kind (as donor_ladder_brain_ixi.py
+    stranger_expectations). The 16-stranger anchor (str00-str15) is unchanged."""
+    r = r[(r.patch < 32) & ~r.fill.isin(IXI_NA_RUNGS)].drop(columns=list(IXI_NA_METRICS), errors="ignore")
+    cell = ["target", "patch", "side"]
+    num = [c for c in r.columns if c not in cell + ["fill", "src"]]
+    extra = []
+    for tag, name in (("sc", "stranger_same_centre"), ("dc", "stranger_other_centre")):
+        g = r[r.fill.str.fullmatch(tag + r"\d\d")]
+        extra.append(g.groupby(cell)[num].mean().reset_index().assign(fill=name))
+    return pd.concat([r] + extra, ignore_index=True)
+
+
 SRC["IXI"] = dict(path=P + "ixi-ladder-20261109-v1/parts/p*.csv.gz", cell=["target", "patch", "side"], unit="target",
-                  ren={"mirror": "other_side"},
-                  filt=lambda r: r[(r.patch < 32) & ~r.fill.isin(IXI_NA_RUNGS)].drop(columns=list(IXI_NA_METRICS), errors="ignore"))
+                  ren={"mirror": "other_side"}, filt=ixi_rows)
 rng = np.random.default_rng(20261106)
 # Rungs a dataset's own protocol does not define: n/a with the reason, never a value (lookalike16 = mean of the 16
 # nearest look-alikes, fundus and iris only).
@@ -55,7 +71,10 @@ NOT_AVAILABLE = {"lookalike16": {
     "IXI": "not defined in brain Amendment 23"},
     **{r: {"IXI": "no repeat, no families in IXI (donor_ladder_brain_ixi.json not_available)"}
        for r in ("repeat", "relative")},
-    "cohort_mean": {"IXI": "no sex-age mean in IXI; its age-matched mean (age only) is not put in this column"}}
+    "cohort_mean": {"IXI": "no sex-age mean in IXI; its age-matched mean (age only) is not put in this column"},
+    **{r: {d: "no acquisition-centre column in this dataset's rows; only IXI (three centres) defines this rung"
+           for d in ("QTIM", "CelebA", "IMDb-WIKI", "GRAPE", "PAPILA", "UTIRIS NIR", "UTIRIS VIS", "UPOL")}
+       for r in ("stranger_same_centre", "stranger_other_centre")}}
 out = {"method": __doc__.strip(), "not_available": NOT_AVAILABLE, "metrics": ALL, "rungs": RUNGS, "kind": {**{m: "R" for m in SIM + ERR}, **{m: "dB" for m in DB},
                                                                          **{m: "raw" for m in RAW}}, "datasets": {}}
 for name, s in SRC.items():

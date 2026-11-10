@@ -93,6 +93,11 @@ metrics. Metrics: rho for each dataset, mean over datasets. ArcFace left out (5 
   not put in that column), mean of 16 look-alikes, and the repeat-tolerance metrics. Its own extra rungs (same- and
   other-centre strangers) are not columns of the common tiles. Dataset mean and other-side MSE equal the IXI file;
   stranger / V 1.98, other side / V 1.31; rung order agrees with QTIM at rho 0.95.
+- 9-10 Nov (Kate: "запускай"): IXI scanner-site strangers as two columns (stranger from the same site / from another
+  site; per cell the mean over up to 16 drawn strangers of that kind, as the IXI script). n/a with the reason on every
+  other dataset (no site column). IXI MSE R: same site 0.87, other site 1.06, so part of "stranger" distance is the
+  scanner. The summary figure (`summary_figure.py`, `fig_metric_summary.{png,pdf}`, values in
+  `fig_metric_summary_R.json`, test that they equal the tables) now lives here; it leaves the IXI-only site rungs out.
 
 ## 5. Window size follows the object (Kate, 8 Nov 2026: "да переделай честно")
 One pixel window covers a different share of each object (brain about 1/10 of its length, faces 0.4 inter-ocular

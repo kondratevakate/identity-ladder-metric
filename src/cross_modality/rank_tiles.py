@@ -17,10 +17,11 @@ c = json.load(open(SCR + "/common_all.json"))
 TST = json.load(open(SCR + "/tests_all.json"))["datasets"]
 QC = {"QTIM": "pre-QC", "CelebA": "QC", "IMDb-WIKI": "QC", "GRAPE": "pre-QC", "PAPILA": "pre-QC", "UTIRIS NIR": "pre-QC", "UTIRIS VIS": "pre-QC", "UPOL": "pre-QC", "IXI": "pre-QC"}
 COLS = ["repeat", "other_side", "relative", "lookalike_oracle", "lookalike", "lookalike16", "cohort_mean", "mean_k2",
-        "dataset_mean", "stranger", "shrink_ref", "wrong_detail", "noise"]
+        "dataset_mean", "stranger", "stranger_same_centre", "stranger_other_centre", "shrink_ref", "wrong_detail", "noise"]
 LAB = {"repeat": "repeat image", "other_side": "other side (mirror / eye)", "relative": "relative (sibling or twin)", "cotwin": "co-twin",
        "lookalike_oracle": "best look-alike", "lookalike": "look-alike", "lookalike16": "mean of 16 look-alikes", "cohort_mean": "sex-age mean", "mean_k2": "mean of 2 strangers",
-       "dataset_mean": "dataset mean   [T1]", "stranger": "16 strangers", "shrink_ref": "repeat shrunk to mean   [T2]",
+       "dataset_mean": "dataset mean   [T1]", "stranger": "16 strangers", "stranger_same_centre": "stranger, same scanner site (IXI)",
+       "stranger_other_centre": "stranger, other scanner site (IXI)", "shrink_ref": "repeat shrunk to mean   [T2]",
        "wrong_detail": "wrong detail   [T3a]", "noise": "white noise   [T3b]"}
 TCOL = [("T1", "T1 repeat beats mean"), ("T2", "T2 repeat beats repeat shrunk to mean"), ("T3a", "T3a repeat beats wrong detail"),
         ("T3b", "T3b repeat beats white noise")]
