@@ -1,0 +1,115 @@
+{
+  "schema_version": 2,
+  "title": "Identity Ladder (CVPR 2027): claims logbook",
+  "emoji": "🎯",
+  "space_id": null,
+  "paper": null,
+  "tags": [
+    "cvpr2027",
+    "identity-ladder",
+    "claims"
+  ],
+  "updated_at": "2026-11-10T08:48:34+00:00",
+  "root": {
+    "slug": "index",
+    "title": "Identity Ladder (CVPR 2027): claims logbook",
+    "file": "pages/index.md",
+    "children": [
+      {
+        "slug": "executive-summary",
+        "title": "Executive summary",
+        "file": "pages/executive-summary/page.md",
+        "children": []
+      },
+      {
+        "slug": "c1-brain-mse-mean-and-mirror",
+        "title": "C1 Brain MSE: mean and mirror",
+        "file": "pages/c1-brain-mse-mean-and-mirror/page.md",
+        "children": []
+      },
+      {
+        "slug": "c2-brain-t2-shrunk-repeat",
+        "title": "C2 Brain T2: shrunk repeat",
+        "file": "pages/c2-brain-t2-shrunk-repeat/page.md",
+        "children": []
+      },
+      {
+        "slug": "c3-mean-of-16-look-alikes",
+        "title": "C3 Mean of 16 look-alikes",
+        "file": "pages/c3-mean-of-16-look-alikes/page.md",
+        "children": []
+      },
+      {
+        "slug": "c4-ixi-scanner-site",
+        "title": "C4 IXI scanner site",
+        "file": "pages/c4-ixi-scanner-site/page.md",
+        "children": []
+      },
+      {
+        "slug": "c5-haca3-session-shift",
+        "title": "C5 HACA3+ session shift",
+        "file": "pages/c5-haca3-session-shift/page.md",
+        "children": []
+      },
+      {
+        "slug": "c6-fundus-and-iris-cohorts",
+        "title": "C6 Fundus and iris cohorts",
+        "file": "pages/c6-fundus-and-iris-cohorts/page.md",
+        "children": []
+      },
+      {
+        "slug": "c7-face-donor-pixel-vs-identity",
+        "title": "C7 Face donor: pixel vs identity",
+        "file": "pages/c7-face-donor-pixel-vs-identity/page.md",
+        "children": []
+      },
+      {
+        "slug": "c8-per-window-errors-reward-shrinkage",
+        "title": "C8 Per-window errors reward shrinkage",
+        "file": "pages/c8-per-window-errors-reward-shrinkage/page.md",
+        "children": []
+      },
+      {
+        "slug": "c9-protein-style-scores-track-mse",
+        "title": "C9 Protein-style scores track MSE",
+        "file": "pages/c9-protein-style-scores-track-mse/page.md",
+        "children": []
+      },
+      {
+        "slug": "c10-lpips-rejects-the-mean-only",
+        "title": "C10 LPIPS rejects the mean only",
+        "file": "pages/c10-lpips-rejects-the-mean-only/page.md",
+        "children": []
+      },
+      {
+        "slug": "c11-fid-fwd-reject-averaging-only",
+        "title": "C11 FID/FWD reject averaging only",
+        "file": "pages/c11-fid-fwd-reject-averaging-only/page.md",
+        "children": []
+      },
+      {
+        "slug": "c12-window-size-keeps-the-rung-order",
+        "title": "C12 Window size keeps the rung order",
+        "file": "pages/c12-window-size-keeps-the-rung-order/page.md",
+        "children": []
+      },
+      {
+        "slug": "not-run-and-limits",
+        "title": "Not run and limits",
+        "file": "pages/not-run-and-limits/page.md",
+        "children": []
+      }
+    ]
+  },
+  "traces": [],
+  "workspace": {
+    "file": "workspace.json",
+    "file_count": 0,
+    "total_size": 0,
+    "bucket_id": null
+  },
+  "agent_view_tokens": 7940,
+  "trace_view_tokens": 10,
+  "workspace_view_tokens": 8,
+  "revision": "b10d036cbbcdc518e408"
+}

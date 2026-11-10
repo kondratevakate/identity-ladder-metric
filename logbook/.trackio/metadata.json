@@ -1,0 +1,13 @@
+{
+  "space_id": null,
+  "emoji": "🎯",
+  "created_at": "2026-11-10T08:48:24+00:00",
+  "private": true,
+  "tags": [
+    "cvpr2027",
+    "identity-ladder",
+    "claims"
+  ],
+  "embed_content": false,
+  "last_page": "not-run-and-limits"
+}
