@@ -11,7 +11,7 @@ The supplement retains both dependency-version records and all numerical probes;
 \subsection{Brain MRI (QTIM)}
 \label{sec:r-brain}
 All brain-panel findings in this section are provisional.
-Table~\ref{tab:brain} reports the saved random-region, both-hemisphere profile, with source two-way intervals.
+The supplementary brain table reports the saved random-region, both-hemisphere profile, with source two-way intervals.
 The MSE position of the dataset mean is below the mirror position, while the corresponding ordering changes under TM-like distance.
 The difference is an observed metric profile under the recorded alignment, not evidence that a population mean preserves more of a person's anatomy.
 
@@ -32,23 +32,6 @@ In IXI, a stranger from the same site is at $0.874$ $[0.844, 0.899]$ and one fro
 Part of the unrelated reference is therefore acquisition rather than anatomy.
 % Sources: results/cross_modality/common_all.json (R_self, mse); donor_ladder_brain_lookalike16.json (qtim, deep/LR).
 
-\begin{table*}[t]
-\centering
-\caption{\textbf{Provisional brain audit profile.} $R_{\rm rep}$: repeat zero and mean of the recorded unrelated donors one; lower is closer.
-Cells contain means and source 95\% intervals, with family and position resampling.
-Non-repeat rows involve 221 targets from 168 families; the repeat anchor involves 23 targets.
-Residual correlation at the exact dataset mean is undefined.
-Source: \src{results/donor_ladder_brain_metrics.json}.}
-\label{tab:brain}
-\small
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-Metric & Dataset mean & Mirror & Incorrect detail & Noise \\
-\midrule
-\input{tab/brain_profile}
-\end{tabular}
-\end{table*}
-
 HACA3+ stage 1 provides a separate contrast sensitivity, not a completed identity endpoint.
 Across its 23 paired scans, mean absolute deep-region session shift changes from $0.121$ to $0.016$ standardized intensity units\statuspre.
 The parietal counterpart changes from $0.059$ to $0.033$\statuspre.
@@ -57,29 +40,12 @@ The source records a pending visual verdict, and neither measurement establishes
 
 \subsection{Fundus photographs (PAPILA, GRAPE)}
 \label{sec:r-fundus}
-The frozen bilateral-branch aggregate supplies the P8/P9 frame-only profile in Table~\ref{tab:fundus}.
+The frozen bilateral-branch aggregate supplies the P8/P9 frame-only profile in the supplementary fundus table.
 GRAPE has 239 target-eye units from 134 people in the stranger comparison; the repeat comparison has 171 units from 97 people\statuspre.
 PAPILA has 488 target eyes from 244 people and no other-visit rung\statuspre.
 The dataset mean is closer than the fellow eye under squared error in both saved summaries.
 The context-selected mean of look-alikes can outperform the unconditional mean in this representation.
 These findings are provisional and do not establish the identity of the inferred detail.
-
-\begin{table*}[t]
-\centering
-\caption{\textbf{Provisional frame-only fundus profile.}
-Mean-relative squared-error ratio $Q$, with source person-bootstrap intervals; lower is closer.
-These P8/P9 map-compatible summaries differ from the older P7 support and from the window-level metric panel.
-PAPILA has no repeat observation.
-Source: \src{results/donor_ladder_2d_facefmt.json} at the frozen bilateral snapshot, copied without change into the paper inputs.}
-\label{tab:fundus}
-\small
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-Dataset & Repeat & Fellow eye & Context mean & Stranger \\
-\midrule
-\input{tab/fundus_ratio}
-\end{tabular}
-\end{table*}
 
 The Gaussian maps in Figure~\ref{fig:atlas} retain these preprocessing labels.
 High split-half correlation cannot establish anatomical validity if a shared preprocessing artifact is reproducible too.
@@ -88,7 +54,7 @@ Superseded support-sensitive block searches supply no primary result.
 
 \subsection{Face photographs (CelebA, IMDb-WIKI)}
 \label{sec:r-face}
-Table~\ref{tab:face} reports the available v6f tier-1 profiles on the self-anchored scale.
+The supplementary face table reports the available v6f tier-1 profiles on the self-anchored scale.
 The repeat photograph has substantial pixel error despite preserving person membership.
 The dataset mean is closer than the repeat under MSE in both datasets, while a local context-selected donor is closer still.
 That pixel preference does not identify the donor as the target person.
@@ -99,53 +65,19 @@ These are different measurements at different spatial scopes.
 Their disagreement shows that local photometric matching can select a donor whose global identity representation remains near the unrelated reference.
 It does not measure identity retention by a completed composite reconstruction, and no ArcFace value is assigned to an unembedded mean.
 
-\begin{table*}[t]
-\centering
-\caption{\textbf{Face metric and donor-identity profiles.} Recorded $R_{\rm self}$ point estimates; target self zero, mean of unrelated donors one.
-The source retains family/position bootstrap intervals; full records accompany the preparation manifest.
-The approved frame has 921 CelebA targets and 678 IMDb-WIKI targets, respectively clustered into 921 and 453 units.
-ArcFace compares whole target and donor images; the pixel metrics compare local windows.
-Source: \src{results/face_ladder_metrics.json}.}
-\label{tab:face}
-\small
-\begin{tabular}{@{}llcccc@{}}
-\toprule
-Dataset & Metric & Retest & Bilateral & Dataset mean & Context donor \\
-\midrule
-\input{tab/face_profile}
-\end{tabular}
-\end{table*}
-
 \subsection{Iris images (UTIRIS, UPOL)}
 \label{sec:r-iris}
 The current P2 strip panel contains 156 target eyes from 78 people for UTIRIS NIR.
 The secondary UTIRIS VIS and UPOL panels contain 158 eyes from 79 people and 128 eyes from 64 people, respectively\statuspre.
 The VIS repeat endpoint has one fewer eligible eye, which is retained as endpoint-specific coverage rather than silently changing every comparison.
-Table~\ref{tab:iris} reports mean-relative squared error on the support defined for each condition.
+The supplementary iris table reports mean-relative squared error on the support defined for each condition.
 The repeated eye is closer than the fellow eye in all three saved summaries, and a context-selected unrelated donor can fall between them.
 These are pixel-space relationships; they are not an iris biometric verification result.
-
-\begin{table*}[t]
-\centering
-\caption{\textbf{Provisional P2 iris donor ladder.} Squared-error ratio $Q$ against an independent dataset mean evaluated on the same support; lower is closer.
-The mean anchor is one by construction; an independent equal-variance stranger has theoretical expectation near two.
-Intervals use person bootstrap.
-Target-eye/person counts are 156/78, 158/79, and 128/64; the VIS repeat endpoint uses 157 eyes.
-Source: \src{results/iris_ladder_metrics.json}, results block.}
-\label{tab:iris}
-\small
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-Dataset & Same-eye repeat & Fellow eye & Context donor & Stranger \\
-\midrule
-\input{tab/iris_ratio}
-\end{tabular}
-\end{table*}
 
 The source retains distinct $R_{\rm self}$ and $R_{\rm rep}$ values, window-level controls, and the directional tests.
 It also records a lid-shadow mask review limitation.
 The full P3 run is committed separately.
-Its LPIPS, Betti-matching, FID, and FWD values enter only the cross-dataset comparison in Section~\ref{sec:r-cross}, not Table~\ref{tab:iris}.
+Its LPIPS, Betti-matching, FID, and FWD values enter only the cross-dataset comparison in Section~\ref{sec:r-cross}, not the per-modality iris table.
 
 \subsection{Metric families across nine image sets}
 \label{sec:r-cross}
