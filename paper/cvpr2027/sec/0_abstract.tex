@@ -1,3 +1,14 @@
 \begin{abstract}
-\TODO{Abstract after Methods and Results are agreed.}
+Inpainting provides a controlled setting for evaluating conditional generation: visible context can be paired with withheld content, population references, and explicit changes to individual detail.
+Identity Ladder organizes these references into a metric audit using brain MRI, fundus photographs, faces, and iris images.
+Comparisons include repeat captures, bilateral anatomy, relatives where available, context-selected donors, independent means, attenuation, and incorrect-detail controls.
+They separate reference distortion, residual magnitude, target alignment, and acquisition sensitivity without imposing one biological ordering.
+In the provisional brain panel, mean squared error places the dataset mean at 0.413 and the mirror at 0.717 on a repeat-zero, stranger-one scale.
+In CelebA, a selected donor scores 0.399 under local pixel error but 0.983 under a whole-image identity reference on self-zero scales.
+The comparison changes spatial scope and is not a generated-composite identity result.
+Masked Gaussian maps localize differences, and validity masks retain missing support as missing.
+We propose applying the same controls to generated completions within prespecified target populations, reporting raw, common-reference, and matched-reference profiles with coverage and uncertainty.
+Target strata, donor cohorts, and acquisition domains remain distinct.
+The existing experiments characterize metrics and references; population-stratified generator behavior is not yet measured, and brain/fundus evidence remains provisional.
+The framework supplies testable controls for inpainting and a defined route to broader conditional-generation audits where an identity-bearing condition and meaningful reference unit are available.
 \end{abstract}

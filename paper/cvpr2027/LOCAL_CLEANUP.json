@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-09",
+  "preservation_commit": "b001d9c9a1ff0a1991f8ccd10a45a93ba9151c9c",
+  "non_external_files": 456,
+  "runtime_files": 29763,
+  "runtime_bytes": 1417083119,
+  "removed_from_workspace": [
+    "identity-ladder-metric",
+    "identity-ladder-repro"
+  ],
+  "method": "Windows Recycle Bin; reversible",
+  "canonical_clone_retained": true
+}

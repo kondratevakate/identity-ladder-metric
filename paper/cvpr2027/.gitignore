@@ -1,0 +1,15 @@
+/.build/
+/*.pdf
+!/main.pdf
+!/supplementary.pdf
+/*.aux
+/*.bbl
+/*.blg
+/*.log
+/*.out
+/*.brf
+/*.synctex.gz
+/*.fls
+/*.fdb_latexmk
+/verification-cache/
+/identity_ladder_review_*.zip

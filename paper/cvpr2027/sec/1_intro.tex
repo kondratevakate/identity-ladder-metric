@@ -1,3 +1,33 @@
 \section{Introduction}
 \label{sec:intro}
-\TODO{Introduction. Position against CARE, OCT LMSB, Brain-ID and restoration theory; every citation through bib-verify.}
+Inpainting is a conditional-generation task with a useful experimental structure: visible context is fixed while a missing region must be completed.
+When a real region is deliberately hidden, an observed target supports controlled comparisons.
+A completion can resemble the target, a population-typical image, or plausible but unrelated anatomy for different reasons.
+Its score therefore needs references that distinguish retained individual information from common structure and acquisition variation.
+
+Human anatomy supplies such controls without requiring a generated image to be declared the correct answer.
+Repeated captures hold the anatomical unit approximately fixed while changing acquisition.
+Bilateral comparisons retain a person but change the anatomical structure.
+Related individuals may share some anatomy, while unrelated donors provide a population reference.
+An average of independent donors supplies a different control: it removes much individual variation while retaining common structure.
+These comparisons define separate experimental questions.
+They do not imply that every metric should place every bilateral structure or relative at one universal intermediate rung.
+
+Identity Ladder turns these comparisons into a metric audit and a set of references for evaluating completions.
+Each candidate is evaluated on valid acquired support and against a denominator estimated without the target's person or family.
+Context selection is paired with the same selection on unrelated anatomy, and selection using the hidden region is labeled an oracle.
+An attenuated correct donor, an amplitude-matched incorrect residual, and white noise distinguish loss of detail from wrong detail.
+Reporting these conditions together makes several otherwise conflated interpretations testable.
+
+Applied to generated outputs, the same design could characterize behavior within prespecified population slices.
+An audit can ask whether a model's preference for typical anatomy, attenuation, incorrect detail, or acquisition sensitivity differs between target groups.
+Target strata, donor reference cohorts, and acquisition domains are separate axes: an age-matched donor mean is a control, not evidence of subgroup model performance.
+Comparable targets, masks, references, and sampling budgets are needed before differences between groups can be interpreted.
+
+Our contribution is an explicit comparison protocol, a source-traceable collection of donor and negative-control profiles, and a spatial reporting design across anatomical image domains.
+The measured experiments characterize the controls and metrics; audits of generated outputs across target strata remain proposed.
+We define that extension and map its evidence requirements without treating cross-dataset contrasts as demographic disparities.
+Squared error's conditional-mean optimum remains a legitimate prediction target, and uncertain hidden detail need not be uniquely recoverable.
+Broader conditional-generation applications require their own identity unit and valid references; unconditional generation has no intended target individual.
+BraTS brain inpainting~\cite{brats2023} is one practical application, including the distinction between an observed healthy reference and unobserved counterfactual tissue.
+\input{sec/population_coverage_table}

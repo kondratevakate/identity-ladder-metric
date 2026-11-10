@@ -1,0 +1,9 @@
+{
+  "tool": "Built-in OpenAI image generation",
+  "intent": "New decorative illustration; no generated scientific data",
+  "prompt": "Use case: scientific-educational, decorative asset only.\nCreate a brand new image: an anonymous, androgynous adult human head-and-shoulders bust as a very pale white 3D anatomical figurine for a scientific paper infographic. It should resemble the restrained ice-blue and white digital-twin health illustration aesthetic of the supplied visual inspiration, without copying an identifiable person or any app UI. Face turned slightly three-quarter toward viewer's right, both eyes visible, smooth neutral expression, short smooth sculpted hair or minimal hair, shoulders and upper chest, a plain pale high-neck athletic top. Soft translucent porcelain / frosted resin material, subtle cool gray anatomical surface detail and very light icy-blue shadows; understated realistic 3D volume, professionally lit. Entire head and shoulders fully visible with generous transparent margin. Centered isolated cutout, portrait composition. Genuine transparent background. No text, letters, numbers, arrows, circles, rings, charts, symbols, logos, watermark, real participant image, exposed internal organs, highlighted brain, eye inset, MRI, heatmap or scientific data. This is a decorative schematic, not empirical evidence. Quiet scientific editorial rendering, graceful and clean.",
+  "source_asset": "C:/Users/Lenovo/.codex/generated_images/01a1ba17-a2d5-7e82-b611-add32e9c14d9/exec-8327a1da-72e0-4a92-9751-aedec01ebe88.png",
+  "workspace_asset": "paper/cvpr2027/fig/assets/identity_bust_v1.png",
+  "transparent_background": true,
+  "scope": "Anonymous synthetic decorative bust, not a participant, dataset sample or anatomical measurement. Labels/maps are composed separately from saved sources."
+}

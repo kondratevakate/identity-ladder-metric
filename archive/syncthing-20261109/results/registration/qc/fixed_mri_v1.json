@@ -1,0 +1,30 @@
+{
+  "rigid": {
+    "exit_code": 0,
+    "seconds": 48.67200000002049,
+    "outputs": {
+      "fixed_to_moving.nii.gz": "adb9d4eae609bad7cf9c176ecf7120d934b87db100d30d2f7608c781de43c6e4",
+      "forward.lta": "0570ab49062adf8123d2cd6489bdeedc4a40872a705995439fc8a9a961a908f6",
+      "inverse.lta": "7c8f72f814631b0925543106bdc5f28468f1b60bca622dc30684ac7a9d9a047e",
+      "moving_to_fixed.nii.gz": "f291bf8ec2ed2fef7c965ee1cb921d65d8fc6badc537a66c555158f13c9a694a"
+    },
+    "visual_acceptance": "NOT ESTABLISHED",
+    "scope": "one development pair",
+    "metric_scoring": "NOT RUN",
+    "gate": "NOT MET"
+  },
+  "affine": {
+    "exit_code": 0,
+    "seconds": 44.45299999997951,
+    "outputs": {
+      "fixed_to_moving.nii.gz": "decf2d4049ba6d5c7f4e54c5ba2a8ff6caa1dda6e1b0810f199d54866eb8443c",
+      "forward.lta": "94f3931029943a1e37a9687aeaa42a08d60697fa524cc57ea21a53ee4d0b02e6",
+      "inverse.lta": "3a85d2c56674307ed5ff24895909fb23fd1d2e12e6d4f165c2196b47c3e8b4ef",
+      "moving_to_fixed.nii.gz": "2db26a3410575b48148657b0e4046ebba5c53ecda5e92ca6b6398d4d78bad9c6"
+    },
+    "visual_acceptance": "NOT ESTABLISHED",
+    "scope": "one development pair",
+    "metric_scoring": "NOT RUN",
+    "gate": "NOT MET"
+  }
+}

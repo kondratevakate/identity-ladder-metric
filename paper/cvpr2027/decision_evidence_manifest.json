@@ -1,0 +1,190 @@
+{
+  "assessed_on": "2026-11-09",
+  "scope": "Documentary assessment of existing experiments, protocols and code. No new metric experiment, patient-data analysis or competition ranking was executed.",
+  "generator_sha256": "3b671c03bdafac04b057ca24e4f4776a318605c4ff5074e890d21d339993467b",
+  "coverage_specification_sha256": "303dfdb57320c61167fe67e0c6851b2b6bac91d30f0b32bf19032b2cc70a57fc",
+  "sources": {
+    "docs/DECISION_TREES.md": {
+      "sha256": "65ae07a2d2bc55bd8fa03bb48e331bfce4a784c0f78e8512c53d7d685b052216",
+      "producing_commit": "f34d4acfda3ca43236adb14f8be7c51724a62034"
+    },
+    "docs/HANDOFF.md": {
+      "sha256": "4374cae3afda71044d5b786b6411b67c18910151f8015b19c06dcf3a9c6bf2a4",
+      "producing_commit": "39e4967f89d667bd6946fecaafcff182d095719e"
+    },
+    "docs/PROTOCOL_donor_ladder_brain.md": {
+      "sha256": "6d92452e38b318a6987c03d8ced2fe44189e056f0ac2791ae9f5c1c87f21a2bc",
+      "producing_commit": "22ddf703267e9de631d28bbedd5d869d789e6de9"
+    },
+    "docs/PROTOCOL_donor_ladder_general.md": {
+      "sha256": "3730e0cfe69948152586df96f46367ab96f61d7738ace99d40204ecce0d0f0b7",
+      "producing_commit": "5da3433fd01b90aa882a5f4492d6db4bab0076f8"
+    },
+    "docs/PROTOCOL_real_cases.md": {
+      "sha256": "c76b7524248788f0e36a33589dc05ba046c66141b4ec6bd3404859e234ab95b7",
+      "producing_commit": "6a533b2ae041114c18b7e299422fc678463cdf46"
+    },
+    "docs/REPRODUCTION_WORKFLOW.md": {
+      "sha256": "d2b86d55b47281bfc2954580c36bb62d0e40da7fd4d8579e407276a3d7b58665",
+      "producing_commit": "bccf8ca41f2e525cb4b23db063178ca542002b8c"
+    },
+    "paper/cvpr2027/README.md": {
+      "sha256": "2c289990c5635238b588358d9e0b2fbb73b162eb5704603c364758d380bb2b3f",
+      "producing_commit": null
+    },
+    "paper/cvpr2027/inputs/fundus_ladder_metrics.json": {
+      "sha256": "73f1d778d70fd0b799648c4a336629e81cb6dfba42741e7bb00851d915bfffc0",
+      "producing_commit": null
+    },
+    "results/brats_panel_checks_tm1.1.2.json": {
+      "sha256": "a8432803e5a12b2629951253e167da1dd08e3bd954b200f5a083e07afb833962",
+      "producing_commit": "5eebee02a90c4105e40db03ad778298e0be51cc7"
+    },
+    "results/brats_panel_checks_tm1.9.0.json": {
+      "sha256": "f0c50110aaa299385ec0e5fc292ebcb6583e64fb97b0d3e64cc844e45667c039",
+      "producing_commit": "5eebee02a90c4105e40db03ad778298e0be51cc7"
+    },
+    "results/care_iteration2.json": {
+      "sha256": "017f0d5d33b3afcb96c4827af14eae696c79337148b22b0bdab7d7caee784be9",
+      "producing_commit": "87a95a1f66b2975b78ac22035610947d55c3c9d8"
+    },
+    "results/donor_ladder_brain_haca3_stage1.json": {
+      "sha256": "90953bb52568c37ab58729a5c5c56473caf97bcff0e51c24993d38b640732992",
+      "producing_commit": "a48523dccd2b70dae2615717d62d8725e5183528"
+    },
+    "results/donor_ladder_brain_map_grid.json": {
+      "sha256": "171eee0203eabc7a4823c9ea7f6473eedf2137ec6c3c048e5d2ca5a39cb22a27",
+      "producing_commit": "22ddf703267e9de631d28bbedd5d869d789e6de9"
+    },
+    "results/donor_ladder_brain_maps.json": {
+      "sha256": "4b64bbf265b748544edad13ddbcfb49aa541dceb91b970e9abf08b5d70e16d1c",
+      "producing_commit": "d3df13c77056a14212da26902197411e67cf84fd"
+    },
+    "results/donor_ladder_brain_metrics.json": {
+      "sha256": "6e33995b8a40de145fda81f76063d0652c42b839b22e5d00bdca749d0cfcfcb8",
+      "producing_commit": "22ddf703267e9de631d28bbedd5d869d789e6de9"
+    },
+    "results/donor_ladder_brain_size.json": {
+      "sha256": "9c3f6200e22686515e4d393ecefb6313b098bd08b9799bb19d6230e43f204fdc",
+      "producing_commit": "a42572715f45c8cfd22acd965d578e15da701108"
+    },
+    "results/donor_ladder_metrics_correlation.json": {
+      "sha256": "51367dbc9d059285bb487764b8260db6db3688bf9514668ebfb1450e02d68524",
+      "producing_commit": "d3df13c77056a14212da26902197411e67cf84fd"
+    },
+    "results/face_ladder_metrics.json": {
+      "sha256": "3477dd2f0886c055a942dc5e04c4859b698b530d5fc2750d30833fb5d5e79692",
+      "producing_commit": "f2ed748efd7ef7de5940f060cd4ff0f1f0d6580c"
+    },
+    "results/iris_ladder_metrics.json": {
+      "sha256": "5f0828e93a8d3bf216c0e493a166f7878a39bc90141c961dab1565dd4ebc3c69",
+      "producing_commit": "29e38c4a7d9225aa509b8316f5fb6dda20d2d91a"
+    },
+    "results/label_ladder.json": {
+      "sha256": "41767f1f8a96f6c5d9f0c6f2852af2599e865249a1ffabc0e2dcf811800e5d50",
+      "producing_commit": "5eebee02a90c4105e40db03ad778298e0be51cc7"
+    },
+    "results/label_robustness.json": {
+      "sha256": "2f23961ddbb46fd629497492a54fdab8b0b841102c55039881ae40743573a1c8",
+      "producing_commit": "f8151663103b160c952e3ad9d4814a352b1e4b5b"
+    },
+    "results/label_robustness_report.md": {
+      "sha256": "fa14bb1a21cfc48dd0e1d9ca9f1bb50b8f486266377e21b9ff58e9f251077b67",
+      "producing_commit": "f8151663103b160c952e3ad9d4814a352b1e4b5b"
+    },
+    "results/population_null_synthetic.json": {
+      "sha256": "4c1b2e71010d9dcac7dbd0f3faabb5a29e15855b97a7be7bb15d200c4ff04885",
+      "producing_commit": "394913ac7e41b8c786dd0f9dbe380bd24d770bd3"
+    },
+    "results/pupil_ladder.json": {
+      "sha256": "12d24185dbaa7554c6199f1a85afb1dd153aaa527abeb0cecf1c5a1803263c9a",
+      "producing_commit": "8d6a41df98e0b5d7552ddb5ace752a2804c07daf"
+    },
+    "results/real_cases.json": {
+      "sha256": "202368b272de7bfbd9bfddca29a542b973876470c2832be50a2afb03670974a5",
+      "producing_commit": "5cf2ee3a6905b255263301fc1a2dc763fbd5cf60"
+    },
+    "results/real_cases_parietal.json": {
+      "sha256": "b43ca58690758d9ba0dd5dcad552dc581a5bb1ec4f31d474dc05fd409618e255",
+      "producing_commit": "5cf2ee3a6905b255263301fc1a2dc763fbd5cf60"
+    },
+    "results/toy_ladder.json": {
+      "sha256": "1b31f94e4482df24d689e18f0f7b222739287e4afa5cc2e16a81c8505349a808",
+      "producing_commit": "5eebee02a90c4105e40db03ad778298e0be51cc7"
+    },
+    "src/brats_panel_checks.py": {
+      "sha256": "ecf4e6c8fd9dc5f3d4283a7cd44d84aae76573cbbf73e2616a60e98e4927e5b8",
+      "producing_commit": "5eebee02a90c4105e40db03ad778298e0be51cc7"
+    }
+  },
+  "saved_implementation_probes": {
+    "1.1.2": {
+      "shape": [
+        1,
+        40,
+        48,
+        36
+      ],
+      "seed": 0,
+      "ssim_dimensionality": {
+        "ssim_original": 0.9561630487442017,
+        "ssim_after_permuting_first_spatial_axis": 0.9561630487442017,
+        "ssim_after_permuting_last_spatial_axis": 0.9966972470283508,
+        "per_slice_2d": true
+      },
+      "psnr_clamping": {
+        "psnr_reported": 12.316670417785645,
+        "psnr_eps_reported": 9.091104507446289,
+        "psnr_from_unclamped_mse": 9.091105014815378,
+        "psnr_from_clamped_mse": 12.316671422754716,
+        "share_of_fill_voxels_above_reference_max": 0.2005859375,
+        "plain_psnr_clamps_fill": true
+      },
+      "within_case_rank_tau": {
+        "mse": 1.0,
+        "psnr": 0.8909090909090909,
+        "psnr_eps": 1.0,
+        "psnr_01": 1.0,
+        "psnr_01_eps": 1.0,
+        "mae": 0.6727272727272727,
+        "msle": 0.8909090909090909,
+        "ssim": 0.6727272727272727
+      },
+      "n_constructed_fills": 11
+    },
+    "1.9.0": {
+      "shape": [
+        1,
+        40,
+        48,
+        36
+      ],
+      "seed": 0,
+      "ssim_dimensionality": {
+        "ssim_original": 0.9561630487442017,
+        "ssim_after_permuting_first_spatial_axis": 0.9561630487442017,
+        "ssim_after_permuting_last_spatial_axis": 0.9966972470283508,
+        "per_slice_2d": true
+      },
+      "psnr_clamping": {
+        "psnr_reported": 12.316670417785645,
+        "psnr_eps_reported": 9.091104507446289,
+        "psnr_from_unclamped_mse": 9.091105014815378,
+        "psnr_from_clamped_mse": 12.316671422754716,
+        "share_of_fill_voxels_above_reference_max": 0.2005859375,
+        "plain_psnr_clamps_fill": true
+      },
+      "within_case_rank_tau": {
+        "mse": 1.0,
+        "psnr": 0.8909090909090909,
+        "psnr_eps": 1.0,
+        "psnr_01": 1.0,
+        "psnr_01_eps": 1.0,
+        "mae": 0.6727272727272727,
+        "msle": 0.8909090909090909,
+        "ssim": 0.6727272727272727
+      },
+      "n_constructed_fills": 11
+    }
+  }
+}

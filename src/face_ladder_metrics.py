@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 import donor_ladder_brain_metrics as BM  # noqa: E402
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), ".."))
-FACE_SRC = os.environ.get("FACE_SRC", r"C:\Projects\02_academia\studies\identity-ladder-metric\src\donor_ladder_face.py")
+FACE_SRC = os.environ.get("FACE_SRC", os.path.join(os.path.dirname(os.path.abspath(__file__)), "donor_ladder_face.py"))
 FACE_RESULTS = os.path.join(os.path.dirname(os.path.dirname(FACE_SRC)), "results")
 PRIVATE = os.path.join(os.environ.get("DATA_ROOT", r"C:\Projects\data"), "projects", "identity-ladder-metric",
                        "face-ladder-metrics-20261106-v1")

@@ -1,0 +1,144 @@
+{
+ "protocol": "docs/PROTOCOL_donor_ladder_general.md, Amendments 9.5-9.11",
+ "status": "pre-QC",
+ "spec": "ladder-result-spec/1",
+ "spec_meta": {
+  "bootstrap_unit": "person",
+  "pools": "leave-person-out",
+  "stranger_rung": "stranger",
+  "mirror_rungs": {
+   "fellow": "sides"
+  }
+ },
+ "scale": "1 = dataset mean, 2 = stranger (squared error, z units, 128 px frame)",
+ "window_px": 16,
+ "lookalike": {
+  "step": 4,
+  "ring": 8,
+  "k": 16
+ },
+ "strangers": 8,
+ "results": {
+  "PAPILA": {
+   "arm": "p9",
+   "fellow": {
+    "ratio": 1.467,
+    "ci95": [
+     1.422,
+     1.512
+    ],
+    "targets": 488,
+    "persons": 244,
+    "split_half_r": 0.98,
+    "directions": {
+     "R eye as target": {
+      "ratio": 1.451,
+      "targets": 244
+     },
+     "L eye as target": {
+      "ratio": 1.482,
+      "targets": 244
+     }
+    }
+   },
+   "stranger": {
+    "ratio": 1.992,
+    "ci95": [
+     1.941,
+     2.049
+    ],
+    "targets": 488,
+    "persons": 244,
+    "split_half_r": -0.26
+   },
+   "lookalike": {
+    "ratio": 0.935,
+    "ci95": [
+     0.914,
+     0.955
+    ],
+    "targets": 488,
+    "persons": 244,
+    "split_half_r": 0.98
+   },
+   "sexage": {
+    "ratio": 1.024,
+    "ci95": [
+     1.016,
+     1.033
+    ],
+    "targets": 454,
+    "persons": 227,
+    "split_half_r": 0.65
+   },
+   "valid_px": 4467,
+   "units": 488
+  },
+  "GRAPE": {
+   "arm": "p8",
+   "repeat": {
+    "ratio": 0.489,
+    "ci95": [
+     0.404,
+     0.585
+    ],
+    "targets": 171,
+    "persons": 97,
+    "split_half_r": 0.88
+   },
+   "fellow": {
+    "ratio": 1.33,
+    "ci95": [
+     1.224,
+     1.437
+    ],
+    "targets": 210,
+    "persons": 105,
+    "split_half_r": 0.67,
+    "directions": {
+     "R eye as target": {
+      "ratio": 1.352,
+      "targets": 105
+     },
+     "L eye as target": {
+      "ratio": 1.308,
+      "targets": 105
+     }
+    }
+   },
+   "stranger": {
+    "ratio": 2.012,
+    "ci95": [
+     1.897,
+     2.14
+    ],
+    "targets": 239,
+    "persons": 134,
+    "split_half_r": -0.09
+   },
+   "lookalike": {
+    "ratio": 0.856,
+    "ci95": [
+     0.832,
+     0.88
+    ],
+    "targets": 239,
+    "persons": 134,
+    "split_half_r": 0.94
+   },
+   "sexage": {
+    "ratio": 1.051,
+    "ci95": [
+     1.025,
+     1.08
+    ],
+    "targets": 37,
+    "persons": 21,
+    "split_half_r": null
+   },
+   "valid_px": 5920,
+   "units": 239
+  }
+ },
+ "spec_checks": "all passed"
+}

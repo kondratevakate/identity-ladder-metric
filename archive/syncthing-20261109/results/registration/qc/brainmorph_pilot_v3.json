@@ -1,0 +1,20 @@
+{
+  "exit_code": 0,
+  "seconds": 220.18799999984913,
+  "output_files": {
+    "outputs\\0_0_fixed_moving\\grid_0-fixed_0-moving-rot0-affine.npy": "7549855e9e9fa4247c66ee764f871a78c6ffea5eb174bf3b2adda0856f41207f",
+    "outputs\\0_0_fixed_moving\\img_a_0-fixed_0-moving-rot0-affine.npy": "3950c4bfe73ea527e4475c7a50bbd56d442ef4c0f87ec2c97f664fc0aa78697a",
+    "outputs\\0_0_fixed_moving\\img_f_0-fixed.npy": "dd7513ac80582265e7f4c30d9c34705571a584a97fba1a9f1dba7b41825a4626",
+    "outputs\\0_0_fixed_moving\\img_m_0-moving-rot0.npy": "3a8ddc4087e742aad187deb8fc2bbc2ca771650cb927271b06b19f11c238bd20",
+    "outputs\\0_0_fixed_moving\\matrix_0-fixed_0-moving-rot0-affine.npy": "92202a355880d8b2343c58e3fb22a5d0dd024f338bd9dac5bed32b5cdea0860f",
+    "outputs\\0_0_fixed_moving\\metrics-rot0-affine.json": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "outputs\\0_0_fixed_moving\\points_a_0-fixed_0-moving-rot0-affine.npy": "8c3345948d4366be3a948dcdbf74c93ea7489685c2d79aad2c87927072b29503",
+    "outputs\\0_0_fixed_moving\\points_f_0-fixed.npy": "64cb39df337fa303b4dd92d62004e733df8fffef7c806d2be2b82a6c06bf2524",
+    "outputs\\0_0_fixed_moving\\points_m_0-moving-rot0.npy": "0d56cb943b4957ed7c6b9cb6aab3308cf0962a70fcaca41fc280d4759092f2c3",
+    "outputs\\0_0_fixed_moving\\points_weights_0-fixed_0-moving-rot0-affine.npy": "069ec1950bba75be31704b93e7f46d7145e2e4db89bf9ae2432b6011ccf4e90e"
+  },
+  "visual_acceptance": "NOT ESTABLISHED",
+  "metric_scoring": "NOT RUN",
+  "gate": "NOT MET",
+  "development_pairs": 1
+}

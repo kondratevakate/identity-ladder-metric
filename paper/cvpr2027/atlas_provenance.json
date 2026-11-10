@@ -1,0 +1,35 @@
+{
+  "assembly_generator": "paper/cvpr2027/assemble_atlas.py",
+  "assembly_generator_sha256": "ef83ac3b5beb8a30dda43b4c8487949d5a38f3d78ae6a4d821a2b0b97e0a4613",
+  "assembly_base_commit": "b001d9c9a1ff0a1991f8ccd10a45a93ba9151c9c",
+  "source_commit": "82ed7fe8a52e557854cf4cd2d02eb47d5803d7cb",
+  "source_pdf": "results/figures/fig_ladder_maps_all_modalities.pdf",
+  "source_pdf_sha256": "5aadadd499d90da2ccbcf5103787b14d9d751b6e0101bc92bac94bc1d653037e",
+  "source_generator": "src/ladder_maps_all_figure.py",
+  "source_generator_sha256": "d7c787b7296da54ca45be33b7d9b92582e25773c6b3a768ca848c27a46c0f628",
+  "replacement_pdf": "results/figures/fig_ladder_maps_common.pdf",
+  "replacement_pdf_sha256": "58719ecae7ab8f05855eb938e192d74cfd60bffa604d5605a844773e8e56322b",
+  "replacement_producing_commit": "22ddf703267e9de631d28bbedd5d869d789e6de9",
+  "replacement_row": 2,
+  "replacement_source_slice": "MNI axial z=10 mm",
+  "replacement_scalar_annotations": [
+    null,
+    0.2842552610161355,
+    1.555108367992031,
+    1.8421699827435112,
+    1.9909290720081336,
+    0.753256433373341,
+    1.0067882993738384,
+    null
+  ],
+  "shared_diverging_scale": {
+    "vmin": 0,
+    "vcenter": 1,
+    "vmax": 2.4
+  },
+  "method": "PDF-panel assembly from saved aggregate maps; private-data maps were not recomputed.",
+  "changes": "Replace brain row/scalar annotations and stale footer. The supplementary atlas retains all eight rows and columns. The current main infographic selects four rows separately; no superseded compact atlas is generated.",
+  "outputs": {
+    "atlas_all_modalities_full.pdf": "3a8ca685c2ecb9f6f19f9e109fe77ac2e214673c440e4e41d76496586ebc8f3e"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "template_brain_voxels": 1882989,
+  "brain_with_full_native_source_support": 1882989,
+  "brain_full_support_fraction": 1.0,
+  "boxes": {
+    "deep": {
+      "voxels": 24576,
+      "full_support_voxels": 24576,
+      "full_support_fraction": 1.0
+    },
+    "parietal": {
+      "voxels": 24576,
+      "full_support_voxels": 24576,
+      "full_support_fraction": 1.0
+    }
+  },
+  "definition": "raw fraction, higher better; source support excludes border extrapolation, not an anatomical score",
+  "gate": "NOT MET",
+  "visual_acceptance": "NOT ESTABLISHED"
+}

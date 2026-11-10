@@ -1,0 +1,54 @@
+{
+ "by_group": {
+  "celeba male": {
+   "images": 14219,
+   "glasses": 0.166,
+   "greyscale": 10,
+   "lips_removed": 0.0,
+   "facial_hair_gt10pct_chin": 0.0,
+   "median_fraction_of_face_removed": 0.0
+  },
+  "celeba female": {
+   "images": 19431,
+   "glasses": 0.055,
+   "greyscale": 6,
+   "lips_removed": 0.0,
+   "facial_hair_gt10pct_chin": 0.0,
+   "median_fraction_of_face_removed": 0.0
+  },
+  "imdb male": {
+   "images": 15503,
+   "glasses": 0.187,
+   "greyscale": 960,
+   "lips_removed": 0.0,
+   "facial_hair_gt10pct_chin": 0.0,
+   "median_fraction_of_face_removed": 0.0
+  },
+  "imdb female": {
+   "images": 13065,
+   "glasses": 0.07,
+   "greyscale": 462,
+   "lips_removed": 0.0,
+   "facial_hair_gt10pct_chin": 0.0,
+   "median_fraction_of_face_removed": 0.0
+  }
+ },
+ "attribute_agreement_[pos,neg]": {
+  "facial_hair (men): No_Beard=0 vs 1": [
+   0.0,
+   0.0
+  ],
+  "lips (women): Wearing_Lipstick=1 vs 0": [
+   0.0,
+   0.0
+  ],
+  "colour>200px (women): Heavy_Makeup=1 vs 0": [
+   0.0,
+   0.0
+  ],
+  "glasses: Eyeglasses=1 vs 0": [
+   0.98,
+   0.04
+  ]
+ }
+}

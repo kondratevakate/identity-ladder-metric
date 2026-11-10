@@ -1,0 +1,9 @@
+{
+  "exit_code": 1,
+  "seconds": 13.233999999938533,
+  "output_files": {},
+  "visual_acceptance": "NOT ESTABLISHED",
+  "metric_scoring": "NOT RUN",
+  "gate": "NOT MET",
+  "development_pairs": 1
+}

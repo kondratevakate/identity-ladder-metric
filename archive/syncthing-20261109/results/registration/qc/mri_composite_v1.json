@@ -1,0 +1,94 @@
+{
+  "saved_image_reproduced": true,
+  "max_absolute_resampling_difference": 0.0,
+  "valid_brain_voxels": 1882851,
+  "full_pull_nonpositive": 0,
+  "full_pull_jacobian_percentiles": [
+    0.3856290702354781,
+    0.46662666069263564,
+    0.7300492463789016,
+    1.2709143826149807,
+    1.8051868318974007
+  ],
+  "roundtrip_points": 3766,
+  "roundtrip_error_mm_percentiles": [
+    0.0005809515880723637,
+    0.012787220212381855,
+    0.03874826632388867,
+    0.12500663316904198
+  ],
+  "boxes": {
+    "deep": {
+      "voxel_slices": [
+        [
+          66,
+          98
+        ],
+        [
+          115,
+          147
+        ],
+        [
+          70,
+          94
+        ]
+      ],
+      "reflected_source_x_slice": [
+        99,
+        131
+      ],
+      "intended_voxels": 24576,
+      "valid_brain_voxels": 24575,
+      "nonpositive": 0,
+      "jacobian_percentiles": [
+        0.5354315804918198,
+        0.6078358462101904,
+        0.8626743742634693,
+        1.4769490525265299,
+        1.6826859532998204
+      ]
+    },
+    "parietal": {
+      "voxel_slices": [
+        [
+          53,
+          85
+        ],
+        [
+          69,
+          101
+        ],
+        [
+          115,
+          139
+        ]
+      ],
+      "reflected_source_x_slice": [
+        112,
+        144
+      ],
+      "intended_voxels": 24576,
+      "valid_brain_voxels": 23843,
+      "nonpositive": 0,
+      "jacobian_percentiles": [
+        0.470121709758511,
+        0.528179104971059,
+        0.6394043564913495,
+        1.0293512965432987,
+        1.1102379811017973
+      ]
+    }
+  },
+  "visual_acceptance": "NOT ESTABLISHED",
+  "gate": "NOT MET",
+  "limits": "One development scan. Positive Jacobians and inverse consistency do not prove preservation of individual anatomy.",
+  "audit_sha256": "3fae6fbedf0ff7f21c30014b95cfa859129fbb189fcd45a952a09401f3182722",
+  "plan_sha256": "ecd4e0e16c32211b17b019d2ce390faaddd719497dd152b7be62d5c8728faa71",
+  "code_sha256": "ff9a02fe4dc0fe17d7b839b1b42dc5292c0682b6c55c8c43aabaf7004e01ad97",
+  "metric_definitions": {
+    "full_pull_jacobian": "det(d native LPS / d template LPS); raw unitless; nonpositive indicates folding; positivity alone is not anatomical acceptance",
+    "roundtrip_error": "Euclidean physical point error in mm; lower better; 3766 evenly subsampled valid brain voxels",
+    "resampling_difference": "max absolute native-intensity difference between saved image and replayed complete chain; lower better"
+  },
+  "data": "QTIM original-design first development target; one repaired scan; no population validation"
+}

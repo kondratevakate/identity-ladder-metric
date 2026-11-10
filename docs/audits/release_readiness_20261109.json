@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-09",
+  "reviewed_commit": "f7d2580e50cd69079bfc80f1ac24febacf441f64",
+  "repository_visibility": "public",
+  "default_branch": "master",
+  "reviewed_branch": "codex/cvpr2027-manuscript",
+  "verdict": "not_ready_for_general_research_release",
+  "confirmed_p0_findings": 0,
+  "p1_findings": 5,
+  "p2_findings": 7,
+  "limited_credential_scan_hits": 0,
+  "tests": {
+    "passed": 417,
+    "skipped": 7,
+    "failed": 1,
+    "python": "3.12",
+    "known_failure": "frozen Python 3.11 guard"
+  },
+  "not_verified": [
+    "fresh Python 3.11 installation",
+    "all dataset-derived publication rights",
+    "institutional consent/ethics",
+    "all image de-identification",
+    "GitHub security settings and branch protections",
+    "independent end-to-end experiment reproduction"
+  ],
+  "report": "docs/OPEN_REPOSITORY_REVIEW.md",
+  "inventory": "docs/audits/open_repository_inventory_20261109.json"
+}

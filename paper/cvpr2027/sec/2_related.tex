@@ -1,0 +1,27 @@
+\section{Related work}
+\label{sec:related}
+\paragraph{Reconstruction and perceptual quality.}
+The perception--distortion tradeoff separates reference distortion from distributional perceptual quality~\cite{blau2018}.
+Learned Perceptual Image Patch Similarity (LPIPS) evaluates aspects of visual similarity that pixel distances miss~\cite{zhang2018lpips}.
+Neither objective alone defines whether the retained detail belongs to the target person.
+Our audit adds controlled person-, organ-, and acquisition-level comparisons to this distinction.
+Structural similarity (SSIM) supplies a local reference comparison~\cite{wang2004}, but its interpretation still depends on the anatomical and acquisition changes represented by a pair.
+
+\paragraph{Anatomical completeness and harmonization.}
+CARE evaluates sparse-view CT reconstruction using anatomy-aware measurements of large and small organs, intestines, and vessels~\cite{care2025}.
+Its objective is structural completeness rather than validation of a donor-based identity scale.
+LMSB addresses anatomical changes in OCT harmonization by learning an anatomy-guided latent metric before distribution matching~\cite{lmsb2025}.
+It demonstrates why Euclidean proximity in appearance need not coincide with anatomical consistency.
+Our contribution is an evaluation design around such interpretations, not an empirical comparison against either reconstruction or harmonization system.
+
+\paragraph{Anatomical representations and biometric units.}
+Brain-ID learns contrast-agnostic anatomical features from synthetic inputs and evaluates robustness and downstream brain-imaging tasks~\cite{brainid2024}.
+Those results motivate acquisition controls, but a Brain-ID distance has not been completed in this study.
+Iris recognition illustrates a complementary distinction: a person has two eyes, and person membership does not make their iris textures one biometric instance~\cite{daugman2004,daugman2001}.
+The relevant identity unit must therefore be specified before an anatomical similarity result is interpreted.
+ArcFace supplies an identity-oriented face representation~\cite{arcface2022}; our local-donor analysis distinguishes that whole-image reference from the window-level reconstruction distance.
+
+\paragraph{Task-specific metric validation.}
+Metrics Reloaded emphasizes matching validation measures to the task and data~\cite{metrics2024}.
+We operationalize that principle through separate controls for attenuation, incorrect detail, bilateral correspondence, and acquisition.
+A successful check on one axis does not establish success on the others.

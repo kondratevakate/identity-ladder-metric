@@ -1,0 +1,17 @@
+{
+  "prepared_scans": 1,
+  "boxes_prepared": 2,
+  "visual": "gross alignment improved; full gate unreviewable",
+  "hash_verified_outputs": 8,
+  "grid_and_reflection": "checked",
+  "nonpositive_jacobian_voxels": 0,
+  "audit_sha256": "210992f4115d1fbbbc57910155392039b61162440d7ee5c3dfdd063e19601ca9",
+  "gate": "NOT MET",
+  "pilot_comparisons_reviewed": 4,
+  "pass": 0,
+  "fail": 0,
+  "unreviewable": 4,
+  "review_sha256": "10f673fc572eb502a11d9c55eb5e5c242c04a1932750a006a60b7288b3f855bf",
+  "scope": "one development scan; cohort denominator not frozen",
+  "iteration": "centroid rigid + affine + SyN repair"
+}

@@ -1,0 +1,50 @@
+{
+  "method": "SynthMorph affine",
+  "planned_scans": 95,
+  "completed_scans": 95,
+  "runtime_failed_scans": 0,
+  "required_comparisons": 334,
+  "prepared_sheets": 334,
+  "visual_review": "NOT ESTABLISHED",
+  "gate": "NOT MET",
+  "metric_scoring": "NOT RUN",
+  "strata": [
+    {
+      "box": "deep",
+      "branch": "template",
+      "intended": 72,
+      "sheets_prepared": 72
+    },
+    {
+      "box": "deep",
+      "branch": "contralateral",
+      "intended": 72,
+      "sheets_prepared": 72
+    },
+    {
+      "box": "deep",
+      "branch": "repeat",
+      "intended": 23,
+      "sheets_prepared": 23
+    },
+    {
+      "box": "parietal",
+      "branch": "template",
+      "intended": 72,
+      "sheets_prepared": 72
+    },
+    {
+      "box": "parietal",
+      "branch": "contralateral",
+      "intended": 72,
+      "sheets_prepared": 72
+    },
+    {
+      "box": "parietal",
+      "branch": "repeat",
+      "intended": 23,
+      "sheets_prepared": 23
+    }
+  ],
+  "note": "Preparation counts are not visual acceptance; development and validation phases remain in the frozen manifest."
+}

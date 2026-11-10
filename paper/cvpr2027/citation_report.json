@@ -1,0 +1,772 @@
+[
+  {
+    "key": "wang2004",
+    "type": "article",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1109/tip.2003.819861",
+      "title": "Image quality assessment: from error visibility to structural similarity",
+      "year": "2004",
+      "type": "journal-article",
+      "authors": [
+        "Zhou Wang",
+        "Bovik, A.C.",
+        "Sheikh, H.R.",
+        "Simoncelli, E.P."
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "blau2018",
+    "type": "inproceedings",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1109/cvpr.2018.00652",
+      "title": "The Perception-Distortion Tradeoff",
+      "year": "2018",
+      "type": "proceedings-article",
+      "authors": [
+        "Blau, Yochai",
+        "Michaeli, Tomer"
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "zhang2018lpips",
+    "type": "inproceedings",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1109/cvpr.2018.00068",
+      "title": "The Unreasonable Effectiveness of Deep Features as a Perceptual Metric",
+      "year": "2018",
+      "type": "proceedings-article",
+      "authors": [
+        "Zhang, Richard",
+        "Isola, Phillip",
+        "Efros, Alexei A.",
+        "Shechtman, Eli",
+        "Wang, Oliver"
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "care2025",
+    "type": "inproceedings",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.52202/085713-1132",
+      "title": "Are Pixel-Wise Metrics Reliable for Computerized Tomography Reconstruction?",
+      "year": "2025",
+      "type": "proceedings-article",
+      "authors": [
+        "Lin, Tianyu",
+        "Li, Xinran",
+        "Zhuang, Chuntung",
+        "Chen, Qi",
+        "Cai, Yuanhao",
+        "Ding, Kai",
+        "Yuille, Alan",
+        "Zhou, Zongwei"
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "lmsb2025",
+    "type": "inproceedings",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.52202/085713-0202",
+      "title": "Optical Coherence Tomography Harmonization with Anatomy-Guided Latent Metric Schrödinger Bridges",
+      "year": "2025",
+      "type": "proceedings-article",
+      "authors": [
+        "Wei, Shuwen",
+        "Remedios, Samuel",
+        "Dewey, Blake",
+        "Bian, Zhangxing",
+        "Wang, Shimeng",
+        "Chen, Junyu",
+        "Jedynak, Bruno",
+        "saidha, shiv",
+        "Calabresi, Peter",
+        "Carass, Aaron",
+        "Prince, Jerry L"
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "papila2022",
+    "type": "article",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1038/s41597-022-01388-1",
+      "title": "PAPILA: Dataset with fundus images and clinical data of both eyes of the same patient for glaucoma assessment",
+      "year": "2022",
+      "type": "journal-article",
+      "authors": [
+        "Kovalyk, Oleksandr",
+        "Morales-Sánchez, Juan",
+        "Verdú-Monedero, Rafael",
+        "Sellés-Navarro, Inmaculada",
+        "Palazón-Cabanes, Ana",
+        "Sancho-Gómez, José-Luis"
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "grape2023",
+    "type": "article",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1038/s41597-023-02424-4",
+      "title": "GRAPE: A multi-modal dataset of longitudinal follow-up visual field and fundus images for glaucoma management",
+      "year": "2023",
+      "type": "journal-article",
+      "authors": [
+        "Huang, Xiaoling",
+        "Kong, Xiangyin",
+        "Shen, Ziyan",
+        "Ouyang, Jing",
+        "Li, Yunxiang",
+        "Jin, Kai",
+        "Ye, Juan"
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "hosseini2010",
+    "type": "article",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1109/tim.2009.2037996",
+      "title": "Pigment Melanin: Pattern for Iris Recognition",
+      "year": "2010",
+      "type": "journal-article",
+      "authors": [
+        "Hosseini, Mahdi S.",
+        "Araabi, Babak N.",
+        "Soltanian-Zadeh, Hamid"
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "dobes2004",
+    "type": "article",
+    "status": "substituted",
+    "issues": [
+      "escalated from 'verified_by_doi' to 'substituted' based on field-level classification",
+      "author overlap with resolved record is only 50% (threshold 60% for 3+ author entries) -- likely wrong paper"
+    ],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1078/0030-4026-00388",
+      "title": "Human eye iris recognition using the mutual information",
+      "year": "2004",
+      "type": "journal-article",
+      "authors": [
+        "Dobeš, M.",
+        "Machala, L.",
+        "Tichavský, P.",
+        "Pospíšil, J."
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "S",
+      "doi": "C"
+    },
+    "risk_score": 68,
+    "hijack": null
+  },
+  {
+    "key": "celeba2015",
+    "type": "inproceedings",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1109/iccv.2015.425",
+      "title": "Deep Learning Face Attributes in the Wild",
+      "year": "2015",
+      "type": "proceedings-article",
+      "authors": [
+        "Liu, Ziwei",
+        "Luo, Ping",
+        "Wang, Xiaogang",
+        "Tang, Xiaoou"
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "rothe2018",
+    "type": "article",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1007/s11263-016-0940-3",
+      "title": "Deep Expectation of Real and Apparent Age from a Single Image Without Facial Landmarks",
+      "year": "2018",
+      "type": "journal-article",
+      "authors": [
+        "Rothe, Rasmus",
+        "Timofte, Radu",
+        "Van Gool, Luc"
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "metrics2024",
+    "type": "article",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1038/s41592-023-02151-z",
+      "title": "Metrics reloaded: recommendations for image analysis validation",
+      "year": "2024",
+      "type": "journal-article",
+      "authors": [
+        "Maier-Hein, Lena",
+        "Reinke, Annika",
+        "Godau, Patrick",
+        "Tizabi, Minu D.",
+        "Buettner, Florian",
+        "Christodoulou, Evangelia",
+        "Glocker, Ben",
+        "Isensee, Fabian",
+        "Kleesiek, Jens",
+        "Kozubek, Michal",
+        "Reyes, Mauricio",
+        "Riegler, Michael A.",
+        "Wiesenfarth, Manuel",
+        "Kavur, A. Emre",
+        "Sudre, Carole H.",
+        "Baumgartner, Michael",
+        "Eisenmann, Matthias",
+        "Heckmann-Nötzel, Doreen",
+        "Rädsch, Tim",
+        "Acion, Laura",
+        "Antonelli, Michela",
+        "Arbel, Tal",
+        "Bakas, Spyridon",
+        "Benis, Arriel",
+        "Blaschko, Matthew B.",
+        "Cardoso, M. Jorge",
+        "Cheplygina, Veronika",
+        "Cimini, Beth A.",
+        "Collins, Gary S.",
+        "Farahani, Keyvan",
+        "Ferrer, Luciana",
+        "Galdran, Adrian",
+        "van Ginneken, Bram",
+        "Haase, Robert",
+        "Hashimoto, Daniel A.",
+        "Hoffman, Michael M.",
+        "Huisman, Merel",
+        "Jannin, Pierre",
+        "Kahn, Charles E.",
+        "Kainmueller, Dagmar",
+        "Kainz, Bernhard",
+        "Karargyris, Alexandros",
+        "Karthikesalingam, Alan",
+        "Kofler, Florian",
+        "Kopp-Schneider, Annette",
+        "Kreshuk, Anna",
+        "Kurc, Tahsin",
+        "Landman, Bennett A.",
+        "Litjens, Geert",
+        "Madani, Amin",
+        "Maier-Hein, Klaus",
+        "Martel, Anne L.",
+        "Mattson, Peter",
+        "Meijering, Erik",
+        "Menze, Bjoern",
+        "Moons, Karel G. M.",
+        "Müller, Henning",
+        "Nichyporuk, Brennan",
+        "Nickel, Felix",
+        "Petersen, Jens",
+        "Rajpoot, Nasir",
+        "Rieke, Nicola",
+        "Saez-Rodriguez, Julio",
+        "Sánchez, Clara I.",
+        "Shetty, Shravya",
+        "van Smeden, Maarten",
+        "Summers, Ronald M.",
+        "Taha, Abdel A.",
+        "Tiulpin, Aleksei",
+        "Tsaftaris, Sotirios A.",
+        "Van Calster, Ben",
+        "Varoquaux, Gaël",
+        "Jäger, Paul F."
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "daugman2004",
+    "type": "article",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1109/tcsvt.2003.818350",
+      "title": "How Iris Recognition Works",
+      "year": "2004",
+      "type": "journal-article",
+      "authors": [
+        "Daugman, J."
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "daugman2001",
+    "type": "article",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1098/rspb.2001.1696",
+      "title": "Epigenetic randomness, complexity and singularity of human iris patterns",
+      "year": "2001",
+      "type": "journal-article",
+      "authors": [
+        "Daugman, John",
+        "Downing, Cathryn"
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "arcface2022",
+    "type": "article",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1109/tpami.2021.3087709",
+      "title": "ArcFace: Additive Angular Margin Loss for Deep Face Recognition",
+      "year": "2022",
+      "type": "journal-article",
+      "authors": [
+        "Deng, Jiankang",
+        "Guo, Jia",
+        "Yang, Jing",
+        "Xue, Niannan",
+        "Kotsia, Irene",
+        "Zafeiriou, Stefanos"
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "tmscore2004",
+    "type": "article",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1002/prot.20264",
+      "title": "Scoring function for automated assessment of protein structure template quality",
+      "year": "2004",
+      "type": "journal-article",
+      "authors": [
+        "Zhang, Yang",
+        "Skolnick, Jeffrey"
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "lddt2013",
+    "type": "article",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1093/bioinformatics/btt473",
+      "title": "lDDT: a local superposition-free score for comparing protein structures and models using distance difference tests",
+      "year": "2013",
+      "type": "journal-article",
+      "authors": [
+        "Mariani, Valerio",
+        "Biasini, Marco",
+        "Barbato, Alessandro",
+        "Schwede, Torsten"
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "brainid2024",
+    "type": "inproceedings",
+    "status": "verified_by_doi",
+    "issues": [],
+    "match": {
+      "source": "crossref",
+      "doi": "10.1007/978-3-031-73254-6_19",
+      "title": "Brain-ID: Learning Contrast-Agnostic Anatomical Representations for Brain Imaging",
+      "year": "2025",
+      "type": "book-chapter",
+      "authors": [
+        "Liu, Peirong",
+        "Puonti, Oula",
+        "Hu, Xiaoling",
+        "Alexander, Daniel C.",
+        "Iglesias, Juan E."
+      ]
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C",
+      "doi": "C"
+    },
+    "risk_score": 0,
+    "hijack": null
+  },
+  {
+    "key": "betti2023",
+    "type": "inproceedings",
+    "status": "needs_review",
+    "issues": [
+      "escalated from 'verified_by_arxiv' to 'needs_review' based on field-level classification"
+    ],
+    "match": {
+      "source": "arxiv",
+      "id": "2211.15272",
+      "title": "Topologically faithful image segmentation via induced matching of persistence barcodes",
+      "authors": [
+        "Nico Stucki",
+        "Johannes C. Paetzold",
+        "Suprosanna Shit",
+        "Bjoern Menze",
+        "Ulrich Bauer"
+      ],
+      "year": "2022"
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "P",
+      "author": "C"
+    },
+    "risk_score": 34,
+    "hijack": null
+  },
+  {
+    "key": "fwd2025",
+    "type": "inproceedings",
+    "status": "substituted",
+    "issues": [
+      "escalated from 'verified_by_arxiv' to 'substituted' based on field-level classification"
+    ],
+    "match": {
+      "source": "arxiv",
+      "id": "2312.15289",
+      "title": "Fréchet Wavelet Distance: A Domain-Agnostic Metric for Image Generation",
+      "authors": [
+        "Lokesh Veeramacheneni",
+        "Moritz Wolter",
+        "Hildegard Kuehne",
+        "Juergen Gall"
+      ],
+      "year": "2023"
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "S",
+      "author": "C"
+    },
+    "risk_score": 64,
+    "hijack": null
+  },
+  {
+    "key": "brats2023",
+    "type": "misc",
+    "status": "verified_by_arxiv",
+    "issues": [],
+    "match": {
+      "source": "arxiv",
+      "id": "2305.08992",
+      "title": "The Brain Tumor Segmentation (BraTS) Challenge: Local Synthesis of Healthy Brain Tissue via Inpainting",
+      "authors": [
+        "Florian Kofler",
+        "Felix Meissen",
+        "Felix Steinbauer",
+        "Robert Graf",
+        "Stefan K Ehrlich",
+        "Annika Reinke",
+        "Eva Oswald",
+        "Diana Waldmannstetter",
+        "Florian Hoelzl",
+        "Izabela Horvath",
+        "Oezguen Turgut",
+        "Suprosanna Shit",
+        "Christina Bukas",
+        "Kaiyuan Yang",
+        "Johannes C. Paetzold",
+        "Ezequiel de da Rosa",
+        "Isra Mekki",
+        "Shankeeth Vinayahalingam",
+        "Hasan Kassem",
+        "Juexin Zhang",
+        "Ke Chen",
+        "Ying Weng",
+        "Alicia Durrer",
+        "Philippe C. Cattin",
+        "Julia Wolleb",
+        "M. S. Sadique",
+        "M. M. Rahman",
+        "W. Farzana",
+        "A. Temtam",
+        "K. M. Iftekharuddin",
+        "Maruf Adewole",
+        "Syed Muhammad Anwar",
+        "Ujjwal Baid",
+        "Anastasia Janas",
+        "Anahita Fathi Kazerooni",
+        "Dominic LaBella",
+        "Hongwei Bran Li",
+        "Ahmed W Moawad",
+        "Gian-Marco Conte",
+        "Keyvan Farahani",
+        "James Eddy",
+        "Micah Sheller",
+        "Sarthak Pati",
+        "Alexandros Karagyris",
+        "Alejandro Aristizabal",
+        "Timothy Bergquist",
+        "Verena Chung",
+        "Russell Takeshi Shinohara",
+        "Farouk Dako",
+        "Walter Wiggins",
+        "Zachary Reitman",
+        "Chunhao Wang",
+        "Xinyang Liu",
+        "Zhifan Jiang",
+        "Elaine Johanson",
+        "Zeke Meier",
+        "Ariana Familiar",
+        "Christos Davatzikos",
+        "John Freymann",
+        "Justin Kirby",
+        "Michel Bilello",
+        "Hassan M Fathallah-Shaykh",
+        "Roland Wiest",
+        "Jan Kirschke",
+        "Rivka R Colen",
+        "Aikaterini Kotrotsou",
+        "Pamela Lamontagne",
+        "Daniel Marcus",
+        "Mikhail Milchenko",
+        "Arash Nazeri",
+        "Marc-André Weber",
+        "Abhishek Mahajan",
+        "Suyash Mohan",
+        "John Mongan",
+        "Christopher Hess",
+        "Soonmee Cha",
+        "Javier Villanueva-Meyer",
+        "Errol Colak",
+        "Priscila Crivellaro",
+        "Andras Jakab",
+        "Abiodun Fatade",
+        "Olubukola Omidiji",
+        "Rachel Akinola Lagos",
+        "O O Olatunji",
+        "Goldey Khanna",
+        "John Kirkpatrick",
+        "Michelle Alonso-Basanta",
+        "Arif Rashid",
+        "Miriam Bornhorst",
+        "Ali Nabavizadeh",
+        "Natasha Lepore",
+        "Joshua Palmer",
+        "Antonio Porras",
+        "Jake Albrecht",
+        "Udunna Anazodo",
+        "Mariam Aboian",
+        "Evan Calabrese",
+        "Jeffrey David Rudie",
+        "Marius George Linguraru",
+        "Juan Eugenio Iglesias",
+        "Koen Van Leemput",
+        "Spyridon Bakas",
+        "Benedikt Wiestler",
+        "Ivan Ezhov",
+        "Marie Piraud",
+        "Bjoern H Menze"
+      ],
+      "year": "2023"
+    },
+    "suggested": null,
+    "field_classification": {
+      "title": "C",
+      "year": "C",
+      "author": "C"
+    },
+    "risk_score": 5,
+    "hijack": null
+  }
+]

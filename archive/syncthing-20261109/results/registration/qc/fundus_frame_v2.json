@@ -1,0 +1,79 @@
+{
+  "gate": "NOT MET",
+  "visual_acceptance": "NOT ESTABLISHED",
+  "method": "G1 shared reg_methods.g1, raw reflection",
+  "manifest_sha256": "2d8f42fe8259cf6ea683cf0bd4a8cad1e9307533043b2e921e9a59ce70a5a666",
+  "pilot_preparation": {
+    "prepared": 7
+  },
+  "strata": [
+    {
+      "stratum": "GRAPE | same_camera_1y+ | ordinary",
+      "intended": 71,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 70
+    },
+    {
+      "stratum": "GRAPE | same_camera_1y+ | reflected_input",
+      "intended": 71,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 70
+    },
+    {
+      "stratum": "GRAPE | other_camera | ordinary",
+      "intended": 152,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 151
+    },
+    {
+      "stratum": "GRAPE | other_camera | reflected_input",
+      "intended": 152,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 151
+    },
+    {
+      "stratum": "GRAPE | fellow_eye_same_visit | fellow_mirror",
+      "intended": 119,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 0,
+      "unreviewable": 1,
+      "not_reviewed": 118
+    },
+    {
+      "stratum": "GRAPE | same_camera_<1y | ordinary",
+      "intended": 95,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 94
+    },
+    {
+      "stratum": "GRAPE | same_camera_<1y | reflected_input",
+      "intended": 95,
+      "reviewed": 1,
+      "pass": 0,
+      "fail": 1,
+      "unreviewable": 0,
+      "not_reviewed": 94
+    }
+  ],
+  "review_sha256": "1f2784a0cafba471664c5ded4774355503e0df7247f3c112f6e357235fb5d9fc",
+  "reviewer": "Codex; Kate review pending",
+  "iteration": "shared-G1 development pilot 2026-11-03",
+  "limitations": "No PASS assigned. Full-native/blend and independent local landmarks remain required for acceptance.",
+  "run_plan_sha256": "8eacc0a00b5733d57d4b1e94ce5185ab87da37d11c50bf1173a02a508f3c1df9"
+}

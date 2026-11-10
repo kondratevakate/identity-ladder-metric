@@ -1,0 +1,27 @@
+{
+  "fixed_preprocessing_replay_max_abs": 0.0,
+  "raw_intensity_scale": "min-max 0 to 1; implementation replay error lower better",
+  "development_pairs": 1,
+  "sheets": [
+    {
+      "box": "deep",
+      "sha256": "9a7b88bcace774fa7ccee2d6d1bb0e4a103168437a0c40e5f855a33c62493aee",
+      "sheet": "deep.png",
+      "visual": "NOT REVIEWED"
+    },
+    {
+      "box": "parietal",
+      "sha256": "715f4b0442cf5e1441b396fad38ae84c784be29326343501d711eeef74694858",
+      "sheet": "parietal.png",
+      "visual": "NOT REVIEWED"
+    }
+  ],
+  "visual_acceptance": "NOT ESTABLISHED",
+  "gate": "NOT MET",
+  "metric_scoring": "NOT RUN",
+  "sheets_inspected": 2,
+  "method_box_pass": 0,
+  "method_box_fail": 0,
+  "method_box_unreviewable": 2,
+  "gate_count_increment": 0
+}

@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "seconds": 397.719000000041,
+  "outputs": {
+    "fixed_to_moving.nii.gz": "0a93daa1424e8151932adfef25832286a57e5db745afd776e66545809674e7f9",
+    "forward.mgz": "fc600a1823c0d39d1dc0e7b6064983946ed1c9ef6dcfc7688441ee78b5beb7fa",
+    "inverse.mgz": "505aecb86dd6ea97812e2543adf957ecdf45e56f6b31f64586f694a893c5d0c4",
+    "moving_to_fixed.nii.gz": "c54e8776c59ddd9aed89b514233d403cb28bd482e7d7f30bc8079ef6c9669989"
+  },
+  "visual_acceptance": "NOT ESTABLISHED",
+  "metric_scoring": "NOT RUN",
+  "gate": "NOT MET"
+}
