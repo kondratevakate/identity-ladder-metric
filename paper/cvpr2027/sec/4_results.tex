@@ -167,10 +167,10 @@ No metric family both recognises the individual and penalises subtle averaging.
 \centering
 \includegraphics[width=\textwidth]{fig/metric_summary.pdf}
 \caption{\textbf{Metric families against the ladder.}
-\textbf{A,} per metric, from its ordering of the ladder fills: how much further the stranger is than the true person (x), and how much further the dataset mean is (y).
-\textbf{B,} position of each fill on the common scale (target zero, 16 unrelated donors one), mean over the image sets where the fill and metric exist; FID and FWD are set distances relative to the stranger set, on a log axis.
+\textbf{A,} per metric, from its ordering of the ladder fills: how much further the stranger is than the true person (x), and how much further the dataset mean is (y); circle: error and similarity, triangle: deep features, diamond: topology, plus: set level.
+\textbf{B,} position of each fill on the common scale (target zero, 16 unrelated donors one), mean over the image sets where the fill and metric exist (number of sets in brackets); FID and FWD are set distances relative to the stranger set, on a log axis.
 True person: repeat acquisition, or the opposite side where no repeat exists (PAPILA, IXI).
-Starred look-alike rungs: the oracle donor is chosen with the hidden target (upper bound); the 16-donor mean is not available for faces.
+Starred look-alike rungs: the oracle donor is chosen with the hidden target (upper bound); the mean of $k=16$ look-alikes exists for brain, fundus and iris, not faces.
 Brain LPIPS and persistence use a repeat-anchored scale and are left out of the means in B.
 Brain, fundus and iris values are provisional.
 Source: \src{results/cross_modality/fig_metric_summary_R.json}.}
