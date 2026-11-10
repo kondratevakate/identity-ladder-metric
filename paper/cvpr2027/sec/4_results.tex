@@ -160,7 +160,7 @@ Source: \src{paper/cvpr2027/atlas_provenance.json}.}
 \label{fig:atlas-all}
 \end{figure*}
 Figure~\ref{fig:summary} places every metric on one scale across nine image sets from eight cohorts; UTIRIS NIR and VIS image the same people.
-Figure~\ref{fig:summary-a} condenses the same ladder into two questions per metric.
+Its panel A condenses the same ladder into two questions per metric.
 On that scale the target is zero and the mean of 16 unrelated donors is one.
 Per-window error and similarity metrics see the person: under MSE the true person is at $0.40$ and the stranger at one.
 They do not reject averaging.
@@ -177,31 +177,19 @@ They are blind to the person, because the true-person set is as far as the stran
 No metric family both recognises the individual and penalises subtle averaging.
 % Sources: results/cross_modality/fig_metric_summary_R.json; agreement.json (metric_matrix); values_generative.json.
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{fig/metric_summary_A.pdf}
-\caption{\textbf{Does a metric see the person and reject subtle averaging?}
-Each metric's ordering of the ladder: how much further the stranger is than the true person (x) and how much further the shrunk true person is (y), as rank gaps divided by the ladder length, mean over image sets.
-The shrunk true person is the person's own repeat pulled part of the way toward the dataset mean: the right person, with part of the individual detail replaced by the average.
-The shaded corner would mark a metric that does both; none falls there.
-Markers give the metric group (error and similarity, LPIPS, topology, set level).
-FID and FWD exclude brain, whose repeat set is about ten times smaller than its stranger set.
-Source: \src{results/cross_modality/fig_metric_summary_R.json}.}
-\label{fig:summary-a}
-\end{figure}
-
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{fig/metric_summary_B.pdf}
-\caption{\textbf{How far each metric puts each fill.}
-Position on the common scale (target zero, mean of 16 unrelated donors one), mean over the image sets where the fill and metric exist (sets in brackets); FID and FWD as set distances relative to the stranger set, on a log axis.
-Ladder rungs in cool colours, checks in warm colours, each with its own shape.
-Shrunk true person: the person's own repeat with its difference from the dataset mean scaled down, so the right person with part of the individual detail replaced by the average (Section~\ref{sec:controls}).
-True person: repeat acquisition, or the opposite side where no repeat exists (PAPILA, IXI).
-Starred look-alike rungs: the oracle donor is chosen with the hidden target (upper bound); the mean of 16 look-alikes exists for brain, fundus and iris, not faces.
-Sibling is omitted because it exists for 2 of 9 image sets, so its mean is not comparable; it remains in the tables.
+\includegraphics[width=\textwidth]{fig/metric_summary.pdf}
+\caption{\textbf{Per-window metrics see the person, set-level metrics reject averaging, and no metric does both.}
+\textbf{A,} Two questions per metric, answered from its ordering of the identity ladder and averaged over image sets: is the true person (a repeat image, or the opposite side where no repeat exists) closer than a stranger (x), and is the shrunk true person (the same repeat pulled part of the way toward the dataset mean, so the right person with part of the individual detail replaced by the average; Section~\ref{sec:controls}) further away than the unchanged repeat (y)?
+Both axes are rank gaps divided by the ladder length; the shaded corner would hold a metric that does both, and none falls there.
+\textbf{B,} Where each metric places every fill, in units of a stranger (0 = target, 1 = mean of 16 unrelated donors), averaged over the image sets where the fill exists (number in brackets).
+Each fill keeps a fixed lane within a row, in legend order, so read left to right; ladder rungs are in cool colours and checks in warm colours.
+Error/similarity, LPIPS and topology share one axis; FID and FWD are set distances relative to the stranger set, on a log axis.
+*The oracle look-alike is chosen with the hidden target (upper bound).
+Sibling is omitted because it exists for 2 of 9 image sets; it remains in the tables.
 TM-like needs repeats for its tolerance, so it has no PAPILA or IXI value.
-Brain LPIPS, Betti matching and persistence lie on repeat- or opposite-side-anchored scales and are not averaged; IXI was not run for LPIPS, persistence, FID and FWD; brain is excluded from FID and FWD, and set-level rungs with fewer than half the stranger set's windows are left out.
+Brain is not averaged for LPIPS and topology (repeat-anchored scale) or for FID/FWD (its repeat set is about ten times smaller than its stranger set); IXI was not run for LPIPS, persistence, FID and FWD.
 Brain, fundus and iris values are provisional.
 Source: \src{results/cross_modality/fig_metric_summary_R.json}.}
 \label{fig:summary}
