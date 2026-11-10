@@ -20,7 +20,7 @@ def test_every_aggregate_has_its_generating_script():
     made_by = {"common_all.json": "common_frame.py", "tests_all.json": "tests_uniform.py", "cal_faces.json": "cal_uniform.py",
                "cal_brain.json": "cal_uniform.py", "cal_c_all.json": "cal_tiles.py", "ranks_all.json": "rank_tiles.py",
                "agreement.json": "agreement.py", "corr_all.json": "explore_corr.py", "data.json": "build_data.py",
-               "dataset_card.json": "dataset_card.py", "ranks_generative.json": "generative_block.py", "values_generative.json": "generative_block.py", "fig_metric_summary_R.json": "summary_figure.py", "fig_metric_summary_paper_R.json": "summary_figure.py",
+               "dataset_card.json": "dataset_card.py", "ranks_generative.json": "generative_block.py", "values_generative.json": "generative_block.py", "fig_metric_summary_R.json": "summary_figure.py", "fig_metric_summary_paper_R.json": "summary_figure.py", "fig_metric_summary_v2_plotted.json": "summary_figure_v2.py",
                "generative_status.json": "generative_block.py"}
     for f in os.listdir(OUT):
         if f.endswith(".json"):
@@ -201,3 +201,15 @@ def test_summary_small_sets_left_out_of_set_level_means():
     assert "QTIM" in rule["datasets_excluded"]
     fig = load("fig_metric_summary_R.json")
     assert "QTIM" not in fig["fid"]["datasets"] and "QTIM" not in fig["fwd"]["datasets"]
+
+
+def test_summary_v2_plots_the_table_values_without_sibling():
+    """Fig. 2 v2 (A and B) plots exactly the values in fig_metric_summary_R.json; sibling (2 of 9 sets) left out."""
+    p = load("fig_metric_summary_v2_plotted.json")
+    r = load("fig_metric_summary_R.json")
+    for m, (x, y) in p["panel_A"].items():
+        assert x == r["panel_A"][m]["x_stranger_gap"] and y == r["panel_A"][m]["y_shrunk_gap"], m
+    for m, rungs in p["panel_B"].items():
+        assert "relative" not in rungs, m
+        for k, v in rungs.items():
+            assert v == r[m][k], (m, k)

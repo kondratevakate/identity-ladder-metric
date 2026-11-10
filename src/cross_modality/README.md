@@ -21,6 +21,7 @@ Run order (`OUT=results/cross_modality`; Python with `-I`):
 | 10 | `generative_block.py OUT <bilateral_worktree>` | LPIPS, Betti matching, persistence, iris code, FID, FWD ranks, values (`values_generative.json`) and tiles (fundus 9.15, iris P3, faces F2, brain Amendment 20; missing parts "not run") |
 | 11 | `agreement.py OUT` again | agreement including the generative block |
 | 11b | `summary_figure.py OUT OUT/fig_metric_summary` | two-panel summary figure (rank gaps; R on the distance scale, FID/FWD log) and its values `_R.json` |
+| 11c | `summary_figure_v2.py OUT/fig_metric_summary_R.json OUT/fig_metric_summary_v2` | Fig. 2 v2 split: `_A` scatter (3.3 in) and `_B` strips (7 in), group colours, no sibling |
 | 12 | `build_data.py OUT`, then `build_explorer.py OUT page.html` | explorer page (published privately as a claude.ai artifact) |
 
 Validation recorded when written: R_self equals the fundus and iris files exactly and the face file within 0.01;
