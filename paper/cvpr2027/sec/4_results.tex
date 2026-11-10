@@ -40,7 +40,7 @@ The source records a pending visual verdict, and neither measurement establishes
 
 \subsection{Fundus photographs (PAPILA, GRAPE)}
 \label{sec:r-fundus}
-The frozen bilateral-branch aggregate supplies the P8/P9 frame-only profile in the supplementary fundus table.
+The supplementary fundus table gives the profile in the shared 128-pixel frame.
 GRAPE has 239 target-eye units from 134 people in the stranger comparison; the repeat comparison has 171 units from 97 people\statuspre.
 PAPILA has 488 target eyes from 244 people and no other-visit rung\statuspre.
 The dataset mean is closer than the fellow eye under squared error in both saved summaries.
@@ -49,12 +49,10 @@ These findings are provisional and do not establish the identity of the inferred
 
 The Gaussian maps in Figure~\ref{fig:atlas} retain these preprocessing labels.
 High split-half correlation cannot establish anatomical validity if a shared preprocessing artifact is reproducible too.
-The completed v1 metric registry and the running newer extension remain separate.
-Superseded support-sensitive block searches supply no primary result.
 
 \subsection{Face photographs (CelebA, IMDb-WIKI)}
 \label{sec:r-face}
-The supplementary face table reports the available v6f tier-1 profiles on the self-anchored scale.
+The supplementary face table reports the per-window profiles on the self-anchored scale.
 The repeat photograph has substantial pixel error despite preserving person membership.
 The dataset mean is closer than the repeat under MSE in both datasets, while a local context-selected donor is closer still.
 That pixel preference does not identify the donor as the target person.
@@ -67,7 +65,7 @@ It does not measure identity retention by a completed composite reconstruction, 
 
 \subsection{Iris images (UTIRIS, UPOL)}
 \label{sec:r-iris}
-The current P2 strip panel contains 156 target eyes from 78 people for UTIRIS NIR.
+The iris panel contains 156 target eyes from 78 people for UTIRIS NIR.
 The secondary UTIRIS VIS and UPOL panels contain 158 eyes from 79 people and 128 eyes from 64 people, respectively\statuspre.
 The VIS repeat endpoint has one fewer eligible eye, which is retained as endpoint-specific coverage rather than silently changing every comparison.
 The supplementary iris table reports mean-relative squared error on the support defined for each condition.
@@ -75,9 +73,8 @@ The repeated eye is closer than the fellow eye in all three saved summaries, and
 These are pixel-space relationships; they are not an iris biometric verification result.
 
 The source retains distinct $R_{\rm self}$ and $R_{\rm rep}$ values, window-level controls, and the directional tests.
-It also records a lid-shadow mask review limitation.
-The full P3 run is committed separately.
-Its LPIPS, Betti-matching, FID, and FWD values enter only the cross-dataset comparison in Section~\ref{sec:r-cross}, not the per-modality iris table.
+The lid-shadow mask review is still outstanding.
+LPIPS, Betti-matching, FID and FWD values for iris enter only the cross-dataset comparison in Section~\ref{sec:r-cross}.
 
 \subsection{Metric families across nine image sets}
 \label{sec:r-cross}

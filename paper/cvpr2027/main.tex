@@ -16,6 +16,7 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{amsmath}
+\usepackage{multicol}
 
 % Status markers for every reported number (see sec/3_methods.tex, "Result status").
 \newcommand{\statusfinal}{\textsuperscript{F}}
@@ -38,8 +39,14 @@ Inpainting and Conditional Generation}
 \author{Anonymous \confName~submission}
 
 \begin{document}
+% Title and abstract span the page width; the abstract is set in two columns inside that block (Kate, 2026-11-10).
+\twocolumn[{%
+\renewcommand\twocolumn[1][]{#1}%
 \maketitle
-\input{sec/0_abstract}
+\renewenvironment{abstract}{\begin{center}{\large\bfseries Abstract}\end{center}\vspace{-1ex}%
+  \begin{multicols}{2}\itshape\small}{\end{multicols}\vspace{1.5ex}}%
+\input{sec/0_abstract}%
+}]
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{fig/identity_ladder_provenance_v2.pdf}

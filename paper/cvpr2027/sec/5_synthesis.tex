@@ -26,11 +26,11 @@ Actual generator outputs, an independent anatomy or task criterion, and held-out
 
 \paragraph{Limitations and evidence coverage.}
 Registration and acquisition remain central confounders in the brain and fundus panels.
-Source protocols have advanced beyond some accessible outputs, and preprocessing versions must not be merged by name.
-The evidence freeze predates receipt of the base face pipeline and full iris P3 aggregates; integration remains pending.
+Brain, fundus and iris results precede the registration and mask quality-control gates and are provisional.
 Lid-shadow information, changing support and selection on usable windows can affect iris comparisons.
 The current residual and rank coordinates have not been validated as a fused identity score.
-Results at one window size do not establish stability over the latest object-relative size grid.
+Window sizes set as a fraction of the object (brain 8, 16 and 32\,mm; faces 1/16 to 1/4 of the face extent; iris 10 and 16 pixels) keep the rung order with rank correlations of 0.72 to 1.00, while fundus has no window-size sweep.
+% Sources: donor_ladder_brain_metrics_size.json (rank_stability); face_ladder_sizes.json; iris_ladder_metrics_w10.json.
 
 \paragraph{Ethics and data.}
 The manuscript preparation uses existing aggregate outputs and does not read or redistribute participant images or identifiers.

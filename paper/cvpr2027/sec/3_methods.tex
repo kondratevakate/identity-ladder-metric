@@ -71,11 +71,10 @@ The current experiments characterize controls; generated subgroup profiles in Eq
 
 \subsection{Result status}
 \label{sec:status}
-The superscript \statusfinal\ identifies a frozen result whose recorded frame passed the author's visual gate.
+The superscript \statusfinal\ marks a result whose preprocessing frame passed visual quality control.
 It does not mean independent replication or clinical validation.
-The superscript \statuspre\ identifies provisional evidence with an unresolved gate or a source-version limitation.
-We distinguish \notrun\ from an undefined mathematical quantity, an unavailable relationship, and an executed result absent from the accessible snapshot.
-Historical outputs are not silently relabeled as newer experiments.
+The superscript \statuspre\ marks a provisional result, for which registration or mask quality control has not yet passed.
+We distinguish \notrun\ from an undefined quantity and from a relationship that a dataset cannot provide, such as a repeat in a cohort without repeats.
 
 Every image has a validity mask.
 Errors, normalization, donor means, context comparisons, and local maps exclude unobserved support.
@@ -112,7 +111,7 @@ Failure to establish one directional test is not proof of equivalence or of its 
 \label{sec:m-brain}
 The QTIM panel contains 221 prepared targets from 168 families, including 23 repeat acquisitions.
 Volumes are N4-corrected and affinely aligned to an independent symmetric MNI frame, with intensity standardized within the brain mask.
-The panel evaluates both hemispheres at the recorded random regions and frozen deep and parietal boxes.
+The panel evaluates both hemispheres at the recorded random regions and at two prespecified boxes, one deep and one parietal.
 Family members are excluded from the target's reference pool.
 The source records related-donor labels; it does not justify converting unknown zygosity into monozygotic or dizygotic classes.
 
@@ -137,23 +136,18 @@ The protocols distinguish a GRAPE disc--fovea similarity frame from the PAPILA d
 The protocol versions specify green-channel preprocessing and standardization on valid field of view.
 Laterality comes from metadata, and opposite eyes are transformed consistently with their comparison references.
 
-The primary frame-only aggregate was recovered from the frozen bilateral-branch Git snapshot.
-It uses GRAPE P8 and PAPILA P9 in a 128-pixel frame, with no pairwise registration or target-dependent intensity fit.
-The saved P7 snapshot is retained as historical evidence, rather than relabeled as P8/P9.
-P8 and P9 change the field mask and preserve more of the PAPILA acquisition field.
-Fixed-composition map regions hold the contributing target set constant over space.
-This avoids interpreting abrupt changes of cohort membership as anatomical boundaries.
-The saved P7 block searches predate the support correction and are excluded.
-No value from a currently running fundus metric panel is inferred here.
-The completed v1 panel is kept separate from its newer extension; its reference donor is the repeat for GRAPE and the fellow eye for PAPILA, where T1 is unavailable.
+Both datasets use a 128-pixel frame, with no pairwise registration or target-dependent intensity fit.
+The field mask keeps the acquired field of view, which in PAPILA covers more of the retina than in GRAPE.
+Map regions hold the contributing set of targets constant over space, so that a change of cohort membership is not read as an anatomical boundary.
+The reference donor is the repeat visit in GRAPE and the fellow eye in PAPILA, which has no repeat; T1 is therefore unavailable for PAPILA.
 
 \subsection{Face photographs (CelebA, IMDb-WIKI)}
 \label{sec:m-face}
-The frozen v6f panel analyzes CelebA~\cite{celeba2015} and IMDb-WIKI~\cite{rothe2018} separately.
-The available protocol specifies a landmark-affine population frame, image-wise masked intensity normalization, restricted pose, and fixed local windows with context rings.
+The face panel analyzes CelebA~\cite{celeba2015} and IMDb-WIKI~\cite{rothe2018} separately.
+Its protocol specifies a landmark-affine population frame, image-wise masked intensity normalization, restricted pose, and fixed local windows with context rings.
 CelebA target and pool identities use separate dataset partitions.
 The IMDb-WIKI analysis clusters recorded kinship links and excludes target-family members from the pool.
-The base face pipeline and its complete v6f protocol were not committed in this source snapshot, which limits reconstruction of the upstream selection.
+The selection pipeline and its protocol are part of the code release.
 
 The face repeat is another photograph chosen by the recorded pose/expression rule, rather than an exact duplicate.
 The bilateral candidate is the opposite face half in the same photograph, with a midline exclusion.
@@ -164,16 +158,15 @@ It is not an embedding of the composited inpainted region.
 \subsection{Iris images (UTIRIS, UPOL)}
 \label{sec:m-iris}
 UTIRIS~\cite{hosseini2010} near-infrared images are primary, with UTIRIS visible-light and UPOL~\cite{dobes2004} reported separately.
-The P2 frame uses learned iris segmentation, a normalized radial--angular strip, and masks for acquisition support, lids, and reflections.
+The iris frame uses learned iris segmentation, a normalized radial--angular strip, and masks for acquisition support, lids, and reflections.
 The same-eye repeat is the next eligible capture in fixed source order rather than the closest image by a metric.
 The fellow-eye strip is transformed by the recorded angular reflection.
 Donor pools exclude the target person.
 
 The panel retains measured coverage and endpoint-specific eligibility.
 It uses no fixed-sector removal or pairwise rotation search.
-Lid shadow remains a known source of shared appearance, and the saved status records an outstanding final mask-sheet review.
-Earlier iris-code calibration is background evidence and is not substituted for this strip-based panel.
-The full P3 extension reported by the workstation handoff includes LPIPS, Betti matching, Fréchet inception distance (FID), and Fréchet wavelet distance (FWD), but is not contained in the accessible aggregate file.
+Lid shadow remains a known source of shared appearance, and the final review of the lid masks is outstanding.
+A second iris pass adds LPIPS, Betti matching, Fréchet inception distance (FID) and Fréchet wavelet distance (FWD); these values enter the cross-dataset comparison in Section~\ref{sec:r-cross}.
 
 \subsection{Synthetic simulations}
 \label{sec:m-sim}
