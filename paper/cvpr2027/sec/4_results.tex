@@ -83,11 +83,12 @@ On that scale the target is zero and the mean of 16 unrelated donors is one.
 Per-window error and similarity metrics see the person: under MSE the true person is at $0.40$ and the stranger at one.
 They do not reject averaging.
 The dataset mean is at $0.50$, and the true person shrunk toward the mean is at $0.29$, closer than the true person itself\statuspre.
-TM-like, GDT-like and superposed RMSE order the rungs almost as MSE does, with rank correlation $0.95$ to $0.98$.
+TM-like, GDT-like and superposed RMSE order the rungs almost as MSE does, with rank correlation $0.96$ to $0.99$.
 The protein-structure tolerances therefore add no separate behaviour here.
 lDDT differs most and is the only per-window score that places white noise far beyond a stranger ($1.76$).
 LPIPS rejects the crude dataset mean (AlexNet $0.90$, VGG $1.09$) but keeps the shrunk person beside the true person ($0.47$ against $0.43$, and $0.57$ against $0.56$).
-Set-level FID and FWD reject averaging strongly: the dataset-mean set is $16$ and $186$ times as far as the stranger set.
+Set-level FID and FWD reject averaging strongly: the dataset-mean set is $27$ and $171$ times as far as the stranger set.
+Set-level comparisons need sets of similar size, because FID is biased upward for small sets; we therefore leave out every rung whose set has fewer than half the windows of the stranger set, a rule fixed after the brain repeat set (138 of 1326 windows) gave a ratio of $8.3$.
 They are blind to the person, because the true-person set is as far as the stranger set ($0.93$ and $0.57$).
 No metric family both recognises the individual and penalises subtle averaging.
 % Sources: results/cross_modality/fig_metric_summary_R.json; agreement.json (metric_matrix); values_generative.json.
@@ -100,7 +101,7 @@ No metric family both recognises the individual and penalises subtle averaging.
 \textbf{B,} position of each fill on the common scale (target zero, 16 unrelated donors one), mean over the image sets where the fill and metric exist (number of sets in brackets); FID and FWD are set distances relative to the stranger set, on a log axis.
 True person: repeat acquisition, or the opposite side where no repeat exists (PAPILA, IXI).
 Starred look-alike rungs: the oracle donor is chosen with the hidden target (upper bound); the mean of $k=16$ look-alikes exists for brain, fundus and iris, not faces.
-Brain LPIPS and persistence use a repeat-anchored scale and are left out of the means in B.
+Sets per row: MSE, SSIM and lDDT 9; TM-like 7 (its tolerance needs repeats, absent in PAPILA and IXI); LPIPS, Betti matching and persistence 7 (brain values lie on a repeat- or opposite-side-anchored scale and are ranked in A but not averaged in B; IXI was not run for LPIPS and persistence); FID and FWD 8, with rungs whose set has fewer than half the stranger set's windows left out (for example the brain repeat set).
 Brain, fundus and iris values are provisional.
 Source: \src{results/cross_modality/fig_metric_summary_R.json}.}
 \label{fig:summary}
