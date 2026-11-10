@@ -89,7 +89,11 @@ Oracle donors use the true hidden region and are upper-bound diagnostics rather 
 The same selection rule on unrelated anatomy controls the benefit of searching many candidates.
 We exclude block-search outputs that predate their missing-support correction.
 
-Attenuation controls have the form $\hat\mu+\lambda(f-\hat\mu)$, with the recorded $\lambda$ derived from the original donor comparison.
+The \emph{shrunk true person} is the most important control.
+We take the true person's own other image (the repeat), keep the dataset mean $\hat\mu$, and scale back only the part that makes this person different from the mean: $\hat\mu+\lambda(f-\hat\mu)$ with $0<\lambda<1$.
+The result is still the right person, but with part of the individual detail replaced by the average, which is what a model trained with squared error is pushed to produce when it is unsure.
+We use the $\lambda$ that minimizes squared error for that rung, recorded from the original donor comparison.
+A metric that protects individual detail should place this shrunk image further from the target than the unshrunk repeat (test T2).
 Incorrect-detail controls use a stranger residual made orthogonal to the target residual and matched in norm on eligible support.
 Residual amplitude and target projection distinguish reduced variation from variation in the wrong direction.
 Residual correlation alone is invariant to positive rescaling and cannot establish preservation of amplitude.
@@ -103,7 +107,7 @@ The source protocols use bootstrap resampling of families or people, with positi
 Saved intervals use 2,000 resamples.
 Repeated regions and both eyes do not multiply the number of independent people.
 Fewer than ten independent units support descriptive reporting only.
-The recorded one-sided tests ask whether the repeat is better than the mean (T1), its attenuated version (T2), incorrect detail (T3a), and noise (T3b).
+The recorded one-sided tests ask whether the repeat is better than the mean (T1), its shrunk version (T2), incorrect detail (T3a), and noise (T3b).
 The brain and iris sources retain their own Holm correction families.
 Failure to establish one directional test is not proof of equivalence or of its reverse.
 

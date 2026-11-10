@@ -18,6 +18,12 @@
 \usepackage{amsmath}
 \usepackage{multicol}
 \usepackage{placeins}
+% Let figures fill more of a page before LaTeX moves them to float-only pages.
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.8}
+\renewcommand{\dblfloatpagefraction}{0.8}
 
 % Status markers for every reported number (see sec/3_methods.tex, "Result status").
 \newcommand{\statusfinal}{\textsuperscript{F}}
