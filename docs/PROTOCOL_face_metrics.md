@@ -348,3 +348,10 @@ Kate ("запускай", 9 Nov, relayed by the ISBI session): add the rung that
   and perceptual metrics (SSIM, LPIPS) it may rank behind the k = 1 look-alike, as the dataset mean does.
 - Compute: laptop CPU, one worker at a time behind the RAM guard; smoke on 4 targets per source with timing and a QC
   sheet (target, k = 1 look-alike, mean of 16) before the full run.
+- Result (9-10 Nov, laptop, one worker, 7.7 h; block `rung_lookalike16`): all three gates passed on every scored target
+  (27271 k = 1 rows per pass equal the stored rows: tier-1 max |diff| 7e-15, F2 1.2e-7 (LPIPS), VGG 1.5e-7; v1
+  residual 0; the k = 1 look-alike MSE R recomputed with the new rung equals the stored R, so the anchors are
+  unchanged). 27271 new rows per pass, 21 metrics. The mean of 16 lies closer to the target than the k = 1 look-alike
+  on every pixel and structure metric (MSE R 0.26 / 0.27 against 0.40 / 0.40; SSIM 0.59 / 0.63 against 0.73 / 0.74,
+  CelebA / IMDb-WIKI), so the written expectation that SSIM may rank it behind did not hold; AlexNet LPIPS ranks it
+  slightly behind the k = 1 look-alike (0.66 / 0.72 against 0.62 / 0.66), VGG ahead (0.69 / 0.73 against 0.76 / 0.80).
