@@ -166,7 +166,7 @@ They do not reject averaging.
 The dataset mean is at $0.50$, and the true person shrunk toward the mean is at $0.29$, closer than the true person itself\statuspre.
 TM-like~\cite{tmscore2004}, GDT-like~\cite{zemla2003lga} and superposed RMSE order the rungs almost as MSE does, with rank correlation $0.96$ to $0.99$.
 The protein-structure tolerances therefore add no separate behaviour here.
-lDDT differs most and is the only per-window score that places white noise far beyond a stranger ($1.76$).
+lDDT differs most and is the only error or similarity score that places white noise far beyond a stranger ($1.76$).
 LPIPS rejects the crude dataset mean (AlexNet $0.90$, VGG $1.09$) but keeps the shrunk person beside the true person ($0.47$ against $0.43$, and $0.57$ against $0.56$).
 Set-level FID and FWD reject averaging strongly: the dataset-mean set is $16$ and $186$ times as far as the stranger set.
 Set-level comparisons need sets of similar size, because FID is biased upward for small sets.
