@@ -65,7 +65,7 @@ Support and target eligibility are fixed independently of generated content, wit
 Seeds are averaged within targets before the population average.
 Negative values mean metric preference over the control, not identity preservation.
 Profiles retain raw distances and both common and stratum-matched references, since group-specific normalization can conceal raw differences.
-Fill-only, identically composited and whole-image endpoints require explicit spatial scope; set-level FID/FWD need a separate definition.
+Fill-only, identically composited and whole-image endpoints require explicit spatial scope; set-level FID~\cite{heusel2017fid} and FWD~\cite{fwd2025} need a separate definition.
 Intervals must account for independent people/families, repeated masks and outputs.
 The current experiments characterize controls; generated subgroup profiles in Eq.~\ref{eq:population-audit} have not been measured.
 
@@ -109,7 +109,7 @@ Failure to establish one directional test is not proof of equivalence or of its 
 
 \subsection{Brain MRI (QTIM)}
 \label{sec:m-brain}
-The QTIM panel contains 221 prepared targets from 168 families, including 23 repeat acquisitions.
+The QTIM panel~\cite{qtim2026,strike2019} contains 221 prepared targets from 168 families, including 23 repeat acquisitions.
 Volumes are N4-corrected and affinely aligned to an independent symmetric MNI frame, with intensity standardized within the brain mask.
 The panel evaluates both hemispheres at the recorded random regions and at two prespecified boxes, one deep and one parietal.
 Family members are excluded from the target's reference pool.
@@ -122,7 +122,7 @@ The metric panel nevertheless remains provisional because the registration gate 
 The completed HACA3+ stage-1 contrast sensitivity is reported separately and does not establish a harmonized metric benchmark.
 % Sources: donor_ladder_brain_metrics.json; PROTOCOL_donor_ladder_brain.md Amendments 10--21.
 
-IXI adds a second, cross-sectional brain cohort without repeats or relatives.
+IXI~\cite{ixi} adds a second, cross-sectional brain cohort without repeats or relatives.
 One hundred T1 scans were sampled by acquisition site and age tertile and prepared with the same skull stripping, N4 and affine pipeline as QTIM.
 The opposite hemisphere anchors the IXI-only scale, and the shared cross-dataset tables use the common stranger scale.
 IXI strangers are additionally split into same-site and other-site donors.
@@ -166,7 +166,7 @@ Donor pools exclude the target person.
 The panel retains measured coverage and endpoint-specific eligibility.
 It uses no fixed-sector removal or pairwise rotation search.
 Lid shadow remains a known source of shared appearance, and the final review of the lid masks is outstanding.
-A second iris pass adds LPIPS, Betti matching, Fréchet inception distance (FID) and Fréchet wavelet distance (FWD); these values enter the cross-dataset comparison in Section~\ref{sec:r-cross}.
+A second iris pass adds LPIPS~\cite{zhang2018lpips}, Betti matching~\cite{betti2023}, Fréchet inception distance (FID)~\cite{heusel2017fid} and Fréchet wavelet distance (FWD)~\cite{fwd2025}; these values enter the cross-dataset comparison in Section~\ref{sec:r-cross}.
 
 \subsection{Synthetic simulations}
 \label{sec:m-sim}
