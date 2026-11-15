@@ -85,7 +85,11 @@ def test_generative_values_match_ranks_and_mark_anchor():
     v = load("values_generative.json")["values"]
     for key, rank in load("ranks_generative.json").items():
         assert set(v[key]["rungs"]) == set(rank), key
-        want = "repeat" if key.endswith("|QTIM") else ("other_side" if key.endswith("|IXI") else "self")
+        # IXI (Amendment 25): LPIPS and persistence on the exact self anchor; Betti 2.5D and the set level keep the
+        # dataset's other-side label (set level is a ratio to the stranger set either way)
+        ixi_self = key.split("|")[0] in ("lpips_alex", "lpips_vgg", "persistence")
+        want = ("repeat" if key.endswith("|QTIM") else
+                ("self" if ixi_self else "other_side") if key.endswith("|IXI") else "self")
         assert v[key]["anchor"] == want, key
         for r, rec in v[key]["rungs"].items():
             assert rec.get("ci95", rec.get("ratio_ci95")) is not None and rec["n"] is not None, (key, r)
@@ -103,10 +107,12 @@ def test_ixi_in_frame_with_na_rungs_never_values():
     assert 1.5 < card["IXI"]["ratio_stranger"] < 2.5
 
 
-def test_ixi_generative_not_run_with_reason():
+def test_ixi_generative_complete_after_amendment25():
+    """Amendment 25 ran LPIPS, persistence, FID and FWD on IXI: no "not run" entry is left, every metric has values."""
     v = load("values_generative.json")
-    assert v["not_run"]["IXI"]
-    assert not [k for k in v["values"] if k.endswith("|IXI") and not k.startswith("betti_")]
+    assert "IXI" not in v["not_run"]
+    for m in ("lpips_alex", "lpips_vgg", "persistence", "fid", "fwd", "betti_matched", "betti_unmatched"):
+        assert f"{m}|IXI" in v["values"], m
 
 
 def test_centre_strangers_ixi_only_and_na_elsewhere():

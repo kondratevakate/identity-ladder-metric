@@ -106,6 +106,47 @@ def compact_atlas(source):
     return selected
 
 
+IXI_FIG=ROOT/'results/figures/fig_ladder_maps_common_ixi.pdf'
+
+
+def add_ixi_row(source,left,cell):
+    """Amendment 25: a ninth row (IXI) below the eight source rows; rows 0-7 keep their coordinates. Panels are the
+    z = 10 mm row of fig_ladder_maps_common_ixi.pdf (same layout as the QTIM figure; n/a columns show the template
+    with 'n/a'). Returns the new document and the scalar annotations."""
+    ixi=fitz.open(IXI_FIG)
+    boxes=sorted(set(tuple(round(x,2) for x in obj['bbox']) for obj in ixi[0].get_image_info()
+                     if 125 < obj['bbox'][1] < 130 and 190 < obj['bbox'][3] < 196))
+    assert len(boxes)==8, 'The IXI map PDF panel layout changed'
+    fine=json.loads((ROOT/'results/donor_ladder_brain_maps_ixi.json').read_text())['maps']
+    grid=json.loads((ROOT/'results/donor_ladder_brain_map_grid_ixi.json').read_text())['maps']
+    mapping=[None,'repeat','mirror','sibling','stranger','knn16_s4','cohort',None]
+    ratios=[]
+    for key in mapping:
+        e=None if key in (None,'repeat','sibling') else (grid if key.startswith('knn') else fine).get(key,{})
+        ratios.append(e.get('pooled_ratio') if e else None)
+    w,h=source[0].rect.width,source[0].rect.height
+    cell_h=(.875-.12)*h/(8+7*.42)
+    top=1018.0                                     # below the source colour bar (source content ends at y = 1012)
+    out=fitz.open()
+    page=out.new_page(width=w,height=top+cell_h+60)
+    page.show_pdf_page(fitz.Rect(0,0,w,1012),source,0,clip=fitz.Rect(0,0,w,1012))
+    for j,rect in enumerate(boxes):
+        x=left+j*cell*1.06
+        page.show_pdf_page(fitz.Rect(x,top,x+cell,top+72),ixi,0,clip=fitz.Rect(rect),keep_proportion=True)
+        if j==0:
+            label=''
+        elif j==7:
+            label='1 x mean'
+        elif ratios[j] is None:
+            label='n/a in IXI'
+        else:
+            label=f'{ratios[j]:.2f} x mean'
+        page.insert_textbox(fitz.Rect(x,top+76,x+cell,top+92),label,fontname='helv',fontsize=6.5,align=1)
+    page.insert_textbox(fitz.Rect(7,top+24,85,top+45),'Brain MRI',fontsize=9,fontname='hebo')
+    page.insert_textbox(fitz.Rect(7,top+46,85,top+82),'IXI\nGaussian, z = 10 mm\nprovisional',fontsize=7,fontname='helv')
+    return out,ratios
+
+
 def main():
     cache=HERE/'.build';cache.mkdir(exist_ok=True)
     source_bytes=blob('results/figures/fig_ladder_maps_all_modalities.pdf')
@@ -139,9 +180,16 @@ def main():
     page.insert_textbox(fitz.Rect(7,358,85,379),'Brain MRI',fontsize=9,fontname='hebo')
     page.insert_textbox(fitz.Rect(7,380,85,416),'QTIM\nGaussian, z = 10 mm\nprovisional',fontsize=7,fontname='helv')
     footer=('Aggregate-only maps. Brain: masked Gaussian, sd = 16/sqrt(12) mm; coarse look-alike grid is Gaussian-weighted. '
+            'IXI: same maps on 100 scans, donors averaged only inside their masks; no repeat scans or families (n/a). '
             'Fundus P8/P9: provisional frame-only results. Iris: P2 panel, not full P3. Missing is unavailable. '
             'Anatomy columns are population means or templates. V has its own scale in each row.')
-    page.insert_textbox(fitz.Rect(8,1015,page.rect.width-8,1038),footer,fontsize=6,fontname='helv',align=1)
+    ixi_ratios,ixi_path=None,None
+    if IXI_FIG.exists():
+        source,ixi_ratios=add_ixi_row(source,left,cell)
+        ixi_path=IXI_FIG
+    page=source[0]
+    page.insert_textbox(fitz.Rect(8,page.rect.height-27,page.rect.width-8,page.rect.height-2),footer,fontsize=6,
+                        fontname='helv',align=1)
     source.set_metadata({'title':'Identity Ladder aggregate Gaussian maps','author':'','subject':'Aggregate-only, version-labeled spatial maps'})
     full=HERE/'fig/atlas_all_modalities_full.pdf'
     source.save(full,garbage=4,deflate=True)
@@ -165,8 +213,15 @@ def main():
         'changes':'Replace brain row/scalar annotations and stale footer. The supplementary atlas retains all eight rows and columns. The current main infographic selects four rows separately; no superseded compact atlas is generated.',
         'outputs':{full.name:sha(full.read_bytes())},
     }
+    if ixi_path is not None:
+        provenance.update({
+            'ixi_row_pdf':str(ixi_path.relative_to(ROOT)),'ixi_row_pdf_sha256':sha(ixi_path.read_bytes()),
+            'ixi_row':8,'ixi_row_source_slice':'MNI axial z=10 mm','ixi_scalar_annotations':ixi_ratios,
+            'ixi_sources':['results/donor_ladder_brain_maps_ixi.json','results/donor_ladder_brain_map_grid_ixi.json'],
+            'ixi_note':'Amendment 25: IXI appended as a ninth row below the eight source rows, so rows 0-7 keep their '
+                       'coordinates (the provenance infographic clips them); page height extended accordingly.'})
     (HERE/'atlas_provenance.json').write_text(json.dumps(provenance,indent=2)+'\n')
-    print('Assembled Gaussian brain row with existing provisional fundus and P2 iris panels; no experiments rerun.')
+    print('Assembled Gaussian brain rows (QTIM; IXI when its maps exist) with existing provisional fundus and P2 iris panels.')
 
 
 if __name__=='__main__':main()

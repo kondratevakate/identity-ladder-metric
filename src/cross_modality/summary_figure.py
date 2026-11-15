@@ -115,7 +115,7 @@ def size_ok(metric, d, rung):
 def r_values(metric):
     """Mean over datasets of each rung's value on the stranger scale, merging the sources by dataset: common_all R_self
     where it has the metric, otherwise the generative block's value. Per-image generative values count only when
-    self-anchored (brain R is on the repeat scale, so brain LPIPS and persistence are left out); set-level FID / FWD are
+    self-anchored (QTIM R is on the repeat scale, so QTIM LPIPS and persistence are left out); set-level FID / FWD are
     ratios to the stranger set and do not depend on that anchor, so brain counts there. Returns (means, datasets)."""
     rows = {}
     for d, blk in common.items():
@@ -323,7 +323,7 @@ fig.text(0.01, 0.008,
          "B: R = (d(fill) - d(target)) / (d(16 strangers) - d(target)), mean over datasets; per-image metrics on a linear "
          "axis, FID/FWD on a log axis.\n"
          "* Look-alikes: oracle = chosen with the hidden truth (upper bound); mean of k look-alikes (k = 16), all nine sets. True person = repeat scan, or the other side where there is no repeat (PAPILA, IXI).\n"
-         "Brain LPIPS, Betti and persistence (and IXI Betti) are on other anchors and left out of B's means. Brain is excluded "
+         "QTIM LPIPS, Betti and persistence and IXI Betti are on other anchors and left out of B's means. QTIM is excluded "
          "from FID/FWD (its repeat set is about 10x smaller than its stranger set; FID is biased upward for small sets), and\n"
          "set-level rungs with under half the stranger set's windows are left out.\n"
          "Data: QTIM and IXI brain, CelebA, IMDb-WIKI, GRAPE, PAPILA, UTIRIS NIR/VIS, UPOL; brain, fundus, iris pre-QC. Source: "

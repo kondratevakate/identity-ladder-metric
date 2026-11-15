@@ -6,7 +6,10 @@ iris `results/iris_ladder_metrics.json` key `amendment_p3`, faces `results/face_
 AlexNet on central orthogonal slices, persistence W1 over H0-H2; pre-QC). Brain R is anchored on the repeat scan
 (repeat 0, strangers 1); it is an affine map of the per-rung mean distance, so the rank order is the same as on the
 self scale. Relative = sibling and co-twin pooled, weighted by targets. Metrics a summary does not carry (brain Betti
-3D, FID, FWD) are "not run" with the reason from that JSON; never a zero.
+3D, FID, FWD) are "not run" with the reason from that JSON; never a zero. IXI (brain Amendment 25,
+`results/donor_ladder_brain_ixi_gen.json`): LPIPS AlexNet and VGG, persistence, FID and FWD on the random-cube subset S
+(2 whole cubes per target, both sides), R anchored on the other side; its other-side set is the target set itself and
+is left out of the set-level ranks.
 Per-target metrics (LPIPS AlexNet, LPIPS VGG, Betti matching matched / unmatched, intensity persistence, iris-code
 Hamming distance) use R_self per rung (target 0, mean of 16 strangers 1, lower = closer). Set-level metrics (FID,
 FWD) use the per-rung set value (lower = closer). The tile rank is the rung's place among the rungs present.
@@ -46,7 +49,9 @@ NOT_RUN_METRICS = {"QTIM": ("fid", "fwd"),
 # Brain set level: the own-other-side and relative sets are drawn from the same scans as the target set, so their FID
 # and FWD are ~0 by construction (brain Amendment 22 note); left out of the set-level ranks, never read as identity.
 EXCLUDED_SET = {"QTIM": {r: "set nearly coincides with the target set by construction (Amendment 22)"
-                         for r in ("mirror", "sibling", "cotwin")}}
+                         for r in ("mirror", "sibling", "cotwin")},
+               "IXI": {r: "set equals (or is a blend of) the target set by construction: both sides are targets "
+                          "(Amendment 25)" for r in ("mirror", "shrink_mirror")}}
 
 
 def ren(f, has_repeat):
@@ -163,8 +168,29 @@ else:
     NOT_RUN_METRICS["QTIM"] = ("betti_matched", "betti_unmatched")
     NOT_RUN_METRICS["IXI"] += ("betti_matched", "betti_unmatched")
 src["QTIM"] = (R, S)
+IXI_S = {}
+ANCHOR_M = {}   # per (dataset, metric) anchor where it differs from the dataset's
+IXG = os.path.join(HERE, "results", "donor_ladder_brain_ixi_gen.json")   # Amendment 25
+if os.path.exists(IXG):
+    ixg = json.load(open(IXG))
+    # self scale (target itself 0: LPIPS and persistence W1 of an image with itself are exactly 0), as the other
+    # datasets; the other-side R stays in that JSON. Betti 2.5D keeps its other-side anchor.
+    IXI_R.update(from_ladder(ixg["views"]["random_patches/LR"]["ladder_R_self"],
+                             {"lpips": "lpips_alex", "lpips_vgg": "lpips_vgg", "persistence_w1": "persistence"}))
+    for m in ("lpips_alex", "lpips_vgg", "persistence"):
+        ANCHOR_M[("IXI", m)] = "self"
+    if isinstance(ixg.get("set_level"), dict):
+        sl = {r: e for r, e in ixg["set_level"]["random_patches/LR"].items()
+              if not r.startswith("_") and r not in EXCLUDED_SET["IXI"] and e.get("fid") is not None}
+        IXI_S = {m: {r: {"value": e[m], "n_cells": e["n_cells"]} for r, e in sl.items()} for m in ("fid", "fwd")}
+        NOT_RUN_METRICS["IXI"] = tuple(m for m in NOT_RUN_METRICS["IXI"] if m not in
+                                       ("lpips_alex", "lpips_vgg", "persistence", "fid", "fwd"))
+    else:
+        NOT_RUN_METRICS["IXI"] = tuple(m for m in NOT_RUN_METRICS["IXI"] if m in ("fid", "fwd"))
+    if not NOT_RUN_METRICS["IXI"]:
+        NOT_RUN.pop("IXI", None)
 if IXI_R:
-    src["IXI"] = (IXI_R, {})
+    src["IXI"] = (IXI_R, IXI_S)
 NOT_RUN["QTIM"] = "brain: Betti matching 3D not available (3D and 2D libraries disagreed, Amendment 24 B); 2.5D used"
 
 ANCHOR = {d: "self" for d in src}
@@ -172,7 +198,8 @@ ANCHOR["QTIM"] = "repeat"   # brain Amendment 20 R: repeat scan 0, strangers 1 (
 if "IXI" in ANCHOR:
     ANCHOR["IXI"] = "other_side"   # IXI R: own other side 0, strangers 1 (no repeat scans)
 ranks, values = {}, {}
-status = {"method": __doc__.strip(), "not_run": NOT_RUN, "not_run_metrics": NOT_RUN_METRICS, "anchor": ANCHOR, "excluded_set_level_rungs": EXCLUDED_SET,
+status = {"method": __doc__.strip(), "not_run": NOT_RUN, "not_run_metrics": NOT_RUN_METRICS, "anchor": ANCHOR,
+          "anchor_by_metric": {f"{m}|{d}": a for (d, m), a in ANCHOR_M.items()}, "excluded_set_level_rungs": EXCLUDED_SET,
           "set_level_caution": {"QTIM": "brain FID/FWD kept in the tables but excluded from Fig. 2: its repeat set (138 "
                                         "windows) is about 10x smaller than its stranger set, and FID is biased upward "
                                         "for small sets"},
@@ -186,7 +213,7 @@ for d, (R, S) in src.items():
         ent = entries(R, S, m)
         if m in ("fid", "fwd") and "stranger" not in ent:
             continue
-        values[f"{m}|{d}"] = {"anchor": ANCHOR[d], "scale": "ratio to stranger set" if m in ("fid", "fwd") else "R",
+        values[f"{m}|{d}"] = {"anchor": ANCHOR_M.get((d, m), ANCHOR[d]), "scale": "ratio to stranger set" if m in ("fid", "fwd") else "R",
                               "rungs": {r: value_record(m, ent[r], ent.get("stranger")) for r in COLS if r in ent}}
         it = [(r, v[r]) for r in COLS if r in v]
         if len(it) < 3:
@@ -246,7 +273,7 @@ for k, b in rows:
 ax.text(-7.0, y + 1.8, "Same columns and colours as the main rank tiles (1 = what the metric calls closest). Per-target metrics are "
         "ranked by R_self,\nset-level FID and FWD by their per-rung set value. Fundus 9.15, iris P3, faces F2 and F2.1 (LPIPS VGG), "
         "brain Amendments 20 and 22\n(deep box, both sides; repeat-anchored R; set level leaves out own other side and relative, "
-        "near 0 by construction; Betti 2.5D on random cubes, IXI other-side R). Grey rows: not computed, reason given. All pre-QC except faces.",
+        "near 0 by construction; Betti 2.5D on random cubes; IXI Amendment 25 on random cubes, self-anchored R; IXI Betti other-side R). Grey rows: not computed, reason given. All pre-QC except faces.",
         fontsize=7, color="#333", va="center")
 ax.set_xlim(-7.2, len(COLS) + 0.2)
 ax.set_ylim(y + 3.2, -5.2)

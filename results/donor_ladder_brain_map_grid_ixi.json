@@ -1,0 +1,57 @@
+{
+ "status": "pre-QC: affine registration only, MRI registration QC not met; exploratory maps",
+ "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendment 25; QTIM method of Amendments 7, 8, 18)",
+ "dataset": "IXI",
+ "grid_mm": 8,
+ "cube_mm": 16,
+ "n_targets": 100,
+ "window": "Gaussian weights inside the cube, sd = CUBE/sqrt(12), truncated, renormalised over valid voxels",
+ "missing_rule": "donor voxels outside the donor's mask never enter a mean or a shell distance",
+ "n_centres": 2296,
+ "not_available": {
+  "repeat": "IXI has no repeat scans",
+  "sibling": "IXI has no families"
+ },
+ "maps": {
+  "mirror": {
+   "pooled_ratio": 1.3432436698559727,
+   "quantiles_5_25_50_75_95": [
+    0.48033811443053903,
+    1.0492508365795838,
+    1.5004474889207216,
+    1.733670156461561,
+    1.9603022091120899
+   ],
+   "split_half_r": 0.9517548833569942,
+   "centres": 2102,
+   "max_targets_per_centre": 100
+  },
+  "stranger": {
+   "pooled_ratio": 1.9799263143922257,
+   "quantiles_5_25_50_75_95": [
+    1.9798045555003023,
+    1.9799986079269365,
+    1.9799996072024872,
+    1.9799998502517444,
+    1.9799999331421105
+   ],
+   "split_half_r": 0.9703969848957474,
+   "centres": 2296,
+   "max_targets_per_centre": 100
+  },
+  "knn16_s4": {
+   "pooled_ratio": 0.7234743640253047,
+   "quantiles_5_25_50_75_95": [
+    0.38813627127229344,
+    0.6231685937557722,
+    0.777588645258498,
+    0.8620291618062151,
+    0.9195585642722072
+   ],
+   "split_half_r": 0.9413111483300244,
+   "centres": 2296,
+   "max_targets_per_centre": 100
+  }
+ },
+ "minutes": 194.8
+}

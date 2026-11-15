@@ -968,3 +968,81 @@ Amendment 24C, result (10 Nov 2026; pre-QC). `src/donor_ladder_brain_betti25d.py
   - not seen: the own other side does not come ahead of the repeat here, unlike persistence in Amendment 20;
     the repeat is the closest rung.
 - Reported, not repaired.
+
+## Amendment 25 (14 Nov 2026, IXI: LPIPS, persistence, FID, FWD and Gaussian error maps; recorded before any value)
+
+Kate, 14 Nov 2026 (quoted by the CVPR paper session): "ixi was not run - так нельзя говорить, надо тогда прогнать".
+The repository gate of 2 Nov (metric experiments paused until registration QC passes) still stands; Kate asked for
+this run explicitly. Everything below is pre-QC, affine registration only, and labelled provisional, like QTIM.
+Earlier outputs stay untouched; every output here is a new version.
+
+- **Cells.** IXI 100 targets (Amendment 23), the topology subset S of Amendment 24C unchanged: per target 2 of the
+  32 random 16 mm cubes where the target cube lies wholly inside its own mask on both sides, seed [20261102, target];
+  both sides. Fills, donors, E and seeds come from `run_position_at` unchanged (new hook `ixi_gen`); the IXI-only
+  rungs of Amendment 23 (age-matched mean, centre strangers) are not scored here. n/a rungs (repeat, sibling, co-twin,
+  cohort mean, repeat shrunk) are dropped as in Amendment 23. Why S and not all 32 cubes: the slice metrics need
+  slices wholly inside E (S guarantees all three for the target), the set-level samples get the same cells in every
+  rung, and the run fits the laptop CPU (about 1 h, as Betti 2.5D). QTIM LPIPS / persistence / FID / FWD are on the
+  frozen deep box (Amendments 20, 22); the two datasets therefore share the metric definitions but not the cells.
+- **Per-target metrics.** LPIPS AlexNet and LPIPS VGG exactly as Amendments 20 and 22 (`lpips_25d`: central
+  orthogonal slices wholly inside E, z / 4 clipped, 64 px short side, mean over slices; NaN when none, never 0);
+  intensity persistence as Amendment 20 (cubical sublevel, outside E at +inf, W1 summed over H0-H2). R with the IXI
+  anchor (other side 0, mean of the 16 reference strangers 1; `other_side_R`), target bootstrap (no families), tests
+  T2, T3a, T3b (T1 needs a repeat), Holm within this run. Also R on the self scale used for the other datasets in
+  the cross-modality block (target itself 0, 16 strangers 1): LPIPS and persistence W1 of an image with itself are
+  exactly 0, so this anchor is an exact value, not a filler; only it lets IXI enter the per-image means of the
+  summary figure (added 14 Nov after the smoke, before the full run; ranks do not depend on the anchor).
+- **Set level.** As Amendment 22 with one change forced by the cube size: the sample is the whole 16 x 16 central
+  slice (the 24 x 24 crop of the deep box does not fit a 16 mm cube), z / 4 clipped to [0, 1], bilinear to 64 x 64.
+  Cell = (target, side, slice axis); target set and fill set use the same cells. FID (Inception-v3 pool 2048,
+  pytorch-fid weights, exact Frechet), FWD (Haar packets level 2, mean of per-packet Frechet), 100 bootstrap
+  resamples of targets, floor = target set split into two random halves of targets. The own-other-side set is the
+  target set itself (both sides are targets) and its shrunk control nearly so; they are reported but left out of the
+  set-level ranks, as QTIM's other side and relatives (Amendment 22).
+- **Maps.** The QTIM Gaussian maps of Amendments 5, 6, 7, 8 and 18 on the 100 IXI scans: 2 mm maps of own mirror,
+  stranger (exact expectation) and same-sex-and-age mean (QTIM rule: >= 10 donors within 2 years, else missing),
+  local MSE as a masked Gaussian average (sd = 16 / sqrt(12) mm), in units of the dataset-mean error V; the 8 mm grid
+  map of the mean of 16 look-alikes chosen on the 4 mm shell (Gaussian weights inside the cube). Split-half
+  reliability over two random halves of targets. One deliberate difference from the QTIM code, required by the
+  missing-is-never-zero rule: the pooled donor mean and variance at a voxel use only the donors whose mask covers
+  that voxel (the QTIM maps average the zero-filled z volumes, which puts the z mean in for donors outside their
+  mask; flagged for QTIM as a follow-up, not changed here). Repeat and sibling columns are n/a in IXI.
+  IXI gets a row in the all-modalities atlas (`paper/cvpr2027/assemble_atlas.py`), below QTIM.
+- **Expectations (stated now).** E1 LPIPS VGG orders the rungs like LPIPS AlexNet (Spearman >= 0.8). E2 noise is the
+  farthest rung on LPIPS and persistence (T3b passes). E3 set level: the dataset mean and the blended controls score
+  worse than a stranger on FID and FWD, the opposite of MSE (as QTIM). E4 maps: the stranger ratio is about 2 by
+  construction; the mirror ratio is below 2 and the 16-look-alike mean is below 1 over most of the brain (IXI MSE R of
+  the mean of 16 look-alikes is -0.89, Amendment 24 A). Failures are reported, not explained away.
+- **Order and gates.** Free disk and RAM checked first; smoke on 3 targets with timing and a QC sheet (slices of
+  target and fills, set-level samples, the first map slices), shown to Kate before the full run; then the full run,
+  2-3 workers. Private rows in `projects/identity-ladder-metric/ixi-gen-metrics-20261114-v1/` and maps in
+  `projects/identity-ladder-metric/ixi-maps-20261114-v1/`; public aggregates only:
+  `results/donor_ladder_brain_ixi_gen.json`, `results/donor_ladder_brain_maps_ixi.json`,
+  `results/donor_ladder_brain_map_grid_ixi.json`.
+
+### Amendment 25 result (15 Nov 2026; pre-QC, affine registration only, provisional)
+
+Run 15 Nov 07:22-10:53 on the laptop (metrics 2 workers, set level 4 threads, maps 1 process; the grid cache resumed
+from 63 of 100 scans verified against the volumes). All steps exited with code 0. 100 targets, 200 cells, 11,600
+rows, no missing value (every cell is a whole cube inside E).
+
+- **Per image, self-anchored R** (0 = target, 1 = 16 strangers; LPIPS AlexNet / VGG / persistence W1): other side
+  0.76 / 0.88 / 0.80; oracle look-alike 0.64 / 0.82 / 0.80; look-alike 0.76 / 0.88 / 0.82; mean of 2 strangers
+  0.90 / 0.96 / 0.88; dataset mean 1.61 / 1.02 / 0.81; shrunk other side 1.25 / 0.91 / 0.80; stranger 0.98 / 0.99 /
+  0.98; wrong detail 0.98 / 1.00 / 1.09; noise 3.42 / 1.34 / 19.1. The other-side-anchored R is kept in the JSON.
+- **Tests** (Holm over 9): LPIPS AlexNet and VGG pass T2, T3a and T3b; persistence fails T2 (p_Holm 0.95) and passes
+  T3a and T3b.
+- **Set level** (FID / FWD; split-half floor 17.5 / 0.078): stranger 8.50 / 0.019; wrong detail 11.0 / 0.020; oracle
+  look-alike 11.2 / 0.030; look-alike 12.1 / 0.036; mean of 2 strangers 23.9 / 0.059; noise 196 / 0.32; dataset mean
+  240 / 0.29; other side about 0 and shrunk other side 160 / 0.24, both excluded from ranks.
+- **Maps** (units of the dataset-mean error V): 2 mm mirror 1.37 (split-half r 0.96), stranger 1.98 (1 + (n-2)/n);
+  same sex and age n/a (no target has 10 same-sex donors within 2 years); 8 mm grid mirror 1.34 (r 0.95), stranger
+  1.98, mean of 16 look-alikes 0.72 (r 0.94, 2296 centres).
+- **Expectations.** E1 met (Spearman 0.93). E2 met (noise farthest; T3b passes on all three). E3 met (dataset mean
+  and blended controls worse than a stranger on FID and FWD). E4 met (mirror 1.37 < 2; look-alike mean 0.72 < 1).
+  Not expected, reported: the stranger set lies below the split-half floor and below every other rung on FID and
+  FWD; persistence does not separate the dataset mean from a stranger (T2 fails).
+- **Summary figure.** IXI enters the per-image means of panel B for LPIPS and persistence (self anchor). It does not
+  enter the FID / FWD means: the summary uses only datasets with a true-person value, and IXI's other-side set is
+  the target set itself. This changes the printed LPIPS means of claim C10 (for example AlexNet dataset mean 0.90 ->
+  0.99); the paper text is updated by the paper owner.
