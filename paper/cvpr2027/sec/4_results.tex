@@ -11,6 +11,8 @@ Error and similarity metrics are computed with the hidden region at 1/8 of the o
 Error and similarity metrics see the person: under \ac{MSE} the true person is at 0.41 and the stranger at 1\statuspre.
 They do not reject averaging: the dataset mean is at 0.50, and the shrunk true person at 0.29 is closer than the unchanged true person\statuspre.
 In the brain, anchored on the second scan, the shrunk scan is at $-0.014$ $[-0.028,-0.004]$, so T2 fails\statuspre.
+\input{sec/tab_tests}
+The directional tests show the same in every image set (Table~\ref{tab:tests}): no error or similarity metric places the unchanged person closer than the shrunk one (T2), while all of them reject wrong detail and noise (T3a, T3b), and only faces fail T1, because a second photograph changes pose and lighting\statuspre.
 \ac{SSIM} shows the same pattern with a smaller gap: the true person at 0.63, the shrunk true person at 0.60 and the dataset mean at 0.83, so it penalizes the crude mean more than \ac{MSE} does but still prefers partial averaging to the unchanged second image.
 \ac{lDDT}-like, the tolerance score that compares local intensity differences, rewards averaging the most: the shrunk true person at 0.52 and the dataset mean at 0.62 are both closer than the true person at 0.66.
 \ac{TM}-like, \ac{GDT}-like and \ac{RMSE} order the rungs almost exactly as \ac{MSE} (rank correlation 0.97 to 0.99).
@@ -44,7 +46,8 @@ About a sixth of the distance to a stranger from another site is therefore the s
 Supplementary Figure~S1 shows where in the image each rung is close or far, and Tables~\ref{tab:brain} to~\ref{tab:fundus} give the profiles of each modality at each set's original window (16 pixels in faces and iris).
 In the brain, the dataset mean is closer to the target than the person's own opposite hemisphere under \ac{MSE} (0.413 against 0.717), \ac{SSIM} and \ac{lDDT}-like, and only \ac{TM}-like reverses this order\statuspre.
 Wrong detail sits at a stranger under every metric, and noise falls short of a stranger under \ac{MSE} (0.921) but far beyond it under \ac{lDDT}-like (2.073)\statuspre.
-In IXI, \acs{LPIPS} places the shrunk opposite hemisphere beyond the unchanged one (AlexNet 1.25 against 0.76, VGG 0.91 against 0.88), while persistence gives both 0.80\statuspre.
+In IXI, \acs{LPIPS} places the shrunk opposite hemisphere beyond the unchanged one (AlexNet 1.25 against 0.76, VGG 0.91 against 0.88) and passes T2 with both networks, which no error or similarity metric does in any set, while persistence gives both 0.80 and fails T2\statuspre.
+Contrast harmonization with HACA3+ shrinks the mean absolute difference between the two sessions of one QTIM brain from 0.121 to 0.016 standardized units in a deep box and from 0.059 to 0.033 in a parietal box, so part of what separates a second scan from its target is acquisition rather than anatomy\statuspre.
 In faces, a second photograph of the same person is further than the dataset mean under \ac{MSE} (0.640 against 0.499 in CelebA), because pose and lighting change between photographs, while ArcFace places it closest (0.354)\statusfinal.
 The maps show that the opposite hemisphere is closest in deep structures near the midline and furthest in the cortex, and that the mirrored half of a face is closest at the cheeks and furthest at the nose; the stranger is uniformly far.
 In the retina, the second visit of the same eye is at 0.49 in GRAPE, while the fellow eye is further than the dataset mean (1.33 in GRAPE, 1.47 in PAPILA) and the mean of 16 look-alikes falls in between (0.86, 0.94)\statuspre.
