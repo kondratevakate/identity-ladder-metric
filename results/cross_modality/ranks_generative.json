@@ -754,6 +754,28 @@
   "noise": 9,
   "dataset_mean": 10
  },
+ "lpips_alex|IXI": {
+  "lookalike_oracle": 1,
+  "other_side": 2,
+  "lookalike": 3,
+  "mean_k2": 4,
+  "wrong_detail": 5,
+  "stranger": 6,
+  "shrink_ref": 7,
+  "dataset_mean": 8,
+  "noise": 9
+ },
+ "lpips_vgg|IXI": {
+  "lookalike_oracle": 1,
+  "lookalike": 2,
+  "other_side": 3,
+  "shrink_ref": 4,
+  "mean_k2": 5,
+  "stranger": 6,
+  "wrong_detail": 7,
+  "dataset_mean": 8,
+  "noise": 9
+ },
  "betti_matched|IXI": {
   "lookalike_oracle": 1,
   "lookalike": 2,
@@ -775,5 +797,34 @@
   "stranger": 7,
   "wrong_detail": 8,
   "noise": 9
+ },
+ "persistence|IXI": {
+  "lookalike_oracle": 1,
+  "other_side": 2,
+  "shrink_ref": 3,
+  "dataset_mean": 4,
+  "lookalike": 5,
+  "mean_k2": 6,
+  "stranger": 7,
+  "wrong_detail": 8,
+  "noise": 9
+ },
+ "fid|IXI": {
+  "stranger": 1,
+  "wrong_detail": 2,
+  "lookalike_oracle": 3,
+  "lookalike": 4,
+  "mean_k2": 5,
+  "noise": 6,
+  "dataset_mean": 7
+ },
+ "fwd|IXI": {
+  "stranger": 1,
+  "wrong_detail": 2,
+  "lookalike_oracle": 3,
+  "lookalike": 4,
+  "mean_k2": 5,
+  "dataset_mean": 6,
+  "noise": 7
  }
 }

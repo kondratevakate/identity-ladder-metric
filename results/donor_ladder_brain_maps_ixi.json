@@ -1,0 +1,51 @@
+{
+ "status": "pre-QC: affine registration only, MRI registration QC not met; exploratory maps",
+ "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendment 25; QTIM method of Amendments 5, 6, 8, 16)",
+ "dataset": "IXI",
+ "n_targets": 100,
+ "window_mm": 16,
+ "window": "masked Gaussian, sd = WIN/sqrt(12)",
+ "grid_mm": 2,
+ "missing_rule": "donor voxels outside the donor's mask never enter a mean; voxels with fewer than 10 donors are missing",
+ "support_voxels": 159462,
+ "targets_with_cohort_mean": 0,
+ "not_available": {
+  "repeat": "IXI has no repeat scans",
+  "sibling": "IXI has no families"
+ },
+ "maps": {
+  "mirror": {
+   "pooled_ratio": 1.366654897696538,
+   "quantiles_5_25_50_75_95": [
+    0.5283301498937881,
+    1.1041071339511526,
+    1.5028777587595055,
+    1.7051776964981713,
+    1.9313867077476068
+   ],
+   "split_half_r": 0.9597762578186643,
+   "split_half_r_shared_pool": 0.9601594968978574,
+   "max_targets_per_voxel": 100,
+   "voxels": 133993
+  },
+  "stranger": {
+   "pooled_ratio": 1.9811130769214294,
+   "quantiles_5_25_50_75_95": [
+    1.9791390303335838,
+    1.9799682931268776,
+    1.979999983983601,
+    1.9800000018662405,
+    1.9828990432738498
+   ],
+   "split_half_r": 0.20177166590499077,
+   "split_half_r_shared_pool": -0.9309099758784052,
+   "max_targets_per_voxel": 100,
+   "voxels": 159462
+  },
+  "cohort": {
+   "status": "n/a",
+   "reason": "no target with >= 10 same-sex donors within 2 years"
+  }
+ },
+ "minutes": 15.0
+}

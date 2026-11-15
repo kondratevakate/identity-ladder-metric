@@ -1,13 +1,13 @@
 {
   "assembly_generator": "paper/cvpr2027/assemble_atlas.py",
-  "assembly_generator_sha256": "ef83ac3b5beb8a30dda43b4c8487949d5a38f3d78ae6a4d821a2b0b97e0a4613",
-  "assembly_base_commit": "b001d9c9a1ff0a1991f8ccd10a45a93ba9151c9c",
+  "assembly_generator_sha256": "eaf1aa3b0f3a8370338a99c1bb5f54516a81cd3bb520c3f6806b53afc495034a",
+  "assembly_base_commit": "90897a4ae7386fa96029fbbf3752c613e91922d8",
   "source_commit": "82ed7fe8a52e557854cf4cd2d02eb47d5803d7cb",
   "source_pdf": "results/figures/fig_ladder_maps_all_modalities.pdf",
   "source_pdf_sha256": "5aadadd499d90da2ccbcf5103787b14d9d751b6e0101bc92bac94bc1d653037e",
   "source_generator": "src/ladder_maps_all_figure.py",
   "source_generator_sha256": "d7c787b7296da54ca45be33b7d9b92582e25773c6b3a768ca848c27a46c0f628",
-  "replacement_pdf": "results/figures/fig_ladder_maps_common.pdf",
+  "replacement_pdf": "results\\figures\\fig_ladder_maps_common.pdf",
   "replacement_pdf_sha256": "58719ecae7ab8f05855eb938e192d74cfd60bffa604d5605a844773e8e56322b",
   "replacement_producing_commit": "22ddf703267e9de631d28bbedd5d869d789e6de9",
   "replacement_row": 2,
@@ -30,6 +30,25 @@
   "method": "PDF-panel assembly from saved aggregate maps; private-data maps were not recomputed.",
   "changes": "Replace brain row/scalar annotations and stale footer. The supplementary atlas retains all eight rows and columns. The current main infographic selects four rows separately; no superseded compact atlas is generated.",
   "outputs": {
-    "atlas_all_modalities_full.pdf": "3a8ca685c2ecb9f6f19f9e109fe77ac2e214673c440e4e41d76496586ebc8f3e"
-  }
+    "atlas_all_modalities_full.pdf": "0e86abfdd3b6c8efce9e5751edad6abef2d0b302b5a64e0762de1d0626aae503"
+  },
+  "ixi_row_pdf": "results\\figures\\fig_ladder_maps_common_ixi.pdf",
+  "ixi_row_pdf_sha256": "d72ed34359a3d8577068ae524ef52fe584540bfeb584b546ef7b391c9d045248",
+  "ixi_row": 8,
+  "ixi_row_source_slice": "MNI axial z=10 mm",
+  "ixi_scalar_annotations": [
+    null,
+    null,
+    1.366654897696538,
+    null,
+    1.9811130769214294,
+    0.7234743640253047,
+    null,
+    null
+  ],
+  "ixi_sources": [
+    "results/donor_ladder_brain_maps_ixi.json",
+    "results/donor_ladder_brain_map_grid_ixi.json"
+  ],
+  "ixi_note": "Amendment 25: IXI appended as a ninth row below the eight source rows, so rows 0-7 keep their coordinates (the provenance infographic clips them); page height extended accordingly."
 }

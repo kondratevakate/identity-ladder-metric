@@ -74,6 +74,8 @@ def _lpips(net):
         raise ValueError(f"unknown LPIPS net {net!r}")
     if net not in _LPIPS:
         os.environ["TORCH_HOME"] = TORCH_HOME
+        import torchvision_guard
+        torchvision_guard.ensure()                     # Application Control may block torchvision/_C.pyd
         import lpips
         import torch
         torch.set_num_threads(1)
@@ -190,7 +192,35 @@ def extra_betti25d(x, f, e, mu_c):
     return out
 
 
-EXTRAS = {"t23": extra, "vgg_set": extra_vgg_set, "betti25d": extra_betti25d}   # tier23 hook name -> function
+def whole_slices(x, f, e):
+    """Amendment 25 set-level samples on a 16 mm cube: the whole central orthogonal slices of target and fill (the
+    24 px crop of Amendment 22 does not fit), and whether each lies wholly inside e. Shapes (3, S, S) x 2, (3,).
+    Only square cubes are accepted (all three slices must have one shape to be stacked)."""
+    if len(set(x.shape)) != 1:
+        raise ValueError(f"whole_slices needs a cube, got {x.shape}")
+    xs, fs, ok = [], [], []
+    for (a, ea), (b, _) in zip(central_slices(x, e), central_slices(f, e)):
+        xs.append(a)
+        fs.append(b)
+        ok.append(bool(ea.all()))
+    return np.stack(xs).astype(np.float32), np.stack(fs).astype(np.float32), np.array(ok)
+
+
+def extra_ixi_gen(x, f, e, mu_c):
+    """Amendment 25 (IXI): LPIPS AlexNet and VGG (Amendments 20, 22), intensity persistence W1 (Amendment 20) and the
+    whole-slice set-level samples. Keys starting with '_' are arrays, split off before the rows are saved."""
+    if e.sum() < 10:
+        return {}
+    la, n_sl = lpips_25d(x, f, e, net="alex")
+    lv, _ = lpips_25d(x, f, e, net="vgg")
+    dx, dfl = diagrams(x, e)[0], diagrams(f, e)
+    xc, fc, ok = whole_slices(x, f, e)
+    return {"lpips": la, "lpips_vgg": lv, "lpips_slices": n_sl, "persistence_w1": persistence_w1(dx, dfl[0]),
+            "persistence_essential": dfl[1], "_xc": xc, "_fc": fc, "_ok": ok}
+
+
+EXTRAS = {"t23": extra, "vgg_set": extra_vgg_set, "betti25d": extra_betti25d,   # tier23 hook name -> function
+          "ixi_gen": extra_ixi_gen}
 
 
 PRIVATE = os.path.join(M.B.PROJ, "donor-ladder-brain-metrics-20261107-v4")

@@ -1,0 +1,4455 @@
+{
+ "status": "pre-QC: affine registration only, MRI registration gate not met (results/registration/status.md)",
+ "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendment 25)",
+ "dataset": "IXI",
+ "R_anchor": "other_side",
+ "seed": 20261102,
+ "cells": "topology subset S of Amendment 24C: 2 whole random 16 mm cubes per target, both sides",
+ "metrics": [
+  "lpips",
+  "lpips_vgg",
+  "persistence_w1"
+ ],
+ "lower_is_better": [
+  "lpips",
+  "lpips_vgg",
+  "persistence_w1"
+ ],
+ "descriptive": [
+  "lpips_slices",
+  "persistence_essential"
+ ],
+ "lpips": {
+  "nets": [
+   "alex",
+   "vgg"
+  ],
+  "version": "0.1",
+  "short_side_px": 64,
+  "z_scale": 4.0,
+  "slices": "central orthogonal, wholly inside E (Amendments 20, 22)"
+ },
+ "persistence": "cubical sublevel (gudhi), outside E at +inf, W1 (internal p = 2) summed over H0-H2",
+ "set_level_method": {
+  "cell": "(target, cube, side, slice axis)",
+  "sample": "whole 16 x 16 central slice, wholly inside E, z/4 clipped to [0, 1], 64 px",
+  "fid": "Inception-v3 pool 2048 (pytorch-fid), exact Frechet",
+  "fwd": "Haar packets level 2, Frechet per packet, mean",
+  "interval": "100 target bootstrap resamples, 2.5-97.5 percentiles",
+  "floor": "_target_split_half",
+  "excluded_from_ranks": {
+   "mirror": "other-side set = the target set by construction (both sides are targets)",
+   "shrink_mirror": "blend of the other-side set, which is the target set by construction"
+  }
+ },
+ "missing_rule": "missing is NaN, never zero; counts per view under 'missing'",
+ "not_available": {
+  "repeat": "n/a in IXI (no repeat, no families); never filled",
+  "sibling": "n/a in IXI (no repeat, no families); never filled",
+  "cotwin": "n/a in IXI (no repeat, no families); never filled",
+  "cohort_mean": "n/a in IXI (no repeat, no families); never filled",
+  "shrink_repeat": "n/a in IXI (no repeat, no families); never filled"
+ },
+ "tests_not_available": {
+  "T1": "needs a repeat"
+ },
+ "expectation_E1_spearman_lpips_alex_vgg": {
+  "rho": 0.9340659340659341,
+  "n_rungs": 13,
+  "rule": ">= 0.8"
+ },
+ "counts": {
+  "n_targets": 100,
+  "n_cells": 200,
+  "n_rows": 11600
+ },
+ "views": {
+  "random_patches/L": {
+   "n_rows": 5800,
+   "missing": {
+    "lpips": 0,
+    "lpips_vgg": 0,
+    "persistence_w1": 0
+   },
+   "fills": {
+    "dataset_mean": {
+     "lpips": {
+      "mean": 0.22274754614258796,
+      "ci95": [
+       0.20794390300040436,
+       0.23606166963030895
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3787350796163082,
+      "ci95": [
+       0.3664591291863471,
+       0.39078636600449673
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.055357549385867,
+      "ci95": [
+       8.401590241645671,
+       9.73314204942765
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "lookalike": {
+     "lpips": {
+      "mean": 0.10429141926423954,
+      "ci95": [
+       0.09785929431498512,
+       0.1105806501926854
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3256487379409373,
+      "ci95": [
+       0.31454262552689755,
+       0.33627710362213353
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.286910308796722,
+      "ci95": [
+       8.747565526997978,
+       9.85536558624704
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "lookalike_oracle": {
+     "lpips": {
+      "mean": 0.09006638788074872,
+      "ci95": [
+       0.08410061326661766,
+       0.09590880243080509
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.30392800468330583,
+      "ci95": [
+       0.29340175844666855,
+       0.3141750133888175
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 8.981424616467331,
+      "ci95": [
+       8.453189639752622,
+       9.520468954176964
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "mean_k2": {
+     "lpips": {
+      "mean": 0.12602981783604864,
+      "ci95": [
+       0.11866057740248893,
+       0.13335104891580213
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3572880524521072,
+      "ci95": [
+       0.34591536042218407,
+       0.3681342223888882
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.842769023133329,
+      "ci95": [
+       9.306460195547773,
+       10.375058699511927
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "mirror": {
+     "lpips": {
+      "mean": 0.1053543403515747,
+      "ci95": [
+       0.09719203613348264,
+       0.11357939645287111
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3284853986278176,
+      "ci95": [
+       0.31547934592484184,
+       0.34133035123255107
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.088943148052389,
+      "ci95": [
+       8.406087421719716,
+       9.807414658569396
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "mirror_block": {
+     "lpips": {
+      "mean": 0.09440591646125536,
+      "ci95": [
+       0.08720737908701019,
+       0.10190173997147936
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3142926515266299,
+      "ci95": [
+       0.30124924549429366,
+       0.3276974325620879
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 8.910213822014178,
+      "ci95": [
+       8.257872217662921,
+       9.59139913060346
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "mirror_block_oracle": {
+     "lpips": {
+      "mean": 0.07942642019285505,
+      "ci95": [
+       0.07319564971614935,
+       0.08545364022600303
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.29197704994430146,
+      "ci95": [
+       0.28087976617055627,
+       0.3033951600128784
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.019889502293745,
+      "ci95": [
+       8.388582435262542,
+       9.678095189421082
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.995,
+      "ci95": [
+       2.985,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "noise": {
+     "lpips": {
+      "mean": 0.4723388850192229,
+      "ci95": [
+       0.45616271828922134,
+       0.4883475671739628
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.49986948380867646,
+      "ci95": [
+       0.4893700779030721,
+       0.5102764868264397
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 213.27070652348647,
+      "ci95": [
+       200.56242970167852,
+       226.12142104835308
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "shrink_mirror": {
+     "lpips": {
+      "mean": 0.17076903788372866,
+      "ci95": [
+       0.1605385609125563,
+       0.18027844993855488
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3387883895635605,
+      "ci95": [
+       0.32777158811191714,
+       0.34931644229652986
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 8.937107496223222,
+      "ci95": [
+       8.294938652984955,
+       9.604610234167962
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "stranger": {
+     "lpips": {
+      "mean": 0.13917917670992508,
+      "ci95": [
+       0.13121758466904668,
+       0.1471789276838923
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.37094242349267004,
+      "ci95": [
+       0.3604928380213677,
+       0.3817287843817223
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 11.05776652422734,
+      "ci95": [
+       10.533958256941553,
+       11.576641329968414
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.995,
+      "ci95": [
+       2.985,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "stranger_block": {
+     "lpips": {
+      "mean": 0.13027213267283508,
+      "ci95": [
+       0.12234266339362751,
+       0.13807138486080411
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3589244678864877,
+      "ci95": [
+       0.34825799444069466,
+       0.3695060048196464
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 11.464702309420169,
+      "ci95": [
+       10.934742833432814,
+       12.016951201808618
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.995,
+      "ci95": [
+       2.985,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "stranger_block_oracle": {
+     "lpips": {
+      "mean": 0.11446438049276665,
+      "ci95": [
+       0.10762038147969478,
+       0.12196355444053181
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.339375535895427,
+      "ci95": [
+       0.329436090045919,
+       0.350451981993392
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 11.198409187456896,
+      "ci95": [
+       10.695722434487662,
+       11.708360055811129
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.99,
+      "ci95": [
+       2.975,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "wrong_detail": {
+     "lpips": {
+      "mean": 0.13741851621385037,
+      "ci95": [
+       0.1291136813005238,
+       0.14566892405919493
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3718848853434125,
+      "ci95": [
+       0.3599596374363948,
+       0.3838167536028972
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 12.2131929684237,
+      "ci95": [
+       11.45337398336556,
+       12.994347872768115
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.995,
+      "ci95": [
+       2.985,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    }
+   },
+   "ladder_R": {
+    "lpips": {
+     "dataset_mean": {
+      "R": 3.451681777846722,
+      "ci95": [
+       2.9347586632500082,
+       4.108816944131819
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": -0.03125279119624026,
+      "ci95": [
+       -0.25631265670524767,
+       0.1394920893528822
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": -0.44950767472930214,
+      "ci95": [
+       -0.759934989217815,
+       -0.2184162895940291
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.6079156659925036,
+      "ci95": [
+       0.4600806043331085,
+       0.7383068635958014
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": -0.3219136489519903,
+      "ci95": [
+       -0.5133653607143233,
+       -0.16326129448003002
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": -0.7623518665010202,
+      "ci95": [
+       -1.064405045511484,
+       -0.5394221449827391
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 10.790350745133734,
+      "ci95": [
+       9.21934116540889,
+       12.932643406610087
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 1.9233712713923992,
+      "ci95": [
+       1.6411029771753753,
+       2.2724488924352233
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.9945428315895174,
+      "ci95": [
+       0.8390740592223657,
+       1.1559787445000584
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.7326513414462659,
+      "ci95": [
+       0.5543871372170455,
+       0.9047197956862294
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.2678601315887364,
+      "ci95": [
+       0.046511800356082815,
+       0.47521252814990467
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 0.9427745907417932,
+      "ci95": [
+       0.7790004461818333,
+       1.1033753428055981
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_other_side": 0.1053543403515747,
+      "d_stranger": 0.13936477739257191,
+      "n_other_side_targets": 100
+     }
+    },
+    "lpips_vgg": {
+     "dataset_mean": {
+      "R": 1.1345750857922396,
+      "ci95": [
+       1.0044430312643906,
+       1.273836231303912
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": -0.06404825819526838,
+      "ci95": [
+       -0.29828101959789416,
+       0.11616435733383189
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": -0.5544753079688202,
+      "ci95": [
+       -0.888435767753488,
+       -0.3155977615813382
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.6503279780268145,
+      "ci95": [
+       0.5340976708302015,
+       0.7513747413463959
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": -0.3204545171868031,
+      "ci95": [
+       -0.4972105547188621,
+       -0.17022134673621958
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": -0.824312951344322,
+      "ci95": [
+       -1.1486358584174854,
+       -0.5878049622929932
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 3.8696387583442515,
+      "ci95": [
+       3.414271774209019,
+       4.477719705445685
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 0.2326286773345799,
+      "ci95": [
+       0.12144038987812013,
+       0.3260674276265278
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.9586266356508099,
+      "ci95": [
+       0.8352125286909393,
+       1.0751587249947285
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.6872761963106128,
+      "ci95": [
+       0.52493347800007,
+       0.8334351130928743
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.24588570875737906,
+      "ci95": [
+       0.01776876866947805,
+       0.43582611430725526
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 0.9799062480608265,
+      "ci95": [
+       0.8371029281960077,
+       1.1158684770532323
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_other_side": 0.3284853986278176,
+      "d_stranger": 0.37277482611282425,
+      "n_other_side_targets": 100
+     }
+    },
+    "persistence_w1": {
+     "dataset_mean": {
+      "R": -0.015499120425169998,
+      "ci95": [
+       -0.4430047285201574,
+       0.2454935134608477
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.09135811140576665,
+      "ci95": [
+       -0.30662362779523544,
+       0.3112177383077064
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": -0.04961777473496083,
+      "ci95": [
+       -0.5347171663193906,
+       0.21171372039961064
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.34787642565190074,
+      "ci95": [
+       0.08014953097423315,
+       0.5088702009978667
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": -0.08248021347724348,
+      "ci95": [
+       -0.217566715049394,
+       0.004454822559675333
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": -0.0318669552994185,
+      "ci95": [
+       -0.16812532048708134,
+       0.06287196032336106
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 94.22603332463419,
+      "ci95": [
+       71.54695694901739,
+       138.7413928186258
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": -0.07006928999244769,
+      "ci95": [
+       -0.5218379317079966,
+       0.19541409323327977
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.9085748599039659,
+      "ci95": [
+       0.7412299980710352,
+       1.070900472739107
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 1.0963680507486433,
+      "ci95": [
+       0.9233803904392157,
+       1.3463440262767816
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.9734787967358088,
+      "ci95": [
+       0.7969004393998074,
+       1.19050455646697
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 1.4417823747926757,
+      "ci95": [
+       1.1639045377180253,
+       1.8576323112785458
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_other_side": 9.088943148052389,
+      "d_stranger": 11.255878931839154,
+      "n_other_side_targets": 100
+     }
+    }
+   },
+   "ladder_R_self": {
+    "lpips": {
+     "dataset_mean": {
+      "R": 1.598305901319226,
+      "ci95": [
+       1.5209133063660392,
+       1.6779865720130045
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.7483341287193721,
+      "ci95": [
+       0.7181615696513998,
+       0.7762278763304283
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": 0.6462636368086304,
+      "ci95": [
+       0.6173091039898082,
+       0.6740037128689372
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.9043161420983691,
+      "ci95": [
+       0.8724204635913845,
+       0.9363375632040327
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.7559610277624571,
+      "ci95": [
+       0.7123079633778016,
+       0.7981078652838955
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": 0.6774015517229761,
+      "ci95": [
+       0.6371545898168379,
+       0.7176943826696256
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": 0.5699174617781756,
+      "ci95": [
+       0.5346759349048013,
+       0.605220369245622
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 3.3892271336874993,
+      "ci95": [
+       3.300392355409305,
+       3.485459576460057
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 1.2253385760642745,
+      "ci95": [
+       1.1725679528639408,
+       1.27596238648938
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.9986682382297787,
+      "ci95": [
+       0.9604720248726437,
+       1.0373568020124517
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.9347565081374609,
+      "ci95": [
+       0.8923217664579406,
+       0.9775067530468076
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.8213293389787852,
+      "ci95": [
+       0.7817597088659707,
+       0.8675654345486024
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 0.9860347699387544,
+      "ci95": [
+       0.9458902943728448,
+       1.0244506849584702
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_self": 0.0,
+      "d_stranger": 0.13936477739257191
+     }
+    },
+    "lpips_vgg": {
+     "dataset_mean": {
+      "R": 1.0159888841358617,
+      "ci95": [
+       1.000550878783659,
+       1.0312102876832903
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.8735802825976673,
+      "ci95": [
+       0.8594899580730735,
+       0.8865962673227207
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": 0.8153125785144053,
+      "ci95": [
+       0.8017265263093716,
+       0.8279542892069853
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.958455419798037,
+      "ci95": [
+       0.9464089427500407,
+       0.9703559907796606
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.8811898648123788,
+      "ci95": [
+       0.8592336818840499,
+       0.9018956091265282
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": 0.8431166203039309,
+      "ci95": [
+       0.8203665464259381,
+       0.8658730783245072
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": 0.7832531316262529,
+      "ci95": [
+       0.7638517228395697,
+       0.8028216152120041
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 1.340942168818518,
+      "ci95": [
+       1.3263706089845981,
+       1.3571241271385692
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 0.9088285094150177,
+      "ci95": [
+       0.893645541711685,
+       0.9224990799955064
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.995084424988506,
+      "ci95": [
+       0.980526017475634,
+       1.0090848926978901
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.9628452426072768,
+      "ci95": [
+       0.9461714167318727,
+       0.979835015189756
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.910403579110547,
+      "ci95": [
+       0.8922057426273549,
+       0.9297519245448347
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 0.9976126586156803,
+      "ci95": [
+       0.9809414745756708,
+       1.0132365953984357
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_self": 0.0,
+      "d_stranger": 0.37277482611282425
+     }
+    },
+    "persistence_w1": {
+     "dataset_mean": {
+      "R": 0.8045002619716581,
+      "ci95": [
+       0.7701202173482521,
+       0.837861139294337
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.8250719792771694,
+      "ci95": [
+       0.797735518312496,
+       0.8529479751468875
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": 0.7979318781638505,
+      "ci95": [
+       0.7693241300441511,
+       0.8273471025419348
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.8744558361667693,
+      "ci95": [
+       0.8500940932971283,
+       0.8979245725995679
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.8074840892560401,
+      "ci95": [
+       0.7507800119911922,
+       0.8679628025035525
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": 0.7916053358401123,
+      "ci95": [
+       0.7367948128918962,
+       0.8507286021646787
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": 0.8013491933339354,
+      "ci95": [
+       0.7500497865308255,
+       0.8573755961360037
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 18.94749471053871,
+      "ci95": [
+       17.669290302994664,
+       20.20964585319229
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 0.7939946360779614,
+      "ci95": [
+       0.7608717681253144,
+       0.8263901964525956
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.9823992058895179,
+      "ci95": [
+       0.9520756471658932,
+       1.0135249335789425
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 1.0185523830564953,
+      "ci95": [
+       0.9836168773015641,
+       1.0551755317158944
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.9948942463995686,
+      "ci95": [
+       0.9589627189687369,
+       1.0317770139934817
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 1.0850501362338414,
+      "ci95": [
+       1.0334187121125058,
+       1.1360895556158968
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_self": 0.0,
+      "d_stranger": 11.255878931839154
+     }
+    }
+   }
+  },
+  "random_patches/LR": {
+   "n_rows": 11600,
+   "missing": {
+    "lpips": 0,
+    "lpips_vgg": 0,
+    "persistence_w1": 0
+   },
+   "fills": {
+    "dataset_mean": {
+     "lpips": {
+      "mean": 0.22469563312207655,
+      "ci95": [
+       0.21092462722320732,
+       0.23830981063349946
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.37985725231468664,
+      "ci95": [
+       0.36768699965688084,
+       0.3922360569769516
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.17403042243124,
+      "ci95": [
+       8.508259303947137,
+       9.826628373540656
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "lookalike": {
+     "lpips": {
+      "mean": 0.10561697009485212,
+      "ci95": [
+       0.0995667348449739,
+       0.111513961195189
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3278243437626709,
+      "ci95": [
+       0.31717685998867573,
+       0.33851710611868957
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.361318756653288,
+      "ci95": [
+       8.845404196120512,
+       9.906657356766782
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.9975,
+      "ci95": [
+       2.9925,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "lookalike_oracle": {
+     "lpips": {
+      "mean": 0.08901083185376285,
+      "ci95": [
+       0.08375759061608305,
+       0.0941842797232675
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.30533580363728097,
+      "ci95": [
+       0.2953629214499766,
+       0.3149123266659832
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.087400671817683,
+      "ci95": [
+       8.584858845514601,
+       9.61001051898187
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "mean_k2": {
+     "lpips": {
+      "mean": 0.12573370421538127,
+      "ci95": [
+       0.11939836117636875,
+       0.132224997445029
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.35631971752271047,
+      "ci95": [
+       0.3456078632411858,
+       0.3671882013540404
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.965425891033616,
+      "ci95": [
+       9.465117099063432,
+       10.469055460676707
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "mirror": {
+     "lpips": {
+      "mean": 0.1053543403515747,
+      "ci95": [
+       0.09719203613348264,
+       0.11357939645287111
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3284853986278176,
+      "ci95": [
+       0.31547934592484184,
+       0.34133035123255107
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.088943148052389,
+      "ci95": [
+       8.406087421719716,
+       9.807414658569396
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "mirror_block": {
+     "lpips": {
+      "mean": 0.094132205141553,
+      "ci95": [
+       0.08746493222176403,
+       0.10091993369387148
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.311893762772282,
+      "ci95": [
+       0.29967248640907923,
+       0.3240155495445554
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.060669620971264,
+      "ci95": [
+       8.4105324132254,
+       9.727907670944024
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "mirror_block_oracle": {
+     "lpips": {
+      "mean": 0.07900672411332678,
+      "ci95": [
+       0.07334395344613094,
+       0.08447876292294916
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.290198491855214,
+      "ci95": [
+       0.27938304110026607,
+       0.30075251197395847
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.111026463982043,
+      "ci95": [
+       8.478929193583083,
+       9.772250988452077
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.995,
+      "ci95": [
+       2.9875,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "noise": {
+     "lpips": {
+      "mean": 0.47650482044865683,
+      "ci95": [
+       0.4615490252707775,
+       0.4915836332902934
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.5010822655633091,
+      "ci95": [
+       0.4910253984915713,
+       0.511420024256222
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 216.84623854425936,
+      "ci95": [
+       205.04448396288615,
+       229.39132213455105
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "shrink_mirror": {
+     "lpips": {
+      "mean": 0.17425161836513625,
+      "ci95": [
+       0.16528834635089149,
+       0.1832721315680537
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3411343232666452,
+      "ci95": [
+       0.33009319696761663,
+       0.351835719098337
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.097691937921255,
+      "ci95": [
+       8.444001680213818,
+       9.735404932926613
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "stranger": {
+     "lpips": {
+      "mean": 0.1364809516142122,
+      "ci95": [
+       0.12957890431662472,
+       0.143574386722544
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3692007339249055,
+      "ci95": [
+       0.358778264551113,
+       0.37977175249500816
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 11.136415582576173,
+      "ci95": [
+       10.653559667239309,
+       11.633275529731778
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.99,
+      "ci95": [
+       2.9775,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "stranger_block": {
+     "lpips": {
+      "mean": 0.12917963046619355,
+      "ci95": [
+       0.12230703728721706,
+       0.13591056826482717
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3578108081283669,
+      "ci95": [
+       0.347771296535929,
+       0.3683415475874207
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 11.41413531830362,
+      "ci95": [
+       10.902145371860431,
+       11.968038360611159
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.9925,
+      "ci95": [
+       2.98,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "stranger_block_oracle": {
+     "lpips": {
+      "mean": 0.11191994982538739,
+      "ci95": [
+       0.10621461332065514,
+       0.11787131411805356
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3367668424608807,
+      "ci95": [
+       0.32728431948336456,
+       0.34665016796051834
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 11.260058510238588,
+      "ci95": [
+       10.801903580080069,
+       11.745361152342362
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.9925,
+      "ci95": [
+       2.98,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "wrong_detail": {
+     "lpips": {
+      "mean": 0.13640037604956884,
+      "ci95": [
+       0.1297274894707176,
+       0.143114243356152
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3716929873389503,
+      "ci95": [
+       0.3609682635913293,
+       0.3826921365728291
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 12.319651083135772,
+      "ci95": [
+       11.539527398454782,
+       13.131713728347188
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.99,
+      "ci95": [
+       2.9775,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    }
+   },
+   "ladder_R": {
+    "lpips": {
+     "dataset_mean": {
+      "R": 3.4901335874020276,
+      "ci95": [
+       2.9688492097349113,
+       4.1637520654633
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.0076806012972052504,
+      "ci95": [
+       -0.2004576959754657,
+       0.16644180810005937
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": -0.4779655609554676,
+      "ci95": [
+       -0.7735981328779021,
+       -0.2518349444632951
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.5959940659243401,
+      "ci95": [
+       0.46702521881294307,
+       0.7084104255600938
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": -0.3281911072823964,
+      "ci95": [
+       -0.5207453485286815,
+       -0.17572345226793037
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": -0.7705354806062359,
+      "ci95": [
+       -1.0776563396265986,
+       -0.5452207321347802
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 10.854287954281283,
+      "ci95": [
+       9.271146698655187,
+       12.983956420679014
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 2.0148994408676475,
+      "ci95": [
+       1.7376567465481654,
+       2.3677138623120313
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.9102970891948426,
+      "ci95": [
+       0.7934404266015229,
+       1.0343280586260124
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.6967701063749675,
+      "ci95": [
+       0.5580011118200777,
+       0.8317083858056091
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.19201111044091665,
+      "ci95": [
+       -0.027382942388345814,
+       0.3728459713569716
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 0.9079406585080521,
+      "ci95": [
+       0.7811057670336149,
+       1.0281129687744033
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_other_side": 0.1053543403515747,
+      "d_stranger": 0.13954824433315172,
+      "n_other_side_targets": 100
+     }
+    },
+    "lpips_vgg": {
+     "dataset_mean": {
+      "R": 1.1478933405302925,
+      "ci95": [
+       1.0164396841396202,
+       1.2840483050703808
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": -0.014771132886354012,
+      "ci95": [
+       -0.22100135310162394,
+       0.14422230854573398
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": -0.5172728647789234,
+      "ci95": [
+       -0.8213124087918919,
+       -0.2894989565015138
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.6219520419176704,
+      "ci95": [
+       0.5181521357320092,
+       0.7066455672567534
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": -0.3707366376763841,
+      "ci95": [
+       -0.5615473697880894,
+       -0.2179947998508467
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": -0.8555129348001228,
+      "ci95": [
+       -1.1614054672371354,
+       -0.6205147332676773
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 3.8566409411518903,
+      "ci95": [
+       3.4021896780608554,
+       4.456843406874956
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 0.28263757905802517,
+      "ci95": [
+       0.1950754853691741,
+       0.3589215667037356
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.909775662950846,
+      "ci95": [
+       0.8145445064953095,
+       1.0014456234769076
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.6552701500551193,
+      "ci95": [
+       0.5227401089197384,
+       0.7757010488535031
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.18504713269434928,
+      "ci95": [
+       -0.026744517946235762,
+       0.36187783231218557
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 0.9654645449276152,
+      "ci95": [
+       0.8546362089821395,
+       1.0703866802346447
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_other_side": 0.3284853986278176,
+      "d_stranger": 0.3732385580660776,
+      "n_other_side_targets": 100
+     }
+    },
+    "persistence_w1": {
+     "dataset_mean": {
+      "R": 0.03754400618963367,
+      "ci95": [
+       -0.33406302327383025,
+       0.27322584661709676
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.12018332482582236,
+      "ci95": [
+       -0.24281498802492685,
+       0.3250844824808682
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": -0.0006806039766334736,
+      "ci95": [
+       -0.4268392722367171,
+       0.22455833487051335
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.3867402472087316,
+      "ci95": [
+       0.16550442083904396,
+       0.5272053740940886
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": -0.012475443401914055,
+      "ci95": [
+       -0.11055123798179753,
+       0.05507988723292737
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": 0.00974406755890451,
+      "ci95": [
+       -0.09132564273241676,
+       0.08768622052518656
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 91.67106645779954,
+      "ci95": [
+       70.62442269127662,
+       131.6745894361838
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 0.0038603260403667493,
+      "ci95": [
+       -0.3775661218129933,
+       0.24161104757033594
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.9034290769804141,
+      "ci95": [
+       0.748888614969912,
+       1.0380195793218963
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 1.0259704505671345,
+      "ci95": [
+       0.8867710161285964,
+       1.2049403326438926
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.9579854236885406,
+      "ci95": [
+       0.8190328597067461,
+       1.1289550842248672
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 1.4255212615180022,
+      "ci95": [
+       1.1678232051071231,
+       1.7991568440006886
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_other_side": 9.088943148052389,
+      "d_stranger": 11.355277591667129,
+      "n_other_side_targets": 100
+     }
+    }
+   },
+   "ladder_R_self": {
+    "lpips": {
+     "dataset_mean": {
+      "R": 1.610164529090366,
+      "ci95": [
+       1.534949573089875,
+       1.6894751417204177
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.7568491499090918,
+      "ci95": [
+       0.7295575106552521,
+       0.7829597280304529
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": 0.637849886819515,
+      "ci95": [
+       0.6126705871915149,
+       0.6617628739050662
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.9010052746719609,
+      "ci95": [
+       0.8745459305002735,
+       0.9265155660633906
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.7549671502857184,
+      "ci95": [
+       0.7102987211568103,
+       0.7977160007293118
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": 0.6745495480174273,
+      "ci95": [
+       0.6372400973777916,
+       0.7107307737730263
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": 0.5661606456668089,
+      "ci95": [
+       0.5339107108356309,
+       0.5961354100343876
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 3.4146242593426606,
+      "ci95": [
+       3.3340517135541337,
+       3.5001404609446882
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 1.2486837021692307,
+      "ci95": [
+       1.2004346738903149,
+       1.2947343495225794
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.9780198401377462,
+      "ci95": [
+       0.9485585235656803,
+       1.0087397939397422
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.9256987150464998,
+      "ci95": [
+       0.8952366849340668,
+       0.9581310675190441
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.8020161798538599,
+      "ci95": [
+       0.7713552708918853,
+       0.8364257151508427
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 0.9774424372114078,
+      "ci95": [
+       0.9468072909391634,
+       1.0072003023880658
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_self": 0.0,
+      "d_stranger": 0.13954824433315172
+     }
+    },
+    "lpips_vgg": {
+     "dataset_mean": {
+      "R": 1.017733147086688,
+      "ci95": [
+       1.002014838506862,
+       1.0329288494674986
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.8783238941369862,
+      "ci95": [
+       0.8661801969469711,
+       0.8895130978200805
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": 0.8180714372581644,
+      "ci95": [
+       0.8077282688457612,
+       0.8276767717734616
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.954670169579929,
+      "ci95": [
+       0.9450212382566694,
+       0.9638283211141315
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.880095026435246,
+      "ci95": [
+       0.8581057609844863,
+       0.9007631354708981
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": 0.8356418596951732,
+      "ci95": [
+       0.8157804375848542,
+       0.8551545150325365
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": 0.777514770603732,
+      "ci95": [
+       0.7600820963577639,
+       0.794168010433262
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 1.3425254565328117,
+      "ci95": [
+       1.3286972592586082,
+       1.3570217322375653
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 0.9139846778806046,
+      "ci95": [
+       0.8999757664455263,
+       0.9260130358691039
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.9891816532512238,
+      "ci95": [
+       0.9778656455190914,
+       1.0001572316972767
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.9586651764553774,
+      "ci95": [
+       0.9451951361273866,
+       0.9727149296664114
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.9022830979891954,
+      "ci95": [
+       0.8892990622234509,
+       0.9164118225689131
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 0.995859027172499,
+      "ci95": [
+       0.9830184322314074,
+       1.0083711960696664
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_self": 0.0,
+      "d_stranger": 0.3732385580660776
+     }
+    },
+    "persistence_w1": {
+     "dataset_mean": {
+      "R": 0.8079089523239346,
+      "ci95": [
+       0.7743219086882673,
+       0.8400280389666421
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.8244024578952546,
+      "ci95": [
+       0.79778617674617,
+       0.8521599639354411
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": 0.8002799225697761,
+      "ci95": [
+       0.775293568422319,
+       0.8260027035085639
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.8776030185599839,
+      "ci95": [
+       0.855043515952339,
+       0.8993275295572665
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.8004157603969233,
+      "ci95": [
+       0.745143122402105,
+       0.8602953464745893
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": 0.7979258585118411,
+      "ci95": [
+       0.7455449399437509,
+       0.8538675592807182
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": 0.8023605227113082,
+      "ci95": [
+       0.7519090455137201,
+       0.857158928309687
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 19.096515852979955,
+      "ci95": [
+       17.950363907010825,
+       20.281013047883768
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 0.8011862206343099,
+      "ci95": [
+       0.768248435508781,
+       0.8330302572014139
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.9807259657613687,
+      "ci95": [
+       0.9530394942295873,
+       1.0071801076603992
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 1.0051832926285909,
+      "ci95": [
+       0.9760421050179081,
+       1.035776858366024
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.991614552734632,
+      "ci95": [
+       0.9624866867830647,
+       1.0230712973114644
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 1.0849273374150123,
+      "ci95": [
+       1.0343267923175383,
+       1.1371252686365474
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_self": 0.0,
+      "d_stranger": 11.355277591667129
+     }
+    }
+   },
+   "tests": {
+    "n_hypotheses_holm": 9,
+    "per_metric": {
+     "lpips": {
+      "T2": {
+       "n_targets": 100,
+       "n_families": 100,
+       "mean_diff": 0.06889727801356155,
+       "share_targets_pass": 0.98,
+       "p_one_sided": 2.335341653948903e-18,
+       "p_holm": 1.753451930293159e-17,
+       "pass_holm_0.05": true
+      },
+      "T3a": {
+       "n_targets": 100,
+       "n_families": 100,
+       "mean_diff": 0.03104603569799413,
+       "share_targets_pass": 0.81,
+       "p_one_sided": 2.9907796733617156e-12,
+       "p_holm": 1.1963118693446862e-11,
+       "pass_holm_0.05": true
+      },
+      "T3b": {
+       "n_targets": 100,
+       "n_families": 100,
+       "mean_diff": 0.3711504800970821,
+       "share_targets_pass": 1.0,
+       "p_one_sided": 1.9482799225479542e-18,
+       "p_holm": 1.753451930293159e-17,
+       "pass_holm_0.05": true
+      }
+     },
+     "lpips_vgg": {
+      "T2": {
+       "n_targets": 100,
+       "n_families": 100,
+       "mean_diff": 0.012648924638827648,
+       "share_targets_pass": 0.61,
+       "p_one_sided": 1.2658895449885864e-05,
+       "p_holm": 2.531779089977173e-05,
+       "pass_holm_0.05": true
+      },
+      "T3a": {
+       "n_targets": 100,
+       "n_families": 100,
+       "mean_diff": 0.0432075887111326,
+       "share_targets_pass": 0.85,
+       "p_one_sided": 9.733392735075373e-13,
+       "p_holm": 4.8666963675376864e-12,
+       "pass_holm_0.05": true
+      },
+      "T3b": {
+       "n_targets": 100,
+       "n_families": 100,
+       "mean_diff": 0.17259686693549164,
+       "share_targets_pass": 1.0,
+       "p_one_sided": 1.9482799225479542e-18,
+       "p_holm": 1.753451930293159e-17,
+       "pass_holm_0.05": true
+      }
+     },
+     "persistence_w1": {
+      "T2": {
+       "n_targets": 100,
+       "n_families": 100,
+       "mean_diff": 0.008748789868867917,
+       "share_targets_pass": 0.41,
+       "p_one_sided": 0.9546441919255599,
+       "p_holm": 0.9546441919255599,
+       "pass_holm_0.05": false
+      },
+      "T3a": {
+       "n_targets": 100,
+       "n_families": 100,
+       "mean_diff": 3.2307079350833834,
+       "share_targets_pass": 0.78,
+       "p_one_sided": 1.6731663028808137e-10,
+       "p_holm": 5.019498908642441e-10,
+       "pass_holm_0.05": true
+      },
+      "T3b": {
+       "n_targets": 100,
+       "n_families": 100,
+       "mean_diff": 207.75729539620704,
+       "share_targets_pass": 1.0,
+       "p_one_sided": 1.9482799225479542e-18,
+       "p_holm": 1.753451930293159e-17,
+       "pass_holm_0.05": true
+      }
+     }
+    }
+   }
+  },
+  "random_patches/R": {
+   "n_rows": 5800,
+   "missing": {
+    "lpips": 0,
+    "lpips_vgg": 0,
+    "persistence_w1": 0
+   },
+   "fills": {
+    "dataset_mean": {
+     "lpips": {
+      "mean": 0.22664372010156508,
+      "ci95": [
+       0.2118653944978335,
+       0.24122963737874908
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.38097942501306536,
+      "ci95": [
+       0.3683220571962497,
+       0.3938997897959004
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.29270329547661,
+      "ci95": [
+       8.64681085334677,
+       9.940927613883746
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "lookalike": {
+     "lpips": {
+      "mean": 0.1069425209254647,
+      "ci95": [
+       0.10020804545357045,
+       0.11400145469931881
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.32999994958440454,
+      "ci95": [
+       0.31863122199599936,
+       0.34175372036049756
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.435727204509856,
+      "ci95": [
+       8.904033006969636,
+       9.998297865285666
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.995,
+      "ci95": [
+       2.985,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "lookalike_oracle": {
+     "lpips": {
+      "mean": 0.08795527582677698,
+      "ci95": [
+       0.08273560625163372,
+       0.09328643352154171
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3067436025912563,
+      "ci95": [
+       0.2968392283553258,
+       0.3163419420837114
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.193376727168037,
+      "ci95": [
+       8.693479732789633,
+       9.7333037180961
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "mean_k2": {
+     "lpips": {
+      "mean": 0.12543759059471385,
+      "ci95": [
+       0.11910655240120828,
+       0.1322703276944812
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.35535138259331384,
+      "ci95": [
+       0.3440209782347083,
+       0.36690653480775653
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 10.088082758933899,
+      "ci95": [
+       9.594744769601215,
+       10.585205321822624
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "mirror": {
+     "lpips": {
+      "mean": 0.1053543403515747,
+      "ci95": [
+       0.09719203613348264,
+       0.11357939645287111
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3284853986278176,
+      "ci95": [
+       0.31547934592484184,
+       0.34133035123255107
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.088943148052389,
+      "ci95": [
+       8.406087421719713,
+       9.807414658569396
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "mirror_block": {
+     "lpips": {
+      "mean": 0.09385849382185063,
+      "ci95": [
+       0.0869988230189968,
+       0.10051512040228888
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.30949487401793396,
+      "ci95": [
+       0.2972643505729114,
+       0.3211198810658728
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.211125419928349,
+      "ci95": [
+       8.55136673102573,
+       9.891294534580117
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "mirror_block_oracle": {
+     "lpips": {
+      "mean": 0.07858702803379852,
+      "ci95": [
+       0.07295066432368666,
+       0.084219754238448
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.2884199337661265,
+      "ci95": [
+       0.27736269230240335,
+       0.29922673057982074
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.202163425670337,
+      "ci95": [
+       8.548865055658993,
+       9.88153204418909
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.995,
+      "ci95": [
+       2.985,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "noise": {
+     "lpips": {
+      "mean": 0.4806707558780909,
+      "ci95": [
+       0.46603577964504567,
+       0.49511053955306605
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.502295047317942,
+      "ci95": [
+       0.4916966459092995,
+       0.5131422745076318
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 220.42177056503235,
+      "ci95": [
+       208.73364464501097,
+       233.38200054689406
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "shrink_mirror": {
+     "lpips": {
+      "mean": 0.17773419884654382,
+      "ci95": [
+       0.16804268372881534,
+       0.1879470218316806
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.34348025696973006,
+      "ci95": [
+       0.33190703057497745,
+       0.355106366128971
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 9.258276379619293,
+      "ci95": [
+       8.608449871305996,
+       9.89584111559123
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 3.0,
+      "ci95": [
+       3.0,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "stranger": {
+     "lpips": {
+      "mean": 0.13378272651849932,
+      "ci95": [
+       0.1266649125668918,
+       0.14124004025710743
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3674590443571409,
+      "ci95": [
+       0.35614664230433596,
+       0.37911682943192615
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 11.215064640925002,
+      "ci95": [
+       10.723231926586848,
+       11.727908216504717
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.985,
+      "ci95": [
+       2.969875,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "stranger_block": {
+     "lpips": {
+      "mean": 0.12808712825955199,
+      "ci95": [
+       0.12109147402314309,
+       0.1352369130277462
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3566971483702461,
+      "ci95": [
+       0.3455739171321814,
+       0.3680353812913721
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 11.363568327187068,
+      "ci95": [
+       10.838486661184437,
+       11.93929598323926
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.99,
+      "ci95": [
+       2.975,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "stranger_block_oracle": {
+     "lpips": {
+      "mean": 0.10937551915800815,
+      "ci95": [
+       0.10343847124635548,
+       0.11559447696347096
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.3341581490263343,
+      "ci95": [
+       0.3238140378948301,
+       0.34492970582128807
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 11.321707833020291,
+      "ci95": [
+       10.837563752448778,
+       11.83486893956647
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.995,
+      "ci95": [
+       2.985,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    },
+    "wrong_detail": {
+     "lpips": {
+      "mean": 0.13538223588528728,
+      "ci95": [
+       0.12886590835537445,
+       0.14187214056891384
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_vgg": {
+      "mean": 0.37150108933448783,
+      "ci95": [
+       0.3606245675782363,
+       0.3824591877218335
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_w1": {
+      "mean": 12.426109197847845,
+      "ci95": [
+       11.614230380921517,
+       13.326369566932895
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lpips_slices": {
+      "mean": 2.985,
+      "ci95": [
+       2.969875,
+       3.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "persistence_essential": {
+      "mean": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     }
+    }
+   },
+   "ladder_R": {
+    "lpips": {
+     "dataset_mean": {
+      "R": 3.5281749737242754,
+      "ci95": [
+       2.974098788295965,
+       4.233884383694654
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.04619843028386991,
+      "ci95": [
+       -0.17303062165537791,
+       0.22866224437830318
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": -0.5061196961278883,
+      "ci95": [
+       -0.8120688866142293,
+       -0.271701355025088
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.5841997134863831,
+      "ci95": [
+       0.4337812721359172,
+       0.7108283644195311
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": -0.3344015618807776,
+      "ci95": [
+       -0.5460758973478118,
+       -0.17424171643558356
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": -0.7786317452369274,
+      "ci95": [
+       -1.1092444381970896,
+       -0.5332218592524163
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 10.917542716584471,
+      "ci95": [
+       9.321209985406243,
+       13.18326201008513
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 2.1054506657552157,
+      "ci95": [
+       1.795771652908891,
+       2.4959159342075457
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.8269505609168618,
+      "ci95": [
+       0.7000466358875451,
+       0.9551387886863805
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.6612718569855959,
+      "ci95": [
+       0.5054494079444045,
+       0.8161026632151747
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.11697167929272116,
+      "ci95": [
+       -0.13662638636042504,
+       0.3175297133007627
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 0.8734785333557619,
+      "ci95": [
+       0.7366369145210996,
+       1.004639949622371
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_other_side": 0.1053543403515747,
+      "d_stranger": 0.13973171127373155,
+      "n_other_side_targets": 100
+     }
+    },
+    "lpips_vgg": {
+     "dataset_mean": {
+      "R": 1.1609384185817844,
+      "ci95": [
+       1.0254432959907025,
+       1.300957791984217
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.033495247240087546,
+      "ci95": [
+       -0.18802440090080516,
+       0.20602756255601704
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": -0.4808334975597632,
+      "ci95": [
+       -0.7783740569519461,
+       -0.24939017016893075
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.5941581373402122,
+      "ci95": [
+       0.4668727131945724,
+       0.6944973547594399
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": -0.4199873990773271,
+      "ci95": [
+       -0.6519554678030114,
+       -0.23806423491378065
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": -0.8860729614245648,
+      "ci95": [
+       -1.2063265888737722,
+       -0.6393230191105448
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 3.843909728008114,
+      "ci95": [
+       3.390468506325325,
+       4.4331959889406685
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 0.3316207258052863,
+      "ci95": [
+       0.23035417446918932,
+       0.4171006213921
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.8619266944263705,
+      "ci95": [
+       0.7459729508647758,
+       0.9678071247662288
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.6239205941460072,
+      "ci95": [
+       0.47240093238432695,
+       0.7661436967456523
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.12545644390718508,
+      "ci95": [
+       -0.10912631293462145,
+       0.3150470433700014
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 0.951319062034056,
+      "ci95": [
+       0.8364370421620164,
+       1.059029453440606
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_other_side": 0.3284853986278176,
+      "d_stranger": 0.3737022900193309,
+      "n_other_side_targets": 100
+     }
+    },
+    "persistence_w1": {
+     "dataset_mean": {
+      "R": 0.08612981199261271,
+      "ci95": [
+       -0.2515557251375702,
+       0.300747315173162
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.1465862974791251,
+      "ci95": [
+       -0.2047523696724274,
+       0.3512931960220637
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": 0.04414427771402951,
+      "ci95": [
+       -0.32497757907573993,
+       0.25711820958858833
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.42233826352918685,
+      "ci95": [
+       0.22559127039389168,
+       0.546692541553908
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": 0.05164668478373813,
+      "ci95": [
+       -0.03724399454728179,
+       0.12841025666351258
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": 0.04785843231985272,
+      "ci95": [
+       -0.047949574108832875,
+       0.1287966055189712
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 89.33079860506645,
+      "ci95": [
+       69.66202167978442,
+       125.59980647431605
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 0.0715774874690993,
+      "ci95": [
+       -0.24976769248660605,
+       0.2854721640943218
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.8987157045647253,
+      "ci95": [
+       0.7379029115469677,
+       1.0295978325126895
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.9614885025806794,
+      "ci95": [
+       0.8162599092161972,
+       1.1216415909796613
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.9437939899977259,
+      "ci95": [
+       0.8045629046321191,
+       1.1047429628936276
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 1.4106266023580902,
+      "ci95": [
+       1.1400442005962894,
+       1.7740481955649092
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_other_side": 9.088943148052389,
+      "d_stranger": 11.454676251495103,
+      "n_other_side_targets": 100
+     }
+    }
+   },
+   "ladder_R_self": {
+    "lpips": {
+     "dataset_mean": {
+      "R": 1.621992016240141,
+      "ci95": [
+       1.5399695375569453,
+       1.7078716936080167
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.7653418107502206,
+      "ci95": [
+       0.730953667661763,
+       0.7991514063414746
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": 0.629458231241972,
+      "ci95": [
+       0.6025061398141652,
+       0.6563446408676071
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.897703101545677,
+      "ci95": [
+       0.869000333573898,
+       0.9264068439326913
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.7539758827199055,
+      "ci95": [
+       0.7073671994334101,
+       0.799389563924269
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": 0.6717050336411022,
+      "ci95": [
+       0.6300530812254674,
+       0.7134251602156434
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": 0.5624136949117309,
+      "ci95": [
+       0.5269543766051067,
+       0.5961930414663696
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 3.4399546924353253,
+      "ci95": [
+       3.354332593310401,
+       3.527574568954404
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 1.2719675242391197,
+      "ci95": [
+       1.2171016917284034,
+       1.3282864744896492
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.9574256645037554,
+      "ci95": [
+       0.925673488520664,
+       0.9894673711618298
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.9166647076169556,
+      "ci95": [
+       0.8810782799247676,
+       0.9557077099931921
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.7827537368646674,
+      "ci95": [
+       0.750422005819029,
+       0.8178387884815493
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 0.9688726678518684,
+      "ci95": [
+       0.935528645543156,
+       1.0011961243515242
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_self": 0.0,
+      "d_stranger": 0.13973171127373155
+     }
+    },
+    "lpips_vgg": {
+     "dataset_mean": {
+      "R": 1.0194730810810873,
+      "ci95": [
+       1.0028389880911566,
+       1.0356109685979544
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.8830557328597967,
+      "ci95": [
+       0.8683419983286288,
+       0.8977860737729487
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": 0.820823448995694,
+      "ci95": [
+       0.8098091413792405,
+       0.8316867286474967
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.9508943136926782,
+      "ci95": [
+       0.9398322307663262,
+       0.9615773032764238
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.8790029052560145,
+      "ci95": [
+       0.8563452218404485,
+       0.8995883560686786
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": 0.8281856501385753,
+      "ci95": [
+       0.8077499959882284,
+       0.8483373546112017
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": 0.7717906511924427,
+      "ci95": [
+       0.752750885575529,
+       0.7896278718995716
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 1.3441048148031396,
+      "ci95": [
+       1.3292625719095035,
+       1.3589716777012766
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 0.919128049635346,
+      "ci95": [
+       0.9050872362449109,
+       0.9315032452120321
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.9832935311638923,
+      "ci95": [
+       0.9707207899081306,
+       0.9961465677651287
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.9544954844986226,
+      "ci95": [
+       0.9381991974824739,
+       0.9711724456761017
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.8941827704856957,
+      "ci95": [
+       0.8802789087382799,
+       0.9090197001793483
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 0.9941097479367086,
+      "ci95": [
+       0.9805807564917393,
+       1.0071111558247223
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_self": 0.0,
+      "d_stranger": 0.3737022900193309
+     }
+    },
+    "persistence_w1": {
+     "dataset_mean": {
+      "R": 0.8112584844345727,
+      "ci95": [
+       0.7771069942479355,
+       0.8440825151457736
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike": {
+      "R": 0.8237445561395306,
+      "ci95": [
+       0.7943763146145219,
+       0.8557308147969933
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "lookalike_oracle": {
+      "R": 0.8025872163753285,
+      "ci95": [
+       0.7758887187885521,
+       0.8296780774279722
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mean_k2": {
+      "R": 0.8806955812144553,
+      "ci95": [
+       0.8571225046494196,
+       0.9039042559972696
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror": {
+      "R": 0.7934701032572674,
+      "ci95": [
+       0.7386424323341015,
+       0.8521175549963743
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block": {
+      "R": 0.8041366877327574,
+      "ci95": [
+       0.7523832625631135,
+       0.8582137643039345
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "mirror_block_oracle": {
+      "R": 0.8033543003425557,
+      "ci95": [
+       0.75177276067965,
+       0.857995928616332
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "noise": {
+      "R": 19.24295071510748,
+      "ci95": [
+       18.15320395875366,
+       20.42383305764868
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "shrink_mirror": {
+      "R": 0.8082529943533647,
+      "ci95": [
+       0.7746873964369435,
+       0.8403002038322629
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger": {
+      "R": 0.9790817649220923,
+      "ci95": [
+       0.9511529854374419,
+       1.00611774201723
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block": {
+      "R": 0.9920462244145797,
+      "ci95": [
+       0.9606869881077247,
+       1.0229593376342359
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "stranger_block_oracle": {
+      "R": 0.9883917785579094,
+      "ci95": [
+       0.9572661629764779,
+       1.0190713841543002
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "wrong_detail": {
+      "R": 1.0848066697848355,
+      "ci95": [
+       1.0296904111891048,
+       1.1445807321752166
+      ],
+      "n_targets": 100,
+      "n_families": 100
+     },
+     "_anchors": {
+      "d_self": 0.0,
+      "d_stranger": 11.454676251495103
+     }
+    }
+   }
+  }
+ },
+ "set_level": {
+  "random_patches/LR": {
+   "dataset_mean": {
+    "n_cells": 1200,
+    "n_families": 100,
+    "fid": 240.4269932312581,
+    "fwd": 0.29451432673199157,
+    "fid_ci95": [
+     229.66664284251743,
+     253.58211416392191
+    ],
+    "fwd_ci95": [
+     0.2592955658755953,
+     0.3468950871065115
+    ]
+   },
+   "lookalike": {
+    "n_cells": 1199,
+    "n_families": 100,
+    "fid": 12.109787209433875,
+    "fwd": 0.036338958068877776,
+    "fid_ci95": [
+     14.471437009763962,
+     18.929065748917473
+    ],
+    "fwd_ci95": [
+     0.03789226104856635,
+     0.06010500444391241
+    ]
+   },
+   "lookalike_oracle": {
+    "n_cells": 1200,
+    "n_families": 100,
+    "fid": 11.226495451901116,
+    "fwd": 0.0300380201665018,
+    "fid_ci95": [
+     13.728227957064739,
+     18.106167347472063
+    ],
+    "fwd_ci95": [
+     0.03264878017664879,
+     0.056399358220094356
+    ]
+   },
+   "mean_k2": {
+    "n_cells": 1200,
+    "n_families": 100,
+    "fid": 23.939909764220715,
+    "fwd": 0.05859223691157422,
+    "fid_ci95": [
+     24.146621281457854,
+     32.89559280989859
+    ],
+    "fwd_ci95": [
+     0.05982932234785142,
+     0.09381249896778121
+    ]
+   },
+   "mirror": {
+    "n_cells": 1200,
+    "n_families": 100,
+    "fid": -5.684341886080802e-14,
+    "fwd": -1.3408591940014384e-12,
+    "fid_ci95": [
+     -1.9895196601282805e-13,
+     1.1368683772161603e-13
+    ],
+    "fwd_ci95": [
+     -3.877493546826435e-10,
+     1.5391821780867146e-10
+    ],
+    "excluded_from_ranks": "other-side set = the target set by construction (both sides are targets)"
+   },
+   "mirror_block": {
+    "n_cells": 1200,
+    "n_families": 100,
+    "fid": 6.70126827959794,
+    "fwd": 0.012384930780180454,
+    "fid_ci95": [
+     9.222192422022852,
+     11.433194883778496
+    ],
+    "fwd_ci95": [
+     0.016382619592954794,
+     0.029089853022583267
+    ]
+   },
+   "mirror_block_oracle": {
+    "n_cells": 1198,
+    "n_families": 100,
+    "fid": 7.234024813704707,
+    "fwd": 0.013370993727199168,
+    "fid_ci95": [
+     9.917387593026415,
+     12.436227035797092
+    ],
+    "fwd_ci95": [
+     0.01728904594517715,
+     0.028097102460524055
+    ]
+   },
+   "noise": {
+    "n_cells": 1200,
+    "n_families": 100,
+    "fid": 196.44943475575508,
+    "fwd": 0.32422394875296895,
+    "fid_ci95": [
+     192.43742975502906,
+     206.93863876168425
+    ],
+    "fwd_ci95": [
+     0.28941105596679684,
+     0.3959275767826393
+    ]
+   },
+   "shrink_mirror": {
+    "n_cells": 1200,
+    "n_families": 100,
+    "fid": 159.8768654295356,
+    "fwd": 0.23781879696250408,
+    "fid_ci95": [
+     154.10761553355275,
+     170.8711860610295
+    ],
+    "fwd_ci95": [
+     0.21164511286078047,
+     0.2785733572576638
+    ],
+    "excluded_from_ranks": "blend of the other-side set, which is the target set by construction"
+   },
+   "stranger": {
+    "n_cells": 1196,
+    "n_families": 100,
+    "fid": 8.50281241647886,
+    "fwd": 0.019251063817757555,
+    "fid_ci95": [
+     12.355387145905242,
+     15.312997144231467
+    ],
+    "fwd_ci95": [
+     0.030543868463252626,
+     0.05315512619763226
+    ]
+   },
+   "stranger_block": {
+    "n_cells": 1197,
+    "n_families": 100,
+    "fid": 9.161639649213214,
+    "fwd": 0.020459647555183338,
+    "fid_ci95": [
+     12.923177719264416,
+     15.762237594323558
+    ],
+    "fwd_ci95": [
+     0.02956471078921402,
+     0.056383961569021215
+    ]
+   },
+   "stranger_block_oracle": {
+    "n_cells": 1197,
+    "n_families": 100,
+    "fid": 9.429989396155321,
+    "fwd": 0.025520560674645545,
+    "fid_ci95": [
+     12.905083470808155,
+     16.32892553713766
+    ],
+    "fwd_ci95": [
+     0.029651152261562164,
+     0.05327816557470291
+    ]
+   },
+   "wrong_detail": {
+    "n_cells": 1196,
+    "n_families": 100,
+    "fid": 10.993174717517263,
+    "fwd": 0.02029024642510823,
+    "fid_ci95": [
+     14.516572820183434,
+     19.29160600454979
+    ],
+    "fwd_ci95": [
+     0.03181862133401896,
+     0.0591321409583221
+    ]
+   },
+   "_target_split_half": {
+    "n_cells": [
+     600,
+     600
+    ],
+    "fid": 17.53062337597808,
+    "fwd": 0.07841356959992564,
+    "note": "two target-disjoint halves of the target set"
+   }
+  }
+ }
+}
