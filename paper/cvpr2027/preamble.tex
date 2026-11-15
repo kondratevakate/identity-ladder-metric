@@ -1,2 +1,26 @@
 % Shared packages only; no font, margin, or spacing overrides.
 \usepackage{amssymb,graphicx}
+% American English for hyphenation and spelling (Kate's rule, 2026-11-14; Florian's edits, 2026-11-14).
+\usepackage[american]{babel}
+% Acronyms: always \ac{} in text, \acs{} in captions and headings (Kate's rule, 2026-11-14).
+% \acrodef prints no list, which keeps the page budget; main and supplement share these definitions.
+\usepackage{acronym}
+\acrodef{MRI}{magnetic resonance imaging}
+\acrodef{MSE}{mean squared error}
+\acrodef{RMSE}{root mean squared error}
+\acrodef{PSNR}{peak signal-to-noise ratio}
+\acrodef{SSIM}{structural similarity index measure}
+\acrodef{LPIPS}{learned perceptual image patch similarity}
+\acrodef{FID}{Fr\'echet inception distance}
+\acrodef{FWD}{Fr\'echet wavelet distance}
+\acrodef{CT}{computed tomography}
+\acrodef{OCT}{optical coherence tomography}
+\acrodef{QC}{quality control}
+\acrodef{MNI}{Montreal Neurological Institute}
+\acrodef{NIR}{near-infrared}
+\acrodef{VIS}{visible-light}
+\acrodef{LLM}{large language model}
+\acrodef{TM}{template modeling}
+\acrodef{GDT}{global distance test}
+\acrodef{lDDT}{local distance difference test}
+\acrodef{BraTS}{Brain Tumor Segmentation}

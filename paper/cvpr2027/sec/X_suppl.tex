@@ -1,3 +1,66 @@
+\section{Material moved from the main text}
+\label{sec:s-moved}
+This section collects analyses that support the main paper but answer none of its four research questions.
+
+\subsection{Where in the image each rung is close or far}
+\label{sec:s-atlas}
+Figure~\ref{fig:atlas-all} maps the local squared error of each rung for every image set; the main text cites it in Section~4.4.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{fig/atlas_all_modalities_full.pdf}
+\caption{\textbf{Where in the image each rung is close or far: local squared error in units of the dataset mean ($Q$).}
+Rows: CelebA and IMDb-WIKI faces, QTIM brain \acs{MRI}, GRAPE and PAPILA retina, UTIRIS \acs{NIR}, UPOL and UTIRIS \acs{VIS} iris, and IXI brain \acs{MRI} (no second scans or families).
+Columns: mean anatomy, second image, opposite side, sibling, stranger, mean of 16 look-alikes, same-sex-and-age mean, and the error of the dataset mean on its own scale.
+1 (white) is the dataset mean and about 2 a stranger; blue is closer than the mean; maps are population summaries with Gaussian windows in the brain; brain, retina and iris are provisional.
+The stranger is red everywhere, while the mean of 16 look-alikes stays below the dataset mean in every row (0.50 to 0.94).}
+\label{fig:atlas-all}
+\end{figure*}
+% Source: paper/cvpr2027/atlas_provenance.json (IXI row: results/donor_ladder_brain_maps_ixi.json, donor_ladder_brain_map_grid_ixi.json).
+
+\subsection{Proposed audit of generated fills across populations}
+For a held-out target $x_i$ with context $c_i$ and mask $M_i$, let $y_{ik}=G(c_i,M_i,z_k)$ be the $k$-th fill of a generative model $G$ with random seed $z_k$.
+For a group of targets $a$ (for example an age band), a lower-is-closer distance $d_m$ and a ladder control $f_{ir}$, the proposed profile is
+\begin{equation}
+\Delta_{a,m,r}=\mathbb E_{i\mid a}\Bigl[\mathbb E_k\, d_m(y_{ik},x_i;E_{ir})-d_m(f_{ir},x_i;E_{ir})\Bigr],
+\end{equation}
+where $E_{ir}$ are the valid pixels shared by the target and the control.
+A negative value means that the metric prefers the model's fills to the control; it does not mean that identity is preserved.
+Valid pixels and target eligibility are fixed before the model is run, seeds are averaged within a target before the group average, and failed outputs are reported.
+Profiles keep raw distances and both a common and a group-matched reference, because normalizing within each group can hide raw differences.
+None of these profiles has been measured; Table~\ref{tab:decision} lists what exists and what is missing.
+
+\input{sec/population_coverage_table}
+
+\subsection{How a group comparison should be read}
+A difference between groups describes the model and the metric together; attributing it to the model requires checking the reference, the acquisition and the composition of the task.
+Mask difficulty, location, acquisition, donor-pool size and missing outputs must remain visible in a comparison.
+Repeated outputs for one context separate variation across targets from variation across seeds; low variance alone does not show mode collapse.
+A gap between groups needs uncertainty over independent people and an explicit target population, and does not by itself show discrimination.
+A conditional mean can be a legitimate prediction when the hidden content is truly ambiguous.
+
+\subsection{Brain contrast harmonization (HACA3+)}
+HACA3+ stage 1 harmonizes the contrast of the 23 QTIM scan pairs.
+It reduces the mean absolute difference between the two sessions of one person from 0.121 to 0.016 standardized intensity units in the deep box and from 0.059 to 0.033 in the parietal box\statuspre.
+The visual verdict is pending, and neither number shows that person-specific detail is preserved.
+Source: \src{results/donor_ladder_brain_haca3_stage1.json}, session\_shift\_z.
+
+\subsection{Mean of 16 look-alikes in the deep brain box}
+On the scale anchored on the second scan, the mean of 16 look-alikes in the deep box is at 0.033 $[-0.136, 0.134]$, so it cannot be separated from the second scan\statuspre.
+Source: \src{results/donor_ladder_brain_lookalike16.json} (qtim, deep, both sides).
+
+\subsection{Window size}
+Window sizes set as a fraction of the object (brain 8, 16 and 32\,mm; faces 1/16 to 1/4 of the face width; iris 10 and 16 pixels) keep the rung order with rank correlations of 0.72 to 1.00; retina has no window-size sweep.
+Sources: \src{donor_ladder_brain_metrics_size.json} (rank\_stability), \src{face_ladder_sizes.json}, \src{iris_ladder_metrics_w10.json}.
+
+\subsection{Synthetic simulations}
+Synthetic tissue and eye experiments with a known target check the controls by construction.
+Along the shrinkage path, an image can keep a high rank against unrelated people while its individual detail shrinks.
+Wrong detail of matched strength shows why distance from the mean alone is not enough.
+Synthetic pupil dilation keeps the eye fixed while changing its appearance, which tests the opposite failure.
+A threshold segmenter supports observations about label overlap and simple topology; it is not a trained segmenter.
+Synthetic variance components are illustrative and are not estimates of human heritability.
+
 \section{Scope, provenance, and evidence status}
 This supplement documents the source snapshot used to assemble the manuscript.
 It does not convert a protocol, a running job, or a workstation report into a completed endpoint.

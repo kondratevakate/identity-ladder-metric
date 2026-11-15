@@ -1,0 +1,65 @@
+% Figure 4 (atlas) moved to the supplement, Section S1 (Kate, 2026-11-15).
+
+\begin{table}[t]
+\centering
+\caption{\textbf{Brain (QTIM), provisional.}
+$R$ anchored on the second scan (0 = second scan, 1 = average of 16 random strangers); mirror = opposite hemisphere; mean and 95\% interval from resampling families and positions.
+Bold: closest fill; underline: second closest.
+Under \acs{MSE}, \acs{SSIM} and \acs{lDDT}-like the dataset mean is closer than the person's own opposite hemisphere, and wrong detail sits at a stranger.}
+\label{tab:brain}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Metric & Dataset mean & Mirror & Wrong detail & Noise \\
+\midrule
+\input{tab/brain_profile}
+\end{tabular}
+\end{table}
+% Source: results/donor_ladder_brain_metrics.json.
+
+\begin{table}[t]
+\centering
+\caption{\textbf{Faces, final.}
+$R$ anchored on the target itself; look-alike = the single unrelated person with the closest context ring; ArcFace compares whole images.
+Bold: closest fill; underline: second closest.
+A local look-alike is closest under \acs{MSE}, yet ArcFace places it almost at a stranger (0.98), while the person's own second photograph is closest under ArcFace.}
+\label{tab:face}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+Data & Metric & 2nd photo & Opp. half & Mean & Look-alike \\
+\midrule
+\input{tab/face_profile}
+\end{tabular}
+\end{table}
+% Source: results/face_ladder_metrics.json.
+
+\begin{table}[t]
+\centering
+\caption{\textbf{Retina and iris, provisional} ($Q$: 1 = dataset mean, about 2 = stranger).
+Retina: context = mean of 16 look-alikes; PAPILA has no second visit.
+Iris: look-alike = one unrelated eye with the closest context.
+Bold: closest fill; underline: second closest.
+The person's own other eye is further than the dataset mean in every set, and only the same eye seen again comes clearly closer.}
+\label{tab:fundus}
+\label{tab:iris}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Retina & Second visit & Fellow eye & Context mean & Stranger \\
+\midrule
+\input{tab/fundus_ratio}
+\end{tabular}
+
+\smallskip
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Iris & Same eye & Other eye & Look-alike & Stranger \\
+\midrule
+\input{tab/iris_ratio}
+\end{tabular}
+\end{table}
+% Sources: results/donor_ladder_2d_facefmt.json; results/iris_ladder_metrics.json.

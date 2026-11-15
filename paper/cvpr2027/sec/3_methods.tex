@@ -1,198 +1,80 @@
 \section{Methods}
 \label{sec:methods}
+\input{sec/fig_explainer}
 
-% One subsection per modality: data and rungs, protocol (file + amendment), preprocessing and alignment, metrics.
-% Source inventory and claim boundaries are recorded in MATERIALS_COVERAGE.md.
-
-\subsection{The donor ladder and the unit}
+\subsection{Terms and fills}
 \label{sec:ladder}
-Let $x_{p,t,s}$ denote an image of person $p$, acquisition $t$, and anatomical side $s$.
-The identity unit is a person for the face comparison and an eye for the iris comparison; bilateral structures remain separate observed anatomy in every domain.
-For a target region, candidates include another acquisition, the actual opposite-side structure in a fixed common frame, related donors where labeled, unrelated donors, metadata-matched means, and the dataset mean.
-Unavailable relationships remain unavailable.
+\label{sec:controls}
+The \emph{target} is the region of a person's image hidden from the inpainting model: a 16\,mm cube in the brain, a square window in the 2D images.
+The \emph{context ring} is a band of visible pixels around it (4\,mm in the brain).
+A \emph{fill} is any content placed into the hidden region and compared with the target; every fill here is a real image, an average of real images, or a control built from them, and no generative model is evaluated.
+\emph{Valid pixels} are pixels observed in both target and fill (field of view, brain mask, iris without lids and reflections); other pixels are missing, never zero.
+\emph{Unrelated people} are everyone outside the target person's family.
 
-Let $\hat\mu_{-g}$ be a masked population mean excluding the target's person or family $g$.
-For each candidate $f_i$, squared error and the reference error are evaluated on the same eligible support $E_i$.
-Define
+The \emph{true person} is the same region in a second image of the same person (second \ac{MRI} session, photograph, visit or capture of the same eye); where a dataset has none (PAPILA, IXI), the opposite side takes its place in cross-dataset summaries.
+The \emph{opposite side} is the mirrored region of the other hemisphere, half face or eye; a \emph{sibling} is a recorded family member.
+A \emph{stranger} is one random unrelated person, and we draw 16 per target.
+The \emph{dataset mean} averages all unrelated people at each pixel, using only people valid there.
+\emph{Look-alikes} are chosen from the context only: we rank unrelated people by the mean squared difference between their context ring and the target's ring and average the hidden region of the 16 closest (\emph{mean of 16 look-alikes}).
+The \emph{oracle look-alike} is instead the one unrelated person whose hidden region is closest to the target; it uses the answer and is an upper bound.
+
+With $\hat\mu$ the dataset mean and $f$ the true person's second image, the \emph{shrunk true person} is $\hat\mu+\lambda(f-\hat\mu)$: nothing is cropped, the individual detail $f-\hat\mu$ is scaled down.
+We set $\lambda=1-\bar Q/2$, the fraction of individual detail a second image keeps on average ($\bar Q$ from Eq.~\ref{eq:unit}; $\lambda=0.85$ for QTIM), which mimics what squared-error training produces under uncertainty.
+\emph{Wrong detail} is $\hat\mu$ plus a stranger's individual detail made orthogonal to the target's and rescaled to the same norm; \emph{noise} is $\hat\mu$ plus white noise with the standard deviation of the target's individual detail.
+
+\subsection{Distances and scales}
+For target $x_i$ and fill $f$ on valid pixels $E_i$,
 \begin{equation}
-\begin{aligned}
-e_i(f)&=\frac{\sum_{v\in E_i}(x_i(v)-f_i(v))^2}{|E_i|},\\
-V_i&=e_i(\hat\mu_{-g}),\qquad
-Q(f)=\frac{\sum_i e_i(f)}{\sum_i V_i}.
-\end{aligned}
+e_i(f)=\frac{1}{|E_i|}\sum_{v\in E_i}\bigl(x_i(v)-f(v)\bigr)^2,\quad
+Q(f)=\frac{\sum_i e_i(f)}{\sum_i e_i(\hat\mu)},
 \label{eq:unit}
 \end{equation}
-The ratio is formed after summing errors, not by averaging unstable per-target ratios.
-The dataset mean has $Q=1$ by construction on that support.
-Under an equal-variance additive model with an independent stranger, its expected squared error is twice the population-mean error.
-A finite estimated mean, unequal variances, support changes, and nuisance correlations can alter this reference.
-The stranger level of two is not a theorem for SSIM, LPIPS, or an arbitrary representation.
-
-For oriented distances, we also retain the recorded panel scales
+where $v$ is a pixel and $i$ runs over all targets and regions; summing before dividing avoids unstable per-target ratios.
+The dataset mean has $Q=1$, and if a person is the mean plus independent detail, a stranger has $Q\approx2$.
+For all metrics we also use a stranger scale,
 \begin{equation}
-\begin{aligned}
-R_{\rm rep}(f)&=
-\frac{\bar d(f)-\bar d({\rm repeat})}
-{\bar d({\rm strangers})-\bar d({\rm repeat})},\\
-R_{\rm self}(f)&=
-\frac{\bar d(f)-d(x,x)}
-{\bar d({\rm strangers})-d(x,x)}.
-\end{aligned}
+R(f)=\frac{\bar d(f)-\bar d_0}{\bar d(\mathrm{strangers})-\bar d_0},
 \label{eq:anchors}
 \end{equation}
-The brain panel uses the repeat anchor, whereas face and iris use the self anchor and retain repeat as a measured acquisition floor.
-These coordinates are not interchangeable biological units.
-Unstable or undefined denominators are not replaced by zero.
-MSE is a raw squared intensity distance; SSIM and correlations are higher-is-closer scores that the anchored coordinates orient toward increasing distance.
-Residual correlation subtracts the independent dataset mean before computing Pearson correlation.
-The TM-like and lDDT-like measures adapt protein-comparison ideas~\cite{tmscore2004,lddt2013} to intensities, rather than transferring their original structural interpretation.
-Their kernels and independently estimated repeat tolerances are defined in the supplement.
-The saved unrelated-reference rank is $c=P(d_{\rm stranger}>d)+\frac12P(d_{\rm stranger}=d)$, computed against the recorded donor panel.
-It expresses relative discrimination, not the probability that identity was preserved.
+with $d$ the metric written as a distance (similarities negated), $\bar d$ its average over targets and regions, $\bar d(\mathrm{strangers})$ the average over the 16 random strangers and $\bar d_0$ the distance of the target to itself, so $R=0$ is the target and $R=1$ a typical stranger (Figure~\ref{fig:explainer}).
+The stranger is the natural unit because it is the fill a model produces when it ignores the context and copies an arbitrary training image, and because every metric can measure it on every dataset; a metric that cannot place the true person below 1 does not see the person at all.
+The brain table also anchors $\bar d_0$ on the second scan, because two sessions of one brain differ.
 
-\subsection{Proposed population audit of completions}
-For a held-out target $x_i$, context $c_i$ and mask $M_i$, let $y_{ik}=G(c_i,M_i,z_k)$ be completion $k$.
-For target stratum $a$, lower-is-closer paired distance $d_m$ and control $f_{ir}$, a proposed profile is
-\begin{equation}
-\begin{aligned}
-\Delta_{a,m,r}=\mathbb E_{i\mid a}\!\left[\right.&
-\mathbb E_k d_m(y_{ik},x_i;E_{ir})\\
-&\left.-d_m(f_{ir},x_i;E_{ir})\right].
-\end{aligned}
-\label{eq:population-audit}
-\end{equation}
-Support and target eligibility are fixed independently of generated content, with model failures reported separately.
-Seeds are averaged within targets before the population average.
-Negative values mean metric preference over the control, not identity preservation.
-Profiles retain raw distances and both common and stratum-matched references, since group-specific normalization can conceal raw differences.
-Fill-only, identically composited and whole-image endpoints require explicit spatial scope; set-level FID~\cite{heusel2017fid} and FWD~\cite{fwd2025} need a separate definition.
-Intervals must account for independent people/families, repeated masks and outputs.
-The current experiments characterize controls; generated subgroup profiles in Eq.~\ref{eq:population-audit} have not been measured.
+\subsection{Metrics, uncertainty and status}
+We compute ten variants in four families.
+\emph{Error and similarity}: \ac{MSE}, \ac{SSIM} and three tolerance scores from protein-structure comparison, \ac{TM}-like~\cite{tmscore2004}, \ac{GDT}-like~\cite{zemla2003lga} and \ac{lDDT}-like~\cite{lddt2013}, which count positions that agree within a tolerance (fixed, or the typical difference between two scans of one person) so that a few large differences cannot dominate.
+\emph{\acs{LPIPS}} with AlexNet and VGG features~\cite{zhang2018lpips}.
+\emph{Topology}: Betti matching~\cite{betti2023} and persistence diagrams of thresholded images.
+\emph{Set level}: \ac{FID}~\cite{heusel2017fid} and \ac{FWD}~\cite{fwd2025}, which compare the distribution of all fills of a rung with that of all targets.
+Kernels and tolerances are in the supplement.
+Intervals are 95\% bootstrap intervals (2{,}000 resamples of people or families).
+One-sided tests ask whether the second image beats the dataset mean (T1), the shrunk true person (T2), wrong detail (T3a) and noise (T3b), Holm-corrected within dataset.
+\statusfinal\ marks results whose preprocessing passed visual \ac{QC}; \statuspre\ marks provisional ones.
+Maps use Gaussian local averages with standard deviation $w/\sqrt{12}$ for window width $w$.
 
-\subsection{Result status}
-\label{sec:status}
-The superscript \statusfinal\ marks a result whose preprocessing frame passed visual quality control.
-It does not mean independent replication or clinical validation.
-The superscript \statuspre\ marks a provisional result, for which registration or mask quality control has not yet passed.
-We distinguish \notrun\ from an undefined quantity and from a relationship that a dataset cannot provide, such as a repeat in a cohort without repeats.
-
-Every image has a validity mask.
-Errors, normalization, donor means, context comparisons, and local maps exclude unobserved support.
-Padding and stored background zeros are never measurements.
-A donor mean averages only valid contributing samples at each location and is undefined where no donor contributes.
-The acquisition field is retained where the recorded canvas permits it; version-specific crop losses remain limitations.
-
-\subsection{Controls, spatial maps, and uncertainty}
-\label{sec:controls}
-Context-selected look-alikes use only the visible shell or ring.
-Oracle donors use the true hidden region and are upper-bound diagnostics rather than achievable inpainting methods.
-The same selection rule on unrelated anatomy controls the benefit of searching many candidates.
-We exclude block-search outputs that predate their missing-support correction.
-
-The \emph{shrunk true person} is the most important control.
-We take the true person's own other image (the repeat), keep the dataset mean $\hat\mu$, and scale back only the part that makes this person different from the mean: $\hat\mu+\lambda(f-\hat\mu)$ with $0<\lambda<1$.
-The result is still the right person, but with part of the individual detail replaced by the average, which is what a model trained with squared error is pushed to produce when it is unsure.
-We use the $\lambda$ that minimizes squared error for that rung, recorded from the original donor comparison.
-A metric that protects individual detail should place this shrunk image further from the target than the unshrunk repeat (test T2).
-Incorrect-detail controls use a stranger residual made orthogonal to the target residual and matched in norm on eligible support.
-Residual amplitude and target projection distinguish reduced variation from variation in the wrong direction.
-Residual correlation alone is invariant to positive rescaling and cannot establish preservation of amplitude.
-
-Drawn maps use masked Gaussian local averages with standard deviation $w/\sqrt{12}$, where $w$ is the recorded window width.
-Box support fractions may define eligibility, but box filters do not define displayed errors.
-The latest geometry protocol specifies $w=fL$ with $f\in\{1/16,1/8,1/4\}$ and anatomical extent $L$; this specification is not evidence that every size sweep has finished.
-Independent family or person halves assess spatial reproducibility, and coverage is reported separately from the error map.
-
-The source protocols use bootstrap resampling of families or people, with positions resampled independently for the panels that specify two-way intervals.
-Saved intervals use 2,000 resamples.
-Repeated regions and both eyes do not multiply the number of independent people.
-Fewer than ten independent units support descriptive reporting only.
-The recorded one-sided tests ask whether the repeat is better than the mean (T1), its shrunk version (T2), incorrect detail (T3a), and noise (T3b).
-The brain and iris sources retain their own Holm correction families.
-Failure to establish one directional test is not proof of equivalence or of its reverse.
-
-Table~\ref{tab:datasets} lists the nine image sets, their status, and where each ladder sits.
-
-\begin{table*}[t]
-\centering
-\caption{\textbf{Datasets and where their ladders sit.} Ratios are the squared error of a rung divided by that of the dataset mean (1 = dataset mean, about 2 = stranger), from one computation for every dataset; n/a = rung absent, never zero.
-QC: preprocessing frame approved by visual quality control; pre-QC: provisional.
-Source: \src{results/cross_modality/dataset_card.json}.}
-\label{tab:datasets}
-\small
-\begin{tabular}{@{}lllrrrrrrr@{}}
-\toprule
-Dataset & Modality & Status & Persons & Targets & Rungs & Repeat & Other side & Look-alike & Stranger \\
-\midrule
-\input{tab/dataset_card}
-\end{tabular}
-\end{table*}
-
-\subsection{Brain MRI (QTIM)}
+\subsection{Datasets}
 \label{sec:m-brain}
-The QTIM panel~\cite{qtim2026,strike2019} contains 221 prepared targets from 168 families, including 23 repeat acquisitions.
-Volumes are N4-corrected and affinely aligned to an independent symmetric MNI frame, with intensity standardized within the brain mask.
-The panel evaluates both hemispheres at the recorded random regions and at two prespecified boxes, one deep and one parietal.
-Family members are excluded from the target's reference pool.
-The source records related-donor labels; it does not justify converting unknown zygosity into monozygotic or dizygotic classes.
-
-The current tier-1 reference uses a 16\,mm window and 4\,mm context shell.
-The latest object-relative amendment gives a registered-space extent of 127.0\,mm and specifies 8, 16, and 32\,mm windows.
-The displayed fine maps and coarse look-alike maps follow the Gaussian amendments.
-The metric panel nevertheless remains provisional because the registration gate has not been met.
-The completed HACA3+ stage-1 contrast sensitivity is reported separately and does not establish a harmonized metric benchmark.
-% Sources: donor_ladder_brain_metrics.json; PROTOCOL_donor_ladder_brain.md Amendments 10--21.
-
-IXI~\cite{ixi} adds a second, cross-sectional brain cohort without repeats or relatives.
-One hundred T1 scans were sampled by acquisition site and age tertile and prepared with the same skull stripping, N4 and affine pipeline as QTIM.
-The opposite hemisphere anchors the IXI-only scale, and the shared cross-dataset tables use the common stranger scale.
-IXI strangers are additionally split into same-site and other-site donors.
-For both brain cohorts, the mean of the 16 context-selected look-alikes is a further rung, as it already is for fundus and iris.
-% Sources: donor_ladder_brain_ixi.json, donor_ladder_brain_lookalike16.json; PROTOCOL_donor_ladder_brain.md Amendments 23--24.
-
-\subsection{Fundus photographs (PAPILA, GRAPE)}
 \label{sec:m-fundus}
-GRAPE~\cite{grape2023} supplies longitudinal and fellow-eye photographs; PAPILA~\cite{papila2022} supplies paired eyes with expert disc contours.
-The protocols distinguish a GRAPE disc--fovea similarity frame from the PAPILA disc-anchored frame.
-The protocol versions specify green-channel preprocessing and standardization on valid field of view.
-Laterality comes from metadata, and opposite eyes are transformed consistently with their comparison references.
-
-Both datasets use a 128-pixel frame, with no pairwise registration or target-dependent intensity fit.
-The field mask keeps the acquired field of view, which in PAPILA covers more of the retina than in GRAPE.
-Map regions hold the contributing set of targets constant over space, so that a change of cohort membership is not read as an anatomical boundary.
-The reference donor is the repeat visit in GRAPE and the fellow eye in PAPILA, which has no repeat; T1 is therefore unavailable for PAPILA.
-
-\subsection{Face photographs (CelebA, IMDb-WIKI)}
 \label{sec:m-face}
-The face panel analyzes CelebA~\cite{celeba2015} and IMDb-WIKI~\cite{rothe2018} separately.
-Its protocol specifies a landmark-affine population frame, image-wise masked intensity normalization, restricted pose, and fixed local windows with context rings.
-CelebA target and pool identities use separate dataset partitions.
-The IMDb-WIKI analysis clusters recorded kinship links and excludes target-family members from the pool.
-The selection pipeline and its protocol are part of the code release.
-
-The face repeat is another photograph chosen by the recorded pose/expression rule, rather than an exact duplicate.
-The bilateral candidate is the opposite face half in the same photograph, with a midline exclusion.
-The panel's local pixel distances are distinct from its ArcFace donor reference.
-The latter compares whole-image embeddings of target and donor and is unavailable for means, unembedded reflections, and artificial controls.
-It is not an embedding of the composited inpainted region.
-
-\subsection{Iris images (UTIRIS, UPOL)}
 \label{sec:m-iris}
-UTIRIS~\cite{hosseini2010} near-infrared images are primary, with UTIRIS visible-light and UPOL~\cite{dobes2004} reported separately.
-The iris frame uses learned iris segmentation, a normalized radial--angular strip, and masks for acquisition support, lids, and reflections.
-The same-eye repeat is the next eligible capture in fixed source order rather than the closest image by a metric.
-The fellow-eye strip is transformed by the recorded angular reflection.
-Donor pools exclude the target person.
+Table~\ref{tab:datasets} lists the nine image sets.
+Brain: QTIM~\cite{qtim2026,strike2019} (twins and siblings, 23 with a second session) and IXI~\cite{ixi} (100 scans across three sites), corrected for slow intensity variation (N4), affinely aligned to the symmetric \ac{MNI} template and standardized within the brain mask; 32 random cubes, both hemispheres.
+Retina: GRAPE~\cite{grape2023} (both eyes, repeated visits) and PAPILA~\cite{papila2022} (both eyes), left eyes mirrored, optic-disc frame, green channel at 128 pixels.
+Faces: CelebA~\cite{celeba2015} and IMDb-WIKI~\cite{rothe2018}, landmark-aligned and pose-restricted; the opposite side is the mirrored other half of the face, with a midline band excluded.
+Irises: UTIRIS~\cite{hosseini2010} (\ac{NIR} and \ac{VIS}) and UPOL~\cite{dobes2004}, segmented and unwrapped into strips with lid and reflection masks.
+Brain, retina and iris remain provisional until registration and mask \ac{QC} are complete.
 
-The panel retains measured coverage and endpoint-specific eligibility.
-It uses no fixed-sector removal or pairwise rotation search.
-Lid shadow remains a known source of shared appearance, and the final review of the lid masks is outstanding.
-A second iris pass adds LPIPS~\cite{zhang2018lpips}, Betti matching~\cite{betti2023}, Fréchet inception distance (FID)~\cite{heusel2017fid} and Fréchet wavelet distance (FWD)~\cite{fwd2025}; these values enter the cross-dataset comparison in Section~\ref{sec:r-cross}.
-
-\subsection{Synthetic simulations}
-\label{sec:m-sim}
-Saved synthetic tissue and eye experiments supply mechanism controls.
-Their known-target shrinkage path verifies attenuation coordinates by construction and does not independently validate an identity metric.
-A threshold segmenter supports conditional observations about label overlap and simple topology; it is not a trained-segmenter result.
-Synthetic variance components are illustrative, not estimates of human heritability.
-These shared experiments remain secondary to the cross-anatomy metric audit.
+\begin{table}[t]
+\centering
+\caption{\textbf{Datasets and where their ladders sit} ($Q$, Eq.~\ref{eq:unit}: 1 = dataset mean, about 2 = stranger; n/a = no such image; look-alike = one context-selected person).
+The stranger is near 2 everywhere; the second image is the closest rung except in faces, where pose and lighting change between photographs.}
+\label{tab:datasets}
+\scriptsize
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Dataset & Persons & Targets & 2nd img & Opp. side & Look-alike & Stranger \\
+\midrule
+\input{tab/dataset_card_short}
+\end{tabular}
+\end{table}

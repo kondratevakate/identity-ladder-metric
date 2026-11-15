@@ -120,7 +120,7 @@ def main():
         if abs(cx-xs[col])<20 and abs(cy-ys[row])<20:boxes[row,col]=box
     columns=[0,1,2,4,5,7]
     rows=[(2,'Brain MRI','QTIM','P'),(0,'Faces','CelebA','F'),
-          (3,'Fundus','GRAPE','P'),(5,'Iris','UTIRIS NIR','P')]
+          (3,'Retina','GRAPE','P'),(6,'Iris','UPOL','P')]
     panel_images={};panels=[]
     for i,(row,_,_,_) in enumerate(rows):
         for j,col in enumerate(columns):
@@ -143,23 +143,23 @@ def main():
            'iris':ROOT/'results/iris_ladder_metrics.json'}
     data={key:(json.loads(p.read_text()) if key=='fundus' else source_snapshot.load_json(p)) for key,p in paths.items()}
     b=data['brain']['counts'];f=data['face']['counts']['celeba']
-    g=data['fundus']['results']['GRAPE'];ir=data['iris']['panel']['UTIRIS_NIR']['counts']
+    g=data['fundus']['results']['GRAPE'];ir=data['iris']['panel']['UPOL']['counts']
     colours=[(.27,.51,.66),(.49,.43,.61),(.20,.53,.48),(.73,.52,.23)]
     blocks=[{'name':'Brain MRI (QTIM)','rect':(8,23,172,75),'colour':colours[0],
-             'counts':f"{b['n_targets']} targets, {b['n_families']} families",'detail':f"{b['n_repeat_scans']} repeat scans"},
+             'counts':f"{b['n_targets']} targets, {b['n_families']} families",'detail':f"{b['n_repeat_scans']} with a second scan"},
             {'name':'Faces (CelebA)','rect':(8,85,172,137),'colour':colours[1],
-             'counts':f"{f['n_targets']} targets",'detail':'Repeat photographs available'},
-            {'name':'Fundus (GRAPE)','rect':(328,23,493,75),'colour':colours[2],
-             'counts':f"{g['units']} eyes, {g['stranger']['persons']} people",'detail':f"Repeat: {g['repeat']['targets']} eyes, {g['repeat']['persons']} people"},
-            {'name':'Iris (UTIRIS NIR)','rect':(328,85,493,137),'colour':colours[3],
-             'counts':f"{ir['units']} eyes, {ir['persons']} people",'detail':'Same-eye repeat acquisitions'}]
+             'counts':f"{f['n_targets']} targets",'detail':'Second photographs available'},
+            {'name':'Retina (GRAPE)','rect':(328,23,493,75),'colour':colours[2],
+             'counts':f"{g['units']} eyes, {g['stranger']['persons']} people",'detail':f"Second visit: {g['repeat']['targets']} eyes, {g['repeat']['persons']} people"},
+            {'name':'Iris (UPOL)','rect':(328,85,493,137),'colour':colours[3],
+             'counts':f"{ir['units']} eyes, {ir['persons']} people",'detail':'Same eye captured again'}]
     document=fitz.open();out=document.new_page(width=495,height=541)
     out.insert_font(fontname='helv');out.insert_font(fontname='hebo')
     def put(rect,text,size=7.2,bold=False,colour=INK,align=0):
         spare=out.insert_textbox(fitz.Rect(rect),text,fontsize=size,fontname='hebo' if bold else 'helv',color=colour,align=align)
         assert spare>=0,('Label does not fit',text,spare)
     put((0,0,14,23),'a',12,True)
-    put((18,3,495,23),'Source cohorts',9.5,True)
+    put((18,3,495,23),'Datasets',9.5,True)
     assert source_spec.ASSET.is_file()
     out.insert_image(fitz.Rect(188,9,311,141),filename=str(source_spec.ASSET),keep_proportion=True)
     leaders=[(colours[0],[(172,43),(211,43),(248,31)]),
@@ -177,9 +177,9 @@ def main():
         put((x+13,y+33,x1,y1),block['detail'],6.6,colour=MUTED)
     out.draw_line((0,145),(495,145),color=RULE,width=.45)
     put((0,151,14,175),'b',12,True)
-    put((18,154,495,174),'Donor-reference error maps',9.5,True)
-    labels=['Reference\nanatomy','Repeat\nacquisition','Opposite\nside','Unrelated\ndonors',
-            'Context-selected\nmean (16 donors)','Mean-fill error V\n(row-scaled)']
+    put((18,154,495,174),'Where each reference falls (squared error)',9.5,True)
+    labels=['Mean\nanatomy','Second\nimage','Opposite\nside','Unrelated\npeople',
+            'Mean of 16\nlook-alikes','Error of the\ndataset mean']
     for j,label in enumerate(labels):
         x=69+j*70
         put((x,173,x+66,197),label,7.1,align=1)
@@ -199,7 +199,7 @@ def main():
     for value in (0,.5,1,1.5,2,2.4):
         x=146+float(norm(value))*275
         put((x-12,507,x+12,520),str(value),7.1,align=1)
-    put((8,523,493,538),'Q: local squared error / mean-fill error. V: row-scaled. P: provisional; F: source-frame approval.',7.1,colour=MUTED,align=1)
+    put((8,523,493,538),'Q: local squared error / error of the dataset mean (1 = dataset mean, about 2 = stranger). P: provisional; F: final.',7.1,colour=MUTED,align=1)
     document.set_metadata({'title':'Source cohorts and population-reference error maps','author':'',
                            'subject':'Journal-style figure; decorative synthetic bust; measured aggregate maps.'})
     document.save(OUT,garbage=4,deflate=True)

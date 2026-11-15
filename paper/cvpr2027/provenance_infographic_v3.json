@@ -1,0 +1,587 @@
+{
+  "generator": {
+    "path": "paper/cvpr2027/make_provenance_infographic_v3.py",
+    "sha256": "b3dee5aea1e78c2227e10c1ac819cedb4d9fa1273c70c381ea64a698206e1553"
+  },
+  "source_specification_module": {
+    "path": "paper/cvpr2027/infographic_sources.py",
+    "sha256": "d8de08eb961dcd8147090e98319da9fced99a081ea7cd98cac67c1cc65ea2eac"
+  },
+  "source_atlas": {
+    "path": "paper/cvpr2027/fig/atlas_all_modalities_full.pdf",
+    "sha256": "0e86abfdd3b6c8efce9e5751edad6abef2d0b302b5a64e0762de1d0626aae503"
+  },
+  "source_atlas_provenance": {
+    "path": "paper/cvpr2027/atlas_provenance.json",
+    "sha256": "41a1bce6b14740fa2e7b22ce066ffcb110d5ad6dcfcbe5753a4619027e2ece28"
+  },
+  "source_commit": "82ed7fe8a52e557854cf4cd2d02eb47d5803d7cb",
+  "original_source_pdf": "results/figures/fig_ladder_maps_all_modalities.pdf",
+  "scientific_inputs": {
+    "brain": {
+      "path": "results/donor_ladder_brain_metrics.json",
+      "sha256": "6e33995b8a40de145fda81f76063d0652c42b839b22e5d00bdca749d0cfcfcb8",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "22ddf703267e9de631d28bbedd5d869d789e6de9"
+    },
+    "face": {
+      "path": "results/face_ladder_metrics.json",
+      "sha256": "3477dd2f0886c055a942dc5e04c4859b698b530d5fc2750d30833fb5d5e79692",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "f2ed748efd7ef7de5940f060cd4ff0f1f0d6580c"
+    },
+    "fundus": {
+      "path": "paper/cvpr2027/inputs/donor_ladder_2d_facefmt.json",
+      "sha256": "95bb2fe3adf963e107e312e97e0a2b4c29e450976015377ffd10d5bca87493a3"
+    },
+    "iris": {
+      "path": "results/iris_ladder_metrics.json",
+      "sha256": "5f0828e93a8d3bf216c0e493a166f7878a39bc90141c961dab1565dd4ebc3c69",
+      "git_snapshot": "a48523dccd2b70dae2615717d62d8725e5183528",
+      "producing_commit": "29e38c4a7d9225aa509b8316f5fb6dda20d2d91a"
+    }
+  },
+  "decorative_asset": {
+    "path": "paper/cvpr2027/fig/assets/identity_bust_v1.png",
+    "sha256": "5c8e1e5459a6e888f21bd454b3f124972375b2d850df3ac0b2440e509873b186",
+    "role": "Previously generated decorative bust; unchanged asset.",
+    "generation_record": {
+      "path": "paper/cvpr2027/fig/assets/identity_bust_v1.provenance.json",
+      "sha256": "fb502f0e850a5ff6a9d1ee85752d3466a523fcba10286b2554cbcb5a00ec3b19"
+    }
+  },
+  "source_cohorts": [
+    {
+      "name": "Brain MRI (QTIM)",
+      "rect": [
+        8,
+        23,
+        172,
+        75
+      ],
+      "color": [
+        0.27,
+        0.51,
+        0.66
+      ],
+      "counts": "221 targets, 168 families",
+      "detail": "23 with a second scan"
+    },
+    {
+      "name": "Faces (CelebA)",
+      "rect": [
+        8,
+        85,
+        172,
+        137
+      ],
+      "color": [
+        0.49,
+        0.43,
+        0.61
+      ],
+      "counts": "921 targets",
+      "detail": "Second photographs available"
+    },
+    {
+      "name": "Retina (GRAPE)",
+      "rect": [
+        328,
+        23,
+        493,
+        75
+      ],
+      "color": [
+        0.2,
+        0.53,
+        0.48
+      ],
+      "counts": "239 eyes, 134 people",
+      "detail": "Second visit: 171 eyes, 97 people"
+    },
+    {
+      "name": "Iris (UPOL)",
+      "rect": [
+        328,
+        85,
+        493,
+        137
+      ],
+      "color": [
+        0.73,
+        0.52,
+        0.23
+      ],
+      "counts": "128 eyes, 64 people",
+      "detail": "Same eye captured again"
+    }
+  ],
+  "panels": [
+    {
+      "row": 0,
+      "source_row": 2,
+      "source_column": 0,
+      "source_clip": [
+        89.6615982055664,
+        334.0,
+        179.9215488932195,
+        406.0
+      ],
+      "destination_rect": [
+        82.16,
+        202.0,
+        121.84,
+        252.0
+      ]
+    },
+    {
+      "row": 0,
+      "source_row": 2,
+      "source_column": 1,
+      "source_clip": [
+        185.3371459344787,
+        334.0,
+        275.5970966221318,
+        406.0
+      ],
+      "annotation": "0.30",
+      "source": "donor_ladder_brain_maps_v2",
+      "destination_rect": [
+        152.16,
+        202.0,
+        191.84,
+        252.0
+      ]
+    },
+    {
+      "row": 0,
+      "source_row": 2,
+      "source_column": 2,
+      "source_clip": [
+        281.012693663391,
+        334.0,
+        371.27264435104416,
+        406.0
+      ],
+      "annotation": "1.51",
+      "source": "donor_ladder_brain_maps_v2",
+      "destination_rect": [
+        222.16,
+        202.0,
+        261.84,
+        252.0
+      ]
+    },
+    {
+      "row": 0,
+      "source_row": 2,
+      "source_column": 4,
+      "source_clip": [
+        472.3637891212155,
+        334.0,
+        562.6237398088687,
+        406.0
+      ],
+      "annotation": "1.97",
+      "source": "donor_ladder_brain_maps_v2",
+      "destination_rect": [
+        292.16,
+        202.0,
+        331.84,
+        252.0
+      ]
+    },
+    {
+      "row": 0,
+      "source_row": 2,
+      "source_column": 5,
+      "source_clip": [
+        568.0393368501279,
+        334.0,
+        658.2992875377811,
+        406.0
+      ],
+      "annotation": "0.75",
+      "destination_rect": [
+        361.91,
+        202.0,
+        402.09,
+        252.0
+      ]
+    },
+    {
+      "row": 0,
+      "source_row": 2,
+      "source_column": 7,
+      "source_clip": [
+        759.3904323079524,
+        334.0,
+        849.6503829956056,
+        406.0
+      ],
+      "destination_rect": [
+        432.16,
+        202.0,
+        471.84,
+        252.0
+      ]
+    },
+    {
+      "row": 1,
+      "source_row": 0,
+      "source_column": 0,
+      "source_clip": [
+        105.22804260253906,
+        129.9906005859375,
+        164.988037109375,
+        201.9906005859375
+      ],
+      "destination_rect": [
+        81.24,
+        274.0,
+        122.76,
+        324.0
+      ]
+    },
+    {
+      "row": 1,
+      "source_row": 0,
+      "source_column": 1,
+      "source_clip": [
+        201.0,
+        130.1199951171875,
+        260.760009765625,
+        202.1199951171875
+      ],
+      "annotation": "1.30\n[1.26, 1.34]",
+      "destination_rect": [
+        151.24,
+        274.0,
+        192.76,
+        324.0
+      ]
+    },
+    {
+      "row": 1,
+      "source_row": 0,
+      "source_column": 2,
+      "source_clip": [
+        297.0,
+        130.1199951171875,
+        356.760009765625,
+        202.1199951171875
+      ],
+      "annotation": "0.99\n[0.94, 1.03]",
+      "destination_rect": [
+        221.24,
+        274.0,
+        262.76,
+        324.0
+      ]
+    },
+    {
+      "row": 1,
+      "source_row": 0,
+      "source_column": 4,
+      "source_clip": [
+        488.0,
+        130.1199951171875,
+        547.760009765625,
+        202.1199951171875
+      ],
+      "annotation": "2.02\n[2.00, 2.04]",
+      "destination_rect": [
+        291.24,
+        274.0,
+        332.76,
+        324.0
+      ]
+    },
+    {
+      "row": 1,
+      "source_row": 0,
+      "source_column": 5,
+      "source_clip": [
+        584.0,
+        130.1199951171875,
+        643.760009765625,
+        202.1199951171875
+      ],
+      "annotation": "0.54\n[0.53, 0.55]",
+      "destination_rect": [
+        361.24,
+        274.0,
+        402.76,
+        324.0
+      ]
+    },
+    {
+      "row": 1,
+      "source_row": 0,
+      "source_column": 7,
+      "source_clip": [
+        775.0,
+        130.1199951171875,
+        834.760009765625,
+        202.1199951171875
+      ],
+      "destination_rect": [
+        431.24,
+        274.0,
+        472.76,
+        324.0
+      ]
+    },
+    {
+      "row": 2,
+      "source_row": 3,
+      "source_column": 0,
+      "source_clip": [
+        98.86627197265625,
+        436.07415771484375,
+        170.86627197265625,
+        508.07415771484375
+      ],
+      "destination_rect": [
+        77.0,
+        346.0,
+        127.0,
+        396.0
+      ]
+    },
+    {
+      "row": 2,
+      "source_row": 3,
+      "source_column": 1,
+      "source_clip": [
+        195.0,
+        436.1199951171875,
+        267.0,
+        508.1199951171875
+      ],
+      "annotation": "0.49\n[0.40, 0.58]",
+      "destination_rect": [
+        147.09,
+        346.0,
+        196.91,
+        396.0
+      ]
+    },
+    {
+      "row": 2,
+      "source_row": 3,
+      "source_column": 2,
+      "source_clip": [
+        290.0,
+        436.1199951171875,
+        362.0,
+        508.1199951171875
+      ],
+      "annotation": "1.33\n[1.22, 1.44]",
+      "destination_rect": [
+        217.09,
+        346.0,
+        266.91,
+        396.0
+      ]
+    },
+    {
+      "row": 2,
+      "source_row": 3,
+      "source_column": 4,
+      "source_clip": [
+        482.0,
+        436.1199951171875,
+        554.0,
+        508.1199951171875
+      ],
+      "annotation": "2.01\n[1.90, 2.14]",
+      "destination_rect": [
+        287.09,
+        346.0,
+        336.91,
+        396.0
+      ]
+    },
+    {
+      "row": 2,
+      "source_row": 3,
+      "source_column": 5,
+      "source_clip": [
+        577.0,
+        436.1199951171875,
+        649.0,
+        508.1199951171875
+      ],
+      "annotation": "0.86\n[0.83, 0.88]",
+      "destination_rect": [
+        357.09,
+        346.0,
+        406.91,
+        396.0
+      ]
+    },
+    {
+      "row": 2,
+      "source_row": 3,
+      "source_column": 7,
+      "source_clip": [
+        769.0,
+        436.1199951171875,
+        841.0,
+        508.1199951171875
+      ],
+      "destination_rect": [
+        427.09,
+        346.0,
+        476.91,
+        396.0
+      ]
+    },
+    {
+      "row": 3,
+      "source_row": 6,
+      "source_column": 0,
+      "source_clip": [
+        96.4551773071289,
+        742.15771484375,
+        173.49517822265625,
+        814.15771484375
+      ],
+      "destination_rect": [
+        75.27,
+        418.0,
+        128.73,
+        468.0
+      ]
+    },
+    {
+      "row": 3,
+      "source_row": 6,
+      "source_column": 1,
+      "source_clip": [
+        192.0,
+        742.1199951171875,
+        269.0400085449219,
+        814.1199951171875
+      ],
+      "annotation": "0.18\n[0.15, 0.20]",
+      "destination_rect": [
+        145.27,
+        418.0,
+        198.73,
+        468.0
+      ]
+    },
+    {
+      "row": 3,
+      "source_row": 6,
+      "source_column": 2,
+      "source_clip": [
+        288.0,
+        742.1199951171875,
+        365.0400085449219,
+        814.1199951171875
+      ],
+      "annotation": "1.12\n[1.04, 1.20]",
+      "destination_rect": [
+        215.27,
+        418.0,
+        268.73,
+        468.0
+      ]
+    },
+    {
+      "row": 3,
+      "source_row": 6,
+      "source_column": 4,
+      "source_clip": [
+        479.0,
+        742.1199951171875,
+        556.0399780273438,
+        814.1199951171875
+      ],
+      "annotation": "2.14\n[2.01, 2.28]",
+      "destination_rect": [
+        285.27,
+        418.0,
+        338.73,
+        468.0
+      ]
+    },
+    {
+      "row": 3,
+      "source_row": 6,
+      "source_column": 5,
+      "source_clip": [
+        575.0,
+        742.1199951171875,
+        652.0399780273438,
+        814.1199951171875
+      ],
+      "annotation": "0.59\n[0.57, 0.62]",
+      "destination_rect": [
+        355.27,
+        418.0,
+        408.73,
+        468.0
+      ]
+    },
+    {
+      "row": 3,
+      "source_row": 6,
+      "source_column": 7,
+      "source_clip": [
+        766.0,
+        742.1199951171875,
+        843.0399780273438,
+        814.1199951171875
+      ],
+      "destination_rect": [
+        425.27,
+        418.0,
+        478.73,
+        468.0
+      ]
+    }
+  ],
+  "mri_background_display": {
+    "method": "Shared exterior display mask, not a measurement/acquisition mask.",
+    "definition": "Border-connected pixels that are black/white/transparent in all six aligned source panels; enclosed dark anatomy remains retained.",
+    "black_threshold_rgb": 2,
+    "white_threshold_rgb": 253,
+    "source_shape_px": [
+      362,
+      288
+    ],
+    "common_crop_bbox_px": [
+      90,
+      27,
+      274,
+      256
+    ],
+    "exterior_pixels": 72766,
+    "internal_dark_reference_pixels_retained": 522,
+    "retained_rgba_pixels_unchanged": true,
+    "outline": "Two-source-pixel gray outline placed outside retained support only.",
+    "scope": "Transparency and uniform display crop only; no statistic, array, color normalization or eligibility changed."
+  },
+  "layout_changes": "White canvas; a/b panels; source text with leaders instead of dashboard cards; smaller bust; maps 50pt high instead of42pt; labels7pt.",
+  "numeric_color_scale": {
+    "vmin": 0,
+    "vcenter": 1,
+    "vmax": 2.4,
+    "changed": false
+  },
+  "spatial_scale": "Aspect preserved; one common MRI crop. Rows have display scales, not a common physical scale.",
+  "measurement_changes": false,
+  "generated_scientific_images": false,
+  "output": {
+    "path": "paper/cvpr2027/fig/identity_ladder_provenance_v3.pdf",
+    "sha256": "b18c14744ae4d24616877775f18934d79443ced7f937543bbdeb333f480e52b4"
+  },
+  "shareable_png": {
+    "path": "paper/cvpr2027/fig/identity_ladder_provenance_v3.png",
+    "sha256": "6d2a10ec5ae5220c632469433f3fe46bb6902be57dedfd0b35a91bf26b38c52f"
+  }
+}

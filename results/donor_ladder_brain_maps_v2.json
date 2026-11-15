@@ -1,0 +1,81 @@
+{
+ "status": "pre-QC: affine registration only, MRI registration QC not met; exploratory maps",
+ "protocol": "docs/PROTOCOL_donor_ladder_brain.md (Amendments 5, 6, 8, 16)",
+ "window_mm": 16,
+ "window": "masked Gaussian, sd = WIN/sqrt(12)",
+ "grid_mm": 2,
+ "support_voxels": 224461,
+ "maps": {
+  "repeat": {
+   "pooled_ratio": 0.3000895933706272,
+   "quantiles_5_25_50_75_95": [
+    0.16487824220032887,
+    0.21640771362293862,
+    0.2697171516594928,
+    0.37982624124196696,
+    0.5487744811649926
+   ],
+   "split_half_r": 0.7204824330733909,
+   "split_half_r_shared_pool": 0.7224326071923588,
+   "max_targets_per_voxel": 23,
+   "voxels": 224461
+  },
+  "mirror": {
+   "pooled_ratio": 1.5095618541265503,
+   "quantiles_5_25_50_75_95": [
+    0.7614964472118682,
+    1.2970281483926396,
+    1.563249744936387,
+    1.7444607832239452,
+    1.9515921655227668
+   ],
+   "split_half_r": 0.9735150285399803,
+   "split_half_r_shared_pool": 0.9736584119451035,
+   "max_targets_per_voxel": 221,
+   "voxels": 192671
+  },
+  "sibling": {
+   "pooled_ratio": 1.7827339840185992,
+   "quantiles_5_25_50_75_95": [
+    1.502406137826626,
+    1.7066925246221702,
+    1.821992048290391,
+    1.8973340058782624,
+    1.9756693450264464
+   ],
+   "split_half_r": 0.6513415074110837,
+   "split_half_r_shared_pool": 0.6530453315273155,
+   "max_targets_per_voxel": 102,
+   "voxels": 224461
+  },
+  "stranger": {
+   "pooled_ratio": 1.9725795330349858,
+   "quantiles_5_25_50_75_95": [
+    1.912902672182654,
+    1.983274461753915,
+    1.9904298572172203,
+    1.990778463413518,
+    1.9934765915382608
+   ],
+   "split_half_r": 0.9483716486421576,
+   "split_half_r_shared_pool": -0.24686159762231574,
+   "max_targets_per_voxel": 221,
+   "voxels": 224461
+  },
+  "cohort": {
+   "pooled_ratio": 1.005532706415811,
+   "quantiles_5_25_50_75_95": [
+    0.9886576404103701,
+    1.0006636536772149,
+    1.0070088528206427,
+    1.0114057847821396,
+    1.0154676718058013
+   ],
+   "split_half_r": 0.22277689499880482,
+   "split_half_r_shared_pool": 0.24663581750782396,
+   "max_targets_per_voxel": 220,
+   "voxels": 224461
+  }
+ },
+ "minutes": 40.1
+}

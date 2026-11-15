@@ -1,47 +1,28 @@
-% Results figures and tables are placed before this section (draft layout, Kate 10 Nov: up to 12 pages).
-\FloatBarrier
-\section{From reference audits to model audits}
+\section{Discussion and conclusion}
 \label{sec:synthesis}
-The existing experiments characterize reference candidates and metric behavior.
-Table~\ref{tab:decision} separates that evidence from the proposed audit of conditional generation across populations.
-Coverage describes what has been investigated, not a percentage of a model-evaluation problem solved.
+The behavior of squared error is not an accident of our data.
+The conditional mean of the hidden content given the context minimizes expected squared error, and a fill drawn from the true conditional distribution has twice that error~\cite{blau2018}; the shrunk true person and the mean of 16 look-alikes are empirical stand-ins for that mean.
+We show how large this reward is on real anatomy, and that set-level metrics trade it for another blind spot.
+A pixel score alone cannot show whether a fill kept the person.
+Under \ac{MSE} a model gains by pulling uncertain detail toward the population mean, while \ac{FID} and \ac{FWD} catch this averaging but cannot tell the right person from a stranger and even prefer sharp wrong detail.
+We therefore suggest reporting three numbers next to any inpainting score, on the same masks: the score of the dataset mean, of the mean of 16 look-alikes chosen from the context, and of a stranger.
+A model that does not beat the look-alike mean adds nothing to retrieval, and one near the dataset mean has averaged the person away; a conditional mean remains the right answer when the hidden content is truly ambiguous, and the controls make that choice visible.
+Applying the controls to generative models across groups of people is the next step, outlined in the supplement.
 
-\paragraph{What the references establish.}
-Means, attenuation, incorrect residuals, and repeats expose different interpretations of a similarity score.
-Symmetry supplies a comparison condition rather than an identity label: a face reflection shares capture conditions, a fellow iris changes the biometric instance, and hemispheres require correspondence.
-Cross-anatomy observations stress these interpretations without establishing a universal ordering or transfer to every inpainting task.
+\paragraph{A recipe for inpainting benchmarks.}
+The controls need no model and no labels beyond the images themselves.
+For each hidden region, a benchmark can compute the dataset mean of the region over unrelated people, the mean of the 16 people whose context rings are closest, and 16 random strangers, all on the same valid pixels as the submitted fills.
+Scores are then reported on the stranger scale of Eq.~\ref{eq:anchors}, so that a submission at 0.5 is as close as the dataset mean and one at 0.3 as close as a context search.
+Where a dataset has second images of the same people, the shrunk second image adds a direct test of whether the metric rewards averaging, and a set-level metric on the same fills shows whether the submission has lost realism.
 
-\paragraph{How model behavior could be tested.}
-For a fixed context and mask, generated outputs can be compared with the same ladder controls using Eq.~\ref{eq:population-audit}.
-Repeating this comparison within target strata could reveal whether a model's scores approach global or matched means, retain target-aligned variation, or respond to acquisition differently between groups.
-The context must support the claimed detail: a conditional mean can be a legitimate prediction when the withheld content is ambiguous.
-Residual correlation misses positive amplitude shrinkage, and stranger calibration supplies no new anatomical information.
-The profile therefore retains complementary controls rather than identifying one coordinate with preserved identity.
-
-\paragraph{Population and sampling interpretation.}
-Global and matched references answer different questions; group-specific normalization alone can conceal raw gaps or differences in reference variance.
-A group contrast characterizes the model--metric system; attribution requires checking reference, acquisition and task-composition effects.
-Mask difficulty, location, acquisition, donor-pool size and missing outputs must remain visible in a comparison.
-Repeated outputs distinguish variation across targets from variation across seeds for one context; reduced variance alone does not establish mode collapse.
-Group gaps require independent-unit uncertainty and an explicit target population, and do not by themselves establish causal discrimination or fairness.
-Actual generator outputs, an independent anatomy or task criterion, and held-out validation are needed to test these proposed interpretations.
-
-\paragraph{Limitations and evidence coverage.}
-Registration and acquisition remain central confounders in the brain and fundus panels.
-Brain, fundus and iris results precede the registration and mask quality-control gates and are provisional.
-Lid-shadow information, changing support and selection on usable windows can affect iris comparisons.
-The current residual and rank coordinates have not been validated as a fused identity score.
-Window sizes set as a fraction of the object (brain 8, 16 and 32\,mm; faces 1/16 to 1/4 of the face extent; iris 10 and 16 pixels) keep the rung order with rank correlations of 0.72 to 1.00, while fundus has no window-size sweep.
-% Sources: donor_ladder_brain_metrics_size.json (rank_stability); face_ladder_sizes.json; iris_ladder_metrics_w10.json.
+\paragraph{Limitations.}
+No generative model is evaluated; every fill is a real image, an average or a constructed control.
+Registration and acquisition remain the main confounders in brain and retina, which stay provisional with the iris until registration and mask \ac{QC} are complete.
+Only 23 QTIM people have a second scan and two of nine image sets record families, and the set-level exclusion rule was fixed after seeing one value.
+The hidden region is 1/8 of the object in brain and retina but about 1/5 in faces and iris, which matters for the look-alike rung only.
+The ladder measures closeness to known references, not whether a fill is clinically or biometrically correct: a fill can sit at the true person's position and still miss a lesion, and identity under ArcFace and under pixel errors can disagree, as the faces show.
 
 \paragraph{Ethics and data.}
-The manuscript preparation uses existing aggregate outputs and does not read or redistribute participant images or identifiers.
-The anatomical map illustrations are population summaries or templates, not individual exemplars.
-Iris images and private row tables remain outside the public repository.
-The preparation record does not establish the original dataset consent or the institutional basis for each secondary analysis.
-Those dataset-specific approval, exemption and consent statements require author confirmation before a submission-ready ethics declaration can be made.
-
-\section{Conclusion}
-Identity Ladder supplies population references for interpreting similarity in inpainting and a defined extension to audits of conditional generation.
-The measured controls probe responses to detail loss, incorrect detail and acquisition variation; generated-output profiles across target strata remain to be tested.
-Broader applications require an appropriate identity unit, conditioning contract and reference population, preserving the distinction between a proposed audit and demonstrated model behavior.
+All datasets are public research datasets used under their terms.
+Figure~\ref{fig:explainer} shows one QTIM brain scan (CC0); otherwise only population averages and maps are shown, as the CelebA and IMDb-WIKI terms do not allow publishing their images.
+Approval and consent statements await author confirmation.

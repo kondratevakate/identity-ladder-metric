@@ -1,11 +1,11 @@
 {
   "generator": {
     "path": "paper/cvpr2027/make_provenance_infographic_v2.py",
-    "sha256": "69b75c57cc852aafa39f997b3f4cd7ccde747d49d8434549e0a7407dae098153"
+    "sha256": "eb90eeb406a8200d7e4b9c4317d4e2129bf89ab3c295bc12cb15b53e632be64a"
   },
   "source_specification_module": {
     "path": "paper/cvpr2027/infographic_sources.py",
-    "sha256": "d5a4cc94e452ceaf4c8a6d7809e5c3c562fa3d264a54efcdb187a0d64894363c"
+    "sha256": "d8de08eb961dcd8147090e98319da9fced99a081ea7cd98cac67c1cc65ea2eac"
   },
   "source_atlas": {
     "path": "paper/cvpr2027/fig/atlas_all_modalities_full.pdf",
@@ -13,7 +13,7 @@
   },
   "source_atlas_provenance": {
     "path": "paper/cvpr2027/atlas_provenance.json",
-    "sha256": "4ec516660e418405153e297203ab178886e4634f86a66ca083796b59bfcb901f"
+    "sha256": "6d24baccde08b6686e9896169f9969a679de13bfb064013cc1ddb8bd9b856709"
   },
   "source_commit": "82ed7fe8a52e557854cf4cd2d02eb47d5803d7cb",
   "original_source_pdf": "results/figures/fig_ladder_maps_all_modalities.pdf",
@@ -32,7 +32,7 @@
     },
     "fundus": {
       "path": "paper/cvpr2027/inputs/donor_ladder_2d_facefmt.json",
-      "sha256": "365396632ad6c8a6aee98ca99892a89cb911ae910456452e20ad48c317b7238c"
+      "sha256": "95bb2fe3adf963e107e312e97e0a2b4c29e450976015377ffd10d5bca87493a3"
     },
     "iris": {
       "path": "results/iris_ladder_metrics.json",
@@ -47,7 +47,7 @@
     "role": "Previously generated decorative bust; unchanged asset.",
     "generation_record": {
       "path": "paper/cvpr2027/fig/assets/identity_bust_v1.provenance.json",
-      "sha256": "8ff2191c7be534c8e5faa9b01b1e813ce16cfeebaac113131713ddfc5f2486ed"
+      "sha256": "fb502f0e850a5ff6a9d1ee85752d3466a523fcba10286b2554cbcb5a00ec3b19"
     }
   },
   "source_cohorts": [
@@ -65,7 +65,7 @@
         0.66
       ],
       "counts": "221 targets, 168 families",
-      "detail": "23 repeat scans"
+      "detail": "23 with a second scan"
     },
     {
       "name": "Faces (CelebA)",
@@ -81,10 +81,10 @@
         0.61
       ],
       "counts": "921 targets",
-      "detail": "Repeat photographs available"
+      "detail": "Second photographs available"
     },
     {
-      "name": "Fundus (GRAPE)",
+      "name": "Retina (GRAPE)",
       "rect": [
         328,
         23,
@@ -97,10 +97,10 @@
         0.48
       ],
       "counts": "239 eyes, 134 people",
-      "detail": "Repeat: 171 eyes, 97 people"
+      "detail": "Second visit: 171 eyes, 97 people"
     },
     {
-      "name": "Iris (UTIRIS NIR)",
+      "name": "Iris (UPOL)",
       "rect": [
         328,
         85,
@@ -112,8 +112,8 @@
         0.52,
         0.23
       ],
-      "counts": "156 eyes, 78 people",
-      "detail": "Same-eye repeat acquisitions"
+      "counts": "128 eyes, 64 people",
+      "detail": "Same eye captured again"
     }
   ],
   "panels": [
@@ -437,13 +437,13 @@
     },
     {
       "row": 3,
-      "source_row": 5,
+      "source_row": 6,
       "source_column": 0,
       "source_clip": [
-        89.6615982055664,
-        648.8851928710938,
-        180.381591796875,
-        702.8851928710938
+        96.4551773071289,
+        742.15771484375,
+        173.49517822265625,
+        814.15771484375
       ],
       "destination_rect": [
         71,
@@ -454,15 +454,15 @@
     },
     {
       "row": 3,
-      "source_row": 5,
+      "source_row": 6,
       "source_column": 1,
       "source_clip": [
-        185.0,
-        649.8399658203125,
-        275.7200012207031,
-        703.1199951171875
+        192.0,
+        742.1199951171875,
+        269.0400085449219,
+        814.1199951171875
       ],
-      "annotation": "0.41\n[0.34, 0.47]",
+      "annotation": "0.18\n[0.15, 0.20]",
       "destination_rect": [
         141,
         418,
@@ -472,15 +472,15 @@
     },
     {
       "row": 3,
-      "source_row": 5,
+      "source_row": 6,
       "source_column": 2,
       "source_clip": [
-        281.0,
-        649.8399658203125,
-        371.7200012207031,
-        703.1199951171875
+        288.0,
+        742.1199951171875,
+        365.0400085449219,
+        814.1199951171875
       ],
-      "annotation": "1.26\n[1.12, 1.40]",
+      "annotation": "1.12\n[1.04, 1.20]",
       "destination_rect": [
         211,
         418,
@@ -490,15 +490,15 @@
     },
     {
       "row": 3,
-      "source_row": 5,
+      "source_row": 6,
       "source_column": 4,
       "source_clip": [
-        472.0,
-        649.8399658203125,
-        562.719970703125,
-        703.1199951171875
+        479.0,
+        742.1199951171875,
+        556.0399780273438,
+        814.1199951171875
       ],
-      "annotation": "2.00\n[1.82, 2.21]",
+      "annotation": "2.14\n[2.01, 2.28]",
       "destination_rect": [
         281,
         418,
@@ -508,15 +508,15 @@
     },
     {
       "row": 3,
-      "source_row": 5,
+      "source_row": 6,
       "source_column": 5,
       "source_clip": [
-        568.0,
-        649.8399658203125,
-        658.719970703125,
-        703.1199951171875
+        575.0,
+        742.1199951171875,
+        652.0399780273438,
+        814.1199951171875
       ],
-      "annotation": "0.50\n[0.47, 0.53]",
+      "annotation": "0.59\n[0.57, 0.62]",
       "destination_rect": [
         351,
         418,
@@ -526,13 +526,13 @@
     },
     {
       "row": 3,
-      "source_row": 5,
+      "source_row": 6,
       "source_column": 7,
       "source_clip": [
-        759.0,
-        649.8399658203125,
-        849.719970703125,
-        703.1199951171875
+        766.0,
+        742.1199951171875,
+        843.0399780273438,
+        814.1199951171875
       ],
       "destination_rect": [
         421,
@@ -575,10 +575,10 @@
   "generated_scientific_images": false,
   "output": {
     "path": "paper/cvpr2027/fig/identity_ladder_provenance_v2.pdf",
-    "sha256": "ec181914a1e918b467d6ef5682c47c53e845c1ecc9e3642a80e0636bbd37fd4a"
+    "sha256": "ef9c11bcfe12de62fbef49ff6116d92be9d3d21cd8705eb53baeb569c3c47ba4"
   },
   "shareable_png": {
     "path": "paper/cvpr2027/fig/identity_ladder_provenance_v2.png",
-    "sha256": "de609a98c1c052476949e238b4b14919938c7c3fc0d79cdec70a11f04439ebb9"
+    "sha256": "c263b68b774622a7a62c27d739eac78651520425fc4a5c10ef724ea03667a1b0"
   }
 }

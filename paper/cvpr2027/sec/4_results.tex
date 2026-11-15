@@ -1,206 +1,57 @@
 \section{Results}
 \label{sec:results}
-% Every table cites its results file with \src{...} and marks each value F, P or not run.
+\input{sec/fig_summary}
+\input{sec/main_profiles}
+% Every number cites its results file in a comment; F and P mark final and provisional values.
 
-\subsection{An inpainting-evaluator case study}
-Saved synthetic probes of BraTS \texttt{inpainting} 0.0.12 identify a two-spatial-axis SSIM convention and PSNR clipping that breaks exact rank equivalence with MSE.
-They motivate an explicit implementation contract, not a claim of independent anatomical sensitivity.
-The supplement retains both dependency-version records and all numerical probes; no generator or organizer-server validation is implied.
-% Sources: results/brats_panel_checks_tm1.1.2.json and brats_panel_checks_tm1.9.0.json.
-
-\subsection{Brain MRI (QTIM)}
-\label{sec:r-brain}
-All brain-panel findings in this section are provisional.
-Table~\ref{tab:brain} reports the saved random-region, both-hemisphere profile, with source two-way intervals.
-The MSE position of the dataset mean is below the mirror position, while the corresponding ordering changes under TM-like distance.
-The difference is an observed metric profile under the recorded alignment, not evidence that a population mean preserves more of a person's anatomy.
-
-The tests also distinguish separate requirements.
-MSE establishes that the repeat is better than the dataset mean, incorrect detail, and noise in the recorded directional tests.
-It does not establish that the repeat is better than the shrunk true person, the same repeat pulled part of the way toward the dataset mean.
-The shrunk repeat's MSE position is $-0.014$ with interval $[-0.028,-0.004]$\statuspre, where the original repeat is the zero anchor: squared error prefers the partly averaged image to the person's own repeat.
-For the repeat-tolerance lDDT-like measure, the corresponding position is $-0.084$ with interval $[-0.108,-0.065]$\statuspre.
-These findings show a possible preference for averaged detail while leaving the registration gate unresolved.
-They do not make failure of T2 a general theorem about those metrics.
-% Numerical source: donor_ladder_brain_metrics.json, views/random_patches/LR/ladder_R.
-
-\begin{table*}[t]
-\centering
-\caption{\textbf{Provisional brain audit profile.} $R_{\rm rep}$: repeat zero and mean of the recorded unrelated donors one; lower is closer.
-Cells contain means and source 95\% intervals, with family and position resampling.
-Non-repeat rows involve 221 targets from 168 families; the repeat anchor involves 23 targets.
-Residual correlation at the exact dataset mean is undefined.
-Source: \src{results/donor_ladder_brain_metrics.json}.}
-\label{tab:brain}
-\small
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-Metric & Dataset mean & Mirror & Incorrect detail & Noise \\
-\midrule
-\input{tab/brain_profile}
-\end{tabular}
-\end{table*}
-
-Averaging context-selected strangers comes close to the repeat.
-On the common self-zero scale, the mean of 16 look-alikes has MSE position $0.375$ $[0.370, 0.380]$, against $0.503$ for the dataset mean and $0.594$ for a single look-alike\statuspre.
-In the deep box on the repeat-anchored scale it reaches $0.033$ with interval $[-0.136, 0.134]$, which does not separate it from the repeat\statuspre.
-IXI reproduces this ordering: $0.363$ for the 16-donor mean, $0.505$ for the dataset mean and $0.662$ for the opposite side\statuspre.
-In IXI, a stranger from the same site is at $0.874$ $[0.844, 0.899]$ and one from another site at $1.059$ $[1.049, 1.072]$\statuspre.
-Part of the unrelated reference is therefore acquisition rather than anatomy.
-% Sources: results/cross_modality/common_all.json (R_self, mse); donor_ladder_brain_lookalike16.json (qtim, deep/LR).
-
-HACA3+ stage 1 provides a separate contrast sensitivity, not a completed identity endpoint.
-Across its 23 paired scans, mean absolute deep-region session shift changes from $0.121$ to $0.016$ standardized intensity units\statuspre.
-The parietal counterpart changes from $0.059$ to $0.033$\statuspre.
-The source records a pending visual verdict, and neither measurement establishes preservation of subject-specific detail.
-% Numerical source: donor_ladder_brain_haca3_stage1.json, session_shift_z.
-
-\subsection{Fundus photographs (PAPILA, GRAPE)}
-\label{sec:r-fundus}
-Table~\ref{tab:fundus} gives the profile in the shared 128-pixel frame.
-GRAPE has 239 target-eye units from 134 people in the stranger comparison; the repeat comparison has 171 units from 97 people\statuspre.
-PAPILA has 488 target eyes from 244 people and no other-visit rung\statuspre.
-The dataset mean is closer than the fellow eye under squared error in both saved summaries.
-The context-selected mean of look-alikes can outperform the unconditional mean in this representation.
-These findings are provisional and do not establish the identity of the inferred detail.
-
-\begin{table*}[t]
-\centering
-\caption{\textbf{Provisional frame-only fundus profile.}
-Mean-relative squared-error ratio $Q$, with source person-bootstrap intervals; lower is closer.
-These P8/P9 map-compatible summaries differ from the older P7 support and from the window-level metric panel.
-PAPILA has no repeat observation.
-Source: \src{results/donor_ladder_2d_facefmt.json} at the frozen bilateral snapshot, copied without change into the paper inputs.}
-\label{tab:fundus}
-\small
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-Dataset & Repeat & Fellow eye & Context mean & Stranger \\
-\midrule
-\input{tab/fundus_ratio}
-\end{tabular}
-\end{table*}
-
-The Gaussian maps in Figure~\ref{fig:atlas} retain these preprocessing labels.
-High split-half correlation cannot establish anatomical validity if a shared preprocessing artifact is reproducible too.
-
-\subsection{Face photographs (CelebA, IMDb-WIKI)}
-\label{sec:r-face}
-Table~\ref{tab:face} reports the per-window profiles on the self-anchored scale.
-The repeat photograph has substantial pixel error despite preserving person membership.
-The dataset mean is closer than the repeat under MSE in both datasets, while a local context-selected donor is closer still.
-That pixel preference does not identify the donor as the target person.
-
-\begin{table*}[t]
-\centering
-\caption{\textbf{Face metric and donor-identity profiles.} Recorded $R_{\rm self}$ point estimates; target self zero, mean of unrelated donors one.
-The source retains family/position bootstrap intervals; full records accompany the preparation manifest.
-The approved frame has 921 CelebA targets and 678 IMDb-WIKI targets, respectively clustered into 921 and 453 units.
-ArcFace compares whole target and donor images; the pixel metrics compare local windows.
-Source: \src{results/face_ladder_metrics.json}.}
-\label{tab:face}
-\small
-\begin{tabular}{@{}llcccc@{}}
-\toprule
-Dataset & Metric & Retest & Bilateral & Dataset mean & Context donor \\
-\midrule
-\input{tab/face_profile}
-\end{tabular}
-\end{table*}
-
-For CelebA, the selected donor's local MSE position is $0.399$\statusfinal, while its whole-image ArcFace donor-reference position is $0.983$\statusfinal.
-The corresponding IMDb-WIKI values are $0.397$ and $0.984$\statusfinal.
-These are different measurements at different spatial scopes.
-Their disagreement shows that local photometric matching can select a donor whose global identity representation remains near the unrelated reference.
-It does not measure identity retention by a completed composite reconstruction, and no ArcFace value is assigned to an unembedded mean.
-
-\subsection{Iris images (UTIRIS, UPOL)}
-\label{sec:r-iris}
-The iris panel contains 156 target eyes from 78 people for UTIRIS NIR.
-The secondary UTIRIS VIS and UPOL panels contain 158 eyes from 79 people and 128 eyes from 64 people, respectively\statuspre.
-The VIS repeat endpoint has one fewer eligible eye, which is retained as endpoint-specific coverage rather than silently changing every comparison.
-Table~\ref{tab:iris} reports mean-relative squared error on the support defined for each condition.
-The repeated eye is closer than the fellow eye in all three saved summaries, and a context-selected unrelated donor can fall between them.
-These are pixel-space relationships; they are not an iris biometric verification result.
-
-\begin{table*}[t]
-\centering
-\caption{\textbf{Provisional P2 iris donor ladder.} Squared-error ratio $Q$ against an independent dataset mean evaluated on the same support; lower is closer.
-The mean anchor is one by construction; an independent equal-variance stranger has theoretical expectation near two.
-Intervals use person bootstrap.
-Target-eye/person counts are 156/78, 158/79, and 128/64; the VIS repeat endpoint uses 157 eyes.
-Source: \src{results/iris_ladder_metrics.json}, results block.}
-\label{tab:iris}
-\small
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-Dataset & Same-eye repeat & Fellow eye & Context donor & Stranger \\
-\midrule
-\input{tab/iris_ratio}
-\end{tabular}
-\end{table*}
-
-The source retains distinct $R_{\rm self}$ and $R_{\rm rep}$ values, window-level controls, and the directional tests.
-The lid-shadow mask review is still outstanding.
-LPIPS, Betti-matching, FID and FWD values for iris enter only the cross-dataset comparison in Section~\ref{sec:r-cross}.
-
-\subsection{Metric families across nine image sets}
+\subsection{RQ1, RQ2: pixel metrics see the person but reward averaging}
 \label{sec:r-cross}
-Figure~\ref{fig:atlas-all} shows the ladder as maps for every dataset with a saved map.
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{fig/atlas_all_modalities_full.pdf}
-\caption{\textbf{Every dataset, every location: local squared error of each donor, in units of the dataset mean.}
-Rows: CelebA and IMDb-WIKI faces, QTIM brain MRI, GRAPE and PAPILA fundus, UTIRIS near-infrared, UTIRIS visible-light and UPOL iris; IXI has no map yet.
-Columns: mean anatomy, another acquisition, opposite side, sibling, stranger, mean of 16 look-alikes, same-sex-and-age mean, and the error of the dataset mean itself (own scale).
-One colour scale: 1 is the dataset mean (white), about 2 a stranger; blue is closer than the mean.
-Mean images and maps are population summaries, not individual people.
-Brain maps use a Gaussian window; brain, fundus and iris are provisional.
-Source: \src{paper/cvpr2027/atlas_provenance.json}.}
-\label{fig:atlas-all}
-\end{figure*}
-Figure~\ref{fig:summary} places every metric on one scale across nine image sets from eight cohorts; UTIRIS NIR and VIS image the same people.
-Its panel A condenses the same ladder into two questions per metric.
-On that scale the target is zero and the mean of 16 unrelated donors is one.
-Per-window error and similarity metrics see the person: under MSE the true person is at $0.40$ and the stranger at one.
-They do not reject averaging.
-The dataset mean is at $0.50$, and the shrunk true person (the person's own repeat with its individual detail partly replaced by the average, Section~\ref{sec:controls}) is at $0.29$, closer than the unshrunk repeat at $0.40$\statuspre.
-Squared error rewards losing part of the person.
-TM-like~\cite{tmscore2004}, GDT-like~\cite{zemla2003lga} and superposed RMSE order the rungs almost as MSE does, with rank correlation $0.96$ to $0.99$.
-The protein-structure tolerances therefore add no separate behaviour here.
-lDDT differs most and is the only error or similarity score that places white noise far beyond a stranger ($1.76$).
-LPIPS rejects the crude dataset mean (AlexNet $0.90$, VGG $1.09$) but keeps the shrunk person beside the true person ($0.47$ against $0.43$, and $0.57$ against $0.56$).
-Set-level FID and FWD reject averaging strongly: the dataset-mean set is $16$ and $186$ times as far as the stranger set.
-Set-level comparisons need sets of similar size, because FID is biased upward for small sets.
-After the brain repeat set (138 of 1326 windows) gave a ratio of $8.3$, we excluded brain from the set-level summary and left out every rung whose set has fewer than half the windows of the stranger set; both rules were fixed after seeing that value.
-They are blind to the person, because the true-person set is as far as the stranger set ($0.93$ and $0.57$).
-No metric family both recognises the individual and penalises subtle averaging.
-% Sources: results/cross_modality/fig_metric_summary_R.json; agreement.json (metric_matrix); values_generative.json.
+Figure~\ref{fig:summary} places all ten metric variants on the stranger scale, averaged over the nine image sets; Figure~\ref{fig:explainer} traces one row.
+Error and similarity metrics see the person: under \ac{MSE} the true person is at 0.40 and the stranger at 1\statuspre.
+They do not reject averaging: the dataset mean is at 0.50, and the shrunk true person at 0.29 is closer than the unchanged true person\statuspre.
+In the brain, anchored on the second scan, the shrunk scan is at $-0.014$ $[-0.028,-0.004]$, so T2 fails\statuspre.
+\ac{SSIM} shows the same pattern with a smaller gap: the true person at 0.63, the shrunk true person at 0.60 and the dataset mean at 0.84, so it penalizes the crude mean more than \ac{MSE} does but still prefers partial averaging to the unchanged second image.
+\ac{lDDT}-like, the tolerance score that compares local intensity differences, rewards averaging the most: the shrunk true person at 0.52 and the dataset mean at 0.62 are both closer than the true person at 0.66.
+\ac{TM}-like, \ac{GDT}-like and \ac{RMSE} order the rungs almost exactly as \ac{MSE} (rank correlation 0.96 to 0.99).
+\ac{LPIPS} rejects the crude dataset mean (AlexNet 0.99, VGG 1.08); VGG keeps the shrunk true person next to the true person (0.61 against 0.60), and AlexNet places it only slightly further (0.56 against 0.47).
+% Sources: fig_metric_summary_R.json; agreement.json; donor_ladder_brain_metrics.json views/random_patches/LR/ladder_R.
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{fig/metric_summary.pdf}
-\caption{\textbf{Per-window metrics see the person, set-level metrics reject averaging, and no metric does both.}
-\textbf{A,} Two questions per metric, answered from its ordering of the identity ladder and averaged over image sets: is the true person (a repeat image, or the opposite side where no repeat exists) closer than a stranger (x), and is the shrunk true person (the same repeat pulled part of the way toward the dataset mean, so the right person with part of the individual detail replaced by the average; Section~\ref{sec:controls}) further away than the unchanged repeat (y)?
-Both axes are rank gaps divided by the ladder length; the shaded corner would hold a metric that does both, and none falls there.
-\textbf{B,} Where each metric places every fill, in units of a stranger (0 = target, 1 = mean of 16 unrelated donors), averaged over the image sets where the fill exists (number in brackets).
-Each fill keeps a fixed lane within a row, in legend order, so read left to right; ladder rungs are in cool colours and checks in warm colours.
-Error/similarity, LPIPS and topology share one axis; FID and FWD are set distances relative to the stranger set, on a log axis.
-*The oracle look-alike is chosen with the hidden target (upper bound).
-Sibling is omitted because it exists for 2 of 9 image sets; it remains in the tables.
-TM-like needs repeats for its tolerance, so it has no PAPILA or IXI value.
-Brain is not averaged for LPIPS and topology (repeat-anchored scale) or for FID/FWD (its repeat set is about ten times smaller than its stranger set); IXI was not run for LPIPS, persistence, FID and FWD.
-Brain, fundus and iris values are provisional.
-Source: \src{results/cross_modality/fig_metric_summary_R.json}.}
-\label{fig:summary}
-\end{figure*}
+Set-level metrics behave the other way round.
+\ac{FID} and \ac{FWD} place the dataset-mean set 16 and 186 times as far as the stranger set, but the true-person set at 0.93 and 0.57 of it; in rank terms the stranger lies only 0.10 of the ladder beyond the true person, against 0.59 for \ac{MSE}.
+Because set distances are biased upward for small sets, we left QTIM out of the set-level summary after its second-scan set (138 of 1{,}326 regions) gave 8.3, and IXI because its opposite-side set is the target set itself, and dropped rungs with fewer than half the stranger set's regions; both rules were fixed after seeing that value.
+No metric family both recognizes the individual and penalizes subtle averaging.
+% Sources: fig_metric_summary_R.json (fid, fwd, panel_A); values_generative.json.
 
-\subsection{Synthetic simulations}
-\label{sec:r-sim}
-The saved synthetic experiments isolate a complementary ambiguity.
-On the known-target attenuation path, an image can keep a high unrelated-reference rank while its residual amplitude falls.
-An amplitude-matched incorrect residual shows why distance from the mean alone is insufficient.
-Synthetic pupil dilation holds latent eye parameters fixed while changing appearance, exposing the opposite failure direction.
-These controls explain mechanisms, but they do not establish how often the same effect occurs in measured anatomy.
-The synthetic label experiments additionally depend on the anatomical prior and segmentation construction.
-Their conditional findings do not establish a universal Dice or topology result.
+\subsection{RQ3: lost detail is cheap for pixel metrics, wrong detail for set-level metrics}
+Under \ac{MSE}, lost detail (shrunk true person) is at 0.29, wrong detail at 1.00, as far as a stranger, and noise at 0.86\statuspre; only \ac{lDDT}-like puts noise far beyond a stranger (1.76).
+\ac{FID} reverses the order: wrong detail at 1.29 and the shrunk true person at 2.55, so it prefers a sharp image of the wrong person to a softened image of the right one\statuspre.
+Residual correlation, which compares only the direction of individual detail, cannot see lost detail at all.
+The two families therefore fail in opposite directions: a model tuned on pixel metrics learns to blur toward the mean, and a model tuned on set-level metrics can produce realistic detail that belongs to someone else.
+\subsection{RQ4: look-alikes chosen from the context come close}
+The mean of 16 look-alikes is at 0.33 under \ac{MSE}, closer than the true person's second image (0.40), and the oracle look-alike at 0.28\statuspre.
+In QTIM it is at 0.375 $[0.370, 0.380]$ against 0.503 for the dataset mean and 0.594 for a single look-alike; IXI gives 0.363, 0.505 and 0.662 for the opposite side\statuspre.
+Local similarity is not identity, however: in CelebA a look-alike is at 0.399 on the local \ac{MSE} scale but at 0.983 for the whole face under ArcFace\statusfinal (IMDb-WIKI 0.397 and 0.984\statusfinal).
+How close look-alikes come depends on the size of the hidden region relative to the object, while the other rungs do not.
+When the brain cube grows from 1/16 to 1/8 and 1/4 of the brain size (8, 16 and 32\,mm), a single look-alike moves from 0.26 to 0.52 and 0.66 under \ac{MSE}, while the dataset mean stays at 0.41 to 0.42, the shrunk second scan at $-0.013$ to $-0.012$ and wrong detail at 1.01\statuspre.
+In CelebA, a single look-alike moves from 0.16 at 1/16 of the face width to 0.30, 0.40 and 0.45 at 1/8, 1/5 and 1/4, while the dataset mean stays at 0.50 and the shrunk true person at 0.43\statusfinal.
+Small holes are thus largely predictable from their surroundings, and large holes are not; RQ1 to RQ3 hold at every size, but the RQ4 retrieval baseline must be reported at a stated fraction of the object.
+The summary uses 1/8 for brain and retina and about 1/5 for faces and iris; a common fraction is being computed.
+Acquisition also matters: in IXI a stranger from the same site is at 0.874 $[0.844, 0.899]$ and one from another site at 1.059 $[1.049, 1.072]$\statuspre.
+About a sixth of the distance to a stranger from another site is therefore the scanner, not the anatomy ($(1.059-0.874)/1.059=0.17$), and a look-alike search restricted to the same site would gain part of its advantage from matching the acquisition.
+
+\subsection{Per-modality profiles}
+Supplementary Figure~S1 shows where in the image each rung is close or far, and Tables~\ref{tab:brain} to~\ref{tab:fundus} give the profiles of each modality.
+In the brain, the dataset mean is closer to the target than the person's own opposite hemisphere under \ac{MSE} (0.413 against 0.717), \ac{SSIM} and \ac{lDDT}-like, and only \ac{TM}-like reverses this order\statuspre.
+Wrong detail sits at a stranger under every metric, and noise falls short of a stranger under \ac{MSE} (0.921) but far beyond it under \ac{lDDT}-like (2.073)\statuspre.
+In IXI, \acs{LPIPS} places the shrunk opposite hemisphere beyond the unchanged one (AlexNet 1.25 against 0.76, VGG 0.91 against 0.88), while persistence gives both 0.80\statuspre.
+In faces, a second photograph of the same person is further than the dataset mean under \ac{MSE} (0.640 against 0.499 in CelebA), because pose and lighting change between photographs, while ArcFace places it closest (0.354)\statusfinal.
+The maps show that the opposite hemisphere is closest in deep structures near the midline and furthest in the cortex, and that the mirrored half of a face is closest at the cheeks and furthest at the nose; the stranger is uniformly far.
+In the retina, the second visit of the same eye is at 0.49 in GRAPE, while the fellow eye is further than the dataset mean (1.33 in GRAPE, 1.47 in PAPILA) and the mean of 16 look-alikes falls in between (0.86, 0.94)\statuspre.
+The iris shows the same order with a larger gap: the same eye captured again is at 0.41, 0.57 and 0.18 in UTIRIS \ac{NIR}, UTIRIS \ac{VIS} and UPOL, the other eye of the same person at 1.12 to 1.29, beyond the dataset mean, and a single look-alike in between\statuspre.
+Across modalities, the opposite side of the same body is therefore not an intermediate rung between the true person and a stranger: under squared error it is usually further than the population average, because mirrored anatomy differs in detail even within one person.
+Only faces break this pattern, where the mirrored half is as close as the dataset mean (0.99 on the $Q$ scale) and closer than a second photograph.
+Relatives behave like strangers under squared error: a sibling is at 1.84 times the dataset-mean error in QTIM and 1.73 in IMDb-WIKI, close to the stranger level of about 2 (Supplementary Figure~S1)\statuspre.
+Whatever anatomy siblings share is small next to the individual detail that pixel errors weigh.
+% Sources: atlas_provenance.json (sibling Q, QTIM and IMDb-WIKI rows).
+% Sources: tab/fundus_ratio.tex, tab/iris_ratio.tex, tab/dataset_card.tex.
+% Sources: fig_metric_summary_R.json; common_all.json (QTIM, IXI); face_ladder_metrics.json.

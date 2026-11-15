@@ -1,15 +1,13 @@
 \begin{abstract}
-Inpainting provides a controlled setting for evaluating conditional generation: visible context can be paired with withheld content, population references, and explicit changes to individual detail.
-Identity Ladder organizes these references into a metric audit using brain MRI, fundus photographs, faces, and iris images.
-Comparisons include repeat captures, bilateral anatomy, relatives where available, context-selected donors, independent means, attenuation, and incorrect-detail controls.
-They separate reference distortion, residual magnitude, target alignment, and acquisition sensitivity without imposing one biological ordering.
-In the provisional brain panel, mean squared error places the dataset mean at 0.413 and the mirror at 0.717 on a repeat-zero, stranger-one scale.
-In CelebA, a selected donor scores 0.399 under local pixel error but 0.983 under a whole-image identity reference on self-zero scales.
-The comparison changes spatial scope and is not a generated-composite identity result.
-Across nine image sets, per-window errors recognise the person but place the person's repeat pulled part of the way toward the dataset mean closer than the unchanged repeat, while set-level FID and FWD reject averaging but cannot tell the person from a stranger.
-Masked Gaussian maps localize differences, and validity masks retain missing support as missing.
-We propose applying the same controls to generated completions within prespecified target populations, reporting raw, common-reference, and matched-reference profiles with coverage and uncertainty.
-Target strata, donor cohorts, and acquisition domains remain distinct.
-The existing experiments characterize metrics and references; population-stratified generator behavior is not yet measured, and brain/fundus evidence remains provisional.
-The framework supplies testable controls for inpainting and a defined route to broader conditional-generation audits where an identity-bearing condition and meaningful reference unit are available.
+Inpainting models fill a hidden region of an image from its visible surroundings, and their fills are usually scored by pixel distance to the original content.
+A low distance can mean that the fill recovered this person's own detail, or only that it looks like an average person.
+We test which of the two common metrics reward, using references whose relationship to the hidden region is known in advance: a second image of the same person, the opposite side of the same body, unrelated people, and averages of many people.
+We add three controls built from the truth: the person's own second image pulled toward the population average, the same amount of detail taken from a stranger, and white noise.
+We apply this identity ladder to nine image sets from eight cohorts of brain \ac{MRI}, retinal photographs, faces and irises.
+On a scale where 0 is the target and 1 is a typical stranger, \ac{MSE} places the person's second image at 0.40 and the dataset mean at 0.50, and the same second image pulled toward the mean scores better (0.29) than the unchanged one.
+Set-level \ac{FID} and \ac{FWD} reject averaged fills by a factor of 16 and 186, but barely separate the right person from a stranger.
+No metric we tested does both.
+The mean of 16 unrelated people chosen by the visible surroundings alone reaches 0.33 under \ac{MSE}, closer than the person's own second image, which sets a retrieval baseline that a generative model must beat.
+We therefore recommend reporting the ladder controls next to any inpainting score.
+Brain, retinal and iris results are provisional until registration quality control is complete; no generative model is evaluated here.
 \end{abstract}

@@ -1,34 +1,34 @@
 \section{Introduction}
 \label{sec:intro}
-Inpainting is a conditional-generation task with a useful experimental structure: visible context is fixed while a missing region must be completed.
-When a real region is deliberately hidden, an observed target supports controlled comparisons.
-A completion can resemble the target, a population-typical image, or plausible but unrelated anatomy for different reasons.
-Its score therefore needs references that distinguish retained individual information from common structure and acquisition variation.
+% Base: Ivan Ezhov's version of 13 Nov 2026 (Overleaf), with Paula's term questions answered in place.
+Inpainting asks a model to fill a hidden region of an image from its visible surroundings.
+The fills are scored by their distance to the original content, typically with \ac{MSE}, the \ac{SSIM} or \ac{LPIPS}~\cite{zhang2018lpips}.
+A low distance can mean that the fill recovered detail that belongs to this individual, or only that it is a generic, population-average fill that is close on average.
+A fill can also look plausible yet show someone else's face, eye or brain.
+A single score cannot tell these cases apart; it needs reference images whose relationship to the target is known.
 
-Human anatomy supplies such controls without requiring a generated image to be declared the correct answer.
-Repeated captures hold the anatomical unit approximately fixed while changing acquisition.
-Bilateral comparisons retain a person but change the anatomical structure.
-Related individuals may share some anatomy, while unrelated donors provide a population reference.
-An average of independent donors supplies a different control: it removes much individual variation while retaining common structure.
-These comparisons define separate experimental questions.
-They do not imply that every metric should place every bilateral structure or relative at one universal intermediate rung.
+Inpainting is also a convenient test bed for conditional generation in general.
+The condition, the visible context, is fixed, and the content the model should produce exists and can be compared, which is rarely true for text-to-image or other conditional tasks.
+Whatever a metric rewards in inpainting, it rewards in any setting where generated content is scored against a single reference.
 
-Identity Ladder turns these comparisons into a metric audit and a set of references for evaluating completions.
-Each candidate is evaluated on valid acquired support and against a denominator estimated without the target's person or family.
-Context selection is paired with the same selection on unrelated anatomy, and selection using the hidden region is labeled an oracle.
-The true person's image pulled part of the way toward the dataset mean (the shrunk true person), a stranger's detail of the same amplitude, and white noise distinguish loss of detail from wrong detail.
-Reporting these conditions together makes several otherwise conflated interpretations testable.
+Human anatomy provides such references.
+A second image of the same person, such as a second \ac{MRI} session or another photograph, keeps the person's anatomy but changes the acquisition.
+The opposite side of the same body, such as the other eye, hemisphere or half of the face, keeps the person but shows a mirrored structure.
+Relatives may share some anatomy, unrelated people share only what is common to the population, and an average over many unrelated people keeps the common structure without individual variation.
+Because every reference is a real image or an average of real images, we can check whether a metric ranks them sensibly without deciding what the ideal fill looks like.
 
-Applied to generated outputs, the same design could characterize behavior within prespecified population slices.
-An audit can ask whether a model's preference for typical anatomy, attenuation, incorrect detail, or acquisition sensitivity differs between target groups.
-Target strata, donor reference cohorts, and acquisition domains are separate axes: an age-matched donor mean is a control, not evidence of subgroup model performance.
-Comparable targets, masks, references, and sampling budgets are needed before differences between groups can be interpreted.
+We call this set of references the \emph{identity ladder}, and each kind of reference a \emph{rung}.
+We call the difference between a person's image and the population average their \emph{individual detail}.
+Three constructed controls separate losing detail from getting it wrong: the \emph{shrunk true person} is the person's own second image with its individual detail scaled down toward the average; \emph{wrong detail} adds a stranger's individual detail of the same strength to the average; and \emph{noise} adds white noise of that strength.
+Finally, unrelated people chosen only because their visible surroundings look like the target's show what a fill can achieve without knowing the person.
+We ask four research questions.
+\textbf{RQ1:} Does a metric place the true person closer than a stranger?
+\textbf{RQ2:} Does it penalize partial averaging toward the population mean?
+\textbf{RQ3:} Does it separate lost detail (the right person, made blurry) from wrong detail (sharp detail from someone else)?
+\textbf{RQ4:} How close can unrelated people chosen from the visible surroundings alone come to the true person?
 
-Our contribution is an explicit comparison protocol, a source-traceable collection of donor and negative-control profiles, and a spatial reporting design across anatomical image domains.
-The measured experiments characterize the controls and metrics; audits of generated outputs across target strata remain proposed.
-We define that extension and map its evidence requirements without treating cross-dataset contrasts as demographic disparities.
-Squared error's conditional-mean optimum remains a legitimate prediction target, and uncertain hidden detail need not be uniquely recoverable.
-Broader conditional-generation applications require their own identity unit and valid references; unconditional generation has no intended target individual.
-BraTS brain inpainting~\cite{brats2023} is one practical application.
-In our framing it also separates an observed healthy reference from unobserved counterfactual tissue.
-\input{sec/population_coverage_table}
+Our contributions are the identity ladder with its three controls, and an audit of ten metric variants from four families on nine image sets from eight cohorts of brain \ac{MRI}, retinal photographs, faces and irises.
+No tested metric answers both RQ1 and RQ2.
+Metrics computed on the filled region distinguish the right person from a stranger but reward partial averaging: under \ac{MSE}, a person's second image pulled partway toward the population mean scores better than the unchanged one.
+Set-level metrics, \ac{FID}~\cite{heusel2017fid} and \ac{FWD}~\cite{fwd2025}, strongly reject averaged fills but barely separate the right person from a stranger.
+Inpainting evaluations, such as the \ac{BraTS} brain inpainting challenge~\cite{brats2023}, therefore need these controls next to the score.

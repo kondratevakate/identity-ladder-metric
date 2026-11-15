@@ -27,8 +27,8 @@ plt.rcParams.update({"font.size": 8, "axes.titlesize": 8, "xtick.labelsize": 8, 
 GREY = "#8a8a8a"
 RUNGS = [  # (key, legend label, colour, marker); lane order = this order, top to bottom
     ("ref", "true person", "#2b5fb8", "o"),
-    ("lookalike_oracle", "oracle look-alike*", "#38b2d8", "^"),
-    ("lookalike16", "mean of 16*", "#6a4fd0", "h"),
+    ("lookalike_oracle", "oracle look-alike", "#38b2d8", "^"),
+    ("lookalike16", "mean of 16 look-alikes", "#6a4fd0", "h"),
     ("dataset_mean", "dataset mean", "#0f9a8a", "s"),
     ("stranger", "stranger", "#555555", "X"),
     ("shrink_ref", "shrunk", "#e8890c", "D"),

@@ -50,26 +50,26 @@ Inpainting and Conditional Generation}
 \twocolumn[{%
 \renewcommand\twocolumn[1][]{#1}%
 \maketitle
+% Teaser (Kate, 2026-11-15): fig/teaser_v4.pdf from make_provenance_infographic_v3.py.
+\vspace{-2ex}
+\begin{center}
+\includegraphics[width=\textwidth]{fig/teaser_v4.pdf}
+\captionof{figure}{\textbf{Pixel error rewards averaging: the average of 16 look-alikes scores closer than the person's own other side.}
+\textbf{A,} A region of the target is hidden, filled from another image and compared with the truth, here on the population average CelebA face.
+\textbf{B,} \acs{MSE} of each fill in a Gaussian window around each pixel, over all targets of a dataset, divided by the \acs{MSE} of the dataset average there: 0 is identical to the target, 1 as close as the dataset average and about 2 a random person.
+Fills: a second image of the same person; the same person's mirrored other side (other hemisphere, other half of the face, other eye); a random person; and the average of the 16 unrelated people whose visible surroundings look most like the target's.
+First column: the dataset average image (for the brain, after alignment to a standard template); last column: the error of the dataset average on its own scale.
+One dataset per modality is shown; IXI, IMDb-WIKI, PAPILA and UTIRIS were also evaluated (Table~\ref{tab:datasets}).
+Faces are shown only as population averages; brain, retina and iris are provisional.}
+\label{fig:teaser}
+\end{center}
+\vspace{1ex}
 \renewenvironment{abstract}{\begin{center}{\large\bfseries Abstract}\end{center}\vspace{-1ex}%
   \begin{multicols}{2}\itshape\small}{\end{multicols}\vspace{1.5ex}}%
 \input{sec/0_abstract}%
 }]
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\textwidth]{fig/identity_ladder_provenance_v2.pdf}
-\caption{\textbf{Source cohorts and population-reference error maps.}
-\textbf{a,} Cohorts and counts; eligibility varies by comparison, with GRAPE repeat coverage shown separately.
-\textbf{b,} Observed donor controls: local squared-error ratios against an independent mean fill ($Q=1$).
-References are population means or an independent MRI template.
-Pooled numbers differ from the anchored window-level tables; recorded intervals appear where available.
-Context-selected means use 16 donors; V is row-scaled.
-Rows use modality-specific display sizes.
-The pale MRI outline and shared crop are display-only; brain windows are Gaussian.
-Fundus uses GRAPE P8 and iris uses P2.
-F denotes source-frame approval; P denotes provisional evidence.
-The bust is decorative and synthetic; secondary datasets and display provenance remain in the supplement.}
-\label{fig:atlas}
-\end{figure*}
+\acresetall
+% Former Figure 1 (fig/identity_ladder_provenance_v2.pdf, label fig:atlas) is replaced by the teaser above; files kept.
 \input{sec/1_intro}
 \input{sec/2_related}
 \input{sec/3_methods}
