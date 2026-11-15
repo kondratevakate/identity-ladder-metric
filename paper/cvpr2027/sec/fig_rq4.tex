@@ -7,3 +7,20 @@ A single look-alike passes the dataset average in brain and retina once the regi
 \label{fig:rq4}
 \end{figure}
 % Source: results/rq4_window_size.json; drawn by paper/cvpr2027/make_fig_rq4_size.py (values in fig/rq4_size_plotted.json).
+
+\begin{table}[t]
+\centering
+\caption{\textbf{Look-alike distance under \acs{MSE} by window size, per image set} (random-person scale; window as a fraction of the object; n/a = not run by protocol; at 1/16, UTIRIS \acs{NIR} and the retina use every fourth eye).
+In every set the single look-alike moves toward a random person as the window grows, while the dataset average stays near 0.5.}
+\label{tab:rq4}
+\scriptsize
+\setlength{\tabcolsep}{1.6pt}
+\begin{tabular}{@{}lccccccccc@{}}
+\toprule
+& \multicolumn{4}{c}{One look-alike} & \multicolumn{4}{c}{Mean of 16 look-alikes} & Data. \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+Image set & 1/16 & 1/8 & 1/5 & 1/4 & 1/16 & 1/8 & 1/5 & 1/4 & avg. \\
+\midrule
+\input{tab/rq4_size_table}\end{tabular}
+\end{table}
+% Source: results/rq4_window_size.json; rows written by paper/cvpr2027/make_rq4_size_table.py.

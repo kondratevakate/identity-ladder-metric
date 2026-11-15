@@ -33,7 +33,7 @@ The two families therefore fail in opposite directions: a model tuned on pixel m
 With the hidden region at 1/8 of the object, the mean of 16 look-alikes is at 0.29 under \ac{MSE}, closer than the true person's second image (0.41), and the oracle look-alike at 0.23\statuspre.
 In QTIM it is at 0.375 $[0.370, 0.380]$ against 0.503 for the dataset mean and 0.594 for a single look-alike; IXI gives 0.363, 0.505 and 0.662 for the opposite side\statuspre.
 Local similarity is not identity, however: in CelebA, with a 16-pixel window (1/5 of the face width), a look-alike is at 0.399 on the local \ac{MSE} scale but at 0.983 for the whole face under ArcFace\statusfinal (IMDb-WIKI 0.397 and 0.984\statusfinal).
-How close look-alikes come depends on the size of the hidden region relative to the object, while the other rungs do not (Figure~\ref{fig:rq4}).
+How close look-alikes come depends on the size of the hidden region relative to the object, while the other rungs do not (Figure~\ref{fig:rq4}, Table~\ref{tab:rq4}).
 When the hidden region grows from 1/16 to 1/8 and 1/4 of the object, a single look-alike moves from 0.38 to 0.59 and 0.71 in the brain (8, 16 and 32\,mm cubes), from 0.16 to 0.30 and 0.46 in faces, from 0.38 to 0.52 and 0.62 in the retina and from 0.13 to 0.22 and 0.39 in the iris, while the dataset mean stays at 0.49 to 0.53 and the true person's second image and its shrunk version do not move\statuspre.
 The mean of 16 look-alikes grows more slowly (brain 0.25 to 0.42, faces 0.12 to 0.28) and stays below the dataset mean at every size.
 Small holes are thus largely predictable from their surroundings, and large holes are not; RQ1 to RQ3 hold at every size, but the RQ4 retrieval baseline must be reported at a stated fraction of the object.

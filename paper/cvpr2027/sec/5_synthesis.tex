@@ -4,16 +4,29 @@ The behavior of squared error is not an accident of our data.
 The conditional mean of the hidden content given the context minimizes expected squared error, and a fill drawn from the true conditional distribution has twice that error~\cite{blau2018}; the shrunk true person and the mean of 16 look-alikes are empirical stand-ins for that mean.
 We show how large this reward is on real anatomy, and that set-level metrics trade it for another blind spot.
 A pixel score alone cannot show whether a fill kept the person.
-Under \ac{MSE} a model gains by pulling uncertain detail toward the population mean, while \ac{FID} and \ac{FWD} catch this averaging but cannot tell the right person from a stranger and even prefer sharp wrong detail.
 We therefore suggest reporting three numbers next to any inpainting score, on the same masks: the score of the dataset mean, of the mean of 16 look-alikes chosen from the context, and of a stranger.
 A model that does not beat the look-alike mean adds nothing to retrieval, and one near the dataset mean has averaged the person away; a conditional mean remains the right answer when the hidden content is truly ambiguous, and the controls make that choice visible.
-Applying the controls to generative models across groups of people is the next step, outlined in the supplement.
 
 \paragraph{A recipe for inpainting benchmarks.}
 The controls need no model and no labels beyond the images themselves.
 For each hidden region, a benchmark can compute the dataset mean of the region over unrelated people, the mean of the 16 people whose context rings are closest, and 16 random strangers, all on the same valid pixels as the submitted fills.
 Scores are then reported on the stranger scale of Eq.~\ref{eq:anchors}, so that a submission at 0.5 is as close as the dataset mean and one at 0.3 as close as a context search.
 Where a dataset has second images of the same people, the shrunk second image adds a direct test of whether the metric rewards averaging, and a set-level metric on the same fills shows whether the submission has lost realism.
+
+\paragraph{Auditing a generative model across groups of people.}
+The same controls turn into an audit of a generative model, which we propose but have not yet run.
+For a held-out target $x_i$ with context $c_i$ and mask $M_i$, let $y_{ik}=G(c_i,M_i,z_k)$ be the $k$-th fill of model $G$ with random seed $z_k$.
+For a group of targets $a$ (for example an age band or an acquisition site), a distance $d_m$ and a ladder control $f_{ir}$, the audit profile is
+\begin{equation}
+\Delta_{a,m,r}=\mathbb E_{i\mid a}\Bigl[\mathbb E_k\, d_m(y_{ik},x_i;E_{ir})-d_m(f_{ir},x_i;E_{ir})\Bigr],
+\label{eq:audit}
+\end{equation}
+where $E_{ir}$ are the valid pixels shared by the target and the control.
+A negative value means that the metric prefers the model's fills to the control, for example to the mean of 16 look-alikes; it does not mean that the person was kept.
+Valid pixels and eligible targets are fixed before the model is run, seeds are averaged within a target before the group average, and failed outputs are reported rather than dropped.
+Profiles keep raw distances next to a common and a group-matched reference, because normalizing within each group can hide a raw difference.
+A gap between groups describes the model and the metric together: mask difficulty, location, acquisition and the size of the reference pool must stay visible, the gap needs uncertainty over independent people, and on its own it shows neither discrimination nor mode collapse.
+The supplement lists, for twelve audit questions, what the present data already answer and what still needs model outputs.
 
 \paragraph{Limitations.}
 No generative model is evaluated; every fill is a real image, an average or a constructed control.

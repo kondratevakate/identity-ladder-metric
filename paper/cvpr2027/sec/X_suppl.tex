@@ -18,26 +18,11 @@ The stranger is red everywhere, while the mean of 16 look-alikes stays below the
 \end{figure*}
 % Source: paper/cvpr2027/atlas_provenance.json (IXI row: results/donor_ladder_brain_maps_ixi.json, donor_ladder_brain_map_grid_ixi.json).
 
-\subsection{Proposed audit of generated fills across populations}
-For a held-out target $x_i$ with context $c_i$ and mask $M_i$, let $y_{ik}=G(c_i,M_i,z_k)$ be the $k$-th fill of a generative model $G$ with random seed $z_k$.
-For a group of targets $a$ (for example an age band), a lower-is-closer distance $d_m$ and a ladder control $f_{ir}$, the proposed profile is
-\begin{equation}
-\Delta_{a,m,r}=\mathbb E_{i\mid a}\Bigl[\mathbb E_k\, d_m(y_{ik},x_i;E_{ir})-d_m(f_{ir},x_i;E_{ir})\Bigr],
-\end{equation}
-where $E_{ir}$ are the valid pixels shared by the target and the control.
-A negative value means that the metric prefers the model's fills to the control; it does not mean that identity is preserved.
-Valid pixels and target eligibility are fixed before the model is run, seeds are averaged within a target before the group average, and failed outputs are reported.
-Profiles keep raw distances and both a common and a group-matched reference, because normalizing within each group can hide raw differences.
-None of these profiles has been measured; Table~\ref{tab:decision} lists what exists and what is missing.
+\subsection{What the audit of a generative model still needs}
+The audit profile of the main text (Discussion) has not been measured; Table~\ref{tab:decision} lists, for each audit question, what exists and what is missing.
+Repeated outputs for one context separate variation across targets from variation across seeds; low variance alone does not show mode collapse.
 
 \input{sec/population_coverage_table}
-
-\subsection{How a group comparison should be read}
-A difference between groups describes the model and the metric together; attributing it to the model requires checking the reference, the acquisition and the composition of the task.
-Mask difficulty, location, acquisition, donor-pool size and missing outputs must remain visible in a comparison.
-Repeated outputs for one context separate variation across targets from variation across seeds; low variance alone does not show mode collapse.
-A gap between groups needs uncertainty over independent people and an explicit target population, and does not by itself show discrimination.
-A conditional mean can be a legitimate prediction when the hidden content is truly ambiguous.
 
 \subsection{Brain contrast harmonization (HACA3+)}
 HACA3+ stage 1 harmonizes the contrast of the 23 QTIM scan pairs.
@@ -49,24 +34,6 @@ Source: \src{results/donor_ladder_brain_haca3_stage1.json}, session\_shift\_z.
 On the scale anchored on the second scan, the mean of 16 look-alikes in the deep box is at 0.033 $[-0.136, 0.134]$, so it cannot be separated from the second scan\statuspre.
 Source: \src{results/donor_ladder_brain_lookalike16.json} (qtim, deep, both sides).
 
-\subsection{Look-alikes by window size, per image set}
-Table~\ref{tab:s-rq4} gives the values behind the window-size figure of the main text (Section 4.3) for every image set.
-UTIRIS \acs{VIS} and UPOL were run at 1/8 and 1/5 only, IXI at 1/8 only, and the 1/16 window of UTIRIS \acs{NIR} and the retina uses every fourth eye.
-
-\begin{table}[htbp]
-\centering
-\caption{\textbf{Look-alike distance under \acs{MSE} by window size} (random-person scale: 0 = target, 1 = average of 16 random people; window as a fraction of the object; n/a = not run). Brain, retina and iris are provisional.}
-\label{tab:s-rq4}
-\small
-\begin{tabular}{@{}lccccccccc@{}}
-\toprule
-& \multicolumn{4}{c}{One look-alike} & \multicolumn{4}{c}{Mean of 16 look-alikes} & Dataset \\
-Image set & 1/16 & 1/8 & 1/5 & 1/4 & 1/16 & 1/8 & 1/5 & 1/4 & average \\
-\midrule
-\input{tab/rq4_size_table}\end{tabular}
-\end{table}
-Source: \src{results/rq4_window_size.json}; table written by \src{paper/cvpr2027/make_rq4_size_table.py}.
-
 \subsection{Synthetic simulations}
 Synthetic tissue and eye experiments with a known target check the controls by construction.
 Along the shrinkage path, an image can keep a high rank against unrelated people while its individual detail shrinks.
@@ -76,8 +43,7 @@ A threshold segmenter supports observations about label overlap and simple topol
 Synthetic variance components are illustrative and are not estimates of human heritability.
 
 \section{Scope, provenance, and evidence status}
-This supplement documents the source snapshot used to assemble the manuscript.
-It does not convert a protocol, a running job, or a workstation report into a completed endpoint.
+This supplement documents the source snapshot used to assemble the manuscript; a protocol or an unfinished run is never reported as a completed endpoint.
 The preparation script reads public aggregate JSONs, generates tables, copies selected population-summary PDFs, and records input hashes and producing commits in \src{evidence_manifest.json}.
 No participant image or per-person result row is read during manuscript assembly.
 Figure provenance describes the origin of the saved output; copying it does not independently reproduce the underlying experiment.
@@ -149,10 +115,7 @@ The initial face protocol's strata-not-run statement describes that version's ou
 Iris sex/age matching is unavailable without the corresponding metadata.
 
 Target strata, donor cohorts and acquisition domains must be specified separately.
-For the proposed generator profile, average outputs within each target before the target-population average, fix support independently of generated content, retain common cross-model target/mask eligibility, and report failures.
-Paired distances require an observed target and explicit fill/composite/whole-image scope; FID/FWD are set-level measures requiring a separate definition.
-Common-reference and stratum-matched profiles should accompany raw distances and coverage, since group-specific reference variability can alter calibrated coordinates.
-Neither low residual amplitude nor a group gap alone demonstrates mode collapse or causal discrimination.
+Paired distances require an observed target and an explicit fill, composite or whole-image scope; FID/FWD are set-level measures requiring a separate definition.
 Unconditional generation and unobserved counterfactual targets require criteria beyond paired target fidelity.
 
 \subsection{Saved official-evaluator implementation probes}
@@ -184,13 +147,9 @@ Scoring multiple stochastic predictions additionally requires a fixed output cou
 
 \section{Distances, units, and aggregation}
 \subsection{Mean-relative error and finite references}
-The mean-relative unit divides the sum of eligible candidate errors by the sum of mean-fill errors on the same support.
-An average of ratios can overweight nearly information-free targets and is not substituted for this quantity.
-The additive equal-variance model gives the familiar reference errors $V$ for a population expectation and $2V$ for an independent donor.
-A finite leave-person-out mean introduces estimation variance, and differing masks change which target distribution is summarized.
-The stranger-to-mean ratio is therefore a diagnostic check, not a normalization identity forced to equal two.
-Under the same additive, equal-variance assumptions, $1-Q/2$ estimates a shared residual correlation.
-It is not an empirical estimate of heritability or a probability of preserved identity when those assumptions fail.
+Two caveats complete the definition of $Q$ in the main text (Eq.~1).
+An average of per-target ratios would overweight nearly information-free targets, which is why sums are divided.
+A finite leave-person-out mean adds estimation variance and differing masks change which targets are summarized, so the stranger's $Q\approx2$ is a diagnostic check, not an identity forced to hold; likewise $1-\bar Q/2$ is not an estimate of heritability or of preserved identity when the additive model fails.
 
 For other distances, the relevant baseline is empirical.
 MSE and RMSE retain the same ordering within a fixed target despite differing raw aggregation and anchored coordinates.
@@ -227,13 +186,10 @@ These algebraic identities explain the controls but are not independent validati
 A small target residual relative to acquisition variability makes the ratios unstable and needs an explicit resolution rule.
 
 \section{Validity masks and Gaussian spatial reporting}
-Missing observations retain their own masks through registration, normalization, donor averaging, context matching and local scoring.
-The mean intensity outside an image is not zero just because the stored canvas contains zeros.
+Beyond the rule of the main text that missing pixels are never zero, masks are carried through registration, normalization, donor averaging, context matching and local scoring.
 Selection-based donors are especially sensitive: a candidate must not win a context search because its padding accidentally matches the standardized target.
 The saved fundus block-search outputs preceding this correction are omitted from the manuscript.
 
-Local-error displays use normalized masked Gaussian averages.
-Their standard deviation matches the variance of the recorded width through $w/\sqrt{12}$.
 Binary box-support fractions can still define eligibility; this does not turn displayed errors into box averages.
 Fine brain maps and the coarser look-alike grid have different sampling and interpolation, which must remain visible in provenance.
 For fundus fixed-composition maps, all displayed positions retain the same set of contributing targets to reduce spatial composition artifacts.
@@ -332,28 +288,17 @@ Recorded comparison status & Count \\
 \end{tabular}
 \end{table}
 
-\section{Correlation and historical size sensitivity}
-The saved correlation analysis groups distances by their rung-order dependence within target, position and side.
+\section{Agreement between metrics}
+The correlation analysis groups distances by how similarly they order the rungs within target, position and side.
 Strong agreement among monotone variants is not independent confirmation of identity sensitivity.
-The saved size/shell sweep varies older window and context choices; it is not the completed object-relative sweep specified by the latest amendment.
-Both figures remain provisional and retain the source protocol's interpretation.
+The window-size dependence of the look-alike rung is reported in the main text (Section 4.3).
 
-\clearpage
-\begin{figure}[p]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\textwidth,height=.72\textheight,keepaspectratio]{fig/metric_correlations.pdf}
-\caption{Saved provisional metric-dependence analysis.
+\caption{Provisional agreement between metrics in the brain (Spearman correlation of rung order).
 Source: \src{results/figures/fig_metrics_correlation.pdf}, with \src{results/donor_ladder_metrics_correlation.json}.
 This is descriptive dependence among measures, not a learned fusion or a ranking of validated identity metrics.}
-\end{figure}
-
-\clearpage
-\begin{figure}[p]
-\centering
-\includegraphics[width=.95\textwidth,height=.72\textheight,keepaspectratio]{fig/size_shell_sensitivity.pdf}
-\caption{Saved provisional window/context sensitivity from the earlier sweep.
-Source: \src{results/figures/fig_size_shell_dependence.pdf}, with \src{results/donor_ladder_brain_size.json}.
-The figure does not establish completion of the latest object-relative metric-panel sweep.}
 \end{figure}
 \clearpage
 
@@ -385,32 +330,9 @@ A set-level distribution distance cannot be treated as a per-eye identity distan
 The protocol records hypotheses about attenuation, realism and repeat--look-alike--stranger order.
 Those expectations must be tested rather than imposed as the order of a plot.
 
-The workstation handoff reports that the full iris P3 run finished, with a Betti-related H4 failure and support for H5 and H6.
-Its numerical aggregate outputs are absent from the accessible Git snapshot.
-This assembly therefore retains that report as a pending source-integration item and makes no numerical P3 claim.
-It must not be replaced by P2 or by the older classical-code pilot.
-Brain-ID embeddings, complete model-level inpainting comparisons, and the latest object-relative size sweep likewise require their own completed evidence before being claimed.
+Brain-ID embeddings and model-level inpainting comparisons require their own completed evidence before being claimed.
 
-\section{Cross-anatomy metric profiles}
-The source-derived profile figure retains its distinct anchors and unresolved MRI status.
-Its role is to compare measured responses to controls, not to select a competition metric by averaging across anatomical domains.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{fig/audit_profiles.pdf}
-\caption{Mean, bilateral and noise controls show different metric profiles.
-QTIM uses the repeat anchor and remains provisional; CelebA and UTIRIS use self anchors.
-The absent residual-correlation point at the mean is undefined.
-Sources: the saved brain, face and iris metric-panel JSONs; generated by the paper preparation script.}
-\end{figure}
-
-\section{Reproducibility and outstanding author inputs}
-The manuscript preparation is independent of historical absolute data paths and operates from the repository root.
-The human-image experiment pipelines retain source-specific model and data requirements, and their presence in Git does not establish execution on this host.
-The base face pipeline, latest fundus metric run, and full iris P3 require safe exports from their owners.
-The atlas supplied here replaces the stale brain row with saved Gaussian aggregate panels and records every assembly transformation.
-It does not recompute the maps from the private data, and its scalar annotations summarize pooled source errors rather than only the displayed axial slice.
-
-The related ISBI source is preserved.
-Publication overlap, dataset-specific ethics statements, portal requirements, and final author approval remain separate from successful typesetting.
-No push is performed before the author reviews the rendered PDFs.
+\section{Reproducibility}
+Every number in the paper is read from an aggregate result file named next to it; no participant image or per-person row is needed to rebuild the tables and figures.
+The experiment pipelines need the original datasets under their own terms; the code, protocols and aggregate results are in the project repository.
+The atlas maps are assembled from saved Gaussian aggregate panels, and their scalar annotations summarize pooled errors rather than only the displayed axial slice.
