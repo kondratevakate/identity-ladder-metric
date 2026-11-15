@@ -306,3 +306,72 @@ a masked Gaussian with sd = 48 px / sqrt(12) (the sd of that square, about 13.9 
 target's field of view and, for donor terms with a single donor image (fellow eye, other visit), inside the donor's
 too. The fixed region and fixed image set of Amendment 9.3 stay defined by the 48 px square fraction (a validity
 fraction, not a drawn value). Figures from these maps are redrawn after Kate approves a before/after view.
+
+## 10. Amendment 10 (14 Nov 2026): one window size, f = 1/8, for the cross-dataset summary; RQ4 size curve
+
+Recorded before any run of this amendment. Kate, 14 Nov 2026: "да давай, зафиксируй и пересчитай". The repo-level
+pause of metric experiments (AGENTS.md, 2 Nov, until registration QC passes) still stands; Kate asked for this run
+explicitly. Brain (QTIM, IXI), retina (GRAPE, PAPILA) and iris (UTIRIS NIR/VIS, UPOL) stay labelled provisional.
+
+**Why.** The rule of 8 Nov (window w = f x L in object units, f in {1/16, 1/8, 1/4}; brain Amendment 21, face F3,
+iris P4) was run as a sweep, but the cross-dataset summary (`results/cross_modality/common_all.json`) still takes each
+dataset at its historical window. Measured f of those windows: brain 16 mm / L 127.0 mm = 0.126; faces 16 px / 79.5 px
+= 0.201 (CelebA) and 16 / 79.5 = 0.201 (IMDb-WIKI); iris 16 px / (256 / pi) = 0.196; retina 16 px / L, L = sqrt(mean
+field-of-view area in the 128 px frame): PAPILA L = 78.1 px (488 eyes, mask `M` of `donor_ladder_2d_facefmt.down2`,
+measured 14 Nov, geometry only) -> f = 0.205; GRAPE to be measured the same way. So only the brain is at f = 1/8; faces,
+iris and retina are at about 0.2. The single look-alike moves with f (MSE, R on the stranger scale: brain 0.26 / 0.52 /
+0.66 at 1/16, 1/8, 1/4; CelebA 0.16 / 0.30 / 0.40 / 0.45 at 1/16, 1/8, 0.2, 1/4), while the dataset mean, the shrunk
+true person and wrong detail do not. RQ4 therefore depends on f and must be reported at one f.
+
+**Rule.**
+1. Reference size for every cross-dataset statement: f = 1/8, w = round_half_up(L / 8). Brain 16 mm (QTIM L = 127.0
+   mm; IXI is in the same MNI analysis space and uses the same 16 mm cube, its own L is not measured: stated as such);
+   faces 10 px; iris 10 px; retina round_half_up(L / 8) per dataset (PAPILA 10 px; GRAPE from its own L). The
+   historical f ~ 0.2 results of faces, iris and retina are kept unchanged as the f = 0.2 point of the size curve.
+2. Context (ring) per modality as in the existing sweeps, no new rule: brain shell s = w / 4 with the +-8 mm block
+   search fixed in mm (Amendment 21); faces, iris and retina ring = ceil(w / 2) (F3, P4, fundus 9.14 with w in place
+   of 16). Grid, validity thresholds, pools, seeds, lambdas and E are unchanged; positions at each size are reported,
+   never filled.
+3. RQ4 size curve: f in {1/16, 1/8, 1/4} (plus the historical ~0.2 point where it exists). Rungs: single look-alike
+   (k = 1, context ring or shell), mean of 16 look-alikes (`lookalike16`, the 16 nearest by the same ring distance,
+   masked mean; fewer than 16 eligible donors = missing, not a smaller mean), oracle look-alike (nearest on the hidden
+   window), dataset mean, true person (second image or other visit: `repeat`), the shrunk true person and the
+   stranger anchor. Scale: R_self of `src/cross_modality/common_frame.py` (0 = target itself, 1 = mean of the 16
+   seeded strangers; d = MSE over E), with a 95% bootstrap interval over the dataset's unit (family, person or brain
+   target; 1000 reps). Faces at 5 / 10 / 20 px use the F3 subset (100 evenly spaced targets per source, the same at
+   every size; their 16 px point is the same subset of the full rows). Brain: QTIM random cubes kept at each size
+   (Amendment 21: 32 of 32 at 8 mm, 20 of 32 at 32 mm; 16 mm on the same 32), all targets. IXI has no size geometry
+   (no 8 or 32 mm run): only its 16 mm point, stated as missing at the other sizes.
+4. What is computed new: `lookalike16` at every swept size where it is missing (brain 8 and 32 mm; faces 5, 10, 20 px
+   on the subset; iris and retina come with their own panel, which already holds `lookalike16` and the oracle); the
+   full-cohort tier-1 face rows at 10 px with `lookalike16` (needed for the f = 1/8 summary input; F3 planned all
+   targets but only the subset was run); iris 10 px for UTIRIS VIS and UPOL (NIR exists, P4), and 5 / 20 px for
+   UTIRIS NIR (primary set) if CPU time allows; retina at 10 px (f = 1/8) and at 1/16, 1/4 if the inputs exist
+   (GRAPE needs its metadata table from the `re_identification` checkout; the only copy on this machine is the
+   Syncthing version store `C:\Projects\.stversions\...\externale_identification-50bf2ea`, used read-only).
+   Retina geometry (measured 14 Nov before any run, `src/rq4_fundus_size.py --geometry`): PAPILA L = 78.1 px (488
+   eyes), GRAPE L = 85.5 px (239 eyes); the 16 px window is f = 0.205 and 0.187. Sizes: PAPILA 5 / 10 / 20 px, GRAPE
+   5 / 11 / 21 px (rings 3 / 5 / 10 and 3 / 6 / 11). Retina runs the panel's tier-1 rungs and metrics only (the
+   Amendment 9.15 extras are off); its wrapper reproduced the stored 16 px PAPILA rows exactly on a 10-eye smoke.
+   CPU budget: where a full-cohort run at 1/16 is too long (retina, iris: the number of windows grows as 1 / f^2),
+   1/16 runs on evenly spaced eyes (every 4th of each side, about 25%), and the 1/8 and 1/4 points of that set are
+   also reported on the same eyes, so the curve is paired; the full-cohort 1/8 run is the summary input.
+5. Gates. (a) Each pass recomputes the k = 1 look-alike next to the new fill; it must equal the stored k = 1 rows of
+   the same size (brain |diff| <= 1e-5, faces <= 1e-9, on every metric and the same missing pattern), else nothing is
+   written. (b) Smoke run with timing on a few targets per modality, and a private QC sheet (target, k = 1 look-alike,
+   mean of 16, oracle, at each size, evenly spaced targets) shown to Kate before the full runs. (c) Disk and RAM are
+   checked before each long run; at most 3 workers while other sessions run; progress with ETA in the log.
+6. Outputs. Private rows: `C:\Projects\data\projects\identity-ladder-metric\rq4-window-size-20261114-v1\`. Public
+   aggregates only: `results/rq4_window_size.json` and `results/figures/fig_rq4_window_size.{png,pdf}`;
+   the f = 1/8 summary inputs for faces and iris (and retina when run) in
+   `results/cross_modality/common_f8_v1.json`, same format as `common_all.json`, brain entries copied unchanged (they
+   are already f = 1/8). `common_all.json`, `generative_block.py`, `fig_metric_summary_R.json` and the summary-figure
+   scripts are not edited here; the summary figure is redrawn from the new file by its owner.
+7. Claims. An RQ4 statement in the paper is made at f = 1/8 and states its f; a statement about the look-alike's
+   position relative to the dataset mean holds only if it holds at all three sizes, otherwise it is given with its
+   scale (rule 4 of the 8 Nov note).
+8. f = 1/16 (14 Nov 2026, after the QC sheets, before any 1/16 result of this amendment was read). At 5 px the retina
+   and face windows hold almost no structure by eye (25 pixels; vessels are 2 to 4 px wide in the 128 px frame), and
+   a 3 px ring nearly determines a 5 px window, so 1/16 mostly measures image smoothness, not the person. Kate kept it
+   on the curves ("ладно пускай будет для кривых"): 1/16 stays a point of the RQ4 curve, labelled in the figure and
+   text as the interpolation end, and no RQ4 claim rests on it alone (rule 7 applies to 1/8, ~0.2 and 1/4).
