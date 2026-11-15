@@ -17,20 +17,20 @@
    -0.256
   ],
   "lpips_alex": [
-   0.664,
-   0.022
+   0.645,
+   0.089
   ],
   "lpips_vgg": [
-   0.652,
-   0.054
+   0.621,
+   0.062
   ],
   "betti_matched": [
    0.515,
    -0.022
   ],
   "persistence": [
-   0.576,
-   -0.088
+   0.581,
+   -0.064
   ],
   "fid": [
    0.1,
@@ -83,24 +83,24 @@
    "wrong_detail": 1.096
   },
   "lpips_alex": {
-   "ref": 0.428,
-   "lookalike_oracle": 0.413,
+   "ref": 0.469,
+   "lookalike_oracle": 0.441,
    "lookalike16": 0.637,
-   "dataset_mean": 0.898,
+   "dataset_mean": 0.987,
    "stranger": 1.0,
-   "shrink_ref": 0.465,
-   "noise": 1.835,
-   "wrong_detail": 0.945
+   "shrink_ref": 0.563,
+   "noise": 2.033,
+   "wrong_detail": 0.949
   },
   "lpips_vgg": {
-   "ref": 0.558,
-   "lookalike_oracle": 0.697,
+   "ref": 0.599,
+   "lookalike_oracle": 0.712,
    "lookalike16": 0.873,
-   "dataset_mean": 1.094,
+   "dataset_mean": 1.084,
    "stranger": 1.0,
-   "shrink_ref": 0.57,
-   "noise": 1.518,
-   "wrong_detail": 0.973
+   "shrink_ref": 0.613,
+   "noise": 1.496,
+   "wrong_detail": 0.976
   },
   "betti_matched": {
    "ref": 0.482,
@@ -113,13 +113,13 @@
    "wrong_detail": 1.16
   },
   "persistence": {
-   "ref": 0.715,
-   "lookalike_oracle": 0.686,
+   "ref": 0.726,
+   "lookalike_oracle": 0.701,
    "lookalike16": 0.756,
-   "dataset_mean": 0.819,
+   "dataset_mean": 0.818,
    "stranger": 1.0,
-   "shrink_ref": 0.691,
-   "noise": 3.897,
+   "shrink_ref": 0.704,
+   "noise": 5.797,
    "wrong_detail": 1.085
   },
   "fid": {
