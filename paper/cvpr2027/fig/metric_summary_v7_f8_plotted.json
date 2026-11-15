@@ -1,0 +1,146 @@
+{
+ "panel_A": {
+  "mse": [
+   0.588,
+   -0.205
+  ],
+  "ssim": [
+   0.602,
+   -0.125
+  ],
+  "tm_like": [
+   0.76,
+   -0.114
+  ],
+  "lddt": [
+   0.465,
+   -0.256
+  ],
+  "lpips_alex": [
+   0.645,
+   0.089
+  ],
+  "lpips_vgg": [
+   0.621,
+   0.062
+  ],
+  "betti_matched": [
+   0.515,
+   -0.022
+  ],
+  "persistence": [
+   0.581,
+   -0.064
+  ],
+  "fid": [
+   0.1,
+   0.458
+  ],
+  "fwd": [
+   0.099,
+   0.516
+  ]
+ },
+ "panel_B": {
+  "mse": {
+   "ref": 0.407,
+   "lookalike_oracle": 0.231,
+   "lookalike16": 0.294,
+   "dataset_mean": 0.502,
+   "stranger": 1.0,
+   "shrink_ref": 0.293,
+   "noise": 0.804,
+   "wrong_detail": 1.003
+  },
+  "ssim": {
+   "ref": 0.631,
+   "lookalike_oracle": 0.57,
+   "lookalike16": 0.661,
+   "dataset_mean": 0.829,
+   "stranger": 1.0,
+   "shrink_ref": 0.595,
+   "noise": 0.998,
+   "wrong_detail": 1.009
+  },
+  "tm_like": {
+   "ref": 0.584,
+   "lookalike_oracle": 0.483,
+   "lookalike16": 0.578,
+   "dataset_mean": 0.793,
+   "stranger": 1.0,
+   "shrink_ref": 0.541,
+   "noise": 0.915,
+   "wrong_detail": 0.962
+  },
+  "lddt": {
+   "ref": 0.658,
+   "lookalike_oracle": 0.657,
+   "lookalike16": 0.574,
+   "dataset_mean": 0.616,
+   "stranger": 1.0,
+   "shrink_ref": 0.518,
+   "noise": 1.583,
+   "wrong_detail": 1.154
+  },
+  "lpips_alex": {
+   "ref": 0.469,
+   "lookalike_oracle": 0.441,
+   "lookalike16": 0.637,
+   "dataset_mean": 0.987,
+   "stranger": 1.0,
+   "shrink_ref": 0.563,
+   "noise": 2.033,
+   "wrong_detail": 0.949
+  },
+  "lpips_vgg": {
+   "ref": 0.599,
+   "lookalike_oracle": 0.712,
+   "lookalike16": 0.873,
+   "dataset_mean": 1.084,
+   "stranger": 1.0,
+   "shrink_ref": 0.613,
+   "noise": 1.496,
+   "wrong_detail": 0.976
+  },
+  "betti_matched": {
+   "ref": 0.482,
+   "lookalike_oracle": 0.318,
+   "lookalike16": 0.446,
+   "dataset_mean": 0.494,
+   "stranger": 1.0,
+   "shrink_ref": 0.426,
+   "noise": 1.664,
+   "wrong_detail": 1.16
+  },
+  "persistence": {
+   "ref": 0.71,
+   "lookalike_oracle": 0.657,
+   "lookalike16": 0.731,
+   "dataset_mean": 0.808,
+   "stranger": 1.0,
+   "shrink_ref": 0.685,
+   "noise": 5.037,
+   "wrong_detail": 1.117
+  },
+  "fid": {
+   "ref": 0.929,
+   "lookalike_oracle": 1.391,
+   "lookalike16": 10.545,
+   "dataset_mean": 16.362,
+   "stranger": 1.0,
+   "shrink_ref": 2.554,
+   "noise": 12.462,
+   "wrong_detail": 1.287
+  },
+  "fwd": {
+   "ref": 0.572,
+   "lookalike_oracle": 15.364,
+   "lookalike16": 159.215,
+   "dataset_mean": 185.55,
+   "stranger": 1.0,
+   "shrink_ref": 34.344,
+   "noise": 183.542,
+   "wrong_detail": 45.531
+  }
+ }
+}

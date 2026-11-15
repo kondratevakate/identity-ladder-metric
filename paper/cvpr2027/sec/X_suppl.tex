@@ -49,9 +49,23 @@ Source: \src{results/donor_ladder_brain_haca3_stage1.json}, session\_shift\_z.
 On the scale anchored on the second scan, the mean of 16 look-alikes in the deep box is at 0.033 $[-0.136, 0.134]$, so it cannot be separated from the second scan\statuspre.
 Source: \src{results/donor_ladder_brain_lookalike16.json} (qtim, deep, both sides).
 
-\subsection{Window size}
-Window sizes set as a fraction of the object (brain 8, 16 and 32\,mm; faces 1/16 to 1/4 of the face width; iris 10 and 16 pixels) keep the rung order with rank correlations of 0.72 to 1.00; retina has no window-size sweep.
-Sources: \src{donor_ladder_brain_metrics_size.json} (rank\_stability), \src{face_ladder_sizes.json}, \src{iris_ladder_metrics_w10.json}.
+\subsection{Look-alikes by window size, per image set}
+Table~\ref{tab:s-rq4} gives the values behind the window-size figure of the main text (Section 4.3) for every image set.
+UTIRIS \acs{VIS} and UPOL were run at 1/8 and 1/5 only, IXI at 1/8 only, and the 1/16 window of UTIRIS \acs{NIR} and the retina uses every fourth eye.
+
+\begin{table}[htbp]
+\centering
+\caption{\textbf{Look-alike distance under \acs{MSE} by window size} (random-person scale: 0 = target, 1 = average of 16 random people; window as a fraction of the object; n/a = not run). Brain, retina and iris are provisional.}
+\label{tab:s-rq4}
+\small
+\begin{tabular}{@{}lccccccccc@{}}
+\toprule
+& \multicolumn{4}{c}{One look-alike} & \multicolumn{4}{c}{Mean of 16 look-alikes} & Dataset \\
+Image set & 1/16 & 1/8 & 1/5 & 1/4 & 1/16 & 1/8 & 1/5 & 1/4 & average \\
+\midrule
+\input{tab/rq4_size_table}\end{tabular}
+\end{table}
+Source: \src{results/rq4_window_size.json}; table written by \src{paper/cvpr2027/make_rq4_size_table.py}.
 
 \subsection{Synthetic simulations}
 Synthetic tissue and eye experiments with a known target check the controls by construction.

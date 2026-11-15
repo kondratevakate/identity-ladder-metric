@@ -1,0 +1,320 @@
+{
+ "mse": {
+  "n_datasets": 9,
+  "datasets": [
+   "QTIM",
+   "IXI",
+   "CelebA",
+   "IMDb-WIKI",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "GRAPE",
+   "PAPILA"
+  ],
+  "ref": 0.407,
+  "lookalike_oracle": 0.231,
+  "relative": 0.872,
+  "dataset_mean": 0.502,
+  "stranger": 1.0,
+  "shrink_ref": 0.293,
+  "lookalike16": 0.294,
+  "wrong_detail": 1.003,
+  "noise": 0.804
+ },
+ "ssim": {
+  "n_datasets": 9,
+  "datasets": [
+   "QTIM",
+   "IXI",
+   "CelebA",
+   "IMDb-WIKI",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "GRAPE",
+   "PAPILA"
+  ],
+  "ref": 0.631,
+  "lookalike_oracle": 0.57,
+  "relative": 0.948,
+  "dataset_mean": 0.829,
+  "stranger": 1.0,
+  "shrink_ref": 0.595,
+  "lookalike16": 0.661,
+  "wrong_detail": 1.009,
+  "noise": 0.998
+ },
+ "tm_like": {
+  "n_datasets": 7,
+  "datasets": [
+   "QTIM",
+   "CelebA",
+   "IMDb-WIKI",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "GRAPE"
+  ],
+  "ref": 0.584,
+  "lookalike_oracle": 0.483,
+  "relative": 0.938,
+  "dataset_mean": 0.793,
+  "stranger": 1.0,
+  "shrink_ref": 0.541,
+  "lookalike16": 0.578,
+  "wrong_detail": 0.962,
+  "noise": 0.915
+ },
+ "lddt": {
+  "n_datasets": 9,
+  "datasets": [
+   "QTIM",
+   "IXI",
+   "CelebA",
+   "IMDb-WIKI",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "GRAPE",
+   "PAPILA"
+  ],
+  "ref": 0.658,
+  "lookalike_oracle": 0.657,
+  "relative": 0.951,
+  "dataset_mean": 0.616,
+  "stranger": 1.0,
+  "shrink_ref": 0.518,
+  "lookalike16": 0.574,
+  "wrong_detail": 1.154,
+  "noise": 1.583
+ },
+ "lpips_alex": {
+  "n_datasets": 8,
+  "datasets": [
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "CelebA",
+   "IMDb-WIKI",
+   "IXI"
+  ],
+  "ref": 0.469,
+  "lookalike_oracle": 0.441,
+  "relative": 0.876,
+  "dataset_mean": 0.987,
+  "stranger": 1.0,
+  "shrink_ref": 0.563,
+  "lookalike16": 0.637,
+  "wrong_detail": 0.949,
+  "noise": 2.033
+ },
+ "lpips_vgg": {
+  "n_datasets": 8,
+  "datasets": [
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "CelebA",
+   "IMDb-WIKI",
+   "IXI"
+  ],
+  "ref": 0.599,
+  "lookalike_oracle": 0.712,
+  "relative": 0.928,
+  "dataset_mean": 1.084,
+  "stranger": 1.0,
+  "shrink_ref": 0.613,
+  "lookalike16": 0.873,
+  "wrong_detail": 0.976,
+  "noise": 1.496
+ },
+ "betti_matched": {
+  "n_datasets": 7,
+  "datasets": [
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "CelebA",
+   "IMDb-WIKI"
+  ],
+  "ref": 0.482,
+  "lookalike_oracle": 0.318,
+  "relative": 0.732,
+  "dataset_mean": 0.494,
+  "stranger": 1.0,
+  "shrink_ref": 0.426,
+  "lookalike16": 0.446,
+  "wrong_detail": 1.16,
+  "noise": 1.664
+ },
+ "persistence": {
+  "n_datasets": 8,
+  "datasets": [
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "GRAPE",
+   "PAPILA",
+   "CelebA",
+   "IMDb-WIKI",
+   "IXI"
+  ],
+  "ref": 0.71,
+  "lookalike_oracle": 0.657,
+  "relative": 0.93,
+  "dataset_mean": 0.808,
+  "stranger": 1.0,
+  "shrink_ref": 0.685,
+  "lookalike16": 0.731,
+  "wrong_detail": 1.117,
+  "noise": 5.037
+ },
+ "fid": {
+  "n_datasets": 7,
+  "datasets": [
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "CelebA",
+   "IMDb-WIKI"
+  ],
+  "ref": 0.929,
+  "lookalike_oracle": 1.391,
+  "relative": null,
+  "dataset_mean": 16.362,
+  "stranger": 1.0,
+  "shrink_ref": 2.554,
+  "lookalike16": 10.545,
+  "wrong_detail": 1.287,
+  "noise": 12.462
+ },
+ "fwd": {
+  "n_datasets": 7,
+  "datasets": [
+   "GRAPE",
+   "PAPILA",
+   "UTIRIS NIR",
+   "UTIRIS VIS",
+   "UPOL",
+   "CelebA",
+   "IMDb-WIKI"
+  ],
+  "ref": 0.572,
+  "lookalike_oracle": 15.364,
+  "relative": null,
+  "dataset_mean": 185.55,
+  "stranger": 1.0,
+  "shrink_ref": 34.344,
+  "lookalike16": 159.215,
+  "wrong_detail": 45.531,
+  "noise": 183.542
+ },
+ "set_level_rule": {
+  "min_set_fraction_of_stranger": 0.5,
+  "datasets_excluded": {
+   "QTIM": "brain excluded from FID/FWD: its repeat set (138 windows) is about 10x smaller than its stranger set, and FID is biased upward for small sets"
+  },
+  "left_out": [
+   "fid|CelebA:other_side",
+   "fid|GRAPE:cohort_mean",
+   "fid|IMDb-WIKI:other_side",
+   "fid|IMDb-WIKI:relative",
+   "fid|QTIM:cohort_mean",
+   "fid|QTIM:dataset_mean",
+   "fid|QTIM:lookalike",
+   "fid|QTIM:lookalike_oracle",
+   "fid|QTIM:mean_k2",
+   "fid|QTIM:noise",
+   "fid|QTIM:repeat",
+   "fid|QTIM:shrink_ref",
+   "fid|QTIM:stranger",
+   "fid|QTIM:wrong_detail",
+   "fwd|CelebA:other_side",
+   "fwd|GRAPE:cohort_mean",
+   "fwd|IMDb-WIKI:other_side",
+   "fwd|IMDb-WIKI:relative",
+   "fwd|QTIM:cohort_mean",
+   "fwd|QTIM:dataset_mean",
+   "fwd|QTIM:lookalike",
+   "fwd|QTIM:lookalike_oracle",
+   "fwd|QTIM:mean_k2",
+   "fwd|QTIM:noise",
+   "fwd|QTIM:repeat",
+   "fwd|QTIM:shrink_ref",
+   "fwd|QTIM:stranger",
+   "fwd|QTIM:wrong_detail"
+  ]
+ },
+ "panel_A": {
+  "mse": {
+   "x_stranger_gap": 0.588,
+   "y_shrunk_gap": -0.205,
+   "n_x": 9,
+   "n_y": 9
+  },
+  "ssim": {
+   "x_stranger_gap": 0.602,
+   "y_shrunk_gap": -0.125,
+   "n_x": 9,
+   "n_y": 9
+  },
+  "tm_like": {
+   "x_stranger_gap": 0.76,
+   "y_shrunk_gap": -0.114,
+   "n_x": 7,
+   "n_y": 7
+  },
+  "lddt": {
+   "x_stranger_gap": 0.465,
+   "y_shrunk_gap": -0.256,
+   "n_x": 9,
+   "n_y": 9
+  },
+  "lpips_alex": {
+   "x_stranger_gap": 0.645,
+   "y_shrunk_gap": 0.089,
+   "n_x": 9,
+   "n_y": 9
+  },
+  "lpips_vgg": {
+   "x_stranger_gap": 0.621,
+   "y_shrunk_gap": 0.062,
+   "n_x": 9,
+   "n_y": 9
+  },
+  "betti_matched": {
+   "x_stranger_gap": 0.515,
+   "y_shrunk_gap": -0.022,
+   "n_x": 9,
+   "n_y": 9
+  },
+  "persistence": {
+   "x_stranger_gap": 0.581,
+   "y_shrunk_gap": -0.064,
+   "n_x": 9,
+   "n_y": 9
+  },
+  "fid": {
+   "x_stranger_gap": 0.1,
+   "y_shrunk_gap": 0.458,
+   "n_x": 7,
+   "n_y": 7
+  },
+  "fwd": {
+   "x_stranger_gap": 0.099,
+   "y_shrunk_gap": 0.516,
+   "n_x": 7,
+   "n_y": 7
+  }
+ },
+ "window_note": "Error and similarity metrics (MSE, SSIM, TM-, GDT-, lDDT-like, RMSE) from common_f8_v1.json: hidden window 1/8 of the object in all nine image sets (Amendment 10). LPIPS, topology, FID and FWD from values_generative.json at their original windows (brain 16 mm = 1/8; faces and iris 16 px, about 1/5; retina 16 px of 128)."
+}

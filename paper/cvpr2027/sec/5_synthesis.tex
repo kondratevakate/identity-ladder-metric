@@ -19,7 +19,7 @@ Where a dataset has second images of the same people, the shrunk second image ad
 No generative model is evaluated; every fill is a real image, an average or a constructed control.
 Registration and acquisition remain the main confounders in brain and retina, which stay provisional with the iris until registration and mask \ac{QC} are complete.
 Only 23 QTIM people have a second scan and two of nine image sets record families, and the set-level exclusion rule was fixed after seeing one value.
-The hidden region is 1/8 of the object in brain and retina but about 1/5 in faces and iris, which matters for the look-alike rung only.
+Error and similarity metrics use a hidden region of 1/8 of the object everywhere, but \ac{LPIPS}, topology and set-level metrics still use about 1/5 in faces and iris.
 The ladder measures closeness to known references, not whether a fill is clinically or biometrically correct: a fill can sit at the true person's position and still miss a lesion, and identity under ArcFace and under pixel errors can disagree, as the faces show.
 
 \paragraph{Ethics and data.}
