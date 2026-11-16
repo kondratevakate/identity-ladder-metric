@@ -133,7 +133,7 @@ def main():
     for ds in ('GRAPE','PAPILA'):
         result=data['fundus_framefmt']['results'][ds]
         selected={r:result.get(r) for r in ('repeat','fellow','lookalike','stranger')}
-        entries.append([ds+' '+result['arm'].upper()]+[estimate(item,'ratio') if item else r'\textit{unavailable}' for item in selected.values()])
+        entries.append([ds]+[estimate(item,'ratio') if item else r'\textit{unavailable}' for item in selected.values()])
         chosen['fundus/'+ds+'/framefmt']=selected
     rows(TAB/'fundus_ratio.tex',entries)
     chosen['fundus/metric_registry']=data['fundus_metrics_v1']['metrics_confirmatory']
@@ -155,17 +155,18 @@ def main():
     # Keep full-source coverage and endpoint-specific counts alongside every selected profile.
     cohort_entries=[]
     b=data['donor_ladder_brain_metrics']['counts']
-    cohort_entries.append(['QTIM',str(b['n_targets']),str(b['n_families']),str(b['n_repeat_scans']),r'Affine, gate pending\statuspre'])
+    # Last column: how images are aligned (16 Nov 2026; replaced internal status labels).
+    cohort_entries.append(['QTIM',str(b['n_targets']),str(b['n_families']),str(b['n_repeat_scans']),r'Affine to template'])
     for ds,label in [('celeba','CelebA'),('imdb','IMDb-WIKI')]:
         counts=face['counts'][ds]
-        cohort_entries.append([label,str(counts['n_targets']),str(counts['n_families']),r'Endpoint-specific',r'v6f frame approved\statusfinal'])
+        cohort_entries.append([label,str(counts['n_targets']),str(counts['n_families']),r'Varies by metric',r'Landmarks, visual QC passed'])
     for ds,label in [('UTIRIS_NIR','UTIRIS NIR'),('UTIRIS_VIS','UTIRIS VIS'),('UPOL','UPOL')]:
         counts=iris['panel'][ds]['counts']
-        cohort_entries.append([label,str(counts['units']),str(counts['persons']),str(counts['eyes_with_repeat']),r'P2 mask QC note\statuspre'])
+        cohort_entries.append([label,str(counts['units']),str(counts['persons']),str(counts['eyes_with_repeat']),r'Segmented, unwrapped strip'])
     for ds in ('GRAPE','PAPILA'):
         result=data['fundus_framefmt']['results'][ds]
-        cohort_entries.append([ds+' '+result['arm'].upper(),str(result['units']),str(result['stranger']['persons']),
-                               str(result['repeat']['targets']) if result.get('repeat') else r'Unavailable',r'Frame-only\statuspre'])
+        cohort_entries.append([ds,str(result['units']),str(result['stranger']['persons']),
+                               str(result['repeat']['targets']) if result.get('repeat') else r'n/a',r'Optic-disc frame'])
     rows(TAB/'coverage.tex',cohort_entries)
 
     tests=[]
@@ -184,11 +185,19 @@ def main():
         chosen['brain/tests/'+metric]=selected
     rows(TAB/'brain_tests.tex',tests)
 
+    # Plain names for the supplement table (16 Nov 2026); unknown keys fall back to the code name.
+    metric_names={'mse':'MSE','rmse':'RMSE','rmse_rep':'RMSE, repeat tolerance','mae':'MAE','psnr':'PSNR',
+                  'psnr_fixed':'PSNR, fixed range','ssim':'SSIM','pearson':'Pearson correlation',
+                  'acc_dataset':'Residual correlation','acc_cohort':'Residual correlation, matched mean',
+                  'tm_like':'TM-like','gdt_like':'GDT-like','lddt':'lDDT-like, fixed tolerance',
+                  'lddt_rep':'lDDT-like, repeat tolerance'}
+    rung_names={'dataset_mean':'Dataset average','mirror':'Opposite side','repeat':'Second scan',
+                'shrink_repeat':'Softened second scan','wrong_detail':'Wrong detail','noise':'Noise'}
     supplementary=[]
     for metric, rungs in brain['ladder_R'].items():
         for rung in ('dataset_mean','mirror','repeat','shrink_repeat','wrong_detail','noise'):
             item=rungs.get(rung)
-            supplementary.append([tex(metric),tex(rung),estimate(item),
+            supplementary.append([metric_names.get(metric,tex(metric)),rung_names[rung],estimate(item),
                                   str(item['n_targets']) if item else r'\textit{undefined}',
                                   str(item['n_families']) if item else r'\textit{undefined}'])
     rows(TAB/'brain_full.tex',supplementary)

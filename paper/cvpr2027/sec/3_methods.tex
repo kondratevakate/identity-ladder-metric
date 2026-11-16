@@ -9,7 +9,7 @@ We first define the fills that form the ladder and the three controls, then the 
 The \emph{target} is the region of a person's image hidden from the inpainting model: a cube in the brain, a square window in the 2D images.
 Its size is a fraction of the \emph{object}, the structure being imaged: the brain (127\,mm across in the template), the aligned face (79.5 pixels wide), the retinal field of view (square root of its mean area: 78 pixels in PAPILA, 85 in GRAPE) or the iris (diameter $256/\pi$ pixels); 1/8 gives 16\,mm cubes and 10 or 11 pixel windows.
 The \emph{context ring} is the band of visible pixels around the target that is used to choose the nearest people: 4\,mm in the brain, a quarter of the cube, and half the window width in the 2D images (5 or 6 pixels).
-A \emph{fill} is any content placed into the hidden region and compared with the target; every fill here is a real image, an average of real images, or a control built from them, and no generative model is evaluated.
+A \emph{fill} is any content placed into the hidden region and compared with the target; every fill here is a real image, an average of real images, or a control built from them.
 \emph{Valid pixels} are pixels observed in both target and fill (field of view, brain mask, iris without lids and reflections); other pixels are missing, never zero.
 \emph{Unrelated people} are everyone outside the target person's family.
 
@@ -42,7 +42,7 @@ with $d$ the metric written as a distance (similarities negated), $\bar d$ its a
 The random person is the natural unit because it is the infill a model produces when it ignores the context and copies an arbitrary training image, and because every metric can measure it on every dataset; a metric that cannot place the same person below 1 does not see the person at all.
 The brain table also anchors $\bar d_0$ on the second scan, because two sessions of one brain differ.
 
-\subsection{Metrics, uncertainty and status}
+\subsection{Metrics and uncertainty}
 We compute ten variants in four families, the ones shown in Figure~\ref{fig:summary}; \ac{GDT}-like and \ac{RMSE}, which order the rungs as \ac{MSE} does, are reported in the text.
 \emph{Error and similarity}: \ac{MSE}, \ac{SSIM} and three tolerance scores from protein-structure comparison, \ac{TM}-like~\cite{tmscore2004}, \ac{GDT}-like~\cite{zemla2003lga} and \ac{lDDT}-like~\cite{lddt2013}, which count positions that agree within a tolerance (fixed, or the typical difference between two scans of one person) so that a few large differences cannot dominate; protein comparison asks the same question as ours, how much of the shape agrees within a tolerance.
 As a diagnostic outside the ten variants, \emph{residual correlation} is the cosine between the fill's and the target's individual detail, $\langle f-\hat\mu,\,x-\hat\mu\rangle/(\|f-\hat\mu\|\,\|x-\hat\mu\|)$; it ignores the size of the detail, so a softened same person scores exactly as the unchanged one.
@@ -52,7 +52,6 @@ As a diagnostic outside the ten variants, \emph{residual correlation} is the cos
 Kernels and tolerances are in the supplement.
 Intervals are 95\% bootstrap intervals (2{,}000 resamples of people or families).
 One-sided tests ask whether the second image beats the dataset average (T1), the softened same person (T2), wrong detail (T3a) and noise (T3b), Holm-corrected within the dataset.
-\statusfinal\ marks results whose preprocessing passed visual \ac{QC}; \statuspre\ marks provisional ones.
 Maps use Gaussian local averages with standard deviation $w/\sqrt{12}$ for window width $w$.
 
 \subsection{Datasets}
@@ -65,7 +64,7 @@ Brain: QTIM~\cite{qtim2026,strike2019} (twins and siblings, 23 with a second ses
 Retina: GRAPE~\cite{grape2023} (both eyes, repeated visits) and PAPILA~\cite{papila2022} (both eyes), left eyes mirrored, optic-disc frame, green channel at 128 pixels.
 Faces: CelebA~\cite{celeba2015} and IMDb-WIKI~\cite{rothe2018}, landmark-aligned and pose-restricted; the opposite side is the mirrored other half of the face, with a midline band excluded.
 Irises: UTIRIS~\cite{hosseini2010} (\ac{NIR} and \ac{VIS}) and UPOL~\cite{dobes2004}, segmented and unwrapped into strips with lid and reflection masks.
-Brain, retina and iris remain provisional until registration and mask \ac{QC} are complete.
+Face alignment passed our visual quality control (\ac{QC}); brain (affine only), retinal and iris alignment has not yet met its criterion (Section~\ref{sec:synthesis} and supplement).
 
 \begin{table}[t]
 \centering

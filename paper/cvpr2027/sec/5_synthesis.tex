@@ -3,21 +3,20 @@
 The conditional mean of the hidden content given the context minimizes expected squared error, and a fill drawn from the true conditional distribution has twice that error, because it adds an independent draw of the unpredictable part; this is the distortion side of the perception-distortion tradeoff~\cite{blau2018}.
 Put simply, when the hidden content cannot be predicted, the safest guess under squared error is the average, and a realistic person scores worse.
 The softened same person and the mean of the 16 nearest people are empirical stand-ins for that mean.
-We show how large this reward is on real anatomy, and that set-level metrics trade it for another blind spot.
+The fact itself is elementary.
+What the ladder adds is its size on real anatomy: no error or similarity metric places the person's own second image ahead of its softened version in any image set (Table~\ref{tab:tests}), and set-level metrics trade this reward for the opposite blind spot.
 A pixel score alone cannot show whether a fill kept the person.
 We therefore suggest reporting three numbers next to any inpainting score on the same masks: the dataset average score, the score for the mean of the 16 nearest people chosen from the context, and the score for a random person.
-Under a metric that passes T2, a model that does not beat the nearest-people mean adds nothing to retrieval; under \ac{MSE} alone, beating it can also mean averaging more, which is why the softened control belongs next to it.
-A model near the dataset average has averaged the person away; a conditional mean remains the right answer when the hidden content is truly ambiguous, and the controls make that choice visible.
+Under \ac{MSE} alone, beating the nearest-people mean can also mean averaging more, which is why the softened control belongs next to it.
+A conditional mean remains the right answer when the hidden content is truly ambiguous; the controls make that choice visible.
 
 \paragraph{A recipe for inpainting benchmarks.}
-The controls need no model and no labels beyond the images themselves.
 For each hidden region, a benchmark can compute the region's dataset average over unrelated people, the mean of the 16 people whose context rings are closest, and 16 random people, all using the same valid pixels as the submitted infills.
 Scores are then reported on the random-person scale of Eq.~\ref{eq:anchors}, so that a submission at 0.5 is as close as the dataset average, and its gap to a context search is read against that set's own nearest-people score (0.20 to 0.40 at 1/8).
 Where a dataset has second images of the same people, the softened second image adds a direct test of whether the metric rewards averaging, and a set-level metric on the same fills shows whether the submission has lost realism.
-Result tables require only a few extra columns per metric: the hidden region as a fraction of the object; the dataset-average score, the nearest-people mean, and a random person; and, where second images exist, whether the metric passes T2.
 
 \paragraph{Auditing a generative model across groups of people.}
-The same controls turn into an audit of a generative model, which we propose but have not yet run.
+The same controls define an audit of a generative model.
 For a held-out target $x_i$ (as in Eq.~\ref{eq:unit}) with visible context $c_i$ and mask $M_i$, let $y_{ik}=G(c_i,M_i,z_k)$ be the $k$-th fill of model $G$ with random seed $z_k$.
 For a group of targets $a$ (for example an age band or an acquisition site), a distance $d_m$ and a ladder control $f_{ir}$, the audit profile is
 \begin{equation}
@@ -25,25 +24,25 @@ For a group of targets $a$ (for example an age band or an acquisition site), a d
 \label{eq:audit}
 \end{equation}
 where $E_{ir}$ are the valid pixels shared by the target and the control.
-A negative value means that the metric prefers the model's fills to the control, for example, to the mean of the 16 nearest people; it does not mean that the person was kept.
-Valid pixels and eligible targets are fixed before the model is run, seeds are averaged within a target before the group average, and failed outputs are reported rather than dropped.
-A gap between groups describes the model and the metric together.
-Mask difficulty, location, acquisition and the size of the reference pool must stay visible.
-The gap needs uncertainty over independent people, and on its own it shows neither discrimination nor mode collapse.
+A negative value means that the metric prefers the model's fills to the control, not that the person was kept.
+Seeds are averaged within a target, failed outputs are reported, and group gaps need uncertainty over independent people.
 
 \paragraph{Limitations.}
-No generative model is evaluated; every fill is a real image, an average or a constructed control.
-Registration and acquisition remain the main confounders in brain and retina, which stay provisional with the iris until registration and mask \ac{QC} are complete.
-Only 23 QTIM people have a second scan and two of nine image sets record families, and the set-level exclusion rule was fixed after seeing one value.
-Error and similarity metrics use a hidden region of 1/8 of the object everywhere, but \ac{LPIPS}, topology and set-level metrics still use about 1/5 in faces, retina and iris.
-The ladder measures closeness to known references, not whether a fill is clinically or biometrically correct: a fill can sit at the same person's position and still miss a lesion, and identity under ArcFace and under pixel errors can disagree, as the faces show.
+We evaluate metrics, not models; where trained inpainting models fall on the ladder remains to be measured.
+Alignment is the main confounder outside faces: misalignment adds to every distance in brain, retina and iris, most in mirrored comparisons with the opposite side.
+It does not explain the averaging reward alone, because faces, whose alignment passed visual \ac{QC}, fail T2 in the same way (Table~\ref{tab:tests}).
+The cross-dataset summaries and tests were defined after the per-dataset results and are exploratory; only 23 QTIM people have a second scan, two of nine image sets record families, and the set-level exclusion rule was fixed after seeing one value.
+\ac{LPIPS}, topology and set-level metrics still use about 1/5 of the object in faces, retina and iris.
+The ladder measures closeness to known references, not clinical or biometric correctness: a fill at the same person's position can still miss a lesion.
 
 \paragraph{Ethics and data.}
-All datasets are public research datasets used under their terms.
-Figure~\ref{fig:explainer} shows one QTIM brain scan (CC0); otherwise, only population averages and maps are shown, as the CelebA and IMDb-WIKI terms do not allow publishing their images, and iris and retina images are biometric.
-Approval and consent statements await author confirmation.
+We collected no new data and use nine public image sets under their terms: QTIM and GRAPE (CC0), IXI (CC BY-SA 3.0), PAPILA (GPL 3.0+), CelebA (non-commercial research only), IMDb-WIKI (academic research only), and UTIRIS and UPOL (free with citation).
+QTIM, GRAPE and PAPILA report ethics approval and signed informed consent; CelebA and IMDb-WIKI are Internet images of public figures (Supplementary Section~S2).
+Faces, irises and retinas are biometric, so we show one QTIM brain scan (CC0) and otherwise only population averages or maps.
+We did not balance the image sets by sex, age or ancestry, so the distances describe these cohorts, not clinical populations.
+% [CONFIRM] Kate: no institutional approval sentence for secondary use of public data; IXI, UTIRIS and UPOL state no ethics approval.
 
 \paragraph{Conclusion.}
 References of known relationship turn a single inpainting score into a position on a ladder from the same person to a random one.
-On nine image sets, error and similarity metrics recognize the person but reward pulling detail toward the average, set-level metrics reject the average but barely separate the right person from the wrong one, and context search alone comes closer than the opposite side of the same body and, in faces, closer than a second photograph.
-Reporting the three controls costs no model and no labels and shows which of these failures a new model has.
+On nine image sets, error and similarity metrics reward averaging, and set-level metrics barely separate the right person from a random one.
+The three controls cost no model and no labels and show which of these failures a new model has.

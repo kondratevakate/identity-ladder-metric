@@ -1,16 +1,21 @@
 \begin{table*}[t]
 \centering
-\caption{\textbf{Measured references and proposed generator audits.}
-Twelve audit questions are grouped here and detailed in Section~S3.
-Requirement: what an audit of a generative model must establish; available evidence: what this paper already measures toward it; extent: how far our experiments cover it (``not measured'' marks what still needs model outputs, kept to show the gap).
-These are qualitative assessments of experimental scope, not completion rates or measured group performance.
-The table is generated from \src{population_audit.json}; measured evidence remains in the modality tables and implementation probes.}
+\caption{\textbf{What an audit of a generative model must establish, and what the reference experiments provide.}
+Requirement: what the audit must establish; reference evidence: what this paper measures toward it; scope: whether the requirement is met by the reference experiments or needs model outputs.}
 \label{tab:decision}
 \small
 \begin{tabular}{@{}p{.24\textwidth}p{.49\textwidth}p{.22\textwidth}@{}}
 \toprule
-Requirement & Available evidence & Extent \\
+Requirement & Reference evidence & Scope \\
 \midrule
-\input{tab/decision_coverage}
+Who is the target, compared with whom & The person (or eye) as unit; reference people from other families & Defined \\
+How distances are computed & Valid-pixel masks; checks of SSIM axes and PSNR clipping in the challenge evaluator & Checked on synthetic fills \\
+Lost or wrong detail & Dataset average, softened same person, wrong detail & Measured on nine image sets \\
+Acquisition sensitivity & Second images, scanner sites, contrast and pupil controls & Measured in part \\
+Structure and scale & Synthetic labels, error maps, region-size curve & Measured in part \\
+Group profiles of generated fills & Group-matched reference means & Needs model outputs \\
+Sampling and ranking decisions & None & Needs model outputs \\
+\bottomrule
 \end{tabular}
 \end{table*}
+% Rows adapted from tab/decision_coverage.tex (generated from population_audit.json, kept), 16 Nov 2026.

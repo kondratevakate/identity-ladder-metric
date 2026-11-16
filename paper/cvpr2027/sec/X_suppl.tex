@@ -1,4 +1,9 @@
-\section{Material moved from the main text}
+% Supplement rewritten as a scientific appendix after the desk-rejection assessment (16 Nov 2026).
+% Removed from the reader-facing text (files and results kept in the repository): source snapshot and evidence
+% manifest notes, materials inventory, the twelve-question population-audit table, the metric registry,
+% the CARE aggregation audit and the list of prespecified but uncomputed metrics.
+% Every number still cites its results file in a comment.
+\section{Additional analyses}
 \label{sec:s-moved}
 This section collects analyses that support the main paper but answer none of its four research questions.
 
@@ -8,129 +13,144 @@ Figure~\ref{fig:atlas-all} maps the local squared error of each rung for every i
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{fig/atlas_all_modalities_full.pdf}
+\includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{fig/atlas_all_modalities_full_v2.pdf}
 \caption{\textbf{Where in the image each rung is close or far: local squared error in units of the dataset average ($Q$).}
-Rows: CelebA and IMDb-WIKI faces, QTIM brain \acs{MRI}, GRAPE and PAPILA retina, UTIRIS \acs{NIR}, UPOL and UTIRIS \acs{VIS} iris, and IXI brain \acs{MRI} (no second scans or families).
+Rows: CelebA and IMDb-WIKI faces, QTIM brain MRI, GRAPE and PAPILA retina, UTIRIS NIR, UPOL and UTIRIS VIS iris, and IXI brain MRI (no second scans or families).
 Columns: mean anatomy, second image, opposite side, sibling, random person, mean of the 16 nearest people, same-sex-and-age mean, and the error of the dataset average on its own scale.
-1 (white) is the dataset average and about 2 a random person; blue is closer than the mean; maps are population summaries with Gaussian windows in the brain; brain, retina and iris are provisional.
+1 (white) is the dataset average and about 2 a random person; blue is closer than the mean; maps are population summaries with Gaussian windows in the brain.
 The random person is red everywhere, while the mean of the 16 nearest people stays below the dataset average in every row (0.50 to 0.94).}
 \label{fig:atlas-all}
 \end{figure*}
 % Source: paper/cvpr2027/atlas_provenance.json (IXI row: results/donor_ladder_brain_maps_ixi.json, donor_ladder_brain_map_grid_ixi.json).
 
-\subsection{What the audit of a generative model still needs}
-The audit profile of the main text (Discussion) has not been measured; Table~\ref{tab:decision} lists, for each audit question, what exists and what is missing.
-Repeated outputs for one context separate variation across targets from variation across seeds; low variance alone does not show mode collapse.
-
-\input{sec/population_coverage_table}
-
-\subsection{Brain contrast harmonization (HACA3+)}
-HACA3+ stage 1 harmonizes the contrast of the 23 QTIM scan pairs.
-It reduces the mean absolute difference between the two sessions of one person from 0.121 to 0.016 standardized intensity units in the deep box and from 0.059 to 0.033 in the parietal box\statuspre.
-The visual verdict is pending, and neither number shows that person-specific detail is preserved.
-Source: \src{results/donor_ladder_brain_haca3_stage1.json}, session\_shift\_z.
+\subsection{Brain contrast harmonization}
+Two sessions of one brain differ in contrast as well as in anatomy.
+We harmonized the 23 QTIM scan pairs with stage 1 of HACA3+ to see how much of the second-scan distance is contrast.
+Two fixed boxes were used: a deep box around the basal ganglia and thalamus, and a parietal box.
+Harmonization reduces the mean absolute difference between the two sessions of one person from 0.121 to 0.016 standardized intensity units in the deep box and from 0.059 to 0.033 in the parietal box.
+Neither number shows that person-specific detail is preserved, so the main analysis uses the scans without harmonization.
+% Source: results/donor_ladder_brain_haca3_stage1.json, session_shift_z.
 
 \subsection{Mean of the 16 nearest people in the deep brain box}
-On the scale anchored on the second scan, the mean of the 16 nearest people in the deep box is at 0.033 $[-0.136, 0.134]$, so it cannot be separated from the second scan\statuspre.
-Source: \src{results/donor_ladder_brain_lookalike16.json} (qtim, deep, both sides).
+On the scale anchored on the second scan, the mean of the 16 nearest people in the deep box is at 0.033 $[-0.136, 0.134]$, so it cannot be separated from the second scan.
+% Source: results/donor_ladder_brain_lookalike16.json (qtim, deep, both sides).
 
 \subsection{Synthetic simulations}
 Synthetic tissue and eye experiments with a known target check the controls by construction.
-Along the shrinkage path, an image can keep a high rank against unrelated people while its individual detail shrinks.
+Along the softening path, an image can keep a high rank against unrelated people while its individual detail shrinks.
 Wrong detail of matched strength shows why distance from the mean alone is not enough.
 Synthetic pupil dilation keeps the eye fixed while changing its appearance, which tests the opposite failure.
 A threshold segmenter supports observations about label overlap and simple topology; it is not a trained segmenter.
 Synthetic variance components are illustrative and are not estimates of human heritability.
 
-\section{Scope, provenance, and evidence status}
-This supplement documents the source snapshot used to assemble the manuscript; a protocol or an unfinished run is never reported as a completed endpoint.
-The preparation script reads public aggregate JSONs, generates tables, copies selected population-summary PDFs, and records input hashes and producing commits in \src{evidence_manifest.json}.
-No participant image or per-person result row is read during manuscript assembly.
-Figure provenance describes the origin of the saved output; copying it does not independently reproduce the underlying experiment.
+\subsection{Agreement between metrics}
+Figure~\ref{fig:s-corr} groups the distances by how similarly they order the rungs within target, position and side.
+Strong agreement among monotone variants, such as MSE, RMSE and PSNR, is expected and is not independent evidence that a metric is sensitive to identity.
 
-The labels \statusfinal\ and \statuspre\ apply to individual results and frames.
-P2 (iris) and P8 and P9 (retina) name the preprocessing versions recorded in the protocols: P2 is the segmented and unwrapped iris strip, P8 and P9 the retinal frame alignment without further correction.
-A frame can have an approved visual decision while an additional mask change remains unresolved.
-An older run can contain valid measurements for its own question while being unsuitable as a replacement for the amended protocol.
-The source-level status must therefore accompany every comparison, not just the dataset name.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\textwidth,height=.6\textheight,keepaspectratio]{fig/metric_correlations_v2.pdf}
+\caption{\textbf{Agreement between metrics in the brain} (QTIM; Spearman correlation of the order in which two metrics place the rungs).
+Metrics in one block order the rungs almost identically; this describes dependence among measures, not their validity.}
+\label{fig:s-corr}
+\end{figure}
+% Source: results/figures/fig_metrics_correlation.pdf with results/donor_ladder_metrics_correlation.json.
 
-\subsection{Coverage of the existing research materials}
+\section{Data, alignment, terms and ethics}
+\label{sec:s-data}
+\subsection{Image sets and alignment}
+Table~\ref{tab:s-coverage} lists the units of analysis and how each image set is aligned.
+Brain volumes are corrected for slow intensity variation (N4), aligned affinely to the symmetric MNI template and standardized within the brain mask.
+Faces are aligned on facial landmarks and restricted in pose.
+Retinal photographs are placed in a frame centered on the optic disc, with left eyes mirrored and no further correction.
+Irises are segmented, unwrapped into strips, and masked for eyelids and reflections.
+
 \begin{table}[htbp]
 \centering
-\caption{Available cohorts and evidence status.
-Units are target people for brain and faces, and target eyes for iris and P8/P9 fundus.
-Independent clusters are families or people; the repeat column is endpoint-specific.
-Sources: the saved brain, face, iris and frozen fundus metric/map aggregate files recorded in the evidence manifest.}
+\caption{\textbf{Units of analysis and alignment.}
+Target units are people for brain and faces and eyes for iris and retina; clusters are the independent units used for resampling (families or people); the repeat column counts targets with a second image, which for faces varies by metric.}
 \label{tab:s-coverage}
 \small
 \begin{tabular}{@{}lrrll@{}}
 \toprule
-Dataset & Target units & Clusters & With repeat & Status \\
+Dataset & Target units & Clusters & With repeat & Alignment \\
 \midrule
 \input{tab/coverage}
 \end{tabular}
 \end{table}
+% Source: counts from the brain, face, iris and fundus aggregate files (see prepare.py).
 
-The material inventory covers the tracked results, protocols, reports, figures and related ISBI source, with each artifact assigned a manuscript role.
-Historical unregistered image-space and ocular pilots supply context for acquisition confounding, not substitutes for the current reference tables.
-Fixed real-case demonstrations establish a preparation history rather than a population validation.
-The synthetic population-null, label and pupil blocks are mechanism controls and remain separate from measured anatomy.
-The earlier figure variants and failed preprocessing versions are retained as history rather than selected opportunistically for a favorable metric ordering.
+\paragraph{Visual quality control of alignment.}
+Alignment passes our visual quality control (QC) when at least 90\% of predefined comparisons, mirrored ones included, overlay the same anatomy.
+Face alignment was approved on visual inspection.
+Brain, retinal and iris alignment has not met the criterion; in particular, mirrored comparisons often do not overlay the same anatomy.
+Misalignment adds to the distance of every real-image fill, most to the opposite side, and can make softened fills look relatively better.
+Faces, whose alignment passed, fail T2 in the same way as the other image sets (directional-test table of the main paper), so the averaging reward is not only a consequence of misalignment.
+Results in brain, retina and iris should be read with this limitation, and the opposite-side distances there are likely overestimated.
 
-The frozen bilateral-branch snapshot adds the P8/P9 fundus frame-only aggregate and its completed v1 metric registry.
-Those files are preserved byte-for-byte in the paper inputs.
-They are distinct from the still newer metric extension reported as running at handoff.
-The inventory, source hashes and version distinctions are recorded in \src{MATERIALS_COVERAGE.md} and the evidence manifest.
+\subsection{Dataset terms and ethics}
+All image sets are public research datasets, and no new data were collected.
+Table~\ref{tab:s-terms} lists the terms under which each set is distributed and the ethics statement of its source, as given on the official dataset page or in the dataset paper.
+CelebA and IMDb-WIKI are Internet images of public figures; their terms do not allow redistribution of the images, so we show only population averages of faces.
+Iris and retinal images are biometric, and we show none of them.
+The only individual image in the paper is one QTIM brain scan, which is released under CC0.
+The nearest-person search resembles biometric retrieval; we run it only within each dataset and report aggregate distances, not matches between named individuals.
+We did not balance the image sets by sex, age or ancestry, so the measured distances describe these cohorts and not clinical populations.
+% [CONFIRM] Kate: statement on institutional approval for secondary use of public de-identified data (Maastricht or
+% Tuebingen) not added; IXI, UTIRIS and UPOL pages state no ethics approval or consent (checked 16 Nov 2026).
 
-\section{Population-audit questions and coverage}
-Inpainting supplies controlled references for a proposed audit of conditional generation across target populations.
-The twelve questions below separate the measured metric/reference evidence from the missing model-output validation.
-No completion percentage, fairness result or universal metric follows from counting the rows.
-BraTS~\cite{brats2023} is one application; the reference experiments across anatomies do not themselves measure generator behavior across demographic groups.
-
-{\small
-\begin{longtable}{@{}p{.07\textwidth}p{.29\textwidth}p{.57\textwidth}@{}}
-\caption{Population-audit questions, current evidence and missing validation.
-Authored assessment from \src{population_audit.json}; source hashes are recorded in \src{population_audit_manifest.json}.}\\
+\begin{table*}[htbp]
+\centering
+\caption{\textbf{Terms of use and ethics statements of the image sets} (checked on the official pages on 16 Nov 2026).
+``Not stated'' means that neither the dataset page nor the dataset record gives an ethics statement.}
+\label{tab:s-terms}
+\small
+\begin{tabular}{@{}lp{.29\textwidth}p{.41\textwidth}@{}}
 \toprule
-ID & Question and coverage & Evidence boundary and missing work \\
+Dataset & Terms of use & Ethics and consent in the source \\
 \midrule
-\endfirsthead
-\toprule
-ID & Question and coverage & Evidence boundary and missing work \\
-\midrule
-\endhead
-\input{tab/decision_questions}
-\end{longtable}
-}
+QTIM (OpenNeuro ds004169) & CC0 & Approved by the QIMR Berghofer Human Research Ethics Committee; written informed consent from all participants \\
+IXI & CC BY-SA 3.0 & Not stated \\
+CelebA & Non-commercial research only; no redistribution of images & Not stated; Internet images \\
+IMDb-WIKI & Academic research only; copyright stays with the image owners & Not stated; Internet images \\
+GRAPE & CC0 (image and clinical files on figshare) & Approved by the Ethics Committee of ZJU-2, Zhejiang University (No.~Y2020-1027); written informed consent \\
+PAPILA & GPL 3.0 or later (figshare) & Approved by the hospital ethics committee (Hospital General Universitario Reina Sof\'ia, Murcia); signed informed consent \\
+UTIRIS & Copyright of the CIPCE, University of Tehran; free download, citation requested & Not stated on the dataset page \\
+UPOL & Free for use; citation required & Not stated on the dataset page \\
+\bottomrule
+\end{tabular}
+\end{table*}
+% Sources (fetched 16 Nov 2026): OpenNeuro ds004169 dataset_description.json (License CC0; EthicsApprovals HREC
+% QIMR Berghofer Ref#P701); brain-development.org/ixi-dataset; mmlab.ie.cuhk.edu.hk/projects/CelebA.html;
+% data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki; api.figshare.com/v2/articles/23575926 (GRAPE, CC0) and
+% Huang et al. 2023 Sci Data (PMC10404253, ZJU-2 No. Y2020-1027); api.figshare.com/v2/articles/14798004 (PAPILA, GPL 3.0+)
+% and Kovalyk et al. 2022 Sci Data (PMC9184612); utiris.wordpress.com; phoenix.inf.upol.cz/iris.
 
-The historical \src{results/real_cases.json} and \src{results/real_cases_parietal.json} explicitly withdraw all their c, correlation and label results because of an incorrect intensity-scaling peak.
-They are excluded from the coverage supporting current conclusions, rather than retained as provisional evidence.
-Protocols mentioning challenge models, fixed illustrations, and available model code do not establish a completed comparison of predictions.
+\section{What an audit of a generative model needs}
+\label{sec:s-audit}
+The Discussion defines an audit profile (Eq.~3 of the main text) that places the fills of a generative model next to the ladder controls for groups of targets.
+Table~\ref{tab:decision} lists what such an audit must establish and what the reference experiments of this paper already provide.
+The reference cohorts for groups are defined: matched means use the recorded sex and age attributes in CelebA and the sex and age bands in IMDb-WIKI, and the brain uses sex- and age-matched cohorts with family exclusion.
+Group profiles of generated fills require model outputs on shared targets and masks, a fixed number of samples per target and a fixed rule for aggregating them.
+Repeated outputs for one context separate variation across targets from variation across seeds; low variance alone does not show mode collapse.
+A gap between groups describes the model and the metric together and is not a causal fairness finding.
 
-\subsection{Target populations and reference cohorts}
-The face protocol defines matched reference means using the recorded Male/Young attributes in CelebA and sex/age bands in IMDb-WIKI.
-The brain protocol likewise defines sex/age-matched reference cohorts with family exclusion.
-These are comparator definitions; the accessible aggregates do not establish a group-wise experiment on generated completions.
-The initial face protocol's groups-not-run statement describes that version's output specification, not every later or unreceived private run.
-Iris sex/age matching is unavailable without the corresponding metadata.
+\input{sec/population_coverage_table}
 
-Target groups, reference cohorts and acquisition domains must be specified separately.
-Paired distances require an observed target and an explicit fill, composite or whole-image scope; FID/FWD are set-level measures requiring a separate definition.
-Unconditional generation and unobserved counterfactual targets require criteria beyond paired target fidelity.
-
-\subsection{Saved official-evaluator implementation probes}
-The source probes use \texttt{inpainting} 0.0.12 and one constructed volume, with eleven fills spanning noise, blur, a constant mean, gain and overshoot.
-The recorded input shape is $[1,40,48,36]$.
-The first anatomical axis is interpreted as channels by the two-dimensional SSIM call; jointly permuting it in every input leaves the score unchanged.
-This establishes an implementation convention rather than an empirical judgment that every two-dimensional SSIM is unsuitable.
+\subsection{Checks of the challenge evaluator}
+The BraTS inpainting challenge scores fills with the \texttt{inpainting} package (version 0.0.12).
+We scored one constructed volume of shape $[1,40,48,36]$ with eleven fills spanning noise, blur, a constant mean, gain and overshoot (Table~\ref{tab:s-brats}).
+The two-dimensional SSIM call interprets the first anatomical axis as channels, so permuting that axis jointly in every input leaves the score unchanged.
+This is an implementation convention, not evidence that every two-dimensional SSIM is unsuitable.
+For a fixed case, PSNR is monotone in MSE; the evaluator instead clips predictions to the reference's in-mask range, which breaks this exact rank identity.
 
 \begin{table}[htbp]
 \centering
-\caption{Saved synthetic evaluator probes under two dependency versions.
-SSIM lists the original score and joint first-axis permutation; PSNR lists the reported score and the expression using unclamped squared error, in dB.
-The last column lists Kendall agreement with RMSE for plain PSNR and its epsilon variant across the eleven fills.
-Sources: \src{results/brats_panel_checks_tm1.1.2.json} and \src{results/brats_panel_checks_tm1.9.0.json}.}
+\caption{\textbf{Challenge evaluator on eleven synthetic fills, under two versions of torchmetrics.}
+SSIM: original score and score after joint permutation of the first axis.
+PSNR: reported score and the value from unclamped squared error, in dB.
+$\tau$: Kendall agreement with RMSE across the eleven fills, for the reported PSNR and its variant with a small constant added to the error.}
+\label{tab:s-brats}
 \small
 \begin{tabular}{@{}lccc@{}}
 \toprule
@@ -139,12 +159,7 @@ Torchmetrics & SSIM original / permuted & PSNR / unclamped & $\tau$: plain / eps
 \input{tab/brats_implementation}
 \end{tabular}
 \end{table}
-
-For a fixed case and the same error definition, PSNR is monotone in MSE.
-The plain recorded implementation instead clips predictions to the reference's in-mask range; the probe therefore breaks exact rank identity.
-This difference should not be interpreted as independent evidence of anatomical sensitivity.
-Rung correlations, synthetic fill-order agreement and cluster bootstrap intervals do not establish stability of a leaderboard over reconstruction methods.
-Scoring multiple stochastic predictions additionally requires a fixed output count, sampling budget and selection/aggregation rule; these have not been evaluated here.
+% Sources: results/brats_panel_checks_tm1.1.2.json and results/brats_panel_checks_tm1.9.0.json.
 
 \section{Distances, units, and aggregation}
 \subsection{Mean-relative error and finite references}
@@ -153,26 +168,26 @@ An average of per-target ratios would overweight nearly information-free targets
 A finite leave-person-out mean adds estimation variance and differing masks change which targets are summarized, so the random person's $Q\approx2$ is a diagnostic check, not an identity forced to hold; likewise $1-\bar Q/2$ is not an estimate of heritability or of preserved identity when the additive model fails.
 
 For other distances, the relevant baseline is empirical.
-MSE and RMSE retain the same ordering within a fixed target despite differing raw aggregation and anchored coordinates.
-PSNR has the corresponding monotonicity only with the recorded range and clamping rules held fixed.
+MSE and RMSE keep the same ordering within a fixed target.
+PSNR has the corresponding monotonicity only when the intensity range and clipping rule are held fixed.
 For unit-normalized features, squared Euclidean distance is twice cosine distance, so their rank agreement is not independent evidence of validity.
 
 \subsection{Intensity adaptations of structural scores}
-The TM-like score adapts the continuous kernel of TM-score~\cite{tmscore2004} to each eligible intensity difference $\delta_v=f(v)-x(v)$:
+The TM-like score adapts the continuous kernel of TM-score~\cite{tmscore2004} to each valid intensity difference $\delta_v=f(v)-x(v)$:
 \begin{equation}
 S_{\rm TM}=\frac{1}{|E|}\sum_{v\in E}\frac{1}{1+(|\delta_v|/\sigma_{\rm rep})^2}.
 \end{equation}
-Here $\sigma_{\rm rep}$ is the pooled repeat-pair RMSE at the same position and side, excluding the target family and requiring at least five other pairs.
+Here $\sigma_{\rm rep}$ is the pooled RMSE between two scans of one person at the same position and side, excluding the target family and requiring at least five other pairs.
 The GDT-like intensity score averages the proportions satisfying $|\delta_v|<m\sigma_{\rm rep}$ for $m\in\{0.5,1,2,4\}$.
 The repeat-normalized RMSE divides RMSE by the same tolerance.
-No valid repeat tolerance means an unavailable cell, not a score of zero.
+Where no repeat tolerance exists, the cell is reported as unavailable, not as a score of zero.
 
 The lDDT-like adaptation~\cite{lddt2013} compares local intensity differences, not inter-atomic distances.
-For each eligible neighboring voxel pair $(u,v)$ within radius two in voxel coordinates, it measures
+For each valid pair of neighboring voxels $(u,v)$ within radius two in voxel coordinates, it measures
 $|(f(u)-f(v))-(x(u)-x(v))|$.
 The score averages the fractions below the four thresholds $m\sigma_{\rm rep}$.
-Its original fixed-tolerance variant instead uses $\{0.25,0.5,1,2\}$ standardized intensity units.
-These scores increase with similarity and are oriented before computing the reported distance coordinates.
+Its fixed-tolerance variant instead uses $\{0.25,0.5,1,2\}$ standardized intensity units.
+These scores increase with similarity and are negated before the distance scales are computed.
 A constant offset leaves the intensity-difference score unchanged; this invariance does not establish anatomical correctness.
 
 \subsection{Residual magnitude and direction}
@@ -182,56 +197,39 @@ A=\frac{\|b\|}{\|a\|},\qquad
 P=\frac{\langle b,a\rangle}{\|a\|^2}.
 \end{equation}
 An orthogonal residual can have $A=1$ and $P=0$.
-On the known-target shrinkage path $b=\lambda a$, both coordinates equal $\lambda$, while residual cosine remains one for positive $\lambda$.
+On the softening path $b=\lambda a$ with a known target, both coordinates equal $\lambda$, while residual correlation remains one for positive $\lambda$.
 These algebraic identities explain the controls but are not independent validation.
-A small target residual relative to acquisition variability makes the ratios unstable and needs an explicit resolution rule.
+A target residual that is small relative to acquisition variability makes the ratios unstable.
 
 \section{Validity masks and Gaussian spatial reporting}
 Beyond the rule of the main text that missing pixels are never zero, masks are carried through registration, normalization, averaging of reference people, context matching and local scoring.
-Fills chosen by search are especially sensitive: a person must not be chosen a context search because its padding accidentally matches the standardized target.
-The saved fundus block-search outputs preceding this correction are omitted from the manuscript.
-
+Fills chosen by search are especially sensitive: a person must not be chosen by the context search because its padding happens to match the standardized target.
 The share of valid pixels in a box can still decide whether a target is used; this does not turn displayed errors into box averages.
-Fine brain maps and the coarser nearest person grid have different sampling and interpolation, which must remain visible in provenance.
-For fundus fixed-composition maps, all displayed positions retain the same set of contributing targets to reduce spatial composition artifacts.
-This reduces one artifact class and does not establish anatomical validity.
-
-\paragraph{Display of the main MRI panels.}
-For the main illustration only, one common exterior display mask is derived from the six rendered MRI panels.
-Only border-connected locations that are black, white or transparent in every panel are made transparent; enclosed dark anatomy is retained.
-One tight crop and a light outer boundary are applied uniformly, preserving retained pixel colors.
-This display mask is not an acquisition or measurement mask and does not change errors, eligibility or window definitions.
-The numeric color limits remain $0$, $1$ and $2.4$; V retains its own row-specific display range.
-Source, illustration, crop and pixel-preservation records are in \src{provenance_infographic_v2.json}.
+Fine brain maps and the coarser nearest-person grid have different sampling and interpolation.
+For retinal maps, all displayed positions keep the same set of contributing targets, which removes artifacts from a changing composition.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{fig/brain_gaussian_maps.pdf}
-\caption{\textbf{Saved provisional Gaussian brain maps.}
-Population-template anatomy underlies aggregated fill-error maps.
-The source remains pre-QC with affine registration.
-Displayed local errors use the Gaussian amendments; the coarser nearest person grid is interpolated for display.
-The source image title is a descriptive pixel-error statement, not a validated biological identity conclusion.
-Source figure: \src{results/figures/fig_ladder_maps_common.pdf}; quantitative sources are the brain map and map-grid JSONs.}
+\includegraphics[width=\textwidth]{fig/brain_gaussian_maps_v2.pdf}
+\caption{\textbf{Brain error maps with Gaussian windows} (QTIM, affine alignment).
+Population-template anatomy underlies the aggregated error maps of each fill; the coarser nearest-person grid is interpolated for display.
+The title inside the figure describes pixel error, not a validated conclusion about biological identity.}
 \label{fig:s-brain}
 \end{figure*}
-
+% Source figure: results/figures/fig_ladder_maps_common.pdf; quantitative sources are the brain map and map-grid JSONs.
 
 \section{Directional tests and uncertainty}
-The recorded tests have explicit reference fills.
-T1 compares the second image with the dataset average; T2 with its softened version; T3a with wrong detail; T3b with white noise.
+Each directional test compares the second image with one reference fill: T1 with the dataset average, T2 with the softened second image, T3a with wrong detail and T3b with white noise.
 The paired independent unit is a family for QTIM and a person for iris.
-The fundus v1 panel uses the second visit as reference for GRAPE and a fellow-eye reference for PAPILA; PAPILA has no T1 comparison.
-The corresponding source protocol specifies its Holm family, and unavailable comparisons retain their status rather than becoming successful tests.
+The retinal tests use the second visit as reference for GRAPE and the fellow eye for PAPILA, which has no T1 comparison.
+Holm correction is applied within each image set, and unavailable comparisons are reported as such, never as passed tests.
 
 \begin{table*}[t]
 \centering
-\caption{\textbf{Recorded brain directional tests, provisional.}
-Each cell reports the source decision and Holm-adjusted probability.
-The test is one-sided in favor of the second image.
-Not establishing T2 is not an equivalence result.
-Residual correlation versus the exact mean has no eligible T1 pair.
-Source: \src{results/donor_ladder_brain_metrics.json}, random-region LR view.}
+\caption{\textbf{Brain directional tests} (QTIM).
+Each cell gives the decision and the Holm-adjusted $p$-value of a one-sided test in favor of the second image; ``not established'' is not an equivalence result.
+Residual correlation is undefined for the dataset average, so it has no T1 comparison.}
+\label{tab:s-brain-tests}
 \small
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -240,77 +238,18 @@ Metric & T1 & T2 & T3a & T3b \\
 \input{tab/brain_tests}
 \end{tabular}
 \end{table*}
+% Source: results/donor_ladder_brain_metrics.json, random-region LR view.
 
-Source intervals resample independent clusters and, where specified, positions.
-The cluster-only interval retained in the source answers a different uncertainty question from the two-way interval.
-Neither interval repairs registration bias or an incorrect identity definition.
-No new confidence interval or hypothesis test is recomputed from the published aggregate summaries.
+Intervals resample independent clusters and, where stated, positions.
+A cluster-only interval answers a different uncertainty question from the two-way interval.
+Neither interval corrects a registration bias or an incorrect definition of identity.
 
-\section{Available metric registry}
-The fixed registry distinguishes computed, blocked and unavailable metrics before a ranking is interpreted.
-The following table compares the completed fundus v1 registry with the accessible iris P2 registry.
-A later unblocking amendment does not change these historical run statuses.
-The main brain table uses its own tier-1 definitions and resampling scheme.
-
-{\small
-\begin{longtable}{@{}lll@{}}
-\caption{Metric availability in the frozen sources.
-Sources: \src{results/fundus_ladder_metrics.json} at the bilateral snapshot and \src{results/iris_ladder_metrics.json}.}\\
-\toprule
-Metric & Fundus v1 & Iris P2 \\
-\midrule
-\endfirsthead
-\toprule
-Metric & Fundus v1 & Iris P2 \\
-\midrule
-\endhead
-\input{tab/metric_registry}
-\end{longtable}
-}
-
-\clearpage
-\section{CARE aggregation audit as related evidence}
-The repository also contains a separate reproduction attempt on the released CARE scores~\cite{care2025}.
-Its current iteration records the status of each published median/quartile comparison under the frozen aggregation rule.
-This is a consistency audit of released scores, not generation of reconstructed CT or a rerun of the image-level segmenter.
-An aggregation mismatch does not refute the anatomical benefit of the reconstruction method.
-Coverage failures and non-finite values remain distinct from numeric disagreement.
-
-\begin{table}[htbp]
-\centering
-\caption{Saved CARE iteration-2 comparison statuses, counted directly from the source rows.
-Source: \src{results/care_iteration2.json}.
-The status names refer to the recorded numerical comparison, not the validity of CARE's broader scientific claims.}
-\begin{tabular}{@{}lr@{}}
-\toprule
-Recorded comparison status & Count \\
-\midrule
-\input{tab/care_status}
-\end{tabular}
-\end{table}
-
-\section{Agreement between metrics}
-The correlation analysis groups distances by how similarly they order the rungs within target, position and side.
-Strong agreement among monotone variants is not independent confirmation of identity sensitivity.
-The window-size dependence of the nearest-person rung is reported in the main text (Section 4.3).
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.9\textwidth,height=.72\textheight,keepaspectratio]{fig/metric_correlations.pdf}
-\caption{Provisional agreement between metrics in the brain (Spearman correlation of rung order).
-Source: \src{results/figures/fig_metrics_correlation.pdf}, with \src{results/donor_ladder_metrics_correlation.json}.
-This is descriptive dependence among measures, not a learned fusion or a ranking of validated identity metrics.}
-\end{figure}
-\clearpage
-
-\section{Full selected brain profiles}
-Table~\ref{tab:s-brain-full} preserves endpoint-specific target and family counts for the selected rungs across all available tier-1 distances.
-These are provisional random-region LR values and do not replace a post-registration panel.
+\section{Full brain profiles}
+Table~\ref{tab:s-brain-full} gives every distance computed in the brain for the selected rungs, with the number of targets and families behind each value.
 
 {\small
 \begin{longtable}{@{}llcrr@{}}
-\caption{Selected saved brain $R_{\rm rep}$ profiles and 95\% intervals.
-Source: \src{results/donor_ladder_brain_metrics.json}.}
+\caption{\textbf{Brain profiles for all distances} (QTIM; $R_{\rm rep}$ of Eq.~2 anchored on the second scan; mean and 95\% interval).}
 \label{tab:s-brain-full}\\
 \toprule
 Metric & Rung & $R_{\rm rep}$ & Targets & Families \\
@@ -323,17 +262,9 @@ Metric & Rung & $R_{\rm rep}$ & Targets & Families \\
 \input{tab/brain_full}
 \end{longtable}
 }
-
-\section{Advanced metrics and unavailable endpoints}
-The iris extension prespecifies LPIPS~\cite{zhang2018lpips}, Betti matching~\cite{betti2023}, and distribution-level FID/FWD comparisons~\cite{heusel2017fid,fwd2025}.
-These measurements operate at different levels.
-A set-level distribution distance cannot be treated as a per-eye identity distance, and Betti matching on intensity filtrations is an adaptation from its segmentation setting.
-The protocol records hypotheses about softening, realism and order of second image, nearest person and random person.
-Those expectations must be tested rather than imposed as the order of a plot.
-
-Brain-ID embeddings and model-level inpainting comparisons require their own completed evidence before being claimed.
+% Source: results/donor_ladder_brain_metrics.json.
 
 \section{Reproducibility}
-Every number in the paper is read from an aggregate result file named next to it; no participant image or per-person row is needed to rebuild the tables and figures.
-The experiment pipelines need the original datasets under their own terms; the code, protocols and aggregate results are in the project repository.
+Every number in the paper is computed from an aggregate result file in the project repository; no participant image or per-person row is needed to rebuild the tables and figures.
+The experiment pipelines need the original datasets, obtained under their own terms (Table~\ref{tab:s-terms}); the code, protocols and aggregate results are in the project repository.
 The atlas maps are assembled from saved Gaussian aggregate panels, and their scalar annotations summarize pooled errors rather than only the displayed axial slice.

@@ -8,7 +8,8 @@ The fills are scored by their distance to the original content, typically with m
 A low distance can mean that the fill recovered detail that belongs to this individual, or only that it is a generic, population-average fill that is close on average.
 A fill can also look plausible yet show someone else's face, eye, or brain.
 A single score cannot distinguish these cases; it requires reference images whose relationship to the target is known.
-We therefore study no inpainting model: every fill we score is a real image, an average of real images or a control built from them, so the audit of the metrics is deterministic and fully data-driven.
+We therefore audit the metrics with fills whose relationship to the target is known: every fill we score is a real image, an average of real images or a control built from them.
+The audit is deterministic and fully data-driven, and what a metric rewards here does not depend on any particular model.
 
 Inpainting is also a convenient test bed for conditional generation: the condition is fixed and the content the model should produce exists, so whatever a metric rewards here, it rewards wherever generated content is scored against a single reference.
 
@@ -30,4 +31,5 @@ We ask four research questions.
 
 Our contributions are the identity ladder with its three control conditions, and an audit of ten metric variants from four families on nine image sets from eight cohorts of brain \ac{MRI}, retinal photographs, faces and irises.
 None of the metrics tested answers both RQ1 and RQ2: metrics computed on the filled region reward partial averaging, and set-level metrics, \ac{FID}~\cite{heusel2017fid} and \ac{FWD}~\cite{fwd2025}, barely separate the right person from a random person.
+That the conditional mean minimizes expected squared error is known~\cite{blau2018}; the audit adds the size of this reward on real anatomy, the opposite failure of set-level metrics, a retrieval baseline built from the context alone whose distance depends on the region size, and directional tests in each image set.
 Inpainting algorithm benchmarks, such as the \ac{BraTS} brain inpainting challenge~\cite{brats2023}, should incorporate these control conditions to complement their original challenge metrics for better interpretability.

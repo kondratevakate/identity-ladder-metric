@@ -2,7 +2,7 @@
 \label{sec:results}
 \input{sec/fig_summary}
 \input{sec/main_profiles}
-% Every number cites its results file in a comment; F and P mark final and provisional values.
+% Every number cites its results file in a comment.
 We answer the four research questions in turn, first on averages over the nine image sets and then per modality.
 
 \subsection{RQ1, RQ2: pixel metrics see the person but reward averaging}
@@ -39,10 +39,10 @@ It is closer than the opposite side in every set, but closer than the person's o
 Local similarity is not identity, however: in CelebA, with a 16-pixel window (1/5 of the face width), the nearest person is at 0.399 on the local \ac{MSE} scale but at 0.983 for the whole face under ArcFace\statusfinal (IMDb-WIKI 0.397 and 0.984\statusfinal).
 How close nearest people come depends on the size of the hidden region relative to the object, while the other rungs do not (Figure~\ref{fig:rq4}, Table~\ref{tab:rq4}).
 When the hidden region grows from 1/16 to 1/8 and 1/4 of the object, the nearest person in the brain moves from 0.38 to 0.59 and 0.71 (8, 16 and 32\,mm cubes), and the other modalities follow the same course (Table~\ref{tab:rq4})\statuspre.
-The dataset average stays at 0.49 to 0.53, and the same person's second image and its softened version do not move.
-The mean of the 16 nearest people grows more slowly (brain 0.25 to 0.42, faces 0.12 to 0.28) and stays below the dataset average at every size.
+The dataset average remains between 0.49 and 0.53, and the same person's second image and its softened version do not change.
+The mean of the 16 nearest people grows more slowly (brain: 0.25 to 0.42; faces: 0.12 to 0.28) and remains below the dataset average at every size.
 Small holes are thus largely predictable from their surroundings, and large holes are not.
-Because the second image and its softened version keep their distance at every size, the averaging reward under \ac{MSE} (RQ2) does not depend on size, whereas the RQ4 retrieval baseline must be reported at a stated fraction of the object.
+Because the second image and its softened version maintain their distance at all sizes, the averaging reward under \ac{MSE} (RQ2) does not depend on size, whereas the RQ4 retrieval baseline must be reported at a specified fraction of the object.
 Acquisition also matters: in IXI, a random person from the same site is at 0.874 $[0.844, 0.899]$ and one from another site at 1.059 $[1.049, 1.072]$\statuspre.
 About a sixth of the distance to a random person from another site is therefore the scanner, not the anatomy ($(1.059-0.874)/1.059=0.17$), and a nearest-person search restricted to the same site would gain part of its advantage from matching the acquisition.
 

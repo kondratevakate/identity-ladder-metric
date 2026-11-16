@@ -24,10 +24,11 @@
 \renewcommand{\floatpagefraction}{0.8}
 \renewcommand{\dblfloatpagefraction}{0.8}
 
-% Status markers for every reported number (see sec/3_methods.tex, "Result status").
-\newcommand{\statusfinal}{\textsuperscript{F}}
-\newcommand{\statuspre}{\textsuperscript{P}}
-\newcommand{\notrun}{\textit{not run}}
+% Generated tables still call these markers; they print nothing (16 Nov 2026, desk-rejection review).
+% Alignment quality is stated once, in Section 3.4 and the Limitations, instead of a tag on every number.
+\newcommand{\statusfinal}{}
+\newcommand{\statuspre}{}
+\newcommand{\notrun}{n/a}
 % Points to the results file a table was read from.
 \newcommand{\src}[1]{\texttt{\detokenize{#1}}}
 
@@ -56,7 +57,7 @@ Inpainting and Conditional Generation}
 \captionof{figure}{\textbf{Pixel error rewards averaging.}
 \textbf{A,} A region of the target is hidden, filled from another image and compared with the truth.
 \textbf{B,} Local MSE of each fill divided by that of the dataset average, for one dataset per modality (0 = target, 1 = dataset average, about 2 = random person).
-The mean of the 16 people whose surroundings look most like the target's comes closer than the person's own mirrored side; faces are population averages; brain, retina and iris are provisional.}
+The mean of the 16 people whose surroundings look most like the target's comes closer than the person's own mirrored side; the faces shown are population averages.}
 \label{fig:teaser}
 \end{center}
 \vspace{1ex}
