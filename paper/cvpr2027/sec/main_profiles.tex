@@ -3,7 +3,7 @@
 \begin{table}[t]
 \centering
 \caption{\textbf{Brain (QTIM), provisional.}
-$R$ anchored on the second scan (0 = second scan, 1 = average distance of 16 random people); mirror = opposite hemisphere; mean and 95\% interval from resampling families and positions.
+$R$ of Eq.~\ref{eq:anchors} anchored on the second scan (0 = second scan, 1 = average distance of 16 random people); mirror = opposite hemisphere; mean and 95\% interval from resampling families and positions.
 Bold: closest fill; underline: second closest.
 Under \acs{MSE}, \acs{SSIM} and \acs{lDDT}-like the dataset average is closer than the person's own opposite hemisphere, and wrong detail sits at a random person.}
 \label{tab:brain}
@@ -21,7 +21,7 @@ Metric & Dataset average & Mirror & Wrong detail & Noise \\
 \begin{table}[t]
 \centering
 \caption{\textbf{Faces, final.}
-$R$ anchored on the target itself; nearest person = the single unrelated person with the closest context ring; ArcFace compares whole images.
+$R$ of Eq.~\ref{eq:anchors} anchored on the target itself; nearest person = the single unrelated person with the closest context ring; ArcFace compares whole images.
 Bold: closest fill; underline: second closest.
 A local nearest person is closest under \acs{MSE}, yet ArcFace places it almost at a random person (0.98), while the person's own second photograph is closest under ArcFace.}
 \label{tab:face}
