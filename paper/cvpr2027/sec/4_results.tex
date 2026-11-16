@@ -6,56 +6,56 @@
 
 \subsection{RQ1, RQ2: pixel metrics see the person but reward averaging}
 \label{sec:r-cross}
-Figure~\ref{fig:summary} places all ten metric variants on the stranger scale, averaged over the nine image sets; Figure~\ref{fig:explainer} traces one row.
-Error and similarity metrics are computed with the hidden region at 1/8 of the object in every image set (16\,mm cubes in the brain, 10 or 11 pixels in faces, retina and iris).
-Error and similarity metrics see the person: under \ac{MSE} the true person is at 0.41 and the stranger at 1\statuspre.
-They do not reject averaging: the dataset mean is at 0.50, and the shrunk true person at 0.29 is closer than the unchanged true person\statuspre.
-In the brain, anchored on the second scan, the shrunk scan is at $-0.014$ $[-0.028,-0.004]$, so T2 fails\statuspre.
+Figure~\ref{fig:summary} places all ten metric variants on the random-person scale, averaged over the nine image sets; Figure~\ref{fig:explainer} traces one row.
+Error and similarity metrics see the person: under \ac{MSE} the same person is at 0.41 and the random person at 1\statuspre.
+They do not reject averaging: the dataset average is at 0.50, and the softened same person at 0.29 is closer than the unchanged same person\statuspre.
+In the brain, anchored on the second scan, the softened scan is at $-0.014$ $[-0.028,-0.004]$, so T2 fails\statuspre.
 \input{sec/tab_tests}
-The directional tests show the same in every image set (Table~\ref{tab:tests}): no error or similarity metric places the unchanged person closer than the shrunk one (T2), while all of them reject wrong detail and noise (T3a, T3b), and only faces fail T1, because a second photograph changes pose and lighting\statuspre.
-\ac{SSIM} shows the same pattern with a smaller gap: the true person at 0.63, the shrunk true person at 0.60 and the dataset mean at 0.83, so it penalizes the crude mean more than \ac{MSE} does but still prefers partial averaging to the unchanged second image.
-\ac{lDDT}-like, the tolerance score that compares local intensity differences, rewards averaging the most: the shrunk true person at 0.52 and the dataset mean at 0.62 are both closer than the true person at 0.66.
+The directional tests show the same in every image set (Table~\ref{tab:tests}): no error or similarity metric places the unchanged person closer than the softened one (T2), while all of them reject wrong detail and noise (T3a, T3b), and T1 fails in faces under all four metrics, because a second photograph changes pose and lighting, and in UTIRIS under \ac{lDDT}-like\statuspre.
+\ac{SSIM} shows the same pattern with a smaller gap: the same person at 0.63, the softened same person at 0.60 and the dataset average at 0.83, so it penalizes the dataset average more than \ac{MSE} does but still prefers partial averaging to the unchanged second image.
+\ac{lDDT}-like, the tolerance score that compares local intensity differences, rewards averaging the most: the softened same person at 0.52 and the dataset average at 0.62 are both closer than the same person at 0.66.
 \ac{TM}-like, \ac{GDT}-like and \ac{RMSE} order the rungs almost exactly as \ac{MSE} (rank correlation 0.97 to 0.99).
-\ac{LPIPS} rejects the crude dataset mean (AlexNet 0.99, VGG 1.08); VGG keeps the shrunk true person next to the true person (0.61 against 0.60), and AlexNet places it only slightly further (0.56 against 0.47).
+\ac{LPIPS} rejects the dataset average (AlexNet 0.99, VGG 1.08); VGG keeps the softened same person next to the same person (0.61 against 0.60), and AlexNet places it only slightly further (0.56 against 0.47).
 % Sources: fig_metric_summary_f8_R.json (error and similarity at f = 1/8, from common_f8_v1.json); agreement_f8_v1.json; donor_ladder_brain_metrics.json views/random_patches/LR/ladder_R.
 
 Set-level metrics behave the other way round.
-\ac{FID} and \ac{FWD} place the dataset-mean set 16 and 186 times as far as the stranger set, but the true-person set at 0.93 and 0.57 of it; in rank terms the stranger lies only 0.10 of the ladder beyond the true person, against 0.59 for \ac{MSE}.
-Because set distances are biased upward for small sets, we left QTIM out of the set-level summary after its second-scan set (138 of 1{,}326 regions) gave 8.3, and IXI because its opposite-side set is the target set itself, and dropped rungs with fewer than half the stranger set's regions; both rules were fixed after seeing that value.
-No metric family both recognizes the individual and penalizes subtle averaging.
+\ac{FID} and \ac{FWD} place the dataset-average set 16 and 186 times as far as the random-person set.
+They place the same-person set at 0.93 and 0.57 of the random-person set.
+In rank terms the random person lies only 0.10 of the ladder beyond the same person, against 0.59 for \ac{MSE}.
+Because set distances are biased upward for small sets, we left QTIM out of the set-level summary after its second-scan set (138 of 1{,}326 regions) gave 8.3, and IXI because its opposite-side set is the target set itself, and dropped rungs with fewer than half the random-person set's regions; both rules were fixed after seeing that value.
+No metric reaches the shaded corner of Figure~\ref{fig:summary}A, where it would both recognize the individual and penalize subtle averaging.
 % Sources: fig_metric_summary_R.json (fid, fwd, panel_A); values_generative.json.
 
 \subsection{RQ3: lost detail is cheap for pixel metrics, wrong detail for set-level metrics}
-Under \ac{MSE}, lost detail (shrunk true person) is at 0.29, wrong detail at 1.00, as far as a stranger, and noise at 0.80\statuspre; only \ac{lDDT}-like puts noise far beyond a stranger (1.58).
-\ac{FID} reverses the order: wrong detail at 1.29 and the shrunk true person at 2.55, so it prefers a sharp image of the wrong person to a softened image of the right one\statuspre.
+Under \ac{MSE}, lost detail (softened same person) is at 0.29, wrong detail at 1.00, as far as a random person, and noise at 0.80\statuspre; only \ac{lDDT}-like puts noise far beyond a random person (1.58).
+\ac{FID} reverses the order: wrong detail at 1.29 and the softened same person at 2.55, so it prefers a sharp image of the wrong person to a softened image of the right one\statuspre.
 Residual correlation, which compares only the direction of individual detail, cannot see lost detail at all.
-The two families therefore fail in opposite directions: a model tuned on pixel metrics learns to blur toward the mean, and a model tuned on set-level metrics can produce realistic detail that belongs to someone else.
-\subsection{RQ4: look-alikes chosen from the context come close}
+The two families therefore fail in opposite directions: a model tuned on pixel metrics would learn to blur toward the mean, and a model tuned on set-level metrics could produce realistic detail that belongs to someone else.
+\subsection{RQ4: nearest people chosen from the context come close}
 \input{sec/fig_rq4}
-With the hidden region at 1/8 of the object, the mean of 16 look-alikes is at 0.29 under \ac{MSE}, closer than the true person's second image (0.41), and the oracle look-alike at 0.23\statuspre.
-In QTIM it is at 0.375 $[0.370, 0.380]$ against 0.503 for the dataset mean and 0.594 for a single look-alike; IXI gives 0.363, 0.505 and 0.662 for the opposite side\statuspre.
-Local similarity is not identity, however: in CelebA, with a 16-pixel window (1/5 of the face width), a look-alike is at 0.399 on the local \ac{MSE} scale but at 0.983 for the whole face under ArcFace\statusfinal (IMDb-WIKI 0.397 and 0.984\statusfinal).
-How close look-alikes come depends on the size of the hidden region relative to the object, while the other rungs do not (Figure~\ref{fig:rq4}, Table~\ref{tab:rq4}).
-When the hidden region grows from 1/16 to 1/8 and 1/4 of the object, a single look-alike moves from 0.38 to 0.59 and 0.71 in the brain (8, 16 and 32\,mm cubes), from 0.16 to 0.30 and 0.46 in faces, from 0.38 to 0.52 and 0.62 in the retina and from 0.13 to 0.22 and 0.39 in the iris, while the dataset mean stays at 0.49 to 0.53 and the true person's second image and its shrunk version do not move\statuspre.
-The mean of 16 look-alikes grows more slowly (brain 0.25 to 0.42, faces 0.12 to 0.28) and stays below the dataset mean at every size.
-Small holes are thus largely predictable from their surroundings, and large holes are not; RQ1 to RQ3 hold at every size, but the RQ4 retrieval baseline must be reported at a stated fraction of the object.
-Acquisition also matters: in IXI a stranger from the same site is at 0.874 $[0.844, 0.899]$ and one from another site at 1.059 $[1.049, 1.072]$\statuspre.
-About a sixth of the distance to a stranger from another site is therefore the scanner, not the anatomy ($(1.059-0.874)/1.059=0.17$), and a look-alike search restricted to the same site would gain part of its advantage from matching the acquisition.
+With the hidden region at 1/8 of the object, the mean of the 16 nearest people is at 0.29 under \ac{MSE} on average over the nine sets, and the best-matching person at 0.23\statuspre.
+It is closer than the opposite side in every set, but closer than the person's own second image only in faces and UTIRIS \ac{VIS} (CelebA 0.20 against 0.63); with a second scan or a repeated capture of the same eye the person stays closer (QTIM 0.15 against 0.37, GRAPE 0.21 against 0.40, UPOL 0.09 against 0.25)\statuspre.
+Local similarity is not identity, however: in CelebA, with a 16-pixel window (1/5 of the face width), the nearest person is at 0.399 on the local \ac{MSE} scale but at 0.983 for the whole face under ArcFace\statusfinal (IMDb-WIKI 0.397 and 0.984\statusfinal).
+How close nearest people come depends on the size of the hidden region relative to the object, while the other rungs do not (Figure~\ref{fig:rq4}, Table~\ref{tab:rq4}).
+When the hidden region grows from 1/16 to 1/8 and 1/4 of the object, the nearest person in the brain moves from 0.38 to 0.59 and 0.71 (8, 16 and 32\,mm cubes), and the other modalities follow the same course (Table~\ref{tab:rq4})\statuspre.
+The dataset average stays at 0.49 to 0.53, and the same person's second image and its softened version do not move.
+The mean of the 16 nearest people grows more slowly (brain 0.25 to 0.42, faces 0.12 to 0.28) and stays below the dataset average at every size.
+Small holes are thus largely predictable from their surroundings, and large holes are not.
+Because the second image and its softened version keep their distance at every size, the averaging reward under \ac{MSE} (RQ2) does not depend on size, whereas the RQ4 retrieval baseline must be reported at a stated fraction of the object.
+Acquisition also matters: in IXI a random person from the same site is at 0.874 $[0.844, 0.899]$ and one from another site at 1.059 $[1.049, 1.072]$\statuspre.
+About a sixth of the distance to a random person from another site is therefore the scanner, not the anatomy ($(1.059-0.874)/1.059=0.17$), and a nearest-person search restricted to the same site would gain part of its advantage from matching the acquisition.
 
 \subsection{Per-modality profiles}
 Supplementary Figure~S1 shows where in the image each rung is close or far, and Tables~\ref{tab:brain} to~\ref{tab:fundus} give the profiles of each modality at each set's original window (16 pixels in faces and iris).
-In the brain, the dataset mean is closer to the target than the person's own opposite hemisphere under \ac{MSE} (0.413 against 0.717), \ac{SSIM} and \ac{lDDT}-like, and only \ac{TM}-like reverses this order\statuspre.
-Wrong detail sits at a stranger under every metric, and noise falls short of a stranger under \ac{MSE} (0.921) but far beyond it under \ac{lDDT}-like (2.073)\statuspre.
-In IXI, \acs{LPIPS} places the shrunk opposite hemisphere beyond the unchanged one (AlexNet 1.25 against 0.76, VGG 0.91 against 0.88) and passes T2 with both networks, which no error or similarity metric does in any set, while persistence gives both 0.80 and fails T2\statuspre.
-Contrast harmonization with HACA3+ shrinks the mean absolute difference between the two sessions of one QTIM brain from 0.121 to 0.016 standardized units in a deep box and from 0.059 to 0.033 in a parietal box, so part of what separates a second scan from its target is acquisition rather than anatomy\statuspre.
-In faces, a second photograph of the same person is further than the dataset mean under \ac{MSE} (0.640 against 0.499 in CelebA), because pose and lighting change between photographs, while ArcFace places it closest (0.354)\statusfinal.
-The maps show that the opposite hemisphere is closest in deep structures near the midline and furthest in the cortex, and that the mirrored half of a face is closest at the cheeks and furthest at the nose; the stranger is uniformly far.
-In the retina, the second visit of the same eye is at 0.49 in GRAPE, while the fellow eye is further than the dataset mean (1.33 in GRAPE, 1.47 in PAPILA) and the mean of 16 look-alikes falls in between (0.86, 0.94)\statuspre.
-The iris shows the same order with a larger gap: the same eye captured again is at 0.41, 0.57 and 0.18 in UTIRIS \ac{NIR}, UTIRIS \ac{VIS} and UPOL, the other eye of the same person at 1.12 to 1.29, beyond the dataset mean, and a single look-alike in between\statuspre.
-Across modalities, the opposite side of the same body is therefore not an intermediate rung between the true person and a stranger: under squared error it is usually further than the population average, because mirrored anatomy differs in detail even within one person.
-Only faces break this pattern, where the mirrored half is as close as the dataset mean (0.99 on the $Q$ scale) and closer than a second photograph.
-Relatives behave like strangers under squared error: a sibling is at 1.84 times the dataset-mean error in QTIM and 1.73 in IMDb-WIKI, close to the stranger level of about 2 (Supplementary Figure~S1)\statuspre.
-Whatever anatomy siblings share is small next to the individual detail that pixel errors weigh.
+In the brain, the dataset average is closer to the target than the person's own opposite hemisphere under \ac{MSE} (0.413 against 0.717), \ac{SSIM} and \ac{lDDT}-like, and only \ac{TM}-like reverses this order\statuspre.
+Wrong detail sits at a random person under every metric, and noise falls short of a random person under \ac{MSE} (0.921) but far beyond it under \ac{lDDT}-like (2.073)\statuspre.
+In IXI, \acs{LPIPS} places the softened opposite hemisphere beyond the unchanged one (AlexNet 1.25 against 0.76, VGG 0.91 against 0.88) and passes T2 with both networks, which no error or similarity metric does in any set, while persistence gives both 0.80 and fails T2\statuspre.
+In faces, a second photograph of the same person is further than the dataset average under \ac{MSE} (0.640 against 0.499 in CelebA), because pose and lighting change between photographs, while ArcFace places it closest (0.354)\statusfinal.
+In the retina, the second visit of the same eye is at 0.49 in GRAPE, while the fellow eye is further than the dataset average (1.33 in GRAPE, 1.47 in PAPILA) and the mean of the 16 nearest people falls in between (0.86, 0.94)\statuspre.
+The iris shows the same order with a larger gap: the same eye captured again is at 0.41, 0.57 and 0.18 in UTIRIS \ac{NIR}, UTIRIS \ac{VIS} and UPOL, the other eye of the same person at 1.12 to 1.29, beyond the dataset average, and the nearest person in between\statuspre.
+Across modalities, the opposite side of the same body is therefore not an intermediate rung between the same person and a random person: under squared error it is usually further than the population average, because mirrored anatomy differs in detail even within one person.
+Only faces break this pattern, where the mirrored half is as close as the dataset average (0.99 on the $Q$ scale) and closer than a second photograph.
+Relatives behave like random people under squared error: a sibling is at 1.84 times the dataset-average error in QTIM and 1.73 in IMDb-WIKI, close to the random-person level of about 2 (Supplementary Figure~S1)\statuspre.
 % Sources: atlas_provenance.json (sibling Q, QTIM and IMDb-WIKI rows).
 % Sources: tab/fundus_ratio.tex, tab/iris_ratio.tex, tab/dataset_card.tex.
 % Sources: fig_metric_summary_f8_R.json; common_all.json (QTIM, IXI); face_ladder_metrics.json; rq4_window_size.json (size curve, fig/rq4_size_plotted.json).

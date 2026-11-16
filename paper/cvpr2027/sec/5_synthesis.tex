@@ -1,19 +1,20 @@
 \section{Discussion and conclusion}
 \label{sec:synthesis}
-The behavior of squared error is not an accident of our data.
-The conditional mean of the hidden content given the context minimizes expected squared error, and a fill drawn from the true conditional distribution has twice that error~\cite{blau2018}; the shrunk true person and the mean of 16 look-alikes are empirical stand-ins for that mean.
+The conditional mean of the hidden content given the context minimizes expected squared error, and a fill drawn from the true conditional distribution has twice that error, because it adds an independent draw of the unpredictable part; this is the distortion side of the perception-distortion tradeoff~\cite{blau2018}.
+The softened same person and the mean of the 16 nearest people are empirical stand-ins for that mean.
 We show how large this reward is on real anatomy, and that set-level metrics trade it for another blind spot.
 A pixel score alone cannot show whether a fill kept the person.
-We therefore suggest reporting three numbers next to any inpainting score, on the same masks: the score of the dataset mean, of the mean of 16 look-alikes chosen from the context, and of a stranger.
-A model that does not beat the look-alike mean adds nothing to retrieval, and one near the dataset mean has averaged the person away; a conditional mean remains the right answer when the hidden content is truly ambiguous, and the controls make that choice visible.
+We therefore suggest reporting three numbers next to any inpainting score, on the same masks: the score of the dataset average, of the mean of the 16 nearest people chosen from the context, and of a random person.
+Under a metric that passes T2, a model that does not beat the nearest-people mean adds nothing to retrieval; under \ac{MSE} alone, beating it can also mean averaging more, which is why the softened control belongs next to it.
+A model near the dataset average has averaged the person away; a conditional mean remains the right answer when the hidden content is truly ambiguous, and the controls make that choice visible.
 
 \paragraph{A recipe for inpainting benchmarks.}
 The controls need no model and no labels beyond the images themselves.
-For each hidden region, a benchmark can compute the dataset mean of the region over unrelated people, the mean of the 16 people whose context rings are closest, and 16 random strangers, all on the same valid pixels as the submitted fills.
-Scores are then reported on the stranger scale of Eq.~\ref{eq:anchors}, so that a submission at 0.5 is as close as the dataset mean and one at 0.3 as close as a context search.
-Where a dataset has second images of the same people, the shrunk second image adds a direct test of whether the metric rewards averaging, and a set-level metric on the same fills shows whether the submission has lost realism.
-A results table then needs only a few extra columns per metric: the hidden region as a fraction of the object, the scores of the dataset mean, the look-alike mean and a stranger, and, where second images exist, whether the metric passes T2.
-Because look-alikes come closer as the hidden region shrinks (Figure~\ref{fig:rq4}), comparing submissions across mask sizes without these columns mixes model quality with how predictable the region is from its surroundings.
+For each hidden region, a benchmark can compute the dataset average of the region over unrelated people, the mean of the 16 people whose context rings are closest, and 16 random people, all on the same valid pixels as the submitted fills.
+Scores are then reported on the random-person scale of Eq.~\ref{eq:anchors}, so that a submission at 0.5 is as close as the dataset average, and its gap to a context search is read against that set's own nearest-people score (0.20 to 0.40 at 1/8).
+Where a dataset has second images of the same people, the softened second image adds a direct test of whether the metric rewards averaging, and a set-level metric on the same fills shows whether the submission has lost realism.
+A results table then needs only a few extra columns per metric: the hidden region as a fraction of the object, the scores of the dataset average, the nearest-people mean and a random person, and, where second images exist, whether the metric passes T2.
+Because nearest people come closer as the hidden region shrinks (Figure~\ref{fig:rq4}), comparing submissions across mask sizes without these columns mixes model quality with how predictable the region is from its surroundings.
 
 \paragraph{Auditing a generative model across groups of people.}
 The same controls turn into an audit of a generative model, which we propose but have not yet run.
@@ -24,28 +25,27 @@ For a group of targets $a$ (for example an age band or an acquisition site), a d
 \label{eq:audit}
 \end{equation}
 where $E_{ir}$ are the valid pixels shared by the target and the control.
-A negative value means that the metric prefers the model's fills to the control, for example to the mean of 16 look-alikes; it does not mean that the person was kept.
+A negative value means that the metric prefers the model's fills to the control, for example to the mean of the 16 nearest people; it does not mean that the person was kept.
 Valid pixels and eligible targets are fixed before the model is run, seeds are averaged within a target before the group average, and failed outputs are reported rather than dropped.
-Profiles keep raw distances next to a common and a group-matched reference, because normalizing within each group can hide a raw difference.
-A gap between groups describes the model and the metric together: mask difficulty, location, acquisition and the size of the reference pool must stay visible, the gap needs uncertainty over independent people, and on its own it shows neither discrimination nor mode collapse.
+A gap between groups describes the model and the metric together.
+Mask difficulty, location, acquisition and the size of the reference pool must stay visible.
+The gap needs uncertainty over independent people, and on its own it shows neither discrimination nor mode collapse.
 The supplement lists, for twelve audit questions, what the present data already answer and what still needs model outputs.
 
 \paragraph{Limitations.}
 No generative model is evaluated; every fill is a real image, an average or a constructed control.
 Registration and acquisition remain the main confounders in brain and retina, which stay provisional with the iris until registration and mask \ac{QC} are complete.
 Only 23 QTIM people have a second scan and two of nine image sets record families, and the set-level exclusion rule was fixed after seeing one value.
-Error and similarity metrics use a hidden region of 1/8 of the object everywhere, but \ac{LPIPS}, topology and set-level metrics still use about 1/5 in faces and iris.
-The look-alike search compares raw context rings by squared error; a learned similarity or a wider context could come closer, so our retrieval baseline is a lower bound on what retrieval can reach.
-Wrong detail is built orthogonal to the target's own detail, whereas a model's errors may be partly correlated with it and would then fall between wrong detail and the true person.
-The ladder measures closeness to known references, not whether a fill is clinically or biometrically correct: a fill can sit at the true person's position and still miss a lesion, and identity under ArcFace and under pixel errors can disagree, as the faces show.
+Error and similarity metrics use a hidden region of 1/8 of the object everywhere, but \ac{LPIPS}, topology and set-level metrics still use about 1/5 in faces, retina and iris.
+The nearest-person search compares raw context rings by squared error; a learned similarity or a wider context could come closer, so our retrieval baseline is a lower bound on what retrieval can reach.
+The ladder measures closeness to known references, not whether a fill is clinically or biometrically correct: a fill can sit at the same person's position and still miss a lesion, and identity under ArcFace and under pixel errors can disagree, as the faces show.
 
 \paragraph{Ethics and data.}
 All datasets are public research datasets used under their terms.
 Figure~\ref{fig:explainer} shows one QTIM brain scan (CC0); otherwise only population averages and maps are shown, as the CelebA and IMDb-WIKI terms do not allow publishing their images and iris and retina images are biometric.
-Released results are aggregates without person identifiers; computing a look-alike needs only the images of the evaluation set itself, so the controls add no new data collection.
 Approval and consent statements await author confirmation.
 
 \paragraph{Conclusion.}
-References of known relationship turn a single inpainting score into a position on a ladder from the true person to a random one.
-On nine image sets, error and similarity metrics recognize the person but reward pulling detail toward the average, set-level metrics reject the average but cannot tell the right person from the wrong one, and context search alone comes closer than the person's own second image.
+References of known relationship turn a single inpainting score into a position on a ladder from the same person to a random one.
+On nine image sets, error and similarity metrics recognize the person but reward pulling detail toward the average, set-level metrics reject the average but barely separate the right person from the wrong one, and context search alone comes closer than the opposite side of the same body and, in faces, closer than a second photograph.
 Reporting the three controls next to every score costs no model and no labels, and it shows which of these failures a new inpainting model has.

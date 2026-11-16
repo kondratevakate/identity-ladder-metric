@@ -1,13 +1,14 @@
 \begin{abstract}
 Inpainting models fill a hidden region of an image from its visible surroundings, and their fills are usually scored by pixel distance to the original content.
 A low distance can mean that the fill recovered this person's own detail, or only that it looks like an average person.
-We test which of the two common metrics reward, using references whose relationship to the hidden region is known in advance: a second image of the same person, the opposite side of the same body, unrelated people, and averages of many people.
-We add three controls built from the truth: the person's own second image pulled toward the population average, the same amount of detail taken from a stranger, and white noise.
+We test which of these two cases common metrics reward, using references whose relationship to the hidden region is known in advance: a second image of the same person, the opposite side of the same body, unrelated people, and averages of many people.
+We add three controls built from the truth: the person's own second image pulled toward the population average, the same amount of detail taken from a random person, and white noise.
 We apply this identity ladder to nine image sets from eight cohorts of brain \ac{MRI}, retinal photographs, faces and irises.
-On a scale where 0 is the target and 1 is a typical stranger, with the hidden region at 1/8 of the object, \ac{MSE} places the person's second image at 0.41 and the dataset mean at 0.50, and the same second image pulled toward the mean scores better (0.29) than the unchanged one.
-Set-level \ac{FID} and \ac{FWD} reject averaged fills by a factor of 16 and 186, but barely separate the right person from a stranger.
+On a scale where 0 is the target and 1 is a random person, with the hidden region at 1/8 of the object, \ac{MSE} places the person's second image at 0.41 and the dataset average at 0.50, and the same second image pulled toward the average scores better (0.29) than the unchanged one.
+Set-level \ac{FID} and \ac{FWD} reject averaged fills by a factor of 16 and 186, but barely separate the right person from a random person.
 No metric we tested does both.
-The mean of 16 unrelated people chosen by the visible surroundings alone reaches 0.29 under \ac{MSE}, closer than the person's own second image, which sets a retrieval baseline that a generative model must beat; how close it comes grows with the size of the hidden region.
+The mean of 16 unrelated people chosen by the visible surroundings alone reaches 0.29 under \ac{MSE}: closer than the opposite side of the same body in every set, and closer than a second photograph in faces.
+This retrieval baseline moves away from the target as the hidden region grows, so it must be reported at a stated region size.
 We therefore recommend reporting the ladder controls next to any inpainting score.
 Brain, retinal and iris results are provisional until registration quality control is complete; no generative model is evaluated here.
 \end{abstract}

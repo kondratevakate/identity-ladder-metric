@@ -19,16 +19,16 @@ Because every reference is a real image or an average of real images, we can che
 
 We call this set of references the \emph{identity ladder}, and each kind of reference a \emph{rung}.
 We call the difference between a person's image and the population average their \emph{individual detail}.
-Three constructed controls separate losing detail from getting it wrong: the \emph{shrunk true person} is the person's own second image with its individual detail scaled down toward the average; \emph{wrong detail} adds a stranger's individual detail of the same strength to the average; and \emph{noise} adds white noise of that strength.
+Three constructed controls separate losing detail from getting it wrong: the \emph{softened same person} is the person's own second image with its individual detail scaled down toward the average; \emph{wrong detail} adds a random person's individual detail of the same strength to the average; and \emph{noise} adds white noise of that strength.
 Finally, unrelated people chosen only because their visible surroundings look like the target's show what a fill can achieve without knowing the person.
 We ask four research questions.
-\textbf{RQ1:} Does a metric place the true person closer than a stranger?
+\textbf{RQ1:} Does a metric place the same person closer than a random person?
 \textbf{RQ2:} Does it penalize partial averaging toward the population mean?
 \textbf{RQ3:} Does it separate lost detail (the right person, made blurry) from wrong detail (sharp detail from someone else)?
-\textbf{RQ4:} How close can unrelated people chosen from the visible surroundings alone come to the true person?
+\textbf{RQ4:} How close can unrelated people chosen from the visible surroundings alone come to the same person?
 
 Our contributions are the identity ladder with its three controls, and an audit of ten metric variants from four families on nine image sets from eight cohorts of brain \ac{MRI}, retinal photographs, faces and irises.
 No tested metric answers both RQ1 and RQ2.
-Metrics computed on the filled region distinguish the right person from a stranger but reward partial averaging: under \ac{MSE}, a person's second image pulled partway toward the population mean scores better than the unchanged one.
-Set-level metrics, \ac{FID}~\cite{heusel2017fid} and \ac{FWD}~\cite{fwd2025}, strongly reject averaged fills but barely separate the right person from a stranger.
+Metrics computed on the filled region distinguish the right person from a random person but reward partial averaging: under \ac{MSE}, a person's second image pulled partway toward the population mean scores better than the unchanged one.
+Set-level metrics, \ac{FID}~\cite{heusel2017fid} and \ac{FWD}~\cite{fwd2025}, strongly reject averaged fills but barely separate the right person from a random person.
 Inpainting evaluations, such as the \ac{BraTS} brain inpainting challenge~\cite{brats2023}, therefore need these controls next to the score.

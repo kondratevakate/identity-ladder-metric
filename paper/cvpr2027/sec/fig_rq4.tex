@@ -1,23 +1,23 @@
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{fig/rq4_size.pdf}
-\caption{\textbf{Look-alikes come closer when the hidden region is small.}
-Distance under \acs{MSE} on the random-person scale (0 = target, 1 = average of 16 random people) against the size of the hidden region as a fraction of the object; lines average the image sets of one modality (faces: CelebA and IMDb-WIKI; retina: GRAPE and PAPILA; iris: UTIRIS \acs{NIR}, every fourth eye at 1/16); the gray band is the dataset average and the dashed line the 1/8 used everywhere else.
-A single look-alike passes the dataset average in brain and retina once the region reaches 1/8, while the mean of 16 look-alikes stays below it at every size; brain, retina and iris are provisional.}
+\caption{\textbf{Nearest people come closer when the hidden region is small.}
+Distance under \acs{MSE} on the random-person scale (0 = target, 1 = average distance of 16 random people) against the size of the hidden region as a fraction of the object; lines average the image sets of one modality (faces: CelebA and IMDb-WIKI; retina: GRAPE and PAPILA; iris: UTIRIS \acs{NIR}, every fourth eye at 1/16); the gray band is the dataset average and the dashed line the 1/8 used everywhere else.
+The nearest person passes the dataset average in brain and retina once the region reaches 1/8, while the mean of the 16 nearest people stays below it at every size; brain, retina and iris are provisional.}
 \label{fig:rq4}
 \end{figure}
 % Source: results/rq4_window_size.json; drawn by paper/cvpr2027/make_fig_rq4_size.py (values in fig/rq4_size_plotted.json).
 
 \begin{table}[t]
 \centering
-\caption{\textbf{Look-alike distance under \acs{MSE} by window size, per image set} (random-person scale; window as a fraction of the object; n/a = not run by protocol; at 1/16, UTIRIS \acs{NIR} and the retina use every fourth eye).
-In every set the single look-alike moves toward a random person as the window grows, while the dataset average stays near 0.5.}
+\caption{\textbf{Nearest person distance under \acs{MSE} by window size, per image set} (random-person scale; window as a fraction of the object; n/a = not run by protocol; at 1/16, UTIRIS \acs{NIR} and the retina use every fourth eye).
+In every set the nearest person moves toward a random person as the window grows, while the dataset average stays near 0.5.}
 \label{tab:rq4}
 \scriptsize
 \setlength{\tabcolsep}{1.6pt}
 \begin{tabular}{@{}lccccccccc@{}}
 \toprule
-& \multicolumn{4}{c}{One look-alike} & \multicolumn{4}{c}{Mean of 16 look-alikes} & Data. \\
+& \multicolumn{4}{c}{Nearest person} & \multicolumn{4}{c}{Mean of the 16 nearest people} & Data. \\
 \cmidrule(lr){2-5}\cmidrule(lr){6-9}
 Image set & 1/16 & 1/8 & 1/5 & 1/4 & 1/16 & 1/8 & 1/5 & 1/4 & avg. \\
 \midrule

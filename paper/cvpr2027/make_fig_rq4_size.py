@@ -1,4 +1,4 @@
-"""One-column RQ4 figure: how close context-selected look-alikes come, by hidden-region size in object units.
+"""One-column RQ4 figure: how close the context-selected nearest people come, by hidden-region size in object units.
 
 Source: results/rq4_window_size.json (R_self under MSE, 0 = target, 1 = average of 16 random people).
 Lines average the image sets of one modality that have all sizes (faces: CelebA, IMDb-WIKI; retina: GRAPE, PAPILA;
@@ -20,7 +20,7 @@ SRC = "results/rq4_window_size.json"
 OUT = "paper/cvpr2027/fig/rq4_size"
 GROUPS = [("Brain (QTIM)", ["QTIM"], "#3b6e8f"), ("Faces", ["CelebA", "IMDb-WIKI"], "#7c6d9c"),
           ("Retina", ["GRAPE", "PAPILA"], "#33877a"), ("Iris (UTIRIS NIR)", ["UTIRIS NIR"], "#b9853a")]
-PANELS = [("lookalike", "One look-alike"), ("lookalike16", "Mean of 16 look-alikes")]
+PANELS = [("lookalike", "Nearest person"), ("lookalike16", "Mean of 16 nearest people")]
 TARGET_F = [1 / 16, 1 / 8, 1 / 4]
 
 R = json.load(open(SRC, encoding="utf-8"))["datasets"]

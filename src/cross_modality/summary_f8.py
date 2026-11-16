@@ -17,8 +17,8 @@ CM = os.path.join("results", "cross_modality")
 OUT = os.path.join(CM, "fig_metric_summary_f8_R.json")
 NOTE = ("Error and similarity metrics (MSE, SSIM, TM-, GDT-, lDDT-like, RMSE) from common_f8_v1.json: hidden window "
         "1/8 of the object in all nine image sets (Amendment 10). LPIPS, topology, FID and FWD from "
-        "values_generative.json at their original windows (brain 16 mm = 1/8; faces and iris 16 px, about 1/5; "
-        "retina 16 px of 128).")
+        "values_generative.json at their original windows (brain 16 mm = 1/8; faces, iris and retina 16 px, "
+        "about 1/5 of the object).")
 
 with tempfile.TemporaryDirectory() as tmp:
     for name in os.listdir(CM):

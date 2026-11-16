@@ -3,15 +3,15 @@
 \begin{table}[t]
 \centering
 \caption{\textbf{Brain (QTIM), provisional.}
-$R$ anchored on the second scan (0 = second scan, 1 = average of 16 random strangers); mirror = opposite hemisphere; mean and 95\% interval from resampling families and positions.
+$R$ anchored on the second scan (0 = second scan, 1 = average distance of 16 random people); mirror = opposite hemisphere; mean and 95\% interval from resampling families and positions.
 Bold: closest fill; underline: second closest.
-Under \acs{MSE}, \acs{SSIM} and \acs{lDDT}-like the dataset mean is closer than the person's own opposite hemisphere, and wrong detail sits at a stranger.}
+Under \acs{MSE}, \acs{SSIM} and \acs{lDDT}-like the dataset average is closer than the person's own opposite hemisphere, and wrong detail sits at a random person.}
 \label{tab:brain}
 \scriptsize
 \setlength{\tabcolsep}{2pt}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-Metric & Dataset mean & Mirror & Wrong detail & Noise \\
+Metric & Dataset average & Mirror & Wrong detail & Noise \\
 \midrule
 \input{tab/brain_profile}
 \end{tabular}
@@ -21,15 +21,15 @@ Metric & Dataset mean & Mirror & Wrong detail & Noise \\
 \begin{table}[t]
 \centering
 \caption{\textbf{Faces, final.}
-$R$ anchored on the target itself; look-alike = the single unrelated person with the closest context ring; ArcFace compares whole images.
+$R$ anchored on the target itself; nearest person = the single unrelated person with the closest context ring; ArcFace compares whole images.
 Bold: closest fill; underline: second closest.
-A local look-alike is closest under \acs{MSE}, yet ArcFace places it almost at a stranger (0.98), while the person's own second photograph is closest under ArcFace.}
+A local nearest person is closest under \acs{MSE}, yet ArcFace places it almost at a random person (0.98), while the person's own second photograph is closest under ArcFace.}
 \label{tab:face}
 \scriptsize
 \setlength{\tabcolsep}{2pt}
 \begin{tabular}{@{}llcccc@{}}
 \toprule
-Data & Metric & 2nd photo & Opp. half & Mean & Look-alike \\
+Data & Metric & 2nd photo & Opp. half & Average & Nearest person \\
 \midrule
 \input{tab/face_profile}
 \end{tabular}
@@ -38,18 +38,18 @@ Data & Metric & 2nd photo & Opp. half & Mean & Look-alike \\
 
 \begin{table}[t]
 \centering
-\caption{\textbf{Retina and iris, provisional} ($Q$: 1 = dataset mean, about 2 = stranger).
-Retina: context = mean of 16 look-alikes; PAPILA has no second visit.
-Iris: look-alike = one unrelated eye with the closest context.
+\caption{\textbf{Retina and iris, provisional} ($Q$: 1 = dataset average, about 2 = random person).
+Retina: 16 nearest = mean of the 16 nearest people; PAPILA has no second visit.
+Iris: nearest person = one unrelated eye with the closest context.
 Bold: closest fill; underline: second closest.
-The person's own other eye is further than the dataset mean in every set, and only the same eye seen again comes clearly closer.}
+The person's own other eye is further than the dataset average in every set, and only the same eye seen again comes clearly closer.}
 \label{tab:fundus}
 \label{tab:iris}
 \scriptsize
 \setlength{\tabcolsep}{2pt}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-Retina & Second visit & Fellow eye & Context mean & Stranger \\
+Retina & Second visit & Fellow eye & 16 nearest & Random person \\
 \midrule
 \input{tab/fundus_ratio}
 \end{tabular}
@@ -57,7 +57,7 @@ Retina & Second visit & Fellow eye & Context mean & Stranger \\
 \smallskip
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-Iris & Same eye & Other eye & Look-alike & Stranger \\
+Iris & Same eye & Other eye & Nearest person & Random person \\
 \midrule
 \input{tab/iris_ratio}
 \end{tabular}

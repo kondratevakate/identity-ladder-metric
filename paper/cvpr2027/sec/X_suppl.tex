@@ -9,11 +9,11 @@ Figure~\ref{fig:atlas-all} maps the local squared error of each rung for every i
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{fig/atlas_all_modalities_full.pdf}
-\caption{\textbf{Where in the image each rung is close or far: local squared error in units of the dataset mean ($Q$).}
+\caption{\textbf{Where in the image each rung is close or far: local squared error in units of the dataset average ($Q$).}
 Rows: CelebA and IMDb-WIKI faces, QTIM brain \acs{MRI}, GRAPE and PAPILA retina, UTIRIS \acs{NIR}, UPOL and UTIRIS \acs{VIS} iris, and IXI brain \acs{MRI} (no second scans or families).
-Columns: mean anatomy, second image, opposite side, sibling, stranger, mean of 16 look-alikes, same-sex-and-age mean, and the error of the dataset mean on its own scale.
-1 (white) is the dataset mean and about 2 a stranger; blue is closer than the mean; maps are population summaries with Gaussian windows in the brain; brain, retina and iris are provisional.
-The stranger is red everywhere, while the mean of 16 look-alikes stays below the dataset mean in every row (0.50 to 0.94).}
+Columns: mean anatomy, second image, opposite side, sibling, random person, mean of the 16 nearest people, same-sex-and-age mean, and the error of the dataset average on its own scale.
+1 (white) is the dataset average and about 2 a random person; blue is closer than the mean; maps are population summaries with Gaussian windows in the brain; brain, retina and iris are provisional.
+The random person is red everywhere, while the mean of the 16 nearest people stays below the dataset average in every row (0.50 to 0.94).}
 \label{fig:atlas-all}
 \end{figure*}
 % Source: paper/cvpr2027/atlas_provenance.json (IXI row: results/donor_ladder_brain_maps_ixi.json, donor_ladder_brain_map_grid_ixi.json).
@@ -30,8 +30,8 @@ It reduces the mean absolute difference between the two sessions of one person f
 The visual verdict is pending, and neither number shows that person-specific detail is preserved.
 Source: \src{results/donor_ladder_brain_haca3_stage1.json}, session\_shift\_z.
 
-\subsection{Mean of 16 look-alikes in the deep brain box}
-On the scale anchored on the second scan, the mean of 16 look-alikes in the deep box is at 0.033 $[-0.136, 0.134]$, so it cannot be separated from the second scan\statuspre.
+\subsection{Mean of the 16 nearest people in the deep brain box}
+On the scale anchored on the second scan, the mean of the 16 nearest people in the deep box is at 0.033 $[-0.136, 0.134]$, so it cannot be separated from the second scan\statuspre.
 Source: \src{results/donor_ladder_brain_lookalike16.json} (qtim, deep, both sides).
 
 \subsection{Synthetic simulations}
@@ -149,7 +149,7 @@ Scoring multiple stochastic predictions additionally requires a fixed output cou
 \subsection{Mean-relative error and finite references}
 Two caveats complete the definition of $Q$ in the main text (Eq.~1).
 An average of per-target ratios would overweight nearly information-free targets, which is why sums are divided.
-A finite leave-person-out mean adds estimation variance and differing masks change which targets are summarized, so the stranger's $Q\approx2$ is a diagnostic check, not an identity forced to hold; likewise $1-\bar Q/2$ is not an estimate of heritability or of preserved identity when the additive model fails.
+A finite leave-person-out mean adds estimation variance and differing masks change which targets are summarized, so the random person's $Q\approx2$ is a diagnostic check, not an identity forced to hold; likewise $1-\bar Q/2$ is not an estimate of heritability or of preserved identity when the additive model fails.
 
 For other distances, the relevant baseline is empirical.
 MSE and RMSE retain the same ordering within a fixed target despite differing raw aggregation and anchored coordinates.
@@ -191,7 +191,7 @@ Selection-based donors are especially sensitive: a candidate must not win a cont
 The saved fundus block-search outputs preceding this correction are omitted from the manuscript.
 
 Binary box-support fractions can still define eligibility; this does not turn displayed errors into box averages.
-Fine brain maps and the coarser look-alike grid have different sampling and interpolation, which must remain visible in provenance.
+Fine brain maps and the coarser nearest person grid have different sampling and interpolation, which must remain visible in provenance.
 For fundus fixed-composition maps, all displayed positions retain the same set of contributing targets to reduce spatial composition artifacts.
 This reduces one artifact class and does not establish anatomical validity.
 
@@ -209,7 +209,7 @@ Source, illustration, crop and pixel-preservation records are in \src{provenance
 \caption{\textbf{Saved provisional Gaussian brain maps.}
 Population-template anatomy underlies aggregated donor-error maps.
 The source remains pre-QC with affine registration.
-Displayed local errors use the Gaussian amendments; the coarser look-alike grid is interpolated for display.
+Displayed local errors use the Gaussian amendments; the coarser nearest person grid is interpolated for display.
 The source image title is a descriptive pixel-error statement, not a validated biological identity conclusion.
 Source figure: \src{results/figures/fig_ladder_maps_common.pdf}; quantitative sources are the brain map and map-grid JSONs.}
 \label{fig:s-brain}
@@ -218,7 +218,7 @@ Source figure: \src{results/figures/fig_ladder_maps_common.pdf}; quantitative so
 
 \section{Directional tests and uncertainty}
 The recorded tests have explicit reference candidates.
-T1 compares repeat with dataset mean; T2 compares repeat with its attenuated version; T3a compares repeat with incorrect detail; T3b compares repeat with white noise.
+T1 compares repeat with dataset average; T2 compares repeat with its attenuated version; T3a compares repeat with incorrect detail; T3b compares repeat with white noise.
 The paired independent unit is a family for QTIM and a person for iris.
 The fundus v1 panel uses a repeat reference for GRAPE and a fellow-eye reference for PAPILA; PAPILA has no T1 comparison.
 The corresponding source protocol specifies its Holm family, and unavailable comparisons retain their status rather than becoming successful tests.
@@ -291,7 +291,7 @@ Recorded comparison status & Count \\
 \section{Agreement between metrics}
 The correlation analysis groups distances by how similarly they order the rungs within target, position and side.
 Strong agreement among monotone variants is not independent confirmation of identity sensitivity.
-The window-size dependence of the look-alike rung is reported in the main text (Section 4.3).
+The window-size dependence of the nearest-person rung is reported in the main text (Section 4.3).
 
 \begin{figure}[htbp]
 \centering
@@ -327,7 +327,7 @@ Metric & Rung & $R_{\rm rep}$ & Targets & Families \\
 The iris extension prespecifies LPIPS~\cite{zhang2018lpips}, Betti matching~\cite{betti2023}, and distribution-level FID/FWD comparisons~\cite{heusel2017fid,fwd2025}.
 These measurements operate at different levels.
 A set-level distribution distance cannot be treated as a per-eye identity distance, and Betti matching on intensity filtrations is an adaptation from its segmentation setting.
-The protocol records hypotheses about attenuation, realism and repeat--look-alike--stranger order.
+The protocol records hypotheses about attenuation, realism and repeat--nearest person--random person order.
 Those expectations must be tested rather than imposed as the order of a plot.
 
 Brain-ID embeddings and model-level inpainting comparisons require their own completed evidence before being claimed.
