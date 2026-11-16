@@ -3,11 +3,11 @@ Inpainting models fill a hidden region of an image using its visible surrounding
 A low error can mean that the infill recovered this person's own detail, or only that it looks like an average person.
 We test which of these two cases common metrics reward, using references whose relationship to the hidden region is known in advance: a second image of the same person, the opposite side of the same body, unrelated people, and averages of many people.
 We add three controls built from the truth: the person's own second image, pulled toward the population average; the same amount of detail taken from a random person; and white noise.
-We apply this identity ladder to nine image sets from eight cohorts of brain \ac{MRI}, retinal photographs, human face photographs and irises; brain, retinal and iris results are provisional until registration quality control is complete.
-On a scale where 0 is the target and 1 is a random person, with the hidden region at 1/8 of the object, \ac{MSE} places the person's second image at 0.41, the dataset average at 0.50, and the same second image pulled toward the average scores better (0.29) than the unchanged one.
-Set-level \ac{FID} and \ac{FWD} reject averaged infills by factors of 16 and 186, but barely distinguish the right person from a random person.
+We apply this identity ladder to nine image sets from eight cohorts of brain magnetic resonance imaging (MRI), retinal photographs, human face photographs and irises; brain, retinal and iris results are provisional until registration quality control is complete.
+On a scale where 0 is the target and 1 is a random person, with the hidden region at 1/8 of the object, mean squared error (MSE) places the person's second image at 0.41, the dataset average at 0.50, and the same second image pulled toward the average scores better (0.29) than the unchanged one.
+Set-level Fr\'echet inception distance (FID) and Fr\'echet wavelet distance (FWD) reject averaged infills by factors of 16 and 186, but barely distinguish the right person from a random person.
 No metric we tested does both.
-The mean of the 16 unrelated people whose visible surroundings look most like the target's reaches 0.29 under \ac{MSE}, averaged over the nine sets: closer than the opposite side of the same body in every set, and closer than a second photograph in faces.
+The mean of the 16 unrelated people whose visible surroundings look most like the target's reaches 0.29 under MSE, averaged over the nine sets: closer than the opposite side of the same body in every set, and closer than a second photograph in faces.
 This retrieval baseline moves away from the target as the hidden region grows, so it must be reported at a stated region size.
 For better interpretability, we therefore recommend reporting the ladder controls next to classical inpainting evaluation metrics.
 \end{abstract}

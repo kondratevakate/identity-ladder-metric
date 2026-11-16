@@ -16,7 +16,6 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{amsmath}
-\usepackage{multicol}
 \usepackage{placeins}
 % Let figures fill more of a page before LaTeX moves them to float-only pages.
 \renewcommand{\topfraction}{0.9}
@@ -46,28 +45,25 @@ Inpainting and Conditional Generation}
 \author{Anonymous \confName~submission}
 
 \begin{document}
-% Title and abstract span the page width; the abstract is set in two columns inside that block (Kate, 2026-11-10).
+% Title and teaser span the page width; the abstract follows in the left column (16 Nov 2026).
 \twocolumn[{%
 \renewcommand\twocolumn[1][]{#1}%
 \maketitle
 % Teaser (Kate, 2026-11-15): fig/teaser_v4.pdf from make_provenance_infographic_v3.py.
 \vspace{-2ex}
 \begin{center}
-\includegraphics[width=\textwidth]{fig/teaser_v4.pdf}
-\captionof{figure}{\textbf{Pixel error rewards averaging: the average of 16 nearest people scores closer than the person's own other side.}
-\textbf{A,} A region of the target is hidden, filled from another image and compared with the truth, here on the population average CelebA face.
-\textbf{B,} \acs{MSE} of each fill in a Gaussian window around each pixel, over all targets of a dataset, divided by the \acs{MSE} of the dataset average there: 0 is identical to the target, 1 as close as the dataset average and about 2 a random person.
-Fills: a second image of the same person; the same person's mirrored other side (other hemisphere, other half of the face, other eye); a random person; and the average of the 16 unrelated people whose visible surroundings look most like the target's.
-First column: the dataset average image (for the brain, after alignment to a standard template); last column: the error of the dataset average on its own scale.
-One dataset per modality is shown; IXI, IMDb-WIKI, PAPILA and UTIRIS were also evaluated (Table~\ref{tab:datasets}).
-Faces are shown only as population averages; brain, retina and iris are provisional.}
+\includegraphics[width=0.72\textwidth]{fig/teaser_v4.pdf}
+\captionof{figure}{\textbf{Pixel error rewards averaging.}
+\textbf{A,} A region of the target is hidden, filled from another image and compared with the truth.
+\textbf{B,} Local MSE of each fill divided by that of the dataset average, for one dataset per modality (0 = target, 1 = dataset average, about 2 = random person).
+The mean of the 16 people whose surroundings look most like the target's comes closer than the person's own mirrored side; faces are population averages; brain, retina and iris are provisional.}
 \label{fig:teaser}
 \end{center}
 \vspace{1ex}
-\renewenvironment{abstract}{\begin{center}{\large\bfseries Abstract}\end{center}\vspace{-1ex}%
-  \begin{multicols}{2}\itshape\small}{\end{multicols}\vspace{1.5ex}}%
-\input{sec/0_abstract}%
 }]
+% Abstract in the left column under the teaser, as in the CVPR template (was a two-column block in the title area,
+% which made the title block too tall for page 1 and typeset the abstract twice).
+\input{sec/0_abstract}
 \acresetall
 % Former Figure 1 (fig/identity_ladder_provenance_v2.pdf, label fig:atlas) is replaced by the teaser above; files kept.
 \input{sec/1_intro}
