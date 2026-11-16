@@ -42,7 +42,7 @@ The dataset average stays at 0.49 to 0.53, and the same person's second image an
 The mean of the 16 nearest people grows more slowly (brain 0.25 to 0.42, faces 0.12 to 0.28) and stays below the dataset average at every size.
 Small holes are thus largely predictable from their surroundings, and large holes are not.
 Because the second image and its softened version keep their distance at every size, the averaging reward under \ac{MSE} (RQ2) does not depend on size, whereas the RQ4 retrieval baseline must be reported at a stated fraction of the object.
-Acquisition also matters: in IXI a random person from the same site is at 0.874 $[0.844, 0.899]$ and one from another site at 1.059 $[1.049, 1.072]$\statuspre.
+Acquisition also matters: in IXI, a random person from the same site is at 0.874 $[0.844, 0.899]$ and one from another site at 1.059 $[1.049, 1.072]$\statuspre.
 About a sixth of the distance to a random person from another site is therefore the scanner, not the anatomy ($(1.059-0.874)/1.059=0.17$), and a nearest-person search restricted to the same site would gain part of its advantage from matching the acquisition.
 
 \subsection{Per-modality profiles}
@@ -52,7 +52,7 @@ Wrong detail sits at a random person under every metric, and noise falls short o
 In IXI, \acs{LPIPS} places the softened opposite hemisphere beyond the unchanged one (AlexNet 1.25 against 0.76, VGG 0.91 against 0.88) and passes T2 with both networks, which no error or similarity metric does in any set, while persistence gives both 0.80 and fails T2\statuspre.
 In faces, a second photograph of the same person is further than the dataset average under \ac{MSE} (0.640 against 0.499 in CelebA), because pose and lighting change between photographs, while ArcFace places it closest (0.354)\statusfinal.
 In the retina, the second visit of the same eye is at 0.49 in GRAPE, while the fellow eye is further than the dataset average (1.33 in GRAPE, 1.47 in PAPILA) and the mean of the 16 nearest people falls in between (0.86, 0.94)\statuspre.
-The iris shows the same order with a larger gap: the same eye captured again is at 0.41, 0.57 and 0.18 in UTIRIS \ac{NIR}, UTIRIS \ac{VIS} and UPOL, the other eye of the same person at 1.12 to 1.29, beyond the dataset average, and the nearest person in between\statuspre.
+The iris shows the same order with a larger gap: the same eye captured again is at 0.41, 0.57 and 0.18 in UTIRIS \ac{NIR}, UTIRIS \ac{VIS} and UPOL, the other eye of the same person is at 1.12 to 1.29, beyond the dataset average, and the nearest person in between\statuspre.
 Across modalities, the opposite side of the same body is therefore not an intermediate rung between the same person and a random person: under squared error it is usually further than the population average, because mirrored anatomy differs in detail even within one person.
 Only faces break this pattern, where the mirrored half is as close as the dataset average (0.99 on the $Q$ scale) and closer than a second photograph.
 Relatives behave like random people under squared error: a sibling is at 1.84 times the dataset-average error in QTIM and 1.73 in IMDb-WIKI, close to the random-person level of about 2 (Supplementary Figure~S1)\statuspre.
