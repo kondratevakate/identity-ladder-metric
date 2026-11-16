@@ -2,33 +2,33 @@
 \label{sec:intro}
 % Base: Ivan Ezhov's version of 13 Nov 2026 (Overleaf), with Paula's term questions answered in place.
 Inpainting asks a model to fill a hidden region of an image from its visible surroundings.
-The fills are scored by their distance to the original content, typically with \ac{MSE}, the \ac{SSIM} or \ac{LPIPS}~\cite{zhang2018lpips}.
+The fills are scored by their distance to the original content, typically with metrics such as \ac{MSE},\ac{SSIM} or \ac{LPIPS}~\cite{zhang2018lpips}.
 A low distance can mean that the fill recovered detail that belongs to this individual, or only that it is a generic, population-average fill that is close on average.
-A fill can also look plausible yet show someone else's face, eye or brain.
-A single score cannot tell these cases apart; it needs reference images whose relationship to the target is known.
+A fill can also look plausible yet show someone else's face, eye, or brain.
+A single score cannot distinguish these cases; it requires reference images whose relationship to the target is known.
 
 Inpainting is also a convenient test bed for conditional generation in general.
 The condition, the visible context, is fixed, and the content the model should produce exists and can be compared, which is rarely true for text-to-image or other conditional tasks.
 Whatever a metric rewards in inpainting, it rewards in any setting where generated content is scored against a single reference.
 
 Human anatomy provides such references.
-A second image of the same person, such as a second \ac{MRI} session or another photograph, keeps the person's anatomy but changes the acquisition.
-The opposite side of the same body, such as the other eye, hemisphere or half of the face, keeps the person but shows a mirrored structure.
-Relatives may share some anatomy, unrelated people share only what is common to the population, and an average over many unrelated people keeps the common structure without individual variation.
+A second image of the same person, such as a second \ac{MRI} session or another photograph, preserves the person's anatomy but might change the acquisition parameters.
+The opposite side of the same body, such as the other eye, hemisphere, or half of the face, keeps the person but shows a mirrored structure.
+Genetic relatives may share some anatomy; unrelated people share only what is common to the population; and averaging across many unrelated people preserves the common structure without individual variation.
 Because every reference is a real image or an average of real images, we can check whether a metric ranks them sensibly without deciding what the ideal fill looks like.
 
 We call this set of references the \emph{identity ladder}, and each kind of reference a \emph{rung}.
 We call the difference between a person's image and the population average their \emph{individual detail}.
 Three constructed controls separate losing detail from getting it wrong: the \emph{shrunk true person} is the person's own second image with its individual detail scaled down toward the average; \emph{wrong detail} adds a stranger's individual detail of the same strength to the average; and \emph{noise} adds white noise of that strength.
-Finally, unrelated people chosen only because their visible surroundings look like the target's show what a fill can achieve without knowing the person.
+Finally, unrelated people chosen solely because their visible surroundings resemble the target's show what a fill can achieve without knowing the person.
 We ask four research questions.
 \textbf{RQ1:} Does a metric place the true person closer than a stranger?
 \textbf{RQ2:} Does it penalize partial averaging toward the population mean?
 \textbf{RQ3:} Does it separate lost detail (the right person, made blurry) from wrong detail (sharp detail from someone else)?
 \textbf{RQ4:} How close can unrelated people chosen from the visible surroundings alone come to the true person?
 
-Our contributions are the identity ladder with its three controls, and an audit of ten metric variants from four families on nine image sets from eight cohorts of brain \ac{MRI}, retinal photographs, faces and irises.
-No tested metric answers both RQ1 and RQ2.
+Our contributions are the identity ladder with its three control conditions, and an audit of ten metric variants from four families on nine image sets from eight cohorts of brain \ac{MRI}, retinal photographs, faces and irises.
+None of the metrics tested answers both RQ1 and RQ2.
 Metrics computed on the filled region distinguish the right person from a stranger but reward partial averaging: under \ac{MSE}, a person's second image pulled partway toward the population mean scores better than the unchanged one.
 Set-level metrics, \ac{FID}~\cite{heusel2017fid} and \ac{FWD}~\cite{fwd2025}, strongly reject averaged fills but barely separate the right person from a stranger.
-Inpainting evaluations, such as the \ac{BraTS} brain inpainting challenge~\cite{brats2023}, therefore need these controls next to the score.
+Inpainting algorithm benchmarks, such as the \ac{BraTS} brain inpainting challenge~\cite{brats2023} should incorporate these control conditions to complement their original challenge metrics for better interpretability.

@@ -1,13 +1,13 @@
 \begin{abstract}
-Inpainting models fill a hidden region of an image from its visible surroundings, and their fills are usually scored by pixel distance to the original content.
-A low distance can mean that the fill recovered this person's own detail, or only that it looks like an average person.
+Inpainting models fill a hidden region of an image using its visible surroundings, and their fills are usually evaluated by pixel-wise distance to the original content.
+A low distance can mean that the infill recovered this person's own detail, or only that it looks like an average person.
 We test which of the two common metrics reward, using references whose relationship to the hidden region is known in advance: a second image of the same person, the opposite side of the same body, unrelated people, and averages of many people.
-We add three controls built from the truth: the person's own second image pulled toward the population average, the same amount of detail taken from a stranger, and white noise.
-We apply this identity ladder to nine image sets from eight cohorts of brain \ac{MRI}, retinal photographs, faces and irises.
-On a scale where 0 is the target and 1 is a typical stranger, with the hidden region at 1/8 of the object, \ac{MSE} places the person's second image at 0.41 and the dataset mean at 0.50, and the same second image pulled toward the mean scores better (0.29) than the unchanged one.
-Set-level \ac{FID} and \ac{FWD} reject averaged fills by a factor of 16 and 186, but barely separate the right person from a stranger.
+We add three controls built from the truth: the person's own second image, pulled toward the population average; the same amount of detail taken from a stranger; and white noise.
+We apply this identity ladder to nine image sets from eight cohorts of brain \ac{MRI}, retinal photographs, human face photographs and irises.
+On a scale where 0 is the target and 1 is a typical stranger, with the hidden region at 1/8 of the object, \ac{MSE} places the person's second image at 0.41, the dataset mean at 0.50, and the same second image pulled toward the mean scores better (0.29) than the unchanged one.
+Set-level \ac{FID} and \ac{FWD} reject averaged infills by factors of 16 and 186, but barely distinguish the right person from a stranger.
 No metric we tested does both.
-The mean of 16 unrelated people chosen by the visible surroundings alone reaches 0.29 under \ac{MSE}, closer than the person's own second image, which sets a retrieval baseline that a generative model must beat; how close it comes grows with the size of the hidden region.
-We therefore recommend reporting the ladder controls next to any inpainting score.
+The mean for 16 random, unrelated people chosen by the visible surroundings alone achieves 0.29 under \ac{MSE}, closer than the person's own second image, which sets a retrieval baseline that a generative model must beat; how close it comes grows with the size of the hidden region.
+For better interpretability, we therefore recommend reporting the ladder controls next to classical inpainting evaluation metrics.
 Brain, retinal and iris results are provisional until registration quality control is complete; no generative model is evaluated here.
 \end{abstract}
