@@ -122,7 +122,7 @@ def infer(model, ckpt, limit, device, batch):
     if not os.path.exists(job_path(limit)):
         export(limit)
     MI.run(job_path(limit), model, "torchscript", ckpt, os.path.join(PRIVATE, tag_of(model, limit)), device, batch,
-           MODEL_SIZE)
+           MODEL_SIZE, ckpt_sha256=MI.PINNED_SHA256["big-lama.pt"])     # the local smoke uses the pinned export only
 
 
 # ------------------------------------------------------------------------------------------------------- score

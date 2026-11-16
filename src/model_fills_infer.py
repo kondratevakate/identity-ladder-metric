@@ -98,7 +98,7 @@ class TorchScript(Base):
 
 
 class LamaRepo(Base):
-    def __init__(self, ckpt, device, model_size, frame_size, repo, config):
+    def __init__(self, ckpt, device, model_size, frame_size, repo, config, allow_unpickle=False):
         super().__init__(device, model_size, frame_size)
         torch = self.torch
         sys.path.insert(0, repo)
@@ -111,9 +111,14 @@ class LamaRepo(Base):
             state = torch.load(ckpt, map_location="cpu", weights_only=True)["state_dict"]
             how = "weights_only"
         except Exception as e:                                   # checkpoint holds non-tensor objects
-            print(f"weights_only load failed ({type(e).__name__}); full unpickle on this throwaway VM", flush=True)
+            # A full unpickle runs code from the file. It is allowed only for a checkpoint whose SHA-256 was pinned
+            # and verified by the caller (PINNED_SHA256) and only with the explicit opt-in flag.
+            if not allow_unpickle:
+                raise SystemExit(f"weights-only load refused ({type(e).__name__}); a full unpickle needs "
+                                 "--allow-unpickle and a pinned --ckpt-sha256") from e
+            print(f"weights_only load failed ({type(e).__name__}); full unpickle of the hash-verified file", flush=True)
             state = torch.load(ckpt, map_location="cpu", weights_only=False)["state_dict"]
-            how = "full_unpickle"
+            how = "full_unpickle_after_sha256_check"
         gs = {k[len("generator."):]: v for k, v in state.items() if k.startswith("generator.")}
         missing = gen.load_state_dict(gs, strict=True)
         self.net = gen.to(device).eval()
@@ -128,16 +133,16 @@ class LamaRepo(Base):
 
 
 class SDInpaint(Base):
-    def __init__(self, ckpt, device, model_size, frame_size, steps):
+    def __init__(self, ckpt, device, model_size, frame_size, steps, revision=None):
         super().__init__(device, model_size, frame_size)
         torch = self.torch
         from diffusers import StableDiffusionInpaintPipeline
         self.pipe = StableDiffusionInpaintPipeline.from_pretrained(
-            ckpt, torch_dtype=torch.float16 if device.startswith("cuda") else torch.float32,
+            ckpt, revision=revision, torch_dtype=torch.float16 if device.startswith("cuda") else torch.float32,
             safety_checker=None, requires_safety_checker=False).to(device)
         self.pipe.set_progress_bar_config(disable=True)
         self.steps = steps
-        self.info = {"steps": steps, "prompt": "", "guidance_scale": 1.0}
+        self.info = {"steps": steps, "prompt": "", "guidance_scale": 1.0, "hub_revision": revision}
 
     def forward(self, x, m, keys):
         torch = self.torch
@@ -148,18 +153,40 @@ class SDInpaint(Base):
         return m * out + (1 - m) * x
 
 
+# Weights used in the paper, pinned by SHA-256 (PROTOCOL_model_fills.md, section 2). A checkpoint file is loaded only
+# if its hash is the one passed with --ckpt-sha256, and that value must be one of these pins.
+PINNED_SHA256 = {
+    "big-lama.pt": "344c77bbcb158f17dd143070d1e789f38a66c04202311ae3a258ef66667a9ea9",
+    "lama-celeba-hq/lama-fourier/best.ckpt": "3060742ea7464288d7d5fa8e83c940ddbd359ba1640f79135759da9c8c81f281",
+}
+
+
+def verify_ckpt(ckpt, expected):
+    """Refuse a checkpoint file whose SHA-256 is not the pinned, expected value. Returns the verified hash."""
+    if expected not in PINNED_SHA256.values():
+        raise SystemExit("--ckpt-sha256 is required for a checkpoint file and must be one of the pinned hashes")
+    got = sha256(ckpt)
+    if got != expected:
+        raise SystemExit(f"checkpoint hash mismatch: {ckpt} has {got}, expected {expected}")
+    return got
+
+
 def run(job, model, backend, ckpt, out_dir, device, batch, model_size, repo=None, config=None, steps=20,
-        every=1):
-    """`every`: keep every n-th target of the job (a stated subset for slow models); 1 = all."""
+        every=1, ckpt_sha256=None, allow_unpickle=False, revision=None):
+    """`every`: keep every n-th target of the job (a stated subset for slow models); 1 = all.
+    File checkpoints (torchscript, lama_repo) are hash-checked before loading; the diffusers model is pinned by its
+    Hub `revision` (commit hash) when one is given."""
     import torch
     J = np.load(job)
     w, size = int(J["w"]), int(J["size"])
+    if backend in ("torchscript", "lama_repo"):
+        verify_ckpt(ckpt, ckpt_sha256)
     if backend == "torchscript":
         net = TorchScript(ckpt, device, model_size, size)
     elif backend == "lama_repo":
-        net = LamaRepo(ckpt, device, model_size, size, repo, config)
+        net = LamaRepo(ckpt, device, model_size, size, repo, config, allow_unpickle)
     elif backend == "sd_inpaint":
-        net = SDInpaint(ckpt, device, model_size, size, steps)
+        net = SDInpaint(ckpt, device, model_size, size, steps, revision)
     else:
         raise SystemExit(f"unknown backend {backend}")
     os.makedirs(out_dir, exist_ok=True)
@@ -230,9 +257,13 @@ def main():
     ap.add_argument("--config")
     ap.add_argument("--steps", type=int, default=20)
     ap.add_argument("--every", type=int, default=1)
+    ap.add_argument("--ckpt-sha256", help="pinned SHA-256 of the checkpoint file (required for file checkpoints)")
+    ap.add_argument("--allow-unpickle", action="store_true",
+                    help="lama_repo: allow a full unpickle of the hash-verified checkpoint if weights-only fails")
+    ap.add_argument("--revision", help="sd_inpaint: Hub commit hash of the model repository")
     a = ap.parse_args()
     run(a.job, a.model, a.backend, a.ckpt, a.out, a.device, a.batch, a.model_size, a.lama_repo, a.config, a.steps,
-        a.every)
+        a.every, a.ckpt_sha256, a.allow_unpickle, a.revision)
 
 
 if __name__ == "__main__":

@@ -122,3 +122,11 @@ of the ladder) the cube at the mirrored x position is hidden in the true scan an
    slower GPU (T4), the budget stays 6 h of run time and fewer targets are reached.
 4. **Spend.** Kate's hard cap for the whole task is 30 USD (17 Nov). Projection at the time of this amendment: at
    most 10 USD in total.
+5. **Pins (after the commit security review of 17 Nov).** Weights are pinned by SHA-256 and refused on a mismatch
+   (`model_fills_infer.PINNED_SHA256`: big-lama.pt 344c77bb...9ea9, LaMa CelebA-HQ best.ckpt 3060742e...f281; its
+   config.yaml is c16dc611...2930); the LaMa repository is checked out at 786f5936b27fb3dacd2b1ad799e4de968ea697e7;
+   the brain image is addressed by digest sha256:c59daaf3...d253. The full unpickle of the LaMa CelebA-HQ checkpoint
+   needs the explicit `--allow-unpickle` flag and happens only after the hash check. The runs of 16 and 17 Nov used
+   the same files (hashes and commit are in their logs and `infer_meta.json`) through scripts without these guards.
+   The diffusion model is pinned by its Hub revision once the snapshot hash of the run is recorded
+   (`out/sd15_snapshot.txt`).

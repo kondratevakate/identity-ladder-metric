@@ -139,3 +139,16 @@ def test_results_json_marks_gates_and_coverage():
             assert ("subset" in e["coverage"]) == (e["n_targets"] < e["n_targets_dataset"])
             for m, v in e["R_self"].items():
                 assert v[1] <= v[0] <= v[2], (name, model, m)
+
+
+def test_checkpoint_is_refused_unless_its_hash_is_pinned(tmp_path):
+    """A checkpoint file is loaded only if its SHA-256 equals a pinned value (commit security review, 17 Nov 2026)."""
+    import model_fills_infer as MI
+    f = tmp_path / "weights.pt"
+    f.write_bytes(b"not a model")
+    with pytest.raises(SystemExit):                       # no hash given
+        MI.verify_ckpt(str(f), None)
+    with pytest.raises(SystemExit):                       # a hash that is not one of the pins
+        MI.verify_ckpt(str(f), MI.sha256(str(f)))
+    with pytest.raises(SystemExit):                       # a pinned hash that the file does not have
+        MI.verify_ckpt(str(f), MI.PINNED_SHA256["big-lama.pt"])
