@@ -8,7 +8,9 @@ The fills are scored by their distance to the original content, typically with m
 A low distance can mean that the fill recovered detail that belongs to this individual, or only that it is a generic, population-average fill that is close on average.
 A fill can also look plausible yet show someone else's face, eye, or brain.
 A single score cannot distinguish these cases; it requires reference images whose relationship to the target is known.
-We therefore audit the metrics with fills whose relationship to the target is known: every fill we score is a real image, an average of real images or a control built from them.
+We therefore audit the metrics themselves.
+For a model output, the score a metric should give is unknown, so the metric cannot be checked on it.
+We instead score fills whose relationship to the target is known by design: real images, averages of real images and controls built from them.
 The audit is deterministic and fully data-driven, and what a metric rewards here does not depend on any particular model.
 
 Inpainting is also a convenient test bed for conditional generation: the condition is fixed and the content the model should produce exists, so whatever a metric rewards here, it rewards wherever generated content is scored against a single reference.
@@ -17,9 +19,8 @@ Human anatomy provides such references.
 A second image of the same person, such as a second \ac{MRI} session or another photograph, preserves the person's anatomy but might change the acquisition parameters.
 The opposite side of the same body, such as the other eye, hemisphere, or half of the face, keeps the person but shows a mirrored structure.
 Genetic relatives may share some anatomy; unrelated people share only what is common to the population; and averaging across many unrelated people preserves the common structure without individual variation.
-Because every reference is a real image or an average of real images, we can check whether a metric ranks them sensibly without deciding what the ideal fill looks like.
 
-We introduce an evaluation framework built on such references, the \emph{identity ladder}; each kind of reference is a \emph{rung}.
+We arrange such references into the \emph{identity ladder}, a calibration scale for inpainting metrics; each kind of reference is a \emph{rung}, and its expected position is known before any metric is computed.
 We call the difference between a person's image and the population average their \emph{individual detail}.
 Three constructed controls separate losing detail from getting it wrong: the \emph{softened same person} is the person's own second image with its individual detail scaled down toward the average; \emph{wrong detail} adds a random person's individual detail of the same strength to the average; and \emph{noise} adds white noise of that strength.
 Finally, unrelated people chosen solely because their visible surroundings resemble the target's show what a fill can achieve without knowing the person.

@@ -15,8 +15,9 @@ For each hidden region, a benchmark can compute the region's dataset average ove
 Scores are then reported on the random-person scale of Eq.~\ref{eq:anchors}, so that a submission at 0.5 is as close as the dataset average, and its gap to a context search is read against that set's own nearest-people score (0.20 to 0.40 at 1/8).
 Where a dataset has second images of the same people, the softened second image adds a direct test of whether the metric rewards averaging, and a set-level metric on the same fills shows whether the submission has lost realism.
 
-\paragraph{Auditing a generative model across groups of people.}
-The same controls define an audit of a generative model.
+\paragraph{Next step: placing generative models on the ladder.}
+% MODEL-RESULTS: when the pretrained-model points arrive, a short "where pretrained models sit on the ladder" paragraph goes here.
+The ladder is the baseline; the natural next step is to place generative models on it, across groups of people.
 For a held-out target $x_i$ (as in Eq.~\ref{eq:unit}) with visible context $c_i$ and mask $M_i$, let $y_{ik}=G(c_i,M_i,z_k)$ be the $k$-th fill of model $G$ with random seed $z_k$.
 For a group of targets $a$ (for example an age band or an acquisition site), a distance $d_m$ and a ladder control $f_{ir}$, the audit profile is
 \begin{equation}
@@ -28,7 +29,7 @@ A negative value means that the metric prefers the model's fills to the control,
 Seeds are averaged within a target, failed outputs are reported, and group gaps need uncertainty over independent people.
 
 \paragraph{Limitations.}
-We evaluate metrics, not models; where trained inpainting models fall on the ladder remains to be measured.
+The ladder calibrates metrics and does not by itself rank models.
 Alignment is the main confounder outside faces: misalignment adds to every distance in brain, retina and iris, most in mirrored comparisons with the opposite side.
 It does not explain the averaging reward alone, because faces, whose alignment passed visual \ac{QC}, fail T2 in the same way (Table~\ref{tab:tests}).
 The cross-dataset summaries and tests were defined after the per-dataset results and are exploratory; only 23 QTIM people have a second scan, two of nine image sets record families, and the set-level exclusion rule was fixed after seeing one value.
