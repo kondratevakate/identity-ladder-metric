@@ -67,8 +67,11 @@ def cells(scale=6):
     v = _slice(nib.load(PRIVATE / "V.nii.gz"), Z_MM)
     v = np.where(v == 0, np.nan, v)
     ok = np.isfinite(v) & brain
-    vn = Normalize(*np.nanpercentile(v[ok], [1, 99]))(np.nan_to_num(v, nan=0.0))
+    v_lo, v_hi = (float(x) for x in np.nanpercentile(v[ok], [2, 98]))   # same 2nd to 98th percentile as the other rows
+    vn = Normalize(v_lo, v_hi)(np.nan_to_num(v, nan=0.0))
     col = colormaps["RdBu_r"](0.5 + np.clip(vn, 0, 1) / 2)[:, :, :3]
     out["V"] = finish(np.where(ok[:, :, None], ALPHA * col + (1 - ALPHA) * base, base))
     res = json.loads(SUMMARY.read_text(encoding="utf-8"))["maps"]
-    return out, {k: res[k]["pooled_ratio"] for k in ("repeat", "mirror", "stranger")}
+    ratios = {k: res[k]["pooled_ratio"] for k in ("repeat", "mirror", "stranger")}
+    ratios["V_range"] = (v_lo, v_hi)
+    return out, ratios

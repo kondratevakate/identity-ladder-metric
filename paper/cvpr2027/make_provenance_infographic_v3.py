@@ -34,6 +34,7 @@ TEASER_AB=HERE/'fig/teaser_ab.pdf'
 TEASER_V2=HERE/'fig/teaser_v2.pdf'
 TEASER_V3=HERE/'fig/teaser_v3.pdf'
 TEASER_V4=HERE/'fig/teaser_v4.pdf'
+TEASER_V5=HERE/'fig/teaser_v5.pdf'
 
 
 def rgb_hex(code):return tuple(int(code[i:i+2],16)/255 for i in (1,3,5))
@@ -131,6 +132,27 @@ def recolor_viridis(image):
     out=a.astype(np.uint8).reshape(-1,4).copy()
     out[hit,:3]=new[best[hit]]
     return Image.fromarray(out.reshape(a.shape))
+
+
+def v_ranges():
+    """2nd and 98th percentile of the dataset-average error map V (MSE of the dataset average, z units) as drawn in
+    the atlas rows (src/ladder_maps_all_figure.py colors V from these limits); read from the saved private maps."""
+    import sys as _sys
+    _sys.path.insert(0,str(ROOT/'src'))
+    import ladder_maps_all_figure as L
+    def rng(V,valid,maps):
+        for m in maps:valid=valid&np.isfinite(m)
+        a,b=np.nanpercentile(np.where(valid,V,np.nan),[2,98]);return float(a),float(b)
+    z=np.load(Path(L.PROJ)/'face-ladder-20261105-v1'/'maps_v6f.npz')
+    face=[z['celeba_'+k] for k in ('repeat','mirror','sibling','stranger','lookalike','sexage','V') if 'celeba_'+k in z.files]
+    out={'CelebA':rng(z['celeba_V'],z['celeba_valid']>0.5,face)}
+    g=dict(np.load(Path(L.PROJ)/'donor-ladder-2d-20261105-v1'/'facefmt_GRAPE_p8.npz'))
+    out['GRAPE']=rng(g['V'],g['valid']>0.5,[g[k] for k in ('repeat','fellow','stranger','lookalike','sexage','V') if k in g])
+    d=json.loads(Path(L.IRIS_JSON).read_text());rho=d['maps']['UPOL'].get('pupil_to_iris_ratio_median',0.45)
+    zi=np.load(Path(L.IRIS_PRIVATE)/'maps_UPOL_P2.npz')
+    m={k:L.iris_ring(zi['all_'+v],rho) for k,v in dict(repeat='other_photo',mirror='fellow_eye',stranger='stranger',lookalike='lookalike16',V='V').items() if 'all_'+v in zi.files}
+    out['UPOL']=rng(m['V'],np.ones(m['V'].shape,bool),list(m.values()))
+    return out
 
 
 def png_stream(image):
@@ -472,6 +494,70 @@ def main():
     put4((rx1-20,yb+8,rx1+6,yb+15),'high',6.5,align=2)
     t4.set_metadata({'title':'Hide, fill and compare: population error maps','author':''})
     t4.save(TEASER_V4,garbage=4,deflate=True)
+    # Teaser v5 (Kate and Paula, 16 Nov): v4 layout at the same aspect, printed at 0.72 textwidth, so fonts are larger;
+    # row labels give targets, people and how many have a second image; the last column prints each row's color range.
+    # Counts: tab/coverage.tex (QTIM 23 with repeat; GRAPE 171; UPOL 128) and results/face_ladder_metrics.json
+    # (CelebA n_repeat_targets = 921). Ranges: 2nd and 98th percentile of the displayed V map, the limits of its color.
+    vr=v_ranges()
+    if brain_v2_used.get(0):vr['QTIM']=bratios['V_range']
+    t5=fitz.open();H5=254;W5=495;t5p=t5.new_page(width=W5,height=H5)
+    t5p.insert_font(fontname='helv');t5p.insert_font(fontname='hebo')
+    def put5(rect,text,size,bold=False,color=INK,align=0):
+        r=fitz.Rect(rect);r.y1+=9
+        spare=t5p.insert_textbox(r,text,fontsize=size,fontname='hebo' if bold else 'helv',color=color,align=align)
+        assert spare>=0,('Label does not fit',text,spare)
+    dark=(.30,.30,.30);F=8.0;FS=7.4
+    put5((0,0,14,13),'A',10,True)
+    AW=50
+    for k,(im,lab) in enumerate(((face,'1  Target'),(hid,'2  Hide'+chr(10)+'a region'),(fil,'3  Fill and'+chr(10)+'compare'))):
+        y=20+k*76;sc=min(40/im.size[0],44/im.size[1]);dw,dh=im.size[0]*sc,im.size[1]*sc
+        t5p.insert_image(fitz.Rect(AW/2-dw/2,y,AW/2+dw/2,y+dh),stream=png_stream(im))
+        put5((-6,y+dh+1,AW+6,y+dh+18),lab,FS,align=1)
+    t5p.draw_line((AW+7,4),(AW+7,H5-4),color=RULE,width=.5)
+    BX=AW+12;put5((BX,0,BX+14,13),'B',10,True)
+    LW5=92;GAP=8;CW5=(W5-BX-LW5-GAP)/6;MH5=40;RH5=45;Y5=42
+    xs5=[BX+LW5+j*CW5+(GAP if j==5 else 0) for j in range(6)]
+    heads5=['Dataset'+chr(10)+'average','Same'+chr(10)+'person','Mirrored'+chr(10)+'side','Random'+chr(10)+'person','16 nearest'+chr(10)+'people','Error of the'+chr(10)+'average']
+    fx0,fx1=xs5[1],xs5[4]+CW5
+    put5((fx0,1,fx1,10),'Fill of the hidden region',F,True,align=1)
+    t5p.draw_line((fx0+6,13),(fx1-6,13),color=RULE,width=.5)
+    for j,label in enumerate(heads5):
+        put5((xs5[j]-3,16,xs5[j]+CW5+3,33),label,FS,align=1)
+    sep=xs5[5]-GAP/2
+    t5p.draw_line((sep,18),(sep,Y5+4*RH5),color=RULE,width=.6)
+    rows5=[('Brain MRI',['QTIM, 221 people','23 with a second scan','1 mm voxels'],'QTIM'),
+           ('Faces',['CelebA, 921 people','all with a second photo','128 x 128 px'],'CelebA'),
+           ('Retina',['GRAPE, 239 eyes','of 134 people','171 with a second visit','128 x 128 px'],'GRAPE'),
+           ('Iris',['UPOL, 128 eyes','of 64 people','all with a second photo','64 x 256 px strip'],'UPOL')]
+    for i,(group,lines,key) in enumerate(rows5):
+        y=Y5+i*RH5;step=8.6;yl=y+MH5/2-(len(lines)+1)*step/2
+        put5((BX,yl,BX+LW5,yl+8),group,F,True)
+        for q,line in enumerate(lines):
+            put5((BX,yl+step*(q+1),BX+LW5,yl+step*(q+1)+8),line,FS,color=dark)
+        for j in range(6):
+            image=panel_images[i,j]
+            if j==5 and not brain_v2_used.get(i):image=recolor_viridis(image)
+            iw,ih=image.size;sc=min((CW5-6)/iw,(MH5-(8 if j==5 else 0))/ih)*(0.8 if i in (2,3) else 1.0);dw,dh=iw*sc,ih*sc
+            cx=xs5[j]+CW5/2;cy=y+(MH5-(8 if j==5 else 0))/2
+            t5p.insert_image(fitz.Rect(cx-dw/2,cy-dh/2,cx+dw/2,cy+dh/2),stream=png_stream(image))
+        lo,hi=vr[key]
+        put5((xs5[5]-4,y+MH5-6,xs5[5]+CW5+4,y+MH5+2),f'{lo:.2f} to {hi:.2f}',FS,color=dark,align=1)
+    yb=Y5+4*RH5+3;x0b,x1b=xs5[1]+6,xs5[4]+CW5-6
+    t5p.insert_image(fitz.Rect(x0b,yb,x1b,yb+5),stream=png_stream(Image.fromarray(np.repeat(rgb,8,axis=0))))
+    for value,lab in {0:'0  Identical',1:'1  Dataset average',2:'2  Random person'}.items():
+        xv=x0b+float(norm(value))*(x1b-x0b)
+        t5p.draw_line((xv,yb+5),(xv,yb+7.5),color=dark,width=.5)
+        put5((xv-45,yb+8,xv+45,yb+16),lab,FS,align=1)
+    put5((x0b,yb+17,x1b,yb+25),'MSE of the fill, relative to the dataset average',FS,True,align=1)
+    red=(colormaps['RdBu_r'](0.5+np.linspace(0,1,256)[None,:]/2)[:,:,:3]*255).astype('uint8')
+    rx0,rx1=xs5[5]+3,xs5[5]+CW5-3
+    t5p.insert_image(fitz.Rect(rx0,yb,rx1,yb+5),stream=png_stream(Image.fromarray(np.repeat(red,8,axis=0))))
+    put5((rx0,yb+8,rx0+26,yb+16),'min',FS)
+    put5((rx1-26,yb+8,rx1,yb+16),'max',FS,align=2)
+    put5((xs5[5]-8,yb+17,W5,yb+25),'MSE, z units',FS,True,align=1)
+    t5.set_metadata({'title':'Hide, fill and compare: population error maps','author':''})
+    t5.save(TEASER_V5,garbage=4,deflate=True)
+    print(json.dumps({'teaser_v5_V_ranges':{k:[round(a,4),round(b,4)] for k,(a,b) in vr.items()}}))
     # Teaser (Kate, 15 Nov): panel B alone at full text width, without its letter and title row.
     teaser=fitz.open();tp=teaser.new_page(width=495,height=541-168)
     tp.show_pdf_page(tp.rect,document,0,clip=fitz.Rect(0,168,495,541))
