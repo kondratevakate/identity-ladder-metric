@@ -49,6 +49,7 @@ No participant image or per-person result row is read during manuscript assembly
 Figure provenance describes the origin of the saved output; copying it does not independently reproduce the underlying experiment.
 
 The labels \statusfinal\ and \statuspre\ apply to individual results and frames.
+P2 (iris) and P8 and P9 (retina) name the preprocessing versions recorded in the protocols: P2 is the segmented and unwrapped iris strip, P8 and P9 the retinal frame alignment without further correction.
 A frame can have an approved visual decision while an additional mask change remains unresolved.
 An older run can contain valid measurements for its own question while being unsuitable as a replacement for the amended protocol.
 The source-level status must therefore accompany every comparison, not just the dataset name.
@@ -71,7 +72,7 @@ Dataset & Target units & Clusters & With repeat & Status \\
 \end{table}
 
 The material inventory covers the tracked results, protocols, reports, figures and related ISBI source, with each artifact assigned a manuscript role.
-Historical unregistered image-space and ocular pilots supply context for acquisition confounding, not substitutes for the current donor panels.
+Historical unregistered image-space and ocular pilots supply context for acquisition confounding, not substitutes for the current reference tables.
 Fixed real-case demonstrations establish a preparation history rather than a population validation.
 The synthetic population-null, label and pupil blocks are mechanism controls and remain separate from measured anatomy.
 The earlier figure variants and failed preprocessing versions are retained as history rather than selected opportunistically for a favorable metric ordering.
@@ -85,7 +86,7 @@ The inventory, source hashes and version distinctions are recorded in \src{MATER
 Inpainting supplies controlled references for a proposed audit of conditional generation across target populations.
 The twelve questions below separate the measured metric/reference evidence from the missing model-output validation.
 No completion percentage, fairness result or universal metric follows from counting the rows.
-BraTS~\cite{brats2023} is one application; cross-anatomy donor experiments do not themselves measure generator behavior across demographic groups.
+BraTS~\cite{brats2023} is one application; the reference experiments across anatomies do not themselves measure generator behavior across demographic groups.
 
 {\small
 \begin{longtable}{@{}p{.07\textwidth}p{.29\textwidth}p{.57\textwidth}@{}}
@@ -108,13 +109,13 @@ They are excluded from the coverage supporting current conclusions, rather than 
 Protocols mentioning challenge models, fixed illustrations, and available model code do not establish a completed comparison of predictions.
 
 \subsection{Target populations and reference cohorts}
-The face protocol defines matched donor means using the recorded Male/Young attributes in CelebA and sex/age bands in IMDb-WIKI.
+The face protocol defines matched reference means using the recorded Male/Young attributes in CelebA and sex/age bands in IMDb-WIKI.
 The brain protocol likewise defines sex/age-matched reference cohorts with family exclusion.
-These are comparator definitions; the accessible aggregates do not establish a population-stratified experiment on generated completions.
-The initial face protocol's strata-not-run statement describes that version's output specification, not every later or unreceived private run.
+These are comparator definitions; the accessible aggregates do not establish a group-wise experiment on generated completions.
+The initial face protocol's groups-not-run statement describes that version's output specification, not every later or unreceived private run.
 Iris sex/age matching is unavailable without the corresponding metadata.
 
-Target strata, donor cohorts and acquisition domains must be specified separately.
+Target groups, reference cohorts and acquisition domains must be specified separately.
 Paired distances require an observed target and an explicit fill, composite or whole-image scope; FID/FWD are set-level measures requiring a separate definition.
 Unconditional generation and unobserved counterfactual targets require criteria beyond paired target fidelity.
 
@@ -175,7 +176,7 @@ These scores increase with similarity and are oriented before computing the repo
 A constant offset leaves the intensity-difference score unchanged; this invariance does not establish anatomical correctness.
 
 \subsection{Residual magnitude and direction}
-For target residual $a=x-\hat\mu$ and candidate residual $b=f-\hat\mu$, magnitude and target projection are
+For target residual $a=x-\hat\mu$ and fill residual $b=f-\hat\mu$, magnitude and target projection are
 \begin{equation}
 A=\frac{\|b\|}{\|a\|},\qquad
 P=\frac{\langle b,a\rangle}{\|a\|^2}.
@@ -186,11 +187,11 @@ These algebraic identities explain the controls but are not independent validati
 A small target residual relative to acquisition variability makes the ratios unstable and needs an explicit resolution rule.
 
 \section{Validity masks and Gaussian spatial reporting}
-Beyond the rule of the main text that missing pixels are never zero, masks are carried through registration, normalization, donor averaging, context matching and local scoring.
-Selection-based donors are especially sensitive: a candidate must not win a context search because its padding accidentally matches the standardized target.
+Beyond the rule of the main text that missing pixels are never zero, masks are carried through registration, normalization, averaging of reference people, context matching and local scoring.
+Fills chosen by search are especially sensitive: a person must not be chosen a context search because its padding accidentally matches the standardized target.
 The saved fundus block-search outputs preceding this correction are omitted from the manuscript.
 
-Binary box-support fractions can still define eligibility; this does not turn displayed errors into box averages.
+The share of valid pixels in a box can still decide whether a target is used; this does not turn displayed errors into box averages.
 Fine brain maps and the coarser nearest person grid have different sampling and interpolation, which must remain visible in provenance.
 For fundus fixed-composition maps, all displayed positions retain the same set of contributing targets to reduce spatial composition artifacts.
 This reduces one artifact class and does not establish anatomical validity.
@@ -207,7 +208,7 @@ Source, illustration, crop and pixel-preservation records are in \src{provenance
 \centering
 \includegraphics[width=\textwidth]{fig/brain_gaussian_maps.pdf}
 \caption{\textbf{Saved provisional Gaussian brain maps.}
-Population-template anatomy underlies aggregated donor-error maps.
+Population-template anatomy underlies aggregated fill-error maps.
 The source remains pre-QC with affine registration.
 Displayed local errors use the Gaussian amendments; the coarser nearest person grid is interpolated for display.
 The source image title is a descriptive pixel-error statement, not a validated biological identity conclusion.
@@ -217,17 +218,17 @@ Source figure: \src{results/figures/fig_ladder_maps_common.pdf}; quantitative so
 
 
 \section{Directional tests and uncertainty}
-The recorded tests have explicit reference candidates.
-T1 compares repeat with dataset average; T2 compares repeat with its attenuated version; T3a compares repeat with incorrect detail; T3b compares repeat with white noise.
+The recorded tests have explicit reference fills.
+T1 compares the second image with the dataset average; T2 with its softened version; T3a with wrong detail; T3b with white noise.
 The paired independent unit is a family for QTIM and a person for iris.
-The fundus v1 panel uses a repeat reference for GRAPE and a fellow-eye reference for PAPILA; PAPILA has no T1 comparison.
+The fundus v1 panel uses the second visit as reference for GRAPE and a fellow-eye reference for PAPILA; PAPILA has no T1 comparison.
 The corresponding source protocol specifies its Holm family, and unavailable comparisons retain their status rather than becoming successful tests.
 
 \begin{table*}[t]
 \centering
 \caption{\textbf{Recorded brain directional tests, provisional.}
 Each cell reports the source decision and Holm-adjusted probability.
-The test is one-sided in favor of the repeat.
+The test is one-sided in favor of the second image.
 Not establishing T2 is not an equivalence result.
 Residual correlation versus the exact mean has no eligible T1 pair.
 Source: \src{results/donor_ladder_brain_metrics.json}, random-region LR view.}
@@ -327,7 +328,7 @@ Metric & Rung & $R_{\rm rep}$ & Targets & Families \\
 The iris extension prespecifies LPIPS~\cite{zhang2018lpips}, Betti matching~\cite{betti2023}, and distribution-level FID/FWD comparisons~\cite{heusel2017fid,fwd2025}.
 These measurements operate at different levels.
 A set-level distribution distance cannot be treated as a per-eye identity distance, and Betti matching on intensity filtrations is an adaptation from its segmentation setting.
-The protocol records hypotheses about attenuation, realism and repeat--nearest person--random person order.
+The protocol records hypotheses about softening, realism and order of second image, nearest person and random person.
 Those expectations must be tested rather than imposed as the order of a plot.
 
 Brain-ID embeddings and model-level inpainting comparisons require their own completed evidence before being claimed.

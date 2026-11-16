@@ -7,7 +7,7 @@
 \label{sec:controls}
 The \emph{target} is the region of a person's image hidden from the inpainting model: a cube in the brain, a square window in the 2D images.
 Its size is a fraction of the \emph{object}, the structure being imaged: the brain (127\,mm across in the template), the aligned face (79.5 pixels wide), the retinal field of view (square root of its mean area: 78 pixels in PAPILA, 85 in GRAPE) or the iris (diameter $256/\pi$ pixels); 1/8 gives 16\,mm cubes and 10 or 11 pixel windows.
-The \emph{context ring} is a band of visible pixels around it (4\,mm in the brain).
+The \emph{context ring} is the band of visible pixels around the target that is used to choose the nearest people: 4\,mm in the brain, a quarter of the cube, and half the window width in the 2D images (5 or 6 pixels).
 A \emph{fill} is any content placed into the hidden region and compared with the target; every fill here is a real image, an average of real images, or a control built from them, and no generative model is evaluated.
 \emph{Valid pixels} are pixels observed in both target and fill (field of view, brain mask, iris without lids and reflections); other pixels are missing, never zero.
 \emph{Unrelated people} are everyone outside the target person's family.
@@ -16,7 +16,7 @@ The \emph{same person} fill is the hidden region taken from a second image of th
 The \emph{opposite side} is the mirrored region of the other hemisphere, half face or eye; a \emph{sibling} is a recorded family member.
 A \emph{random person} is one unrelated person drawn at random, and we draw 16 per target.
 The \emph{dataset average} averages all unrelated people at each pixel, using only people valid there.
-\emph{Nearest people} are chosen from the context only: we rank unrelated people by the mean squared difference between their context ring and the target's ring and average the hidden region of the 16 closest (\emph{mean of the 16 nearest people}).
+\emph{Nearest people} are chosen from the context only: we rank unrelated people by the mean squared difference between their context ring and the target's ring and average the hidden region of the 16 closest (\emph{mean of the 16 nearest people}); 16 equals the number of random people drawn per target and was fixed before any result.
 The \emph{best-matching person} is instead the one unrelated person whose hidden region is closest to the target; it uses the answer and is an upper bound.
 
 With $\hat\mu$ the dataset average and $f$ the same person's second image, the \emph{softened same person} is $\hat\mu+\lambda(f-\hat\mu)$: nothing is cropped, the individual detail $f-\hat\mu$ is scaled down.
@@ -34,10 +34,10 @@ where $v$ is a pixel and $i$ runs over all targets and regions; summing before d
 The dataset average has $Q=1$, and if a person is the mean plus independent detail, a random person has $Q\approx2$.
 For all metrics we also use a random-person scale,
 \begin{equation}
-R(f)=\frac{\bar d(f)-\bar d_0}{\bar d(\mathrm{random people})-\bar d_0},
+R(f)=\frac{\bar d(f)-\bar d_0}{\bar d(\mathrm{random})-\bar d_0},
 \label{eq:anchors}
 \end{equation}
-with $d$ the metric written as a distance (similarities negated), $\bar d$ its average over targets and regions, $\bar d(\mathrm{random people})$ the average over the 16 random people and $\bar d_0$ the distance of the target to itself, so $R=0$ is the target and $R=1$ a typical random person (Figure~\ref{fig:explainer}).
+with $d$ the metric written as a distance (similarities negated), $\bar d$ its average over targets and regions, $\bar d(\mathrm{random})$ the average over the 16 random people and $\bar d_0$ the distance of the \emph{anchor}, the reference placed at 0, here the target itself, so $R=0$ is the target and $R=1$ a typical random person (Figure~\ref{fig:explainer}).
 The random person is the natural unit because it is the fill a model produces when it ignores the context and copies an arbitrary training image, and because every metric can measure it on every dataset; a metric that cannot place the same person below 1 does not see the person at all.
 The brain table also anchors $\bar d_0$ on the second scan, because two sessions of one brain differ.
 

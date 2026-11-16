@@ -2,14 +2,15 @@
 \label{sec:intro}
 % Base: Ivan Ezhov's version of 13 Nov 2026 (Overleaf), with Paula's term questions answered in place.
 Inpainting asks a model to fill a hidden region of an image from its visible surroundings.
-The fills are scored by their distance to the original content, typically with metrics such as \ac{MSE},\ac{SSIM} or \ac{LPIPS}~\cite{zhang2018lpips}.
+In medical imaging it replaces content that is missing or must not be used: for brain tumor patients, the first scan is already diseased, and inpainting healthy-looking tissue into the lesion lets tools built for healthy brains, such as tissue segmentation and brain extraction, run on it~\cite{brats2023}.
+Such a fill should show this patient's anatomy, but a model that is unsure can lower its error by producing blurry, population-average content instead.
+The fills are scored by their distance to the original content, typically with metrics such as \ac{MSE}, \ac{SSIM} or \ac{LPIPS}~\cite{zhang2018lpips}.
 A low distance can mean that the fill recovered detail that belongs to this individual, or only that it is a generic, population-average fill that is close on average.
 A fill can also look plausible yet show someone else's face, eye, or brain.
 A single score cannot distinguish these cases; it requires reference images whose relationship to the target is known.
+We therefore study no inpainting model: every fill we score is a real image, an average of real images or a control built from them, so the audit of the metrics is deterministic and fully data-driven.
 
-Inpainting is also a convenient test bed for conditional generation in general.
-The condition, the visible context, is fixed, and the content the model should produce exists and can be compared, which is rarely true for text-to-image or other conditional tasks.
-Whatever a metric rewards in inpainting, it rewards in any setting where generated content is scored against a single reference.
+Inpainting is also a convenient test bed for conditional generation: the condition is fixed and the content the model should produce exists, so whatever a metric rewards here, it rewards wherever generated content is scored against a single reference.
 
 Human anatomy provides such references.
 A second image of the same person, such as a second \ac{MRI} session or another photograph, preserves the person's anatomy but might change the acquisition parameters.
@@ -28,7 +29,5 @@ We ask four research questions.
 \textbf{RQ4:} How close can unrelated people chosen from the visible surroundings alone come to the same person?
 
 Our contributions are the identity ladder with its three control conditions, and an audit of ten metric variants from four families on nine image sets from eight cohorts of brain \ac{MRI}, retinal photographs, faces and irises.
-None of the metrics tested answers both RQ1 and RQ2.
-Metrics computed on the filled region distinguish the right person from a random person but reward partial averaging: under \ac{MSE}, a person's second image pulled partway toward the population mean scores better than the unchanged one.
-Set-level metrics, \ac{FID}~\cite{heusel2017fid} and \ac{FWD}~\cite{fwd2025}, strongly reject averaged fills but barely separate the right person from a random person.
-Inpainting algorithm benchmarks, such as the \ac{BraTS} brain inpainting challenge~\cite{brats2023} should incorporate these control conditions to complement their original challenge metrics for better interpretability.
+None of the metrics tested answers both RQ1 and RQ2: metrics computed on the filled region reward partial averaging, and set-level metrics, \ac{FID}~\cite{heusel2017fid} and \ac{FWD}~\cite{fwd2025}, barely separate the right person from a random person.
+Inpainting algorithm benchmarks, such as the \ac{BraTS} brain inpainting challenge~\cite{brats2023}, should incorporate these control conditions to complement their original challenge metrics for better interpretability.
