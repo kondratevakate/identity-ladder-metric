@@ -38,7 +38,7 @@ R(f)=\frac{\bar d(f)-\bar d_0}{\bar d(\mathrm{random})-\bar d_0},
 \label{eq:anchors}
 \end{equation}
 with $d$ the metric written as a distance (similarities negated), $\bar d$ its average over targets and regions, $\bar d(\mathrm{random})$ the average over the 16 random people and $\bar d_0$ the distance of the \emph{anchor}, the reference placed at 0, here the target itself, so $R=0$ is the target and $R=1$ a typical random person (Figure~\ref{fig:explainer}).
-The random person is the natural unit because it is the fill a model produces when it ignores the context and copies an arbitrary training image, and because every metric can measure it on every dataset; a metric that cannot place the same person below 1 does not see the person at all.
+The random person is the natural unit because it is the infill a model produces when it ignores the context and copies an arbitrary training image, and because every metric can measure it on every dataset; a metric that cannot place the same person below 1 does not see the person at all.
 The brain table also anchors $\bar d_0$ on the second scan, because two sessions of one brain differ.
 
 \subsection{Metrics, uncertainty and status}
@@ -50,7 +50,7 @@ As a diagnostic outside the ten variants, \emph{residual correlation} is the cos
 \emph{Set level}: \ac{FID}~\cite{heusel2017fid} and \ac{FWD}~\cite{fwd2025}, which compare the distribution of all fills of a rung with that of all targets.
 Kernels and tolerances are in the supplement.
 Intervals are 95\% bootstrap intervals (2{,}000 resamples of people or families).
-One-sided tests ask whether the second image beats the dataset average (T1), the softened same person (T2), wrong detail (T3a) and noise (T3b), Holm-corrected within dataset.
+One-sided tests ask whether the second image beats the dataset average (T1), the softened same person (T2), wrong detail (T3a) and noise (T3b), Holm-corrected within the dataset.
 \statusfinal\ marks results whose preprocessing passed visual \ac{QC}; \statuspre\ marks provisional ones.
 Maps use Gaussian local averages with standard deviation $w/\sqrt{12}$ for window width $w$.
 

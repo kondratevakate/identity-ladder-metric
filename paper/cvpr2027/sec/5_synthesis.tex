@@ -4,16 +4,16 @@ The conditional mean of the hidden content given the context minimizes expected 
 The softened same person and the mean of the 16 nearest people are empirical stand-ins for that mean.
 We show how large this reward is on real anatomy, and that set-level metrics trade it for another blind spot.
 A pixel score alone cannot show whether a fill kept the person.
-We therefore suggest reporting three numbers next to any inpainting score, on the same masks: the score of the dataset average, of the mean of the 16 nearest people chosen from the context, and of a random person.
+We therefore suggest reporting three numbers next to any inpainting score on the same masks: the dataset average score, the score for the mean of the 16 nearest people chosen from the context, and the score for a random person.
 Under a metric that passes T2, a model that does not beat the nearest-people mean adds nothing to retrieval; under \ac{MSE} alone, beating it can also mean averaging more, which is why the softened control belongs next to it.
 A model near the dataset average has averaged the person away; a conditional mean remains the right answer when the hidden content is truly ambiguous, and the controls make that choice visible.
 
 \paragraph{A recipe for inpainting benchmarks.}
 The controls need no model and no labels beyond the images themselves.
-For each hidden region, a benchmark can compute the dataset average of the region over unrelated people, the mean of the 16 people whose context rings are closest, and 16 random people, all on the same valid pixels as the submitted fills.
+For each hidden region, a benchmark can compute the region's dataset average over unrelated people, the mean of the 16 people whose context rings are closest, and 16 random people, all using the same valid pixels as the submitted infills.
 Scores are then reported on the random-person scale of Eq.~\ref{eq:anchors}, so that a submission at 0.5 is as close as the dataset average, and its gap to a context search is read against that set's own nearest-people score (0.20 to 0.40 at 1/8).
 Where a dataset has second images of the same people, the softened second image adds a direct test of whether the metric rewards averaging, and a set-level metric on the same fills shows whether the submission has lost realism.
-A results table then needs only a few extra columns per metric: the hidden region as a fraction of the object, the scores of the dataset average, the nearest-people mean and a random person, and, where second images exist, whether the metric passes T2.
+Result tables require only a few extra columns per metric: the hidden region as a fraction of the object; the dataset-average score, the nearest-people mean, and a random person; and, where second images exist, whether the metric passes T2.
 
 \paragraph{Auditing a generative model across groups of people.}
 The same controls turn into an audit of a generative model, which we propose but have not yet run.
@@ -35,12 +35,12 @@ No generative model is evaluated; every fill is a real image, an average or a co
 Registration and acquisition remain the main confounders in brain and retina, which stay provisional with the iris until registration and mask \ac{QC} are complete.
 Only 23 QTIM people have a second scan and two of nine image sets record families, and the set-level exclusion rule was fixed after seeing one value.
 Error and similarity metrics use a hidden region of 1/8 of the object everywhere, but \ac{LPIPS}, topology and set-level metrics still use about 1/5 in faces, retina and iris.
-The nearest-person search compares raw context rings by squared error; a learned similarity or a wider context could come closer, so our baseline is a lower bound for retrieval.
+The nearest-person search compares raw context rings using squared error; a learned similarity or a wider context could yield a closer match, so our baseline is a lower bound for retrieval.
 The ladder measures closeness to known references, not whether a fill is clinically or biometrically correct: a fill can sit at the same person's position and still miss a lesion, and identity under ArcFace and under pixel errors can disagree, as the faces show.
 
 \paragraph{Ethics and data.}
 All datasets are public research datasets used under their terms.
-Figure~\ref{fig:explainer} shows one QTIM brain scan (CC0); otherwise only population averages and maps are shown, as the CelebA and IMDb-WIKI terms do not allow publishing their images and iris and retina images are biometric.
+Figure~\ref{fig:explainer} shows one QTIM brain scan (CC0); otherwise, only population averages and maps are shown, as the CelebA and IMDb-WIKI terms do not allow publishing their images, and iris and retina images are biometric.
 Approval and consent statements await author confirmation.
 
 \paragraph{Conclusion.}
