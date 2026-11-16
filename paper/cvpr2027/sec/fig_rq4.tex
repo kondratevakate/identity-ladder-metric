@@ -2,16 +2,15 @@
 \centering
 \includegraphics[width=\columnwidth]{fig/rq4_size.pdf}
 \caption{\textbf{Nearest people come closer when the hidden region is small.}
-Distance under \acs{MSE} on the random-person scale (0 = target, 1 = average distance of 16 random people) against the size of the hidden region as a fraction of the object; lines average the image sets of one modality (faces: CelebA and IMDb-WIKI; retina: GRAPE and PAPILA; iris: UTIRIS \acs{NIR}, every fourth eye at 1/16); the gray band is the dataset average and the dashed line the 1/8 used everywhere else.
-The nearest person passes the dataset average in brain and retina once the region reaches 1/8, while the mean of the 16 nearest people stays below it at every size; brain, retina and iris are provisional.}
+\acs{MSE} on the random-person scale against the hidden-region size as a fraction of the object; lines average the sets of one modality (Table~\ref{tab:rq4}); gray band: dataset average; dashed line: the 1/8 used elsewhere.
+The nearest person passes the dataset average in brain and retina from 1/8 on, while the mean of the 16 nearest people stays below it at every size.}
 \label{fig:rq4}
 \end{figure}
 % Source: results/rq4_window_size.json; drawn by paper/cvpr2027/make_fig_rq4_size.py (values in fig/rq4_size_plotted.json).
 
 \begin{table}[t]
 \centering
-\caption{\textbf{Nearest person distance under \acs{MSE} by window size, per image set} (random-person scale; window as a fraction of the object; n/a = not run by protocol; at 1/16, UTIRIS \acs{NIR} and the retina use every fourth eye).
-In every set the nearest person moves toward a random person as the window grows, while the dataset average stays near 0.5.}
+\caption{\textbf{Distance under \acs{MSE} by window size, per image set} (random-person scale; window as a fraction of the object; n/a = not run; at 1/16, UTIRIS \acs{NIR} and the retina use every fourth eye).}
 \label{tab:rq4}
 \scriptsize
 \setlength{\tabcolsep}{1.6pt}
