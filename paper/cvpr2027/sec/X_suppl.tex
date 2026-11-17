@@ -17,7 +17,7 @@ Figure~\ref{fig:atlas-all} maps the local squared error of each rung for every i
 \caption{\textbf{Where in the image each rung is close or far: local squared error in units of the dataset average ($Q$).}
 Rows: CelebA and IMDb-WIKI faces, QTIM brain MRI, GRAPE and PAPILA retina, UTIRIS NIR, UPOL and UTIRIS VIS iris, and IXI brain MRI (no second scans or families).
 Columns: mean anatomy, second image, opposite side, sibling, random person, mean of the 16 nearest people, same-sex-and-age mean, and the error of the dataset average on its own scale.
-1 (white) is the dataset average and about 2 a random person; blue is closer than the mean; maps are population summaries with Gaussian windows in the brain.
+1 (white) is the dataset average and about 2 is a random person; blue is closer than the mean; maps are population summaries with Gaussian windows in the brain.
 The random person is red everywhere, while the mean of the 16 nearest people stays below the dataset average in every row (0.50 to 0.94).}
 \label{fig:atlas-all}
 \end{figure*}
@@ -37,15 +37,15 @@ On the scale anchored on the second scan, the mean of the 16 nearest people in t
 
 \subsection{Synthetic simulations}
 Synthetic tissue and eye experiments with a known target check the controls by construction.
-Along the softening path, an image can keep a high rank against unrelated people while its individual detail shrinks.
+Along the softening path, an image can maintain a high rank relative to unrelated people while its individual details shrink.
 Wrong detail of matched strength shows why distance from the mean alone is not enough.
 Synthetic pupil dilation keeps the eye fixed while changing its appearance, which tests the opposite failure.
 A threshold segmenter supports observations about label overlap and simple topology; it is not a trained segmenter.
 Synthetic variance components are illustrative and are not estimates of human heritability.
 
 \subsection{Agreement between metrics}
-Figure~\ref{fig:s-corr} groups the distances by how similarly they order the rungs within target, position and side.
-Strong agreement among monotone variants, such as MSE, RMSE and PSNR, is expected and is not independent evidence that a metric is sensitive to identity.
+Figure~\ref{fig:s-corr} groups the distances by how similarly they order the rungs within target, position, and side.
+Strong agreement among monotone variants, such as MSE, RMSE, and PSNR, is expected and is not independent evidence that a metric is sensitive to identity.
 
 \begin{figure}[htbp]
 \centering
@@ -60,7 +60,7 @@ Metrics in one block order the rungs almost identically; this describes dependen
 \label{sec:s-data}
 \subsection{Image sets and alignment}
 Table~\ref{tab:s-coverage} lists the units of analysis and how each image set is aligned.
-Brain volumes are corrected for slow intensity variation (N4), aligned affinely to the symmetric MNI template and standardized within the brain mask.
+Brain volumes are corrected for slow intensity variation (N4), aligned affinely to the symmetric MNI template, and standardized within the brain mask.
 Faces are aligned on facial landmarks and restricted in pose.
 Retinal photographs are placed in a frame centered on the optic disc, with left eyes mirrored and no further correction.
 Irises are segmented, unwrapped into strips, and masked for eyelids and reflections.
@@ -68,7 +68,7 @@ Irises are segmented, unwrapped into strips, and masked for eyelids and reflecti
 \begin{table}[htbp]
 \centering
 \caption{\textbf{Units of analysis and alignment.}
-Target units are people for brain and faces and eyes for iris and retina; clusters are the independent units used for resampling (families or people); the repeat column counts targets with a second image, which for faces varies by metric.}
+Target units are people for brain and faces, and eyes for iris and retina; clusters are the independent units used for resampling (families or people); the repeat column counts targets with a second image, which, for faces, varies by metric.}
 \label{tab:s-coverage}
 \small
 \begin{tabular}{@{}lrrll@{}}
@@ -131,17 +131,17 @@ UPOL & Free for use; citation required & Not stated on the dataset page \\
 Section~\ref{sec:s-models} places four pretrained models on the ladder for whole cohorts.
 The next step is an audit profile that compares a model with each ladder control within groups of people.
 For a held-out target $x_i$ (as in Eq.~1 of the main text) with visible context $c_i$ and mask $M_i$, let $y_{ik}=G(c_i,M_i,z_k)$ be the $k$-th fill of model $G$ with random seed $z_k$.
-For a group of targets $a$ (for example an age band or an acquisition site), a distance $d_m$ and a ladder control $f_{ir}$, the audit profile is
+For a group of targets $a$ (for example, an age band or an acquisition site), a distance $d_m$ and a ladder control $f_{ir}$, the audit profile is
 \begin{equation}
 \Delta_{a,m,r}=\mathbb E_{i\mid a}\Bigl[\mathbb E_k\, d_m(y_{ik},x_i;E_{ir})-d_m(f_{ir},x_i;E_{ir})\Bigr],
 \label{eq:audit}
 \end{equation}
 where $E_{ir}$ are the valid pixels shared by the target and the control.
 A negative value means that the metric prefers the model's fills to the control, not that the person was kept.
-Seeds are averaged within a target, failed outputs are reported, and group gaps need uncertainty over independent people.
+Seeds are averaged within a target; failed outputs are reported; and group gaps require uncertainty over independent people.
 Table~\ref{tab:s-models} gives the two terms of this profile for one group, the whole cohort, with one sample per target.
 Table~\ref{tab:decision} lists what such an audit must establish and what the reference experiments of this paper already provide.
-The reference cohorts for groups are defined: matched means use the recorded sex and age attributes in CelebA and the sex and age bands in IMDb-WIKI, and the brain uses sex- and age-matched cohorts with family exclusion.
+The reference cohorts for groups are defined as follows: matched means use the recorded sex and age attributes in CelebA and the sex and age bands in IMDb-WIKI; the brain uses sex- and age-matched cohorts with family exclusion.
 Group profiles of generated fills require model outputs on shared targets and masks, a fixed number of samples per target and a fixed rule for aggregating them.
 Repeated outputs for one context separate variation across targets from variation across seeds; low variance alone does not show mode collapse.
 A gap between groups describes the model and the metric together and is not a causal fairness finding.
@@ -150,8 +150,8 @@ A gap between groups describes the model and the metric together and is not a ca
 
 \subsection{Checks of the challenge evaluator}
 The BraTS inpainting challenge scores fills with the \texttt{inpainting} package (version 0.0.12).
-We scored one constructed volume of shape $[1,40,48,36]$ with eleven fills spanning noise, blur, a constant mean, gain and overshoot (Table~\ref{tab:s-brats}).
-The two-dimensional SSIM call interprets the first anatomical axis as channels, so permuting that axis jointly in every input leaves the score unchanged.
+We scored one constructed volume of shape $[1,40,48,36]$ with eleven fills spanning noise, blur, a constant mean, gain, and overshoot (Table~\ref{tab:s-brats}).
+The two-dimensional SSIM call interprets the first anatomical axis as channels, so permuting that axis jointly across all inputs leaves the score unchanged.
 This is an implementation convention, not evidence that every two-dimensional SSIM is unsuitable.
 For a fixed case, PSNR is monotone in MSE; the evaluator instead clips predictions to the reference's in-mask range, which breaks this exact rank identity.
 
@@ -180,11 +180,11 @@ Torchmetrics & SSIM original / permuted & PSNR / unclamped & $\tau$: plain / eps
 \subsection{Mean-relative error and finite references}
 Two caveats complete the definition of $Q$ in the main text (Eq.~1).
 An average of per-target ratios would overweight nearly information-free targets, which is why sums are divided.
-A finite leave-person-out mean adds estimation variance and differing masks change which targets are summarized, so the random person's $Q\approx2$ is a diagnostic check, not an identity forced to hold; likewise $1-\bar Q/2$ is not an estimate of heritability or of preserved identity when the additive model fails.
+A finite leave-person-out mean adds estimation variance, and differing masks change which targets are summarized, so the random person's $Q\approx2$ is a diagnostic check, not an identity forced to hold; likewise, $1-\bar Q/2$ is not an estimate of heritability or of preserved identity when the additive model fails.
 
 For other distances, the relevant baseline is empirical.
 MSE and RMSE keep the same ordering within a fixed target.
-PSNR has the corresponding monotonicity only when the intensity range and clipping rule are held fixed.
+PSNR is monotonic only when the intensity range and clipping rule are held fixed.
 For unit-normalized features, squared Euclidean distance is twice cosine distance, so their rank agreement is not independent evidence of validity.
 
 \subsection{Intensity adaptations of structural scores}
@@ -201,7 +201,7 @@ The lDDT-like adaptation~\cite{lddt2013} compares local intensity differences, n
 For each valid pair of neighboring voxels $(u,v)$ within radius two in voxel coordinates, it measures
 $|(f(u)-f(v))-(x(u)-x(v))|$.
 The score averages the fractions below the four thresholds $m\sigma_{\rm rep}$.
-Its fixed-tolerance variant instead uses $\{0.25,0.5,1,2\}$ standardized intensity units.
+Its fixed-tolerance variant instead uses standardized intensity units of $\{0.25, 0.5, 1, 2 \}$.
 These scores increase with similarity and are negated before the distance scales are computed.
 A constant offset leaves the intensity-difference score unchanged; this invariance does not establish anatomical correctness.
 
@@ -217,11 +217,11 @@ These algebraic identities explain the controls but are not independent validati
 A target residual that is small relative to acquisition variability makes the ratios unstable.
 
 \section{Validity masks and Gaussian spatial reporting}
-Beyond the rule of the main text that missing pixels are never zero, masks are carried through registration, normalization, averaging of reference people, context matching and local scoring.
+Beyond the main text rule that missing pixels are never zero, masks are carried through registration, normalization, averaging of reference people, context matching, and local scoring.
 Fills chosen by search are especially sensitive: a person must not be chosen by the context search because its padding happens to match the standardized target.
-The share of valid pixels in a box can still decide whether a target is used; this does not turn displayed errors into box averages.
-Fine brain maps and the coarser nearest-person grid have different sampling and interpolation.
-For retinal maps, all displayed positions keep the same set of contributing targets, which removes artifacts from a changing composition.
+The share of valid pixels within a box can still determine whether a target is used; this does not convert displayed errors into box averages.
+Fine brain maps and the coarser nearest-person grid use different sampling and interpolation methods.
+For retinal maps, all displayed positions share the same set of contributing targets, thereby removing artifacts due to a changing composition.
 
 \begin{figure*}[t]
 \centering
@@ -234,7 +234,7 @@ The title inside the figure describes pixel error, not a validated conclusion ab
 % Source figure: results/figures/fig_ladder_maps_common.pdf; quantitative sources are the brain map and map-grid JSONs.
 
 \section{Directional tests and uncertainty}
-Each directional test compares the second image with one reference fill: T1 with the dataset average, T2 with the softened second image, T3a with wrong detail and T3b with white noise.
+Each directional test compares the second image with one reference fill: T1 with the dataset average, T2 with the softened second image, T3a with wrong detail, and T3b with white noise.
 The paired independent unit is a family for QTIM and a person for iris.
 The retinal tests use the second visit as reference for GRAPE and the fellow eye for PAPILA, which has no T1 comparison.
 Holm correction is applied within each image set, and unavailable comparisons are reported as such, never as passed tests.
@@ -242,7 +242,7 @@ Holm correction is applied within each image set, and unavailable comparisons ar
 \begin{table*}[t]
 \centering
 \caption{\textbf{Brain directional tests} (QTIM).
-Each cell gives the decision and the Holm-adjusted $p$-value of a one-sided test in favor of the second image; ``not established'' is not an equivalence result.
+Each cell reports the decision and the Holm-adjusted $p$-value for a one-sided test favoring the second image; ``not established'' is not an equivalence result.
 Residual correlation is undefined for the dataset average, so it has no T1 comparison.}
 \label{tab:s-brain-tests}
 \small
@@ -282,6 +282,6 @@ Metric & Rung & $R_{\rm rep}$ & Targets & Families \\
 \input{sec/X_suppl_rq4}
 
 \section{Reproducibility}
-Every number in the paper is computed from an aggregate result file in the project repository; no participant image or per-person row is needed to rebuild the tables and figures.
-The experiment pipelines need the original datasets, obtained under their own terms (Table~\ref{tab:s-terms}); the code, protocols and aggregate results are in the project repository.
+Every number in the paper is computed from an aggregate results file in the project repository; no participant images or per-person rows are needed to rebuild the tables and figures.
+The experiment pipelines need the original datasets, obtained under their own terms (Table~\ref{tab:s-terms}); the code, protocols, and aggregate results are in the project repository.
 The atlas maps are assembled from saved Gaussian aggregate panels, and their scalar annotations summarize pooled errors rather than only the displayed axial slice.

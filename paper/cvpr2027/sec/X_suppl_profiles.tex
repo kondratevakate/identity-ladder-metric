@@ -9,7 +9,7 @@ In IXI, \acs{LPIPS} places the softened opposite hemisphere beyond the unchanged
 In faces, a second photograph of the same person is further than the dataset average under \ac{MSE} (0.640 against 0.499 in CelebA), because pose and lighting change between photographs, while ArcFace places it closest (0.354)\statusfinal.
 In the retina, the second visit of the same eye is at 0.49 in GRAPE, while the fellow eye is further than the dataset average (1.33 in GRAPE, 1.47 in PAPILA) and the mean of the 16 nearest people falls in between (0.86, 0.94)\statuspre.
 The iris shows the same order with a larger gap: the same eye captured again is at 0.41, 0.57 and 0.18 in UTIRIS \ac{NIR}, UTIRIS \ac{VIS} and UPOL, the other eye of the same person is at 1.12 to 1.29, beyond the dataset average, and the nearest person in between\statuspre.
-Across modalities, the opposite side of the same body is therefore not an intermediate rung between the same person and a random person: under squared error it is usually further than the population average, because mirrored anatomy differs in detail even within one person.
+Across modalities, the opposite side of the same body is therefore not an intermediate rung between the same person and a random person: under squared error, it is usually farther from the population average, because mirrored anatomy differs in detail even within one person.
 Only faces break this pattern, where the mirrored half is as close as the dataset average (0.99 on the $Q$ scale) and closer than a second photograph.
 Relatives behave like random people under squared error: a sibling is at 1.84 times the dataset-average error in QTIM and 1.73 in IMDb-WIKI, close to the random-person level of about 2 (Supplementary Figure~S1)\statuspre.
 % Sources: atlas_provenance.json (sibling Q, QTIM and IMDb-WIKI rows).
@@ -58,7 +58,7 @@ Data & Metric & 2nd photo & Opp. half & Average & Nearest person \\
 Retina: 16 nearest = mean of the 16 nearest people; PAPILA has no second visit.
 Iris: nearest person = one unrelated eye with the closest context.
 Bold: closest fill; underline: second closest.
-The person's own other eye is further than the dataset average in every set, and only the same eye seen again comes clearly closer.}
+The person's own other eye is farther than the dataset average in every set, and only the same eye seen again comes clearly closer.}
 \label{tab:fundus}
 \label{tab:iris}
 \scriptsize
