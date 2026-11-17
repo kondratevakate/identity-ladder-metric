@@ -21,8 +21,8 @@ Next to the references, a model score becomes readable (Table~\ref{tab:models}):
 \paragraph{Limitations.}
 The ladder calibrates metrics and does not by itself rank models.
 The pretrained models run mostly outside their training domain, with one diffusion sample per region and subsets of people for the two slow models.
-Alignment is the main confounder outside faces: misalignment adds to every distance in brain, retina and iris, most in mirrored comparisons with the opposite side.
-It does not explain the averaging reward alone, because faces, whose alignment passed visual \ac{QC}, fail T2 in the same way (Table~\ref{tab:tests}).
+Residual misalignment is the main confounder outside faces: it adds to every distance in brain, retina and iris, most in mirrored comparisons with the opposite side.
+It does not explain the averaging reward alone, because faces, aligned on landmarks, fail T2 in the same way (Table~\ref{tab:tests}).
 The cross-dataset summaries and tests were defined after the per-dataset results and are exploratory; only 23 QTIM people have a second scan, two of nine image sets record families, and the set-level exclusion rule was fixed after seeing one value.
 \ac{LPIPS}, topology and set-level metrics still use about 1/5 of the object in faces, retina and iris.
 The ladder measures closeness to known references, not clinical or biometric correctness: a fill at the same person's position can still miss a lesion.

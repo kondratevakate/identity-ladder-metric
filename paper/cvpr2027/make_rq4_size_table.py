@@ -1,6 +1,6 @@
 """Supplement table: RQ4 look-alike distance by hidden-region size, one row per image set.
 
-Source: results/rq4_window_size.json (R_self under MSE). A size that was not run is printed as n/a, never as zero.
+Source: results/rq4_window_size.json (R_self under MSE). A size that was not run is printed as a dot, never as zero.
 Usage: python -I paper/cvpr2027/make_rq4_size_table.py   (run from the repository root)
 """
 import json
@@ -15,10 +15,10 @@ data = json.load(open(SRC, encoding="utf-8"))["datasets"]
 def cell(points, f, rung):
     """Value at the window closest to fraction f (within 15 %), else n/a."""
     if not points:
-        return "n/a"
+        return "$\\cdot$"
     near = min(points, key=lambda p: abs(p - f))
     if abs(near - f) > 0.15 * f or not points[near].get(rung):
-        return "n/a"
+        return "$\\cdot$"
     return f"{points[near][rung][0]:.2f}"
 
 

@@ -3,12 +3,29 @@
 \begin{table}[t]
 \centering
 \caption{\textbf{Pretrained models among the references.}
-\acs{MSE} and \acs{SSIM} on the random-person scale (Eq.~\ref{eq:anchors}; 0 = target, 1 = random person), hidden region at 1/8 of the object (n/a: model not made for this modality; $\dagger$: subset of people; reference rows use all people, references on the same subset in Supplementary Section~S4).
+One row per model and image set, hidden region at 1/8 of the object, random-person scale (Eq.~\ref{eq:anchors}; 0 = target, 1 = random person).
+The last four columns are the references under \acs{MSE} on the same people and regions as the model (2nd: second image; soft.: softened second image; 16: mean of the 16 nearest people; avg.: dataset average).
 In faces the models are closer than every reference but only \mfFaceAheadMin{} to \mfFaceAheadMax{} ahead of the mean of the 16 nearest people; in the brain the second scan stays closer than the model.}
 \label{tab:models}
 \scriptsize
-\setlength{\tabcolsep}{3pt}
-\input{tab/model_fills}
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{@{}llrrrrrrr@{}}
+\toprule
+ & & & \multicolumn{2}{c}{Model} & \multicolumn{4}{c}{References, \acs{MSE}} \\
+\cmidrule(lr){4-5}\cmidrule(l){6-9}
+Model & Image set & People & \acs{MSE} & \acs{SSIM} & 2nd & Soft. & 16 & Avg. \\
+\midrule
+BraTS 2024 winner & QTIM & \mfBratsQtimN{} & \mfBratsQtimMse{} & \mfBratsQtimSsim{} & \mfBratsQtimRefRepeatMse{} & \mfBratsQtimRefSoftMse{} & \mfBratsQtimRefNearestMse{} & \mfBratsQtimRefMeanMse{} \\
+\addlinespace[2pt]
+LaMa (CelebA-HQ) & CelebA & \mfLamaHqCelebaN{} & \mfLamaHqCelebaMse{} & \mfLamaHqCelebaSsim{} & \mfLamaHqCelebaRefRepeatMse{} & \mfLamaHqCelebaRefSoftMse{} & \mfLamaHqCelebaRefNearestMse{} & \mfLamaHqCelebaRefMeanMse{} \\
+LaMa (Places) & CelebA & \mfLamaPlacesCelebaN{} & \mfLamaPlacesCelebaMse{} & \mfLamaPlacesCelebaSsim{} & \mfLamaPlacesCelebaRefRepeatMse{} & \mfLamaPlacesCelebaRefSoftMse{} & \mfLamaPlacesCelebaRefNearestMse{} & \mfLamaPlacesCelebaRefMeanMse{} \\
+Stable Diffusion 1.5 & CelebA & \mfSdCelebaN{} & \mfSdCelebaMse{} & \mfSdCelebaSsim{} & \mfSdCelebaRefRepeatMse{} & \mfSdCelebaRefSoftMse{} & \mfSdCelebaRefNearestMse{} & \mfSdCelebaRefMeanMse{} \\
+\addlinespace[2pt]
+LaMa (CelebA-HQ) & IMDb-WIKI & \mfLamaHqImdbN{} & \mfLamaHqImdbMse{} & \mfLamaHqImdbSsim{} & \mfLamaHqImdbRefRepeatMse{} & \mfLamaHqImdbRefSoftMse{} & \mfLamaHqImdbRefNearestMse{} & \mfLamaHqImdbRefMeanMse{} \\
+LaMa (Places) & IMDb-WIKI & \mfLamaPlacesImdbN{} & \mfLamaPlacesImdbMse{} & \mfLamaPlacesImdbSsim{} & \mfLamaPlacesImdbRefRepeatMse{} & \mfLamaPlacesImdbRefSoftMse{} & \mfLamaPlacesImdbRefNearestMse{} & \mfLamaPlacesImdbRefMeanMse{} \\
+Stable Diffusion 1.5 & IMDb-WIKI & \mfSdImdbN{} & \mfSdImdbMse{} & \mfSdImdbSsim{} & \mfSdImdbRefRepeatMse{} & \mfSdImdbRefSoftMse{} & \mfSdImdbRefNearestMse{} & \mfSdImdbRefMeanMse{} \\
+\bottomrule
+\end{tabular}
 \end{table}
 % Sources: results/model_fills_v1/model_fills_f8.json (input version v3; docs/PROTOCOL_model_fills.md, amendment 2); the
 % table and every \mf... number are written by paper/cvpr2027/make_model_fills.py (tab/model_fills*.tex).
