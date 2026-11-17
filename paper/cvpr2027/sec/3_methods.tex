@@ -8,7 +8,7 @@ We first define the fills that form the ladder and the three controls, then the 
 \label{sec:controls}
 The \emph{target} is the region of a person's image hidden from the inpainting model: a cube in the brain, a square window in the 2D images.
 Its size is a fraction of the \emph{object}, the structure being imaged: the brain (127\,mm across in the template), the aligned face (79.5 pixels wide), the retinal field of view (square root of its mean area: 78 pixels in PAPILA, 85 in GRAPE) or the iris (diameter $256/\pi$ pixels); 1/8 gives 16\,mm cubes and 10 or 11 pixel windows.
-The \emph{context ring} is the band of visible pixels around the target that is used to choose the nearest people: 4\,mm in the brain, a quarter of the cube, and half the window width in the 2D images (5 or 6 pixels).
+The \emph{context ring} is the band of visible pixels around the target that is used to choose the nearest people: 4\,mm in the brain (a quarter of the cube) and half the window width in the 2D images (5 or 6 pixels).
 A \emph{fill} is any content placed into the hidden region and compared with the target; every reference fill is a real image, an average of real images, or a control built from them, and Section~\ref{sec:m-models} adds the fills of pretrained models.
 \emph{Valid pixels} are pixels observed in both target and fill (field of view, brain mask, iris without lids and reflections); other pixels are missing, never zero.
 \emph{Unrelated people} are everyone outside the target person's family.
@@ -17,11 +17,11 @@ The \emph{same person} fill is the hidden region taken from a second image of th
 The \emph{opposite side} is the mirrored region of the other hemisphere, half face or eye; a \emph{sibling} is a recorded family member.
 A \emph{random person} is one unrelated person drawn at random, and we draw 16 per target.
 The \emph{dataset average} averages all unrelated people at each pixel, using only people valid there.
-\emph{Nearest people} are chosen from the context only: we rank unrelated people by the mean squared difference between their context ring and the target's ring and average the hidden region of the 16 closest (\emph{mean of the 16 nearest people}); 16 equals the number of random people drawn per target and was fixed before any result.
-The \emph{best-matching person} is instead the one unrelated person whose hidden region is closest to the target; it uses the answer and is an upper bound.
+\emph{Nearest people} are chosen from the context only: we rank unrelated people by the mean squared difference between their context ring and the target's ring and average the hidden region of the 16 closest (\emph{mean of the 16 nearest people}; the \emph{nearest person} is the closest one); 16 was fixed before any result.
+The \emph{best-matching person} is instead the one unrelated person whose hidden region is closest to the target; it uses the answer and bounds any single person.
 
-With $\hat\mu$ the dataset average and $f$ the same person's second image, the \emph{softened same person} is $\hat\mu+\lambda(f-\hat\mu)$: nothing is cropped, the individual detail $f-\hat\mu$ is scaled down.
-We set $\lambda=1-\bar Q/2$, the fraction of individual detail a second image keeps on average ($\bar Q$ from Eq.~\ref{eq:unit}; $\lambda=0.85$ for QTIM).
+With $\hat\mu$ the dataset average and $s$ the same person's second image, the \emph{softened same person} is $\hat\mu+\lambda(s-\hat\mu)$: nothing is cropped, the individual detail $s-\hat\mu$ is scaled down.
+We set $\lambda=1-Q(s)/2$, the fraction of individual detail a second image keeps on average ($Q$ of Eq.~\ref{eq:unit}; $\lambda=0.85$ for QTIM).
 \emph{Wrong detail} is $\hat\mu$ plus a random person's individual detail made orthogonal to the target's and rescaled to the same norm; \emph{noise} is $\hat\mu$ plus white noise with the standard deviation of the target's individual detail.
 
 \subsection{Distances and scales}
@@ -31,20 +31,21 @@ e_i(f)=\frac{1}{|E_i|}\sum_{v\in E_i}\bigl(x_i(v)-f(v)\bigr)^2,\quad
 Q(f)=\frac{\sum_i e_i(f)}{\sum_i e_i(\hat\mu)},
 \label{eq:unit}
 \end{equation}
-where $v$ is a pixel and $i$ runs over all targets and regions; summing before dividing avoids unstable per-target ratios.
+where $v$ is a pixel, $i$ runs over all hidden regions, $e_i$ is the \ac{MSE} of one region and $Q$ the error relative to the dataset average; summing first avoids unstable ratios.
 The dataset average has $Q=1$, and if a person is the mean plus independent detail, a random person has $Q\approx2$.
 For all metrics we also use a random-person scale,
 \begin{equation}
 R(f)=\frac{\bar d(f)-\bar d_0}{\bar d(\mathrm{random})-\bar d_0},
 \label{eq:anchors}
 \end{equation}
-with $d$ the metric written as a distance (similarities negated), $\bar d$ its average over targets and regions, $\bar d(\mathrm{random})$ the average over the 16 random people and $\bar d_0$ the distance of the \emph{anchor}, the reference placed at 0, here the target itself, so $R=0$ is the target and $R=1$ a typical random person (Figure~\ref{fig:explainer}).
-The random person is the natural unit because it is the infill a model produces when it ignores the context and copies an arbitrary training image, and because every metric can measure it on every dataset; a metric that cannot place the same person below 1 does not see the person at all.
+Here $d$ is the metric written as a distance (similarities negated), $\bar d$ its average over all hidden regions, and $\bar d(\mathrm{random})$ the average over the 16 random people.
+The \emph{anchor} is the reference placed at 0, with distance $\bar d_0$; here it is the target itself, so $R=0$ is the target and $R=1$ a typical random person (Figure~\ref{fig:explainer}).
+The random person is the natural unit because it is the fill a model produces when it ignores the context and copies an arbitrary training image, and because every metric can measure it on every dataset; a metric that cannot place the same person below 1 does not see the person at all.
 The brain profile (Supplementary Section~S5) also anchors $\bar d_0$ on the second scan, because two sessions of one brain differ.
 
 \subsection{Metrics and uncertainty}
-We compute ten variants in four families, the ones shown in Figure~\ref{fig:summary}; \ac{GDT}-like and \ac{RMSE}, which order the rungs as \ac{MSE} does, are reported in the text.
-\emph{Error and similarity}: \ac{MSE}, \ac{SSIM} and three tolerance scores from protein-structure comparison, \ac{TM}-like~\cite{tmscore2004}, \ac{GDT}-like~\cite{zemla2003lga} and \ac{lDDT}-like~\cite{lddt2013}, which count positions that agree within a tolerance (fixed, or the typical difference between two scans of one person) so that a few large differences cannot dominate; protein comparison asks the same question as ours, how much of the shape agrees within a tolerance.
+Figure~\ref{fig:summary} shows ten metric variants in four families; \ac{GDT}-like and \ac{RMSE} order the rungs as \ac{MSE} does and are reported in the text only.
+\emph{Error and similarity} (pixel metrics): \ac{MSE}, \ac{SSIM} and three tolerance scores from protein-structure comparison, \ac{TM}-like~\cite{tmscore2004}, \ac{GDT}-like~\cite{zemla2003lga} and \ac{lDDT}-like~\cite{lddt2013}, which count positions that agree within a tolerance (fixed, or the typical difference between two scans of one person) so that a few large differences cannot dominate.
 As a diagnostic outside the ten variants, \emph{residual correlation} is the cosine between the fill's and the target's individual detail, $\langle f-\hat\mu,\,x-\hat\mu\rangle/(\|f-\hat\mu\|\,\|x-\hat\mu\|)$; it ignores the size of the detail, so a softened same person scores exactly as the unchanged one.
 \emph{\acs{LPIPS}} with AlexNet and VGG features~\cite{zhang2018lpips}.
 \emph{Topology}: Betti matching~\cite{betti2023} and persistence diagrams of thresholded images.
@@ -74,14 +75,14 @@ Alignment in every image set passed our visual \ac{QC} on overlay sheets before 
 
 \begin{table}[t]
 \centering
-\caption{\textbf{Datasets and where their ladders sit} ($Q$, Eq.~\ref{eq:unit}: 1 = dataset average, about 2 = random person; $\cdot$ = no second image in this set; nearest = one context-selected person; random = one random person; bold: closest rung in the row).
+\caption{\textbf{Datasets and where their ladders sit} ($Q$, Eq.~\ref{eq:unit}: 1 = dataset average, about 2 = random person; $\cdot$ = no second image in this set; nearest = one context-selected person; random = one random person; each set's original window, as in Supplementary Section~S5; bold: closest rung in the row).
 The random person is near 2 everywhere; the second image is the closest rung except in faces, where pose and lighting change between photographs.}
 \label{tab:datasets}
 \scriptsize
 \setlength{\tabcolsep}{2.2pt}
 \begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-Dataset & Persons & Targets & 2nd img & Opp. side & Nearest & Random \\
+Dataset & People & Targets & 2nd img & Opp. side & Nearest & Random \\
 \midrule
 \input{tab/dataset_card_short}
 \end{tabular}

@@ -12,46 +12,52 @@ Error and similarity metrics see the person: under \ac{MSE} the same person is a
 They do not reject averaging: the dataset average is at 0.50, and the softened same person at 0.29 is closer than the unchanged same person\statuspre.
 In the brain, anchored on the second scan, the softened scan is at $-0.01$ $[-0.028,-0.004]$, so T2 fails\statuspre.
 \input{sec/tab_tests}
-The directional tests show the same in every image set (Table~\ref{tab:tests}): no error or similarity metric places the unchanged person closer than the softened one (T2), while all of them reject wrong detail and noise (T3a, T3b), and T1 fails in faces under all four metrics, because a second photograph changes pose and lighting, and in UTIRIS under \ac{lDDT}-like\statuspre.
+The directional tests show the same in every tested set (Table~\ref{tab:tests}).
+No error or similarity metric places the unchanged person closer than the softened one (T2), while all of them reject wrong detail and noise (T3a, T3b).
+T1 fails in faces under all four metrics, because a second photograph changes pose and lighting, and in UTIRIS under \ac{lDDT}-like\statuspre.
 \ac{SSIM} shows the same pattern with a smaller gap: the same person at 0.63, the softened same person at 0.60 and the dataset average at 0.83, so it penalizes the dataset average more than \ac{MSE} does but still prefers partial averaging to the unchanged second image.
 \ac{lDDT}-like, the tolerance score that compares local intensity differences, rewards averaging the most: the softened same person at 0.52 and the dataset average at 0.62 are both closer than the same person at 0.66.
 \ac{TM}-like, \ac{GDT}-like and \ac{RMSE} order the rungs almost exactly as \ac{MSE} (rank correlation 0.97 to 0.99).
-\ac{LPIPS} rejects the dataset average (AlexNet 0.99, VGG 1.08); VGG keeps the softened same person next to the same person (0.61 against 0.60), and AlexNet places it only slightly further (0.56 against 0.47).
+\ac{LPIPS} rejects the dataset average (AlexNet 0.99, VGG 1.08); VGG keeps the softened same person next to the same person (0.61 against 0.60), and AlexNet, the closest to doing both, separates it by only 0.09 (0.56 against 0.47).
+Topology also rewards averaging: under Betti matching the softened same person (0.43) is closer than the unchanged one (0.48).
 % Sources: fig_metric_summary_f8_R.json (error and similarity at f = 1/8, from common_f8_v1.json); agreement_f8_v1.json; donor_ladder_brain_metrics.json views/random_patches/LR/ladder_R.
 
 Set-level metrics behave the other way round.
 \ac{FID} and \ac{FWD} place the dataset-average set 16 and 186 times as far as the random-person set.
 They place the same-person set at 0.93 (\ac{FID}) and 0.57 (\ac{FWD}) of the random-person set's distance.
-In rank terms the random person lies only 0.10 of the ladder beyond the same person, against 0.59 for \ac{MSE}.
-Because set distances are biased upward for small sets, we left QTIM out of the set-level summary after its second-scan set (138 of 1{,}326 regions) gave 8.3, and IXI because its opposite-side set is the target set itself, and dropped rungs with fewer than half the random-person set's regions; both rules were fixed after seeing that value.
-No metric reaches the shaded corner of Figure~\ref{fig:summary}A, where it would both recognize the individual and penalize subtle averaging.
+By rank (Figure~\ref{fig:summary}A, x), the random person lies only 0.10 of the ladder beyond the same person, against 0.59 for \ac{MSE}.
+Set distances are biased upward for small sets: the second-scan set of QTIM (138 of 1{,}326 regions) lies at 8.3 times the random-person set.
+We therefore left QTIM out of the set-level summary, and IXI because its opposite-side set is the target set itself.
+We also dropped rungs with fewer than half the random-person set's regions; both rules were fixed after seeing that value.
+No metric reaches the shaded corner of Figure~\ref{fig:summary}A, where it would both recognize the individual and penalize partial averaging.
 % Sources: fig_metric_summary_R.json (fid, fwd, panel_A); values_generative.json.
 
-\subsection{RQ3: lost detail is cheap for pixel metrics, wrong detail for set-level metrics}
+\subsection{RQ3: lost detail is cheap for pixel metrics, wrong detail for \acs{FID}}
 Under \ac{MSE}, lost detail (softened same person) is at 0.29, wrong detail at 1.00, as far as a random person, and noise at 0.80\statuspre; only \ac{lDDT}-like puts noise far beyond a random person (1.58).
 \ac{FID} reverses the order: wrong detail at 1.29 and the softened same person at 2.55, so it prefers a sharp image of the wrong person to a softened image of the right one\statuspre.
 Residual correlation, which compares only the direction of individual detail, cannot see lost detail at all.
-The two families therefore fail in opposite directions: a model tuned on pixel metrics would learn to blur toward the mean, and a model tuned on set-level metrics could produce realistic detail that belongs to someone else.
+The two families therefore fail in opposite directions: a model tuned on pixel metrics would learn to blur toward the mean, and a model tuned on \ac{FID} could produce realistic detail that belongs to someone else.
 \subsection{RQ4: nearest people chosen from the context come close}
 \input{sec/fig_rq4}
 With the hidden region at 1/8 of the object, the mean of the 16 nearest people is at 0.29 under \ac{MSE} on average over the nine sets, and the best-matching person at 0.23\statuspre.
-It is closer than the opposite side in every set, but closer than the person's own second image only in faces and UTIRIS \ac{VIS} (CelebA 0.20 against 0.63); with a second scan or a repeated capture of the same eye the person stays closer (QTIM 0.15 against 0.37, GRAPE 0.21 against 0.40, UPOL 0.09 against 0.25)\statuspre.
+This mean is closer than the opposite side in every set, but closer than the person's own second image only in faces and UTIRIS \ac{VIS} (CelebA 0.20 against 0.63); with a second scan or a repeated capture of the same eye the person stays closer (QTIM 0.15 against 0.37, GRAPE 0.21 against 0.40, UPOL 0.09 against 0.25)\statuspre.
 Local similarity is not identity, however: in CelebA, with a 16-pixel window (1/5 of the face width), the nearest person is at 0.40 on the local \ac{MSE} scale but at 0.98 for the whole face under ArcFace\statusfinal{} (IMDb-WIKI 0.40 and 0.98\statusfinal).
 How close nearest people come depends on the size of the hidden region relative to the object, while the other rungs do not (Figure~\ref{fig:rq4}).
 When the hidden region grows from 1/16 to 1/8 and 1/4 of the object, the nearest person in the brain moves from 0.38 to 0.59 and 0.71 (8, 16 and 32\,mm cubes), and the other modalities follow the same course (Supplementary Table~S13)\statuspre.
-The dataset average remains between 0.49 and 0.53, and the same person's second image and its softened version do not change.
+The dataset average remains between 0.49 and 0.53, and the second image and its softened version stay in place (QTIM: 0.16, 0.15, 0.15 and 0.14, 0.14, 0.14).
 The mean of the 16 nearest people grows more slowly (brain: 0.25 to 0.42; faces: 0.12 to 0.28) and remains below the dataset average at every size.
-Small holes are thus largely predictable from their surroundings, and large holes are not.
+Small regions are thus largely predictable from their surroundings, and large regions are not.
 Because the second image and its softened version maintain their distance at all sizes, the averaging reward under \ac{MSE} (RQ2) does not depend on size, whereas the RQ4 retrieval baseline must be reported at a specified fraction of the object.
 Acquisition also matters: in IXI, a random person from the same site is at 0.87 $[0.844, 0.899]$ and one from another site at 1.06 $[1.049, 1.072]$\statuspre.
-About a sixth of the distance to a random person from another site is therefore the scanner, not the anatomy, and a nearest-person search restricted to the same site would gain part of its advantage from matching the acquisition.
+About a sixth of the distance to a random person from another site is therefore tied to the site, not the person, and a nearest-person search restricted to the same site would gain part of its advantage from matching the acquisition.
 
 \input{sec/models}
 
 \subsection{Per-modality profiles}
 Supplementary Section~S5 gives the profile of each modality at its original window, and Supplementary Figure~S1 shows where in the image each rung is close or far.
-Across modalities, the opposite side of the same body is not an intermediate rung between the same person and a random person: under squared error it is usually further than the dataset average (brain 0.72 against 0.41 under \ac{MSE}; fellow eye 1.33 in GRAPE and 1.47 in PAPILA on the $Q$ scale; other iris 1.12 to 1.29), because mirrored anatomy differs in detail even within one person\statuspre.
-Only faces break this pattern, where the mirrored half is as close as the dataset average (0.99 on the $Q$ scale) and closer than a second photograph, which pose and lighting push beyond the dataset average under \ac{MSE} (0.64 against 0.50 in CelebA) while ArcFace places it closest (0.35)\statusfinal.
+Across modalities, the opposite side of the same body is not an intermediate rung between the same person and a random person: under squared error it is usually farther than the dataset average (brain, second-scan anchor: 0.72 against 0.41; fellow eye 1.33 in GRAPE and 1.47 in PAPILA on the $Q$ scale; other iris 1.12 to 1.29), because mirrored anatomy differs in detail even within one person\statuspre.
+Only faces break this pattern: the mirrored half is as close as the dataset average ($Q$ near 1) and closer than a second photograph.
+Pose and lighting push that photograph beyond the dataset average under \ac{MSE} (0.64 against 0.50 in CelebA), while ArcFace places it closest (0.35)\statusfinal.
 Relatives behave like random people under squared error: a sibling is at 1.84 times the dataset-average error in QTIM and 1.73 in IMDb-WIKI, close to the random-person level of about 2\statuspre.
 % Sources: atlas_provenance.json (sibling Q, QTIM and IMDb-WIKI rows).
 % Sources: tab/fundus_ratio.tex, tab/iris_ratio.tex, tab/dataset_card.tex.

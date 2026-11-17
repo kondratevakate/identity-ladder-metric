@@ -2,18 +2,16 @@
 \label{sec:intro}
 % Base: Ivan Ezhov's version of 13 Nov 2026 (Overleaf), with Paula's term questions answered in place.
 Inpainting asks a model to fill a hidden region of an image from its visible surroundings.
-In medical imaging it replaces content that is missing or must not be used: for brain tumor patients, the first scan is already diseased, and inpainting healthy-looking tissue into the lesion lets tools built for healthy brains, such as tissue segmentation and brain extraction, run on it~\cite{brats2023}.
-Such an infill should show this patient's anatomy, but an unsure model can reduce its error by producing blurry, population-average content instead.
+In medical imaging it replaces content that is missing or must not be used: for brain tumor patients, even the first scan shows the lesion, and inpainting healthy-looking tissue into it lets tools built for healthy brains, such as tissue segmentation and brain extraction, run on the scan~\cite{brats2023}.
+Such a fill should show this patient's anatomy, but an unsure model can reduce its error by producing blurry, population-average content instead.
 The fills are scored by their distance from the original content, typically using metrics such as \ac{MSE}, \ac{SSIM}, or \ac{LPIPS}~\cite{zhang2018lpips}.
 A low distance can mean that the fill recovered detail that belongs to this individual, or only that it is a generic, population-average fill that is close on average.
-An infill can also look plausible yet show someone else's face, eye, or brain.
-A single score cannot distinguish these cases; it requires reference images whose relationship to the target is known.
-We therefore audit the metrics themselves.
+A fill can also look plausible yet show someone else's face, eye, or brain.
+A single score cannot distinguish these cases.
 For a model output, the score a metric should give is unknown, so the metric cannot be checked on it.
+We therefore audit the metrics themselves.
 We instead score fills whose relationship to the target is known by design: real images, averages of real images, and controls built from them.
 The audit is deterministic and fully data-driven, and what a metric rewards here does not depend on any particular model.
-
-Inpainting is also a convenient test bed for conditional generation: the condition is fixed, and the content the model should produce exists, so whatever a metric rewards here, it rewards wherever generated content is scored against a single reference.
 
 Human anatomy provides such references.
 A second image of the same person, such as a second \ac{MRI} session or another photograph, preserves the person's anatomy but might change the acquisition parameters.
@@ -21,16 +19,17 @@ The opposite side of the same body, such as the other eye, hemisphere, or half o
 Genetic relatives may share some anatomy; unrelated people share only what is common to the population; and averaging across many unrelated people preserves the common structure without individual variation.
 
 We arrange such references into the \emph{identity ladder}, a calibration scale for inpainting metrics; each kind of reference is a \emph{rung}, and its expected position is known before any metric is computed.
-We call the difference between a person's image and the population average their \emph{individual detail}.
-Three constructed controls separate losing detail from getting it wrong: the \emph{softened same person} is the person's own second image with its individual detail scaled down toward the average; \emph{wrong detail} adds a random person's individual detail of the same strength to the average; and \emph{noise} adds white noise of that strength.
+We call the difference between a person's image and the dataset average their \emph{individual detail}.
+Three constructed controls separate losing detail from getting it wrong: the \emph{softened same person} is the person's own second image with its individual detail scaled down toward the average; \emph{wrong detail} adds a random person's individual detail of the target's strength to the average; and \emph{noise} adds white noise of that strength.
 Finally, unrelated people chosen solely because their visible surroundings resemble the target's show what a fill can achieve without knowing the person.
 We ask four research questions.
 \textbf{RQ1:} Does a metric place the same person closer than a random person?
-\textbf{RQ2:} Does it penalize partial averaging toward the population mean?
+\textbf{RQ2:} Does it penalize partial averaging toward the dataset average?
 \textbf{RQ3:} Does it separate lost detail (the right person, made blurry) from wrong detail (sharp detail from someone else)?
 \textbf{RQ4:} How close can unrelated people chosen from the visible surroundings alone come to the same person?
 
-Our contributions are the identity ladder with its three control conditions, an audit of ten metric variants from four families on nine image sets from eight cohorts of brain \ac{MRI}, retinal photographs, faces and irises, and the positions of four pretrained inpainting models on that ladder.
-None of the metrics tested answers both RQ1 and RQ2: metrics computed on the filled region reward partial averaging, and set-level metrics, \ac{FID}~\cite{heusel2017fid} and \ac{FWD}~\cite{fwd2025}, barely separate the right person from a random person.
+Our contributions are the identity ladder with its three control conditions, an audit of ten metric variants from four families on nine image sets from eight cohorts of brain \ac{MRI}, retinal photographs, faces, and irises, and the positions of four pretrained inpainting models on that ladder.
+No tested metric passes both RQ1 and RQ2: metrics computed on the filled region reward partial averaging, and set-level metrics, \ac{FID}~\cite{heusel2017fid} and \ac{FWD}~\cite{fwd2025}, barely separate the right person from a random person.
 That the conditional mean minimizes expected squared error is known~\cite{blau2018}; the audit adds the size of this reward on real anatomy, the opposite failure of set-level metrics, a retrieval baseline built from the context alone whose distance depends on the region size, and directional tests in each image set.
-Inpainting algorithm benchmarks, such as the \ac{BraTS} brain inpainting challenge~\cite{brats2023}, should incorporate these control conditions to complement their original challenge metrics for better interpretability.
+Inpainting algorithm benchmarks, such as the \ac{BraTS} brain inpainting challenge~\cite{brats2023}, should report these references and controls next to their own metrics.
+Inpainting is also a convenient test bed for conditional generation: the condition is fixed, and the content the model should produce exists, so whatever a metric rewards here, it rewards wherever generated content is scored against a single reference.

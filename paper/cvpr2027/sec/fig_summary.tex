@@ -1,10 +1,10 @@
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.92\textwidth]{fig/metric_summary_v7_f8.pdf}
+\includegraphics[width=0.92\textwidth]{fig/metric_summary_v8_f8.pdf}
 \caption{\textbf{Pixel metrics see the person, set-level metrics reject averaging, and no metric does both.}
 \textbf{A,} One point per metric.
 x (RQ1): how far beyond the same person the metric places a random person; y (RQ2): how far beyond the unchanged same person it places the softened same person; each is the rank of the second fill minus the rank of the first along the ladder, divided by the number of rungs and averaged over image sets.
-The shaded corner (x at least 0.4, y at least 0.25) would hold a metric that answers both, and none falls there.
+The shaded corner (x at least 0.4, y at least 0.25; thresholds set by us for display) would hold a metric that answers both, and none falls there.
 \textbf{B,} Each fill on the random-person scale (0 = target, 1 = average distance of 16 random people), averaged over the image sets where it exists (in brackets); fixed lanes in legend order, rungs in cool and controls in warm colors.
 \acs{FID} and \acs{FWD} are set distances divided by the random-person set's distance, on a log axis.
 The sibling is omitted (2 of 9 image sets record families); \acs{TM}-like needs second images, so PAPILA and IXI have no value.

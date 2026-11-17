@@ -26,7 +26,7 @@ def span_at(page, rect):
     raise ValueError(f"no span at {rect}")
 
 
-def edit(page, jobs):
+def edit(page, jobs, align="center"):
     """jobs: (old text, new text or None), applied one after another, so a long phrase is gone before a
     shorter phrase it contains is searched. None removes the text; '|' in the new text starts a new line.
     Every occurrence of the old text is replaced in place."""
@@ -44,7 +44,8 @@ def edit(page, jobs):
         for r, size, col, serif, bold in todo:
             font = ("tibo" if bold else "tiro") if serif else ("hebo" if bold else "helv")
             width = fitz.get_text_length(new, fontname=font, fontsize=size)
-            page.insert_text(((r.x0 + r.x1) / 2 - width / 2, r.y1 - 0.22 * size), new,
+            x = r.x0 if align == "left" else (r.x0 + r.x1) / 2 - width / 2
+            page.insert_text((x, r.y1 - 0.22 * size), new,
                              fontname=font, fontsize=size, color=col)
 
 
@@ -83,7 +84,19 @@ def atlas():
     d.save("fig/atlas_all_modalities_full_v3.pdf", garbage=3, deflate=True)
 
 
+def main_figures():
+    """Figures 2 and 3 of the main text: the controls carry the names used in the text."""
+    d = fitz.open("fig/metric_summary_v7_f8.pdf")
+    edit(d[0], [("average + random detail", "wrong detail"), ("average + noise", "noise")], align="left")
+    d.save("fig/metric_summary_v8_f8.pdf", garbage=3, deflate=True)
+    d = fitz.open("fig/fig_explainer_mse_v3.pdf")
+    edit(d[0], [("Average + random detail", "Wrong detail"), ("Average + noise", "Noise"),
+                ("scale unit 0.38", "mean of 16: 0.38")])
+    d.save("fig/fig_explainer_mse_v4.pdf", garbage=3, deflate=True)
+
+
 if __name__ == "__main__":
     brain_maps()
     atlas()
-    print("written: fig/brain_gaussian_maps_v3.pdf, fig/atlas_all_modalities_full_v3.pdf")
+    main_figures()
+    print("written: brain_gaussian_maps_v3, atlas_all_modalities_full_v3, metric_summary_v8_f8, fig_explainer_mse_v4")
