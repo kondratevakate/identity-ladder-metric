@@ -1,32 +1,52 @@
 {
  "QTIM": {
-  "same person, softened": [
-   0.1414,
-   0.107,
-   0.1872
-  ],
-  "same person": [
+  "Same person": [
    0.1529,
    0.1117,
    0.2076
   ],
-  "BraTS 2024 winner \u2020": [
-   0.2558,
-   0.2381,
-   0.2737
+  "Same person, softened": [
+   0.1414,
+   0.107,
+   0.1872
   ],
   "16 nearest people": [
    0.3749,
    0.3696,
    0.3803
   ],
-  "dataset average": [
+  "Dataset average": [
    0.5025,
    0.4976,
    0.5081
+  ],
+  "BraTS 2024 winner": [
+   0.2558,
+   0.2381,
+   0.2737
   ]
  },
  "CelebA": {
+  "Same person": [
+   0.6323,
+   0.6117,
+   0.6517
+  ],
+  "Same person, softened": [
+   0.4236,
+   0.4154,
+   0.4315
+  ],
+  "16 nearest people": [
+   0.1959,
+   0.1924,
+   0.1994
+  ],
+  "Dataset average": [
+   0.4917,
+   0.4858,
+   0.4974
+  ],
   "LaMa (CelebA-HQ)": [
    0.1393,
    0.1358,
@@ -37,28 +57,33 @@
    0.1628,
    0.171
   ],
-  "16 nearest people": [
-   0.1959,
-   0.1924,
-   0.1994
-  ],
-  "same person, softened": [
-   0.4236,
-   0.4154,
-   0.4315
-  ],
-  "dataset average": [
-   0.4917,
-   0.4858,
-   0.4974
-  ],
-  "same person": [
-   0.6323,
-   0.6117,
-   0.6517
+  "Stable Diffusion 1.5": [
+   0.1295,
+   0.1173,
+   0.1427
   ]
  },
  "IMDb-WIKI": {
+  "Same person": [
+   0.6817,
+   0.6598,
+   0.705
+  ],
+  "Same person, softened": [
+   0.4423,
+   0.4335,
+   0.4516
+  ],
+  "16 nearest people": [
+   0.2129,
+   0.2088,
+   0.2171
+  ],
+  "Dataset average": [
+   0.4921,
+   0.4855,
+   0.4981
+  ],
   "LaMa (CelebA-HQ)": [
    0.151,
    0.1461,
@@ -69,25 +94,10 @@
    0.1785,
    0.191
   ],
-  "16 nearest people": [
-   0.2129,
-   0.2088,
-   0.2171
-  ],
-  "same person, softened": [
-   0.4423,
-   0.4335,
-   0.4516
-  ],
-  "dataset average": [
-   0.4921,
-   0.4855,
-   0.4981
-  ],
-  "same person": [
-   0.6817,
-   0.6598,
-   0.705
+  "Stable Diffusion 1.5": [
+   0.1355,
+   0.1202,
+   0.1533
   ]
  }
 }

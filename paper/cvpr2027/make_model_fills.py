@@ -29,7 +29,7 @@ DATASETS = ["QTIM", "CelebA", "IMDb-WIKI"]
 METRICS = [("mse", "MSE"), ("ssim", "SSIM"), ("lddt", "lDDT-like")]
 REFS = [("repeat", "ref"), ("shrink_ref", "shrink_ref"), ("lookalike16", "lookalike16"), ("dataset_mean", "dataset_mean")]
 MODELS = [("brats24_unet", "BraTS 2024 winner", "#111111", "*"), ("lama_celebahq", "LaMa (CelebA-HQ)", "#111111", "*"),
-          ("lama_places", "LaMa (Places)", "#7a7a7a", "*"), ("sd15_inpaint", "SD 1.5 inpainting", "#8b1a1a", "p")]
+          ("lama_places", "LaMa (Places)", "#7a7a7a", "*"), ("sd15_inpaint", "Stable Diffusion 1.5", "#8b1a1a", "p")]
 
 f8 = json.load(open(F8, encoding="utf-8"))["datasets"]
 panel = json.load(open(PANEL, encoding="utf-8"))["datasets"] if os.path.exists(PANEL) else {}
@@ -134,48 +134,51 @@ def table():
 
 # --------------------------------------------------------------------------------------------------- figure
 def figure():
+    """One panel per image set, fixed lanes shared by the panels (references above, models below), so no label can
+    collide with a marker; the value is printed next to each marker and a dagger marks a subset of targets."""
     S.apply()
-    fig, axes = plt.subplots(1, 3, figsize=(S.TEXTWIDTH_IN, 1.9), sharex=True)
+    lanes = [(S.label(style).capitalize(), ("ref", rung), S.color(style), S.marker(style), S.MS) for rung, style in REFS]
+    n_ref = len(lanes)
+    lanes += [(name, ("model", key), col, mk, 6.5) for key, name, col, mk in MODELS
+              if any(model_entry(ds, key) for ds in DATASETS)]
+    fig, axes = plt.subplots(1, 3, figsize=(S.TEXTWIDTH_IN, 0.42 + 0.21 * len(lanes)), sharex=True, sharey=True)
     plotted = {}
     for ax, ds in zip(axes, DATASETS):
-        rows, y = [], 0
-        for key, name, col, mk in MODELS:
-            e = model_entry(ds, key)
-            if e and "mse" in e["R_self"]:
-                rows.append((name + (" †" if e["n_targets"] < e["n_targets_dataset"] else ""), e["R_self"]["mse"],
-                             col, mk, 6.5))
-        for rung, style in REFS:
-            v = ref_value(ds, rung, "mse")
-            if v:
-                rows.append((S.label(style), v, S.color(style), S.marker(style), S.MS))
-        rows.sort(key=lambda r: r[1][0])
         plotted[ds] = {}
-        for y, (lab, v, col, mk, ms) in enumerate(rows):
+        n_all = None
+        for y, (lab, (kind, key), col, mk, ms) in enumerate(lanes):
+            dagger = ""
+            if kind == "ref":
+                v = ref_value(ds, key, "mse")
+            else:
+                e = model_entry(ds, key)
+                v = e["R_self"].get("mse") if e else None
+                if e:
+                    n_all = e["n_targets_dataset"]
+                    dagger = "†" if e["n_targets"] < e["n_targets_dataset"] else ""
+            if not v:
+                continue
             ax.plot([v[1], v[2]], [y, y], color=col, lw=1.0, solid_capstyle="butt")
             ax.plot(v[0], y, marker=mk, ms=ms, color=col, mec="white", mew=S.EDGE, ls="")
-            if v[0] > 0.40:          # label on the free side of the marker
-                ax.text(v[1] - 0.035, y, f"{lab}  {v[0]:.2f}", va="center", ha="right", fontsize=S.SIZE_SMALL,
-                        color=S.INK)
-            else:
-                ax.text(v[2] + 0.035, y, f"{lab}  {v[0]:.2f}", va="center", ha="left", fontsize=S.SIZE_SMALL,
-                        color=S.INK)
+            ax.text(v[2] + 0.04, y, f"{v[0]:.2f}{dagger}", va="center", ha="left", fontsize=S.SIZE_SMALL, color=S.INK)
             plotted[ds][lab] = v[:3]
         ax.axvline(1.0, color=S.color("stranger"), lw=0.8, ls=(0, (2, 2)))
         ax.axvline(0.0, color=S.RULE, lw=0.8)
-        ax.set_ylim(len(rows) - 0.5, -0.9)
-        ax.set_yticks([])
-        ax.set_xlim(-0.04, 1.04)
+        ax.axhline(n_ref - 0.5, color=S.RULE, lw=0.6)
+        ax.set_ylim(len(lanes) - 0.4, -0.6)
+        ax.set_xlim(-0.04, 1.12)
         ax.set_xticks([0, 0.5, 1.0])
         ax.set_xticklabels(["0", "0.5", "1"])
-        ax.text(0.0, -0.85, "target", ha="left", va="top", fontsize=S.SIZE_SMALL, color=S.MUTED)
-        ax.text(1.0, -0.85, "random person", ha="right", va="top", fontsize=S.SIZE_SMALL, color=S.MUTED)
+        ax.tick_params(axis="y", length=0)
         for sp in ("top", "right", "left"):
             ax.spines[sp].set_visible(False)
-        n = f8[ds]["n_units"]
-        ax.set_title(f"{ds}  ({n} {'people' if f8[ds]['unit'] == 'target' else 'families'})", fontsize=S.SIZE_TITLE,
-                     fontweight="bold", loc="left")
-    fig.supxlabel("MSE on the random-person scale (hidden region = 1/8 of the object)", fontsize=S.SIZE, y=0.02)
-    fig.subplots_adjust(left=0.012, right=0.992, top=0.88, bottom=0.25, wspace=0.07)
+        n = n_all if n_all else f8[ds]["n_units"]
+        ax.set_title(f"{ds}  ({n} people)", fontsize=S.SIZE_TITLE, fontweight="bold", loc="left")
+    axes[0].set_yticks(range(len(lanes)))
+    axes[0].set_yticklabels([lane[0] for lane in lanes], fontsize=S.SIZE_SMALL)
+    fig.supxlabel("MSE on the random-person scale: 0 = target, 1 = random person (hidden region = 1/8 of the object)",
+                  fontsize=S.SIZE, y=0.0)
+    fig.subplots_adjust(left=0.19, right=0.992, top=0.88, bottom=0.24, wspace=0.07)
     fig.savefig(FIG + ".pdf")
     fig.savefig(FIG + ".png", dpi=300)
     json.dump(plotted, open(FIG + "_plotted.json", "w", encoding="utf-8"), indent=1)
@@ -232,6 +235,14 @@ def macros():
                 put(f"{mt}{dt}Fid", num(sl.get("fid_over_random_person"), 1))
                 put(f"{mt}{dt}Fwd", num(sl.get("fwd_over_random_person"), 1))
                 put(f"{mt}{dt}SetN", str(sl["n_cells"]) if sl else "n/a")
+    # ranges over the face models and both face sets, for sentences that speak about all of them at once
+    face = [e for ds in ("CelebA", "IMDb-WIKI") for key in MODEL_TAG if (e := model_entry(ds, key))]
+    ahead = [-e["model_minus_reference"]["lookalike16"]["mse"][0] for e in face]
+    detail = [e["detail_norm_ratio_median"]["model"] for e in face if "detail_norm_ratio_median" in e]
+    put("FaceAheadMin", num(min(ahead)) if ahead else "n/a")
+    put("FaceAheadMax", num(max(ahead)) if ahead else "n/a")
+    put("FaceDetailMin", num(min(detail)) if detail else "n/a")
+    put("FaceDetailMax", num(max(detail)) if detail else "n/a")
     for ds, dt in DS_TAG.items():
         if ds == "QTIM" or ds not in panel:
             continue
