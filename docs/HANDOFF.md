@@ -1,5 +1,34 @@
 # Handoff: identity-ladder-metric (updated 2026-11-08)
 
+## Backlog for the next paper: second expected review of CVPR 43304 (Kate, 17 Nov 2026)
+
+Kate, 17 Nov 2026: "запиши в хендоф и закомить в беклог, мы это понесем следующую статью". Nothing below was run.
+Text-only answers to this review are in commit 5454d0a (main text 8 pages, 51 tests pass). A smoke test on a few
+targets and a look at the QC sheet come before any full run; any GCP spend needs a plan row in the spend ledger and
+Kate's go. Time and cost are estimates, not measurements.
+
+| Id | Item | Answers | Where | Estimate | Risk |
+|---|---|---|---|---|---|
+| R2-i | Softened control built by Gaussian blur of the target at several widths (no Q, no second image), T2 for all metrics | Review Major 1: the current control is the error-optimal shrinkage of the second image, so T2 does not isolate lost anatomy; also gives T2 in PAPILA and IXI | local, CPU | 1 to 3 h, no cost | T2 may pass under MSE at weak blur, which narrows the claim |
+| R2-ii | LPIPS, FID, FWD on composite full images (fill pasted into the visible context) at 1/8 for all families | Major 3: mixed 1/8 and 1/5 windows, features on isolated gray patches | local, GPU preferred | 3 to 6 h, no cost | Figure 3 numbers change; 7/8 of a composite is identical, so differences shrink |
+| R2-iii | Photometric normalization of the second photograph in faces | Major 2: separates lighting from anatomy on the same-person rung | local | 1 to 2 h, no cost | pose stays; the effect may be small |
+| R2-iv | Models at 1/4 and on full cohorts (SD on 58 and 43 people, BraTS on 37 of 221 so far) | Major 4 and 5 | LaMa local; SD and BraTS on GCP | 0.5 to 1 day, 5 to 15 USD | most expensive; BraTS on 221 people is slow |
+| R2-v | Nonlinear brain registration on a subset | Major 2 for the brain (affine only so far) | local or VM | 0.5 day, 0 to 5 USD | registration and visual QC gate; memory |
+| R2-vi | Seven-set means (sets with a true second image) for all metrics as a supplement table | Major 4; already computed from `results/cross_modality/common_f8_v1.json`: same person / softened / dataset average = MSE 0.33 / 0.25 / 0.50, SSIM 0.56 / 0.54 / 0.83, lDDT-like 0.58 / 0.48 / 0.61 | text only | under 1 h | none |
+| R2-vii | Table 1 and the teaser on the R scale at the original windows | Minor 1 (the caption now gives R = Q / Q(random) under MSE) | re-aggregation | 1 h | none |
+
+Recommended order: R2-i, then R2-ii; R2-iii together with R2-i; R2-iv and R2-v last.
+
+References from this review that exist but are not cited (re-verify with `bib-verify` before any use):
+Barcelos et al., Computers & Graphics 2024;123:104010, doi 10.1016/j.cag.2024.104010 (the review gave ACM Computing
+Surveys; no abstract could be retrieved); Koo et al., WACV 2026, doi 10.1109/wacv61042.2026.00204 (real title
+"Evaluating Text-to-Image and Text-to-Video Synthesis with a Conditional Frechet Distance"); Kline et al., J Imaging
+Inform Med 2026, doi 10.1007/s10278-026-02241-2 (real title "... Medical Image Deidentification and Reconstruction").
+
+Sentences cut from the main text to keep 8 pages (in 1b5bab1, restore if space allows): the signpost sentences of
+Related work and Methods, "Put simply ..." and "A conditional mean remains ..." in the Discussion, the MSE caveat in
+the recipe, the expansion of "fail in opposite directions", and two sentences in RQ4.
+
 ## Night plan 8-9 Nov 2026 (Kate's goal and stop rule; read before any run)
 
 Goal (Kate, 8 Nov evening): finish the CVPR paper's experiments overnight; results intact, reproducible and clear.
