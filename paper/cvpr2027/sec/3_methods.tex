@@ -70,11 +70,11 @@ Brain: QTIM~\cite{qtim2026,strike2019} (twins and siblings, 23 with a second ses
 Retina: GRAPE~\cite{grape2023} (both eyes, repeated visits) and PAPILA~\cite{papila2022} (both eyes), left eyes mirrored, optic-disc frame, green channel at 128 pixels.
 Faces: CelebA~\cite{celeba2015} and IMDb-WIKI~\cite{rothe2018}, landmark-aligned and pose-restricted; the opposite side is the mirrored other half of the face, with a midline band excluded.
 Irises: UTIRIS~\cite{hosseini2010} (\ac{NIR} and \ac{VIS}) and UPOL~\cite{dobes2004}, segmented and unwrapped into strips with lid and reflection masks.
-Alignment in every image set passed our visual quality control (\ac{QC}) on overlay sheets before the metrics were computed; the brain is aligned affinely only (Section~\ref{sec:synthesis}).
+Alignment in every image set passed our visual \ac{QC} on overlay sheets before the metrics were computed; the brain is aligned affinely only (Section~\ref{sec:synthesis}).
 
 \begin{table}[t]
 \centering
-\caption{\textbf{Datasets and where their ladders sit} ($Q$, Eq.~\ref{eq:unit}: 1 = dataset average, about 2 = random person; $\cdot$ = no second image in this set; nearest = one context-selected person; random = one random person).
+\caption{\textbf{Datasets and where their ladders sit} ($Q$, Eq.~\ref{eq:unit}: 1 = dataset average, about 2 = random person; $\cdot$ = no second image in this set; nearest = one context-selected person; random = one random person; bold: closest rung in the row).
 The random person is near 2 everywhere; the second image is the closest rung except in faces, where pose and lighting change between photographs.}
 \label{tab:datasets}
 \scriptsize
