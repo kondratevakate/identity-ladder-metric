@@ -17,12 +17,12 @@ No pixel that the model sees therefore depends on the hidden content or on a val
 The output is averaged over channels, downsampled and mapped back; only the hidden window is kept.
 In the brain the model receives the skull-stripped scan with one 16\,mm cube set to zero and the cube mask in the $240\times240\times155$ challenge grid.
 The 1\,mm template grid is moved there by axis flips, zero padding, and a 155-slice window, so neither the scan nor the fill is interpolated; interpolation would smooth the fill, which \ac{MSE} rewards.
-We run the container's own preprocessing, forward pass, and postprocessing in memory; in three cases, the result equals the output of the official entry point up to $4\times10^{-7}$ of the cube maximum.
+We run the container's own preprocessing, forward pass, and postprocessing in memory; in three cases, the result equals the output of the official entry point within floating-point tolerance.
 The returned cube is standardized with the target's own mean and standard deviation inside the brain mask.
 
 \paragraph{Scoring and checks.}
 A model fill is one more rung: it is scored by the same functions as the references on the same valid pixels, and the random-person scale uses the same 16 random people per target.
-Before a model row was kept, the same call had to reproduce the stored rows of the references: every rung on the test targets, the dataset average and the second image on all 1{,}599 face targets (137{,}049 rows, largest difference $4\times10^{-15}$), and the dataset average in the brain.
+Before a model row was kept, the same call had to reproduce the stored rows of the references: every rung on the test targets, the dataset average and the second image on all 1{,}599 face targets (137{,}049 rows, identical within floating-point tolerance), and the dataset average in the brain.
 The summary recomputes every reference value of the cross-dataset results from the stored rows and matches them exactly.
 Intervals of the model rows are 95\% percentile intervals from 1{,}000 bootstrap draws over people (families in IMDb-WIKI), as in the cross-dataset results at 1/8 of the object.
 \Ac{LPIPS}, \ac{FID} and \ac{FWD} of the references exist only at the 16-pixel window in faces, so the face models were also run at that window and scored with the same functions; the stored \ac{LPIPS} of the dataset average and the stored \ac{FID} and \ac{FWD} of the random-person set are reproduced.

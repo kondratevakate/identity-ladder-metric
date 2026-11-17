@@ -179,8 +179,10 @@ def main():
             if 'p_holm' not in item:
                 cells.append(r'$\cdot$')
             else:
-                outcome='pass' if item['pass_holm_0.05'] else 'fails'
-                cells.append(f"{outcome} (p = {item['p_holm']:.2g})"+r'\statuspre')
+                outcome='passes' if item['pass_holm_0.05'] else 'fails'
+                p=item['p_holm']
+                ptext='$p<0.001$' if p<0.001 else ('$p=1$' if p>0.995 else f'$p={p:.3f}$')
+                cells.append(f"{outcome} ({ptext})"+r'\statuspre')
         tests.append([label]+cells)
         chosen['brain/tests/'+metric]=selected
     rows(TAB/'brain_tests.tex',tests)

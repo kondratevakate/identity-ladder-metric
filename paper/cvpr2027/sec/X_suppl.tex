@@ -13,11 +13,11 @@ Figure~\ref{fig:atlas-all} maps the local squared error of each rung for every i
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{fig/atlas_all_modalities_full_v2.pdf}
+\includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{fig/atlas_all_modalities_full_v3.pdf}
 \caption{\textbf{Where in the image each rung is close or far: local squared error in units of the dataset average ($Q$).}
 Rows: CelebA and IMDb-WIKI faces, QTIM brain MRI, GRAPE and PAPILA retina, UTIRIS NIR, UPOL and UTIRIS VIS iris, and IXI brain MRI (no second scans or families).
 Columns: mean anatomy, second image, opposite side, sibling, random person, mean of the 16 nearest people, same-sex-and-age mean, and the error of the dataset average on its own scale.
-1 (white) is the dataset average and about 2 is a random person; blue is closer than the mean; maps are population summaries with Gaussian windows in the brain.
+Color: error of the fill divided by the error of the dataset average; 1 (white) is the dataset average and about 2 (red) is a random person; blue is closer than the average. Below each map: its mean over the region with the 95\% interval. Maps are population summaries (masked Gaussian windows, standard deviation $16/\sqrt{12}$\,mm in the brain); gray panels and the bare template in the IXI row mark rungs that the image set does not have.
 The random person is red everywhere, while the mean of the 16 nearest people stays below the dataset average in every row (0.50 to 0.94).}
 \label{fig:atlas-all}
 \end{figure*}
@@ -49,8 +49,11 @@ Strong agreement among monotone variants, such as MSE, RMSE, and PSNR, is expect
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=.9\textwidth,height=.6\textheight,keepaspectratio]{fig/metric_correlations_v2.pdf}
-\caption{\textbf{Agreement between metrics in the brain} (QTIM; Spearman correlation of the order in which two metrics place the rungs).
+\includegraphics[width=.58\textwidth,trim=140 12 528 104,clip]{fig/metric_correlations_v2.pdf}\\[4pt]
+\includegraphics[width=.58\textwidth,trim=562 12 26 104,clip]{fig/metric_correlations_v2.pdf}
+\caption{\textbf{Agreement between metrics in the brain} (QTIM, 32 random 16\,mm cubes, both hemispheres, 221 targets; mean Spearman correlation per target, cube and side, averaged by Fisher $z$; values below 0.4 are drawn as 0.4).
+Top: do two metrics order the rungs of the ladder the same way (eight rungs, 14{,}142 cells).
+Bottom: do two metrics order the 16 random people of a target the same way, that is, agree on which unrelated person is the worse fill (14{,}143 cells).
 Metrics in one block order the rungs almost identically; this describes dependence among measures, not their validity.}
 \label{fig:s-corr}
 \end{figure}
@@ -82,11 +85,10 @@ Dataset & Target units & Clusters & With repeat & Alignment \\
 
 \paragraph{Visual quality control of alignment.}
 Alignment passes our visual quality control (QC) when at least 90\% of predefined comparisons, mirrored ones included, overlay the same anatomy.
-Face alignment was approved on visual inspection.
-Brain, retinal and iris alignment has not met the criterion; in particular, mirrored comparisons often do not overlay the same anatomy.
-Misalignment adds to the distance of every real-image fill, most to the opposite side, and can make softened fills look relatively better.
-Faces, whose alignment passed, fail T2 in the same way as the other image sets (directional-test table of the main paper), so the averaging reward is not only a consequence of misalignment.
-Results in brain, retina and iris should be read with this limitation, and the opposite-side distances there are likely overestimated.
+Alignment in every image set met this criterion on overlay sheets before the metrics were computed.
+Residual misalignment still adds to the distance of every real-image fill, most to the opposite side, and can make softened fills look relatively better.
+Faces, aligned on landmarks, fail T2 in the same way as the other image sets (directional-test table of the main paper), so the averaging reward is not only a consequence of misalignment.
+The opposite-side distances in brain, retina and iris may still be overestimated.
 
 \subsection{Dataset terms and ethics}
 All image sets are public research datasets, and no new data were collected.
@@ -225,10 +227,9 @@ For retinal maps, all displayed positions share the same set of contributing tar
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{fig/brain_gaussian_maps_v2.pdf}
+\includegraphics[width=\textwidth]{fig/brain_gaussian_maps_v3.pdf}
 \caption{\textbf{Brain error maps with Gaussian windows} (QTIM, affine alignment).
-Population-template anatomy underlies the aggregated error maps of each fill; the coarser nearest-person grid is interpolated for display.
-The title inside the figure describes pixel error, not a validated conclusion about biological identity.}
+Population-template anatomy underlies the aggregated error maps of each fill; the coarser nearest-person grid is interpolated for display.}
 \label{fig:s-brain}
 \end{figure*}
 % Source figure: results/figures/fig_ladder_maps_common.pdf; quantitative sources are the brain map and map-grid JSONs.
@@ -242,7 +243,7 @@ Holm correction is applied within each image set, and unavailable comparisons ar
 \begin{table*}[t]
 \centering
 \caption{\textbf{Brain directional tests} (QTIM).
-Each cell reports the decision and the Holm-adjusted $p$-value for a one-sided test favoring the second image; ``fails'' means that the test did not favor the second image; it is not an equivalence result.
+Each cell reports the decision and the Holm-adjusted $p$-value for a one-sided test favoring the second image; ``passes'' means $p<0.05$ after correction, and ``fails'' means that the test did not favor the second image, which is not an equivalence result.
 Residual correlation is undefined for the dataset average, so it has no T1 comparison ($\cdot$).}
 \label{tab:s-brain-tests}
 \small
