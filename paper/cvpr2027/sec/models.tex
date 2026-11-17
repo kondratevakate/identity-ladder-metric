@@ -17,4 +17,4 @@ The fills are not averaged: the norm of their individual detail is \mfFaceDetail
 Yet the models are only \mfFaceAheadMin{} to \mfFaceAheadMax{} ahead of that mean (\mfLamaHqCelebaRefNearestMse{} and \mfLamaHqImdbRefNearestMse{}), which uses no model and nothing of the person beyond the surroundings.
 In the brain, the challenge-winning ensemble is at \mfBratsQtimMse{} \mfBratsQtimMseCi{} on \mfBratsQtimN{} of 221 people: ahead of the mean of the 16 nearest people (\mfBratsQtimRefNearestMse{}) and the dataset average (\mfBratsQtimRefMeanMse{}), while the person's second scan stays twice as close (\mfBratsQtimRefRepeatMse{} on the same people and cubes).
 A low error at this size therefore shows that a fill continues its surroundings, which a model sees in full, and not that it kept the person.
-These positions depend on how the pixels next to the mask are prepared (Supplementary Section~S4).
+Fed the frame without upsampling, LaMa is level with that mean (Supplementary Section~S4).
