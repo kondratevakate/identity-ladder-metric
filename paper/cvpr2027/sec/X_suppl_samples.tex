@@ -1,0 +1,24 @@
+\section{A second sample of the diffusion model}
+\label{sec:s-samples}
+The diffusion row of the main text uses one sample per region.
+A second sample on the same people, with every seed changed, lands at the same position (Table~\ref{tab:s-samples}): the paired difference is \mfSamplesCelebaDiffOne{} in CelebA and \mfSamplesImdbDiffOne{} in IMDb-WIKI, with intervals that include zero.
+The pixelwise mean of the two samples is closer to the target than either of them, by \mfSamplesCelebaDiffMean{} and \mfSamplesImdbDiffMean{}, although it is no fill the model would produce.
+This is the averaging reward of the main text, measured on the outputs of a generative model.
+The second sample was added after the first was scored and is exploratory.
+
+\begin{table}[htbp]
+\centering
+\caption{\textbf{Two samples of the diffusion model and their mean.}
+\acs{MSE} on the random-person scale at 1/8 of the object, on the same people (column People) and windows.
+Sample 0 is the reported run; differences are paired, with 95\% bootstrap intervals; the last two columns give the norm of the individual detail relative to the target's (median).
+Averaging two samples moves the score toward the target while the fill keeps most of its detail.}
+\label{tab:s-samples}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrrrrllrr@{}}
+\toprule
+Set & People & Sample 0 & Sample 1 & Mean of 2 & Sample 1 $-$ sample 0 & Mean $-$ sample 0 & Detail, one & Detail, mean \\
+\midrule
+\input{tab/model_fills_samples}\end{tabular}
+\end{table}
+% Source: results/model_fills_v1/model_fills_sd_samples.json (protocol amendment 3); rows by make_model_fills.py.

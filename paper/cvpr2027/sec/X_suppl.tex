@@ -242,8 +242,8 @@ Holm correction is applied within each image set, and unavailable comparisons ar
 \begin{table*}[t]
 \centering
 \caption{\textbf{Brain directional tests} (QTIM).
-Each cell reports the decision and the Holm-adjusted $p$-value for a one-sided test favoring the second image; ``not established'' is not an equivalence result.
-Residual correlation is undefined for the dataset average, so it has no T1 comparison.}
+Each cell reports the decision and the Holm-adjusted $p$-value for a one-sided test favoring the second image; ``fails'' means that the test did not favor the second image; it is not an equivalence result.
+Residual correlation is undefined for the dataset average, so it has no T1 comparison ($\cdot$).}
 \label{tab:s-brain-tests}
 \small
 \begin{tabular}{@{}lcccc@{}}
@@ -280,6 +280,10 @@ Metric & Rung & $R_{\rm rep}$ & Targets & Families \\
 % Source: results/donor_ladder_brain_metrics.json.
 
 \input{sec/X_suppl_rq4}
+
+\input{sec/X_suppl_t2}
+
+\input{sec/X_suppl_samples}
 
 \section{Reproducibility}
 Every number in the paper is computed from an aggregate results file in the project repository; no participant images or per-person rows are needed to rebuild the tables and figures.
