@@ -1,6 +1,6 @@
 \section{Pretrained models on the ladder}
 \label{sec:s-models}
-This section gives the protocol and the full results behind Section~4.4 and the model table of the main text.
+This section provides the protocol and the full results for Section~4.4 and the model table in the main text.
 The protocol was written before any full run was scored (\src{docs/PROTOCOL_model_fills.md}).
 
 \paragraph{Models and weights.}
@@ -11,13 +11,13 @@ The brain model is the first-ranked entry of the \ac{BraTS} 2024 inpainting chal
 LaMa code is released under Apache 2.0, the Stable Diffusion weights under CreativeML OpenRAIL-M and the challenge weights under CC BY 4.0.
 
 \paragraph{What a model sees and returns.}
-In faces the model receives the whole aligned 128-pixel frame of the target, as standardized gray level mapped to $[0,1]$ by a fixed affine and repeated in three channels, with one window set to zero, together with the window mask.
-The frame is brought to the model's resolution (256 pixels, 512 for the diffusion model) by an interpolation that reads visible pixels only: the bicubic interpolation of the frame with the window set to zero is divided by the same interpolation of the visibility mask.
+In faces, the model receives the whole aligned 128-pixel frame of the target, as standardized gray level mapped to $[0,1]$ by a fixed affine and repeated in three channels, with one window set to zero, together with the window mask.
+The frame is brought to the model's resolution (256 pixels, 512 for the diffusion model) by interpolation that reads only visible pixels: the bicubic interpolation of the frame, with the window set to zero, is divided by the same interpolation of the visibility mask.
 No pixel that the model sees therefore depends on the hidden content or on a value we invented for it.
 The output is averaged over channels, downsampled and mapped back; only the hidden window is kept.
 In the brain the model receives the skull-stripped scan with one 16\,mm cube set to zero and the cube mask in the $240\times240\times155$ challenge grid.
-The 1\,mm template grid is moved there by axis flips, zero padding and a 155-slice window, so neither the scan nor the fill is interpolated; interpolation would smooth the fill, which \ac{MSE} rewards.
-We run the container's own preprocessing, forward pass and postprocessing in memory; on three cases the result equals the output of the official entry point up to $4\times10^{-7}$ of the cube maximum.
+The 1\,mm template grid is moved there by axis flips, zero padding, and a 155-slice window, so neither the scan nor the fill is interpolated; interpolation would smooth the fill, which \ac{MSE} rewards.
+We run the container's own preprocessing, forward pass, and postprocessing in memory; in three cases, the result equals the output of the official entry point up to $4\times10^{-7}$ of the cube maximum.
 The returned cube is standardized with the target's own mean and standard deviation inside the brain mask.
 
 \paragraph{Scoring and checks.}
@@ -36,7 +36,7 @@ The input described above avoids both.
 Two alternatives that also read visible pixels only, replicating pixels without interpolation and running the model at the 128-pixel frame without any resampling, were run on every eighth person and place each model within \mfSensSpread{} of the reported value.
 The reported input is the most favorable of the three for both models.
 With pixel replication the face-trained model stays ahead of the mean of the 16 nearest people (\mfSensLamaHqCelebaNearest{} and \mfSensLamaHqImdbNearest{}); at the frame resolution it is level with that mean, and the scene-trained model is level with it under both alternatives (0.19 to 0.21).
-A model's position on an error scale, and its small lead over the retrieval baseline, therefore depend on how the pixels next to the mask are prepared.
+A model's position on an error scale and its small lead over the retrieval baseline therefore depend on how the pixels adjacent to the mask are prepared.
 
 \begin{table}[htbp]
 \centering
@@ -57,7 +57,7 @@ Set & Model & Targets & Reported & Replicated & Native & Outline & Leak & Near \
 
 \paragraph{Size of the hidden region.}
 Table~\ref{tab:s-size} adds the two LaMa models to the size curve of the main text, on the same 100 evenly spaced people per face set.
-At 1/16 and 1/8 of the face both models are ahead of the mean of the 16 nearest people.
+At 1/16 and 1/8 of the face, both models are ahead of the mean of the 16 nearest people.
 At 1/5 only the face-trained model is, and at 1/4 it is level with that mean (\mfSizeLamaHqCelebaTwenty{} against \mfSizeRefNearestCelebaTwenty{} in CelebA, \mfSizeLamaHqImdbTwenty{} against \mfSizeRefNearestImdbTwenty{} in IMDb-WIKI) while the scene-trained model is behind it (\mfSizeLamaPlacesCelebaTwenty{} and \mfSizeLamaPlacesImdbTwenty{}).
 The lead of these models over a retrieval baseline that needs no training thus shrinks as the hidden region grows.
 This analysis was added after the result at 1/8 was known and is exploratory.
@@ -65,7 +65,7 @@ This analysis was added after the result at 1/8 was known and is exploratory.
 \begin{table}[htbp]
 \centering
 \caption{\textbf{LaMa on the size curve in faces.}
-\acs{MSE} on the random-person scale for hidden regions of 1/16, 1/8, 1/5 and 1/4 of the face width (5, 10, 16 and 20 pixels), 100 targets per set.
+\acs{MSE} on the random-person scale for hidden regions of 1/16, 1/8, 1/5, and 1/4 of the face width (5, 10, 16, and 20 pixels), 100 targets per set.
 Read each column from top to bottom: a model above the row of the 16 nearest people is closer to the target than that retrieval baseline at this size.}
 \label{tab:s-size}
 \small
@@ -111,12 +111,12 @@ The two slow models ran on subsets fixed in advance by compute cost alone.
 The diffusion model ran on every 16th person of each face set at 1/8 of the object (\mfSdCelebaN{} people in CelebA and \mfSdImdbN{} in IMDb-WIKI), and on the stored set-level regions at the 16-pixel window.
 One brain cube costs 25 forward passes, so the brain ensemble ran on 8 of the 32 cubes (every fourth, both hemispheres) for targets taken in a fixed order: the 23 people with a second scan first, then the others in an order that spreads any prefix evenly over the cohort.
 The run stopped on its time budget of six hours, not on a result, after \mfBratsQtimN{} people (all 23 with a second scan and 14 others).
-For both models Table~\ref{tab:s-models} gives the reference values recomputed on the same targets.
+For both models, Table~\ref{tab:s-models} gives the reference values recomputed on the same targets.
 
 \paragraph{Limits.}
-Every model except the face-trained LaMa is used outside its training domain: a scene model and a text-to-image model on gray aligned faces, and a model trained to fill tumor regions on healthy young brains with small cubic masks.
+Every model except the face-trained LaMa is used outside its training domain: a scene model and a text-to-image model on gray-aligned faces, and a model trained to fill tumor regions on healthy young brains with small cubic masks.
 CelebA-HQ is a subset of CelebA, so the face-trained LaMa may have seen CelebA people; IMDb-WIKI is its leakage-free set.
-The array orientation of the challenge grid was set from the file convention of the challenge data, which we could not check against a challenge scan; on 18 test cubes other orientations gave slightly higher error (0.29 and 0.30 against 0.28 under \ac{MSE}).
+The array orientation of the challenge grid was set from the file convention of the challenge data, which we could not check against a challenge scan; on 18 test cubes, other orientations gave slightly higher error (0.29 and 0.30 against 0.28 under \ac{MSE}).
 The positions therefore describe what each metric rewards in these fills; they do not rank the models.
 
 \begin{table}[htbp]
@@ -143,6 +143,6 @@ Set & Model & Targets & \acs{MSE} & \acs{SSIM} & \acs{TM} & \acs{GDT} & \acs{lDD
 \caption{\textbf{Pretrained models and references under \acs{MSE}.}
 Each panel is one image set and each row one fill: the references of the main text above the line, the models below it.
 The horizontal position is the distance on the random-person scale with the hidden region at 1/8 of the object, with 95\% bootstrap intervals (often narrower than the marker); a dagger marks a model run on a subset of people.
-Read each panel from left (the target) to right (a random person): in faces both LaMa models lie left of every reference, and in the brain the model lies between the same person's second scan and the mean of the 16 nearest people.}
+Read each panel from left (the target) to right (a random person): in faces, both LaMa models lie left of every reference, and in the brain, the model lies between the same person's second scan and the mean of the 16 nearest people.}
 \label{fig:s-models}
 \end{figure}

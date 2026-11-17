@@ -3,7 +3,7 @@
 \input{sec/fig_summary}
 % sec/main_profiles (Tables brain, faces, retina and iris) moved to the supplement, Section S5 (17 Nov 2026).
 % Every number cites its results file in a comment.
-We answer the four research questions in turn, first on averages over the nine image sets and then per modality.
+We answer the four research questions in turn: first, by averaging across the nine image sets, and then per modality.
 
 \subsection{RQ1, RQ2: pixel metrics see the person but reward averaging}
 \label{sec:r-cross}
@@ -21,7 +21,7 @@ The directional tests show the same in every image set (Table~\ref{tab:tests}): 
 
 Set-level metrics behave the other way round.
 \ac{FID} and \ac{FWD} place the dataset-average set 16 and 186 times as far as the random-person set.
-They place the same-person set at 0.93 and 0.57 of the random-person set.
+They place the same-person set at 0.93 (\ac{FID}) and 0.57 (\ac{FWD}) of the random-person set's distance.
 In rank terms the random person lies only 0.10 of the ladder beyond the same person, against 0.59 for \ac{MSE}.
 Because set distances are biased upward for small sets, we left QTIM out of the set-level summary after its second-scan set (138 of 1{,}326 regions) gave 8.3, and IXI because its opposite-side set is the target set itself, and dropped rungs with fewer than half the random-person set's regions; both rules were fixed after seeing that value.
 No metric reaches the shaded corner of Figure~\ref{fig:summary}A, where it would both recognize the individual and penalize subtle averaging.
@@ -37,8 +37,8 @@ The two families therefore fail in opposite directions: a model tuned on pixel m
 With the hidden region at 1/8 of the object, the mean of the 16 nearest people is at 0.29 under \ac{MSE} on average over the nine sets, and the best-matching person at 0.23\statuspre.
 It is closer than the opposite side in every set, but closer than the person's own second image only in faces and UTIRIS \ac{VIS} (CelebA 0.20 against 0.63); with a second scan or a repeated capture of the same eye the person stays closer (QTIM 0.15 against 0.37, GRAPE 0.21 against 0.40, UPOL 0.09 against 0.25)\statuspre.
 Local similarity is not identity, however: in CelebA, with a 16-pixel window (1/5 of the face width), the nearest person is at 0.399 on the local \ac{MSE} scale but at 0.983 for the whole face under ArcFace\statusfinal{} (IMDb-WIKI 0.397 and 0.984\statusfinal).
-How close nearest people come depends on the size of the hidden region relative to the object, while the other rungs do not (Figure~\ref{fig:rq4}, Table~\ref{tab:rq4}).
-When the hidden region grows from 1/16 to 1/8 and 1/4 of the object, the nearest person in the brain moves from 0.38 to 0.59 and 0.71 (8, 16 and 32\,mm cubes), and the other modalities follow the same course (Table~\ref{tab:rq4})\statuspre.
+How close nearest people come depends on the size of the hidden region relative to the object, while the other rungs do not (Figure~\ref{fig:rq4}).
+When the hidden region grows from 1/16 to 1/8 and 1/4 of the object, the nearest person in the brain moves from 0.38 to 0.59 and 0.71 (8, 16 and 32\,mm cubes), and the other modalities follow the same course (Supplementary Table~S13)\statuspre.
 The dataset average remains between 0.49 and 0.53, and the same person's second image and its softened version do not change.
 The mean of the 16 nearest people grows more slowly (brain: 0.25 to 0.42; faces: 0.12 to 0.28) and remains below the dataset average at every size.
 Small holes are thus largely predictable from their surroundings, and large holes are not.

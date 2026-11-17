@@ -3,9 +3,8 @@
 The conditional mean of the hidden content given the context minimizes expected squared error, and a fill drawn from the true conditional distribution has twice that error, because it adds an independent draw of the unpredictable part; this is the distortion side of the perception-distortion tradeoff~\cite{blau2018}.
 Put simply, when the hidden content cannot be predicted, the safest guess under squared error is the average, and a realistic person scores worse.
 The softened same person and the mean of the 16 nearest people are empirical stand-ins for that mean.
-The fact itself is elementary.
+The fact itself is elementary, and under \ac{MSE} exact: if the second image has as much individual detail as the target, the softened version is at $1-Q/4$ times its distance, so for \ac{MSE} T2 shows only the size of the reward.
 What the ladder adds is its size on real anatomy: no error or similarity metric places the person's own second image ahead of its softened version in any image set (Table~\ref{tab:tests}), and set-level metrics trade this reward for the opposite blind spot.
-A pixel score alone cannot show whether a fill kept the person.
 We therefore suggest reporting three numbers next to any inpainting score on the same masks: the dataset average score, the score for the mean of the 16 nearest people chosen from the context, and the score for a random person.
 Under \ac{MSE} alone, beating the nearest-people mean can also mean averaging more, which is why the softened control belongs next to it.
 A conditional mean remains the right answer when the hidden content is truly ambiguous; the controls make that choice visible.
@@ -18,13 +17,12 @@ Where a dataset has second images of the same people, the softened second image 
 \paragraph{What the pretrained models add.}
 % Sources: results/model_fills_v1/model_fills_f8.json and model_fills_face_panel.json (numbers via tab/model_fills_numbers.tex).
 Next to the references, a model score becomes readable (Table~\ref{tab:models}): most of a model's score in faces is reachable without a model, and the brain model is still twice as far as the second scan.
-Supplementary Section~S3 defines the same comparison within groups of people.
 
 \paragraph{Limitations.}
 The ladder calibrates metrics and does not by itself rank models.
 The pretrained models run mostly outside their training domain, with one diffusion sample per region and subsets of people for the two slow models.
-Alignment is the main confounder outside faces: misalignment adds to every distance in brain, retina and iris, most in mirrored comparisons with the opposite side.
-It does not explain the averaging reward alone, because faces, whose alignment passed visual \ac{QC}, fail T2 in the same way (Table~\ref{tab:tests}).
+Residual misalignment is the main confounder outside faces: it adds to every distance in brain, retina, and iris, most in mirrored comparisons with the opposite side.
+It does not explain the averaging reward alone, because faces, aligned on landmarks, fail T2 in the same way (Table~\ref{tab:tests}).
 The cross-dataset summaries and tests were defined after the per-dataset results and are exploratory; only 23 QTIM people have a second scan, two of nine image sets record families, and the set-level exclusion rule was fixed after seeing one value.
 \ac{LPIPS}, topology and set-level metrics still use about 1/5 of the object in faces, retina and iris.
 The ladder measures closeness to known references, not clinical or biometric correctness: a fill at the same person's position can still miss a lesion.
@@ -38,5 +36,5 @@ We did not balance the image sets by sex, age or ancestry, so the distances desc
 
 \paragraph{Conclusion.}
 References of known relationship turn a single inpainting score into a position on a ladder from the same person to a random one.
-On nine image sets, error and similarity metrics reward averaging, set-level metrics barely separate the right person from a random one, and pretrained models score close to a retrieval baseline that needs no model.
+Across nine image sets, error and similarity metrics reward averaging; set-level metrics barely separate the right person from a random one; and pretrained models score close to a retrieval baseline that requires no model.
 The three controls cost no model and no labels and show which of these failures a new model has.

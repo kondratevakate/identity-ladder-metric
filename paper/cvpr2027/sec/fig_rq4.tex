@@ -2,24 +2,8 @@
 \centering
 \includegraphics[width=\columnwidth]{fig/rq4_size.pdf}
 \caption{\textbf{Nearest people come closer when the hidden region is small.}
-\acs{MSE} on the random-person scale against the hidden-region size as a fraction of the object; lines average the sets of one modality (Table~\ref{tab:rq4}); gray band: dataset average; dashed line: the 1/8 used elsewhere.
+\acs{MSE} on the random-person scale against the hidden-region size as a fraction of the object; lines average the sets of one modality (per image set: Supplementary Table~S13); gray band: dataset average; dashed line: the 1/8 used elsewhere.
 The nearest person passes the dataset average in brain and retina from 1/8 on, while the mean of the 16 nearest people stays below it at every size.}
 \label{fig:rq4}
 \end{figure}
 % Source: results/rq4_window_size.json; drawn by paper/cvpr2027/make_fig_rq4_size.py (values in fig/rq4_size_plotted.json).
-
-\begin{table}[t]
-\centering
-\caption{\textbf{Distance under \acs{MSE} by window size, per image set} (random-person scale; window as a fraction of the object; n/a = size not evaluated; at 1/16, UTIRIS \acs{NIR} and the retina use every fourth eye).}
-\label{tab:rq4}
-\scriptsize
-\setlength{\tabcolsep}{1.6pt}
-\begin{tabular}{@{}lccccccccc@{}}
-\toprule
-& \multicolumn{4}{c}{Nearest person} & \multicolumn{4}{c}{Mean of the 16 nearest people} & Data. \\
-\cmidrule(lr){2-5}\cmidrule(lr){6-9}
-Image set & 1/16 & 1/8 & 1/5 & 1/4 & 1/16 & 1/8 & 1/5 & 1/4 & avg. \\
-\midrule
-\input{tab/rq4_size_table}\end{tabular}
-\end{table}
-% Source: results/rq4_window_size.json; rows written by paper/cvpr2027/make_rq4_size_table.py.
