@@ -3,9 +3,8 @@
 The conditional mean of the hidden content given the context minimizes expected squared error, and a fill drawn from the true conditional distribution has twice that error, because it adds an independent draw of the unpredictable part; this is the distortion side of the perception-distortion tradeoff~\cite{blau2018}.
 Put simply, when the hidden content cannot be predicted, the safest guess under squared error is the average, and a realistic person scores worse.
 The softened same person and the mean of the 16 nearest people are empirical stand-ins for that mean.
-The fact itself is elementary.
+The fact itself is elementary, and under \ac{MSE} exact: if the second image has as much individual detail as the target, the softened version is at $1-Q/4$ times its distance, so for \ac{MSE} T2 shows only the size of the reward.
 What the ladder adds is its size on real anatomy: no error or similarity metric places the person's own second image ahead of its softened version in any image set (Table~\ref{tab:tests}), and set-level metrics trade this reward for the opposite blind spot.
-A pixel score alone cannot show whether a fill kept the person.
 We therefore suggest reporting three numbers next to any inpainting score on the same masks: the dataset average score, the score for the mean of the 16 nearest people chosen from the context, and the score for a random person.
 Under \ac{MSE} alone, beating the nearest-people mean can also mean averaging more, which is why the softened control belongs next to it.
 A conditional mean remains the right answer when the hidden content is truly ambiguous; the controls make that choice visible.
@@ -18,7 +17,6 @@ Where a dataset has second images of the same people, the softened second image 
 \paragraph{What the pretrained models add.}
 % Sources: results/model_fills_v1/model_fills_f8.json and model_fills_face_panel.json (numbers via tab/model_fills_numbers.tex).
 Next to the references, a model score becomes readable (Table~\ref{tab:models}): most of a model's score in faces is reachable without a model, and the brain model is still twice as far as the second scan.
-Supplementary Section~S3 defines the same comparison within groups of people.
 
 \paragraph{Limitations.}
 The ladder calibrates metrics and does not by itself rank models.
