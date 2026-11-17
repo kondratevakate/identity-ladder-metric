@@ -1,0 +1,726 @@
+{
+ "method": "LPIPS, FID and FWD of the model fills on the face panel (PROTOCOL_face_metrics.md, Amendment F2: 16 px windows,\nframe v6f), next to the stored values of the references.\n\nThe references' LPIPS rows and set-level patches exist only at the 16 px panel window (f = 0.2), so the models are\nrun on the same windows (`model_fills_face.py export --panel`) and scored with the panel's own functions:\n`lpips_batch` (AlexNet, lpips 0.1, window at 64 px), `inception_features`, `frechet`, `fwd`. Scored cells are the\npanel's: LPIPS on every (target, window) whose window is complete in the target, FID and FWD on the stored target\ncells of `set_patches_v6f.npz`.\n\nGates before a model value is kept: (1) LPIPS of the dataset-average fill recomputed here equals the stored rows;\n(2) FID and FWD of the stored random-person set recomputed here equal `set_level_v6f.json`.\n\nUsage: python src/model_fills_face_panel.py --models lama_places lama_celebahq --torch-home DIR\nWrites aggregates to results/model_fills_v1/model_fills_face_panel.json; rows stay private.",
+ "window": "16 px (f = 0.2), the panel window of Amendment F2",
+ "gates": {
+  "lpips_dataset_mean": {
+   "rows_recomputed": 21731,
+   "stored_rows_with_lpips": 21731,
+   "max_abs_diff": 8.940696721859709e-08,
+   "passed": true
+  },
+  "set_level_stranger_celeba": {
+   "fid": 18.94443904134141,
+   "fid_stored": 18.94443904134141,
+   "fwd": 0.0025810359060948716,
+   "fwd_stored": 0.0025810359060948716,
+   "n_cells": 663,
+   "passed": true
+  },
+  "set_level_stranger_imdb": {
+   "fid": 22.501692022399737,
+   "fid_stored": 22.501692022399737,
+   "fwd": 0.003719715171850345,
+   "fwd_stored": 0.003719715171850345,
+   "n_cells": 646,
+   "passed": true
+  }
+ },
+ "datasets": {
+  "CelebA": {
+   "models": {
+    "lama_places": {
+     "lpips_alex": {
+      "R_self_model": [
+       0.4777,
+       0.4706,
+       0.4836,
+       921
+      ],
+      "n_targets": 921,
+      "R_self_references_same_targets": {
+       "repeat": [
+        0.6881,
+        0.6736,
+        0.7011,
+        921
+       ],
+       "lookalike_oracle": [
+        0.4552,
+        0.4492,
+        0.4616,
+        921
+       ],
+       "lookalike": [
+        0.6238,
+        0.6169,
+        0.6314,
+        921
+       ],
+       "cohort_mean": [
+        0.9712,
+        0.9588,
+        0.982,
+        921
+       ],
+       "mean_k2": [
+        0.9314,
+        0.9238,
+        0.9386,
+        921
+       ],
+       "dataset_mean": [
+        1.029,
+        1.0171,
+        1.0401,
+        921
+       ],
+       "wrong_detail": [
+        0.9563,
+        0.9479,
+        0.9651,
+        920
+       ],
+       "noise": [
+        2.8009,
+        2.7807,
+        2.8209,
+        921
+       ],
+       "shrink_ref": [
+        0.7828,
+        0.7715,
+        0.7937,
+        921
+       ],
+       "mirror": [
+        0.4227,
+        0.4077,
+        0.4375,
+        811
+       ],
+       "stranger": [
+        1.0063,
+        0.9959,
+        1.0168,
+        920
+       ],
+       "_strangers": [
+        1.0,
+        1.0,
+        1.0,
+        921
+       ]
+      }
+     },
+     "set_level": {
+      "n_cells": 778,
+      "fid": 24.572205549477815,
+      "fwd": 0.011533287548224273,
+      "fid_over_random_person": 1.2970669385277251,
+      "fwd_over_random_person": 4.468472337401238,
+      "note": null
+     }
+    },
+    "lama_celebahq": {
+     "lpips_alex": {
+      "R_self_model": [
+       0.4608,
+       0.4543,
+       0.4668,
+       921
+      ],
+      "n_targets": 921,
+      "R_self_references_same_targets": {
+       "repeat": [
+        0.6881,
+        0.6736,
+        0.7011,
+        921
+       ],
+       "lookalike_oracle": [
+        0.4552,
+        0.4492,
+        0.4616,
+        921
+       ],
+       "lookalike": [
+        0.6238,
+        0.6169,
+        0.6314,
+        921
+       ],
+       "cohort_mean": [
+        0.9712,
+        0.9588,
+        0.982,
+        921
+       ],
+       "mean_k2": [
+        0.9314,
+        0.9238,
+        0.9386,
+        921
+       ],
+       "dataset_mean": [
+        1.029,
+        1.0171,
+        1.0401,
+        921
+       ],
+       "wrong_detail": [
+        0.9563,
+        0.9479,
+        0.9651,
+        920
+       ],
+       "noise": [
+        2.8009,
+        2.7807,
+        2.8209,
+        921
+       ],
+       "shrink_ref": [
+        0.7828,
+        0.7715,
+        0.7937,
+        921
+       ],
+       "mirror": [
+        0.4227,
+        0.4077,
+        0.4375,
+        811
+       ],
+       "stranger": [
+        1.0063,
+        0.9959,
+        1.0168,
+        920
+       ],
+       "_strangers": [
+        1.0,
+        1.0,
+        1.0,
+        921
+       ]
+      }
+     },
+     "set_level": {
+      "n_cells": 778,
+      "fid": 29.64821074995379,
+      "fwd": 0.008802026985836674,
+      "fid_over_random_person": 1.5650086384323192,
+      "fwd_over_random_person": 3.4102690958508255,
+      "note": null
+     }
+    },
+    "sd15_inpaint": {
+     "lpips_alex": {
+      "R_self_model": [
+       0.3712,
+       0.3566,
+       0.3879,
+       522
+      ],
+      "n_targets": 522,
+      "R_self_references_same_targets": {
+       "repeat": [
+        0.6954,
+        0.6766,
+        0.7136,
+        522
+       ],
+       "lookalike_oracle": [
+        0.4574,
+        0.4487,
+        0.4657,
+        522
+       ],
+       "lookalike": [
+        0.6233,
+        0.613,
+        0.633,
+        522
+       ],
+       "cohort_mean": [
+        0.9763,
+        0.96,
+        0.9916,
+        522
+       ],
+       "mean_k2": [
+        0.9321,
+        0.9215,
+        0.9428,
+        522
+       ],
+       "dataset_mean": [
+        1.0332,
+        1.0174,
+        1.0483,
+        522
+       ],
+       "wrong_detail": [
+        0.9516,
+        0.9415,
+        0.9624,
+        522
+       ],
+       "noise": [
+        2.8087,
+        2.7825,
+        2.8326,
+        522
+       ],
+       "shrink_ref": [
+        0.7902,
+        0.7769,
+        0.8036,
+        522
+       ],
+       "mirror": [
+        0.4238,
+        0.4067,
+        0.4418,
+        484
+       ],
+       "stranger": [
+        1.0021,
+        0.9887,
+        1.0157,
+        522
+       ],
+       "_strangers": [
+        1.0,
+        1.0,
+        1.0,
+        522
+       ]
+      }
+     },
+     "set_level": {
+      "n_cells": 778,
+      "fid": 23.991705577301786,
+      "fwd": 0.0025958206721936293,
+      "fid_over_random_person": 1.266424702518032,
+      "fwd_over_random_person": 1.0057282295313463,
+      "note": null
+     }
+    }
+   },
+   "set_level_references_stored": {
+    "dataset_mean": {
+     "fid": 254.12557485416596,
+     "fwd": 0.05871684885665873,
+     "n_cells": 778,
+     "fid_over_random_person": 13.414257043959003,
+     "fwd_over_random_person": 22.74933437307263
+    },
+    "lookalike": {
+     "fid": 23.483241530283465,
+     "fwd": 0.0034880500733875572,
+     "n_cells": 581,
+     "fid_over_random_person": 1.2395849504457364,
+     "fwd_over_random_person": 1.3514147808447212
+    },
+    "mirror": {
+     "fid": 30.0417115918346,
+     "fwd": 0.003591891339933924,
+     "n_cells": 223,
+     "fid_over_random_person": 1.5857799497929823,
+     "fwd_over_random_person": 1.3916471798985877
+    },
+    "noise": {
+     "fid": 253.87106827403346,
+     "fwd": 0.0773134911566706,
+     "n_cells": 778,
+     "fid_over_random_person": 13.400822675193735,
+     "fwd_over_random_person": 29.954442312910924
+    },
+    "repeat": {
+     "fid": 17.66800003850119,
+     "fwd": 0.0025253843160049074,
+     "n_cells": 709,
+     "fid_over_random_person": 0.9326219689031321,
+     "fwd_over_random_person": 0.9784382735790121
+    },
+    "shrink_repeat": {
+     "fid": 80.31604672711879,
+     "fwd": 0.03616049276399137,
+     "n_cells": 709,
+     "fid_over_random_person": 4.239557927888468,
+     "fwd_over_random_person": 14.010069630802809
+    },
+    "stranger": {
+     "fid": 18.94443904134141,
+     "fwd": 0.0025810359060948716,
+     "n_cells": 663,
+     "fid_over_random_person": 1.0,
+     "fwd_over_random_person": 1.0
+    },
+    "wrong_detail": {
+     "fid": 21.662960973797908,
+     "fwd": 0.004279158682910328,
+     "n_cells": 663,
+     "fid_over_random_person": 1.1434997323765574,
+     "fwd_over_random_person": 1.657922957524729
+    },
+    "_target_split_half": {
+     "fid": 26.714218982708047,
+     "fwd": 0.004411591789669175,
+     "n_cells": 389,
+     "fid_over_random_person": 1.4101351285414718,
+     "fwd_over_random_person": 1.7092330173523038
+    }
+   }
+  },
+  "IMDb-WIKI": {
+   "models": {
+    "lama_places": {
+     "lpips_alex": {
+      "R_self_model": [
+       0.4639,
+       0.4546,
+       0.4732,
+       453
+      ],
+      "n_targets": 678,
+      "R_self_references_same_targets": {
+       "repeat": [
+        0.7469,
+        0.7289,
+        0.7667,
+        453
+       ],
+       "lookalike_oracle": [
+        0.5256,
+        0.5149,
+        0.5366,
+        453
+       ],
+       "lookalike": [
+        0.6725,
+        0.6618,
+        0.683,
+        453
+       ],
+       "cohort_mean": [
+        0.9257,
+        0.9079,
+        0.9428,
+        437
+       ],
+       "mean_k2": [
+        0.9212,
+        0.9114,
+        0.9311,
+        453
+       ],
+       "dataset_mean": [
+        1.0322,
+        1.014,
+        1.0501,
+        453
+       ],
+       "wrong_detail": [
+        0.9449,
+        0.9325,
+        0.9585,
+        453
+       ],
+       "noise": [
+        2.2462,
+        2.2144,
+        2.279,
+        453
+       ],
+       "shrink_ref": [
+        0.821,
+        0.8053,
+        0.8373,
+        453
+       ],
+       "mirror": [
+        0.4282,
+        0.4118,
+        0.4457,
+        406
+       ],
+       "stranger": [
+        1.0073,
+        0.9935,
+        1.0219,
+        453
+       ],
+       "_strangers": [
+        1.0,
+        1.0,
+        1.0,
+        453
+       ]
+      }
+     },
+     "set_level": {
+      "n_cells": 744,
+      "fid": 27.625107152622775,
+      "fwd": 0.010396507658905074,
+      "fid_over_random_person": 1.2276902165900607,
+      "fwd_over_random_person": 2.7949741253262164,
+      "note": null
+     }
+    },
+    "lama_celebahq": {
+     "lpips_alex": {
+      "R_self_model": [
+       0.4503,
+       0.4412,
+       0.4581,
+       453
+      ],
+      "n_targets": 678,
+      "R_self_references_same_targets": {
+       "repeat": [
+        0.7469,
+        0.7289,
+        0.7667,
+        453
+       ],
+       "lookalike_oracle": [
+        0.5256,
+        0.5149,
+        0.5366,
+        453
+       ],
+       "lookalike": [
+        0.6725,
+        0.6618,
+        0.683,
+        453
+       ],
+       "cohort_mean": [
+        0.9257,
+        0.9079,
+        0.9428,
+        437
+       ],
+       "mean_k2": [
+        0.9212,
+        0.9114,
+        0.9311,
+        453
+       ],
+       "dataset_mean": [
+        1.0322,
+        1.014,
+        1.0501,
+        453
+       ],
+       "wrong_detail": [
+        0.9449,
+        0.9325,
+        0.9585,
+        453
+       ],
+       "noise": [
+        2.2462,
+        2.2144,
+        2.279,
+        453
+       ],
+       "shrink_ref": [
+        0.821,
+        0.8053,
+        0.8373,
+        453
+       ],
+       "mirror": [
+        0.4282,
+        0.4118,
+        0.4457,
+        406
+       ],
+       "stranger": [
+        1.0073,
+        0.9935,
+        1.0219,
+        453
+       ],
+       "_strangers": [
+        1.0,
+        1.0,
+        1.0,
+        453
+       ]
+      }
+     },
+     "set_level": {
+      "n_cells": 744,
+      "fid": 31.78898245147164,
+      "fwd": 0.008619319706457008,
+      "fid_over_random_person": 1.41273742524903,
+      "fwd_over_random_person": 2.317198846751858,
+      "note": null
+     }
+    },
+    "sd15_inpaint": {
+     "lpips_alex": {
+      "R_self_model": [
+       0.3695,
+       0.3545,
+       0.3852,
+       348
+      ],
+      "n_targets": 451,
+      "R_self_references_same_targets": {
+       "repeat": [
+        0.7375,
+        0.715,
+        0.7618,
+        348
+       ],
+       "lookalike_oracle": [
+        0.5198,
+        0.5086,
+        0.5324,
+        348
+       ],
+       "lookalike": [
+        0.6684,
+        0.6565,
+        0.6804,
+        348
+       ],
+       "cohort_mean": [
+        0.9233,
+        0.9021,
+        0.9445,
+        333
+       ],
+       "mean_k2": [
+        0.9237,
+        0.9131,
+        0.9354,
+        348
+       ],
+       "dataset_mean": [
+        1.0281,
+        1.0059,
+        1.0484,
+        348
+       ],
+       "wrong_detail": [
+        0.9442,
+        0.9296,
+        0.9587,
+        348
+       ],
+       "noise": [
+        2.2528,
+        2.2131,
+        2.2922,
+        348
+       ],
+       "shrink_ref": [
+        0.8151,
+        0.7968,
+        0.8323,
+        348
+       ],
+       "mirror": [
+        0.4313,
+        0.4122,
+        0.4516,
+        320
+       ],
+       "stranger": [
+        1.0071,
+        0.9923,
+        1.0239,
+        348
+       ],
+       "_strangers": [
+        1.0,
+        1.0,
+        1.0,
+        348
+       ]
+      }
+     },
+     "set_level": {
+      "n_cells": 744,
+      "fid": 26.723786044504607,
+      "fwd": 0.0029748838257283665,
+      "fid_over_random_person": 1.1876345129024921,
+      "fwd_over_random_person": 0.7997611882332734,
+      "note": null
+     }
+    }
+   },
+   "set_level_references_stored": {
+    "dataset_mean": {
+     "fid": 278.15975301005835,
+     "fwd": 0.06669339070631591,
+     "n_cells": 744,
+     "fid_over_random_person": 12.361726075228429,
+     "fwd_over_random_person": 17.92970365339553
+    },
+    "lookalike": {
+     "fid": 28.824929152751935,
+     "fwd": 0.005346149895853734,
+     "n_cells": 595,
+     "fid_over_random_person": 1.2810116289947266,
+     "fwd_over_random_person": 1.4372471140564054
+    },
+    "mirror": {
+     "fid": 33.62354502030601,
+     "fwd": 0.004090513517006353,
+     "n_cells": 219,
+     "fid_over_random_person": 1.4942674082835554,
+     "fwd_over_random_person": 1.0996846070263915
+    },
+    "noise": {
+     "fid": 256.99502457388144,
+     "fwd": 0.07585059631113233,
+     "n_cells": 744,
+     "fid_over_random_person": 11.421142210908,
+     "fwd_over_random_person": 20.391506555433654
+    },
+    "repeat": {
+     "fid": 21.736193803593977,
+     "fwd": 0.002466068855329557,
+     "n_cells": 660,
+     "fid_over_random_person": 0.9659804152486076,
+     "fwd_over_random_person": 0.6629724969244968
+    },
+    "shrink_repeat": {
+     "fid": 80.25026622712849,
+     "fwd": 0.04486219922361197,
+     "n_cells": 660,
+     "fid_over_random_person": 3.566410301378307,
+     "fwd_over_random_person": 12.060654418681095
+    },
+    "stranger": {
+     "fid": 22.501692022399737,
+     "fwd": 0.003719715171850345,
+     "n_cells": 646,
+     "fid_over_random_person": 1.0,
+     "fwd_over_random_person": 1.0
+    },
+    "wrong_detail": {
+     "fid": 28.48248077625246,
+     "fwd": 0.0068077775446563574,
+     "n_cells": 646,
+     "fid_over_random_person": 1.2657928456179666,
+     "fwd_over_random_person": 1.8301878585154892
+    },
+    "_target_split_half": {
+     "fid": 31.96932796649193,
+     "fwd": 0.006224498260076448,
+     "n_cells": 372,
+     "fid_over_random_person": 1.4207521787547113,
+     "fwd_over_random_person": 1.6733803456731118
+    }
+   }
+  }
+ }
+}

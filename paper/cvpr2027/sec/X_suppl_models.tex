@@ -25,21 +25,23 @@ A model fill is one more rung: it is scored by the same functions as the referen
 Before a model row was kept, the same call had to reproduce the stored rows of the references: every rung on the test targets, the dataset average and the second image on all 1{,}599 face targets (137{,}049 rows, largest difference $4\times10^{-15}$), and the dataset average in the brain.
 The summary recomputes every reference value of the cross-dataset results from the stored rows and matches them exactly.
 Intervals of the model rows are 95\% percentile intervals from 1{,}000 bootstrap draws over people (families in IMDb-WIKI), as in the cross-dataset results at 1/8 of the object.
-\ac{LPIPS}, \ac{FID} and \ac{FWD} of the references exist only at the 16-pixel window in faces, so the face models were also run at that window and scored with the same functions; the stored \ac{LPIPS} of the dataset average and the stored \ac{FID} and \ac{FWD} of the random-person set are reproduced.
+\Ac{LPIPS}, \ac{FID} and \ac{FWD} of the references exist only at the 16-pixel window in faces, so the face models were also run at that window and scored with the same functions; the stored \ac{LPIPS} of the dataset average and the stored \ac{FID} and \ac{FWD} of the random-person set are reproduced.
 For every model we looked at sheets of evenly spaced targets, with the model fill next to the target and the references, before the full run was scored.
 
 \paragraph{The pixels next to the mask decide the score.}
 Two earlier ways of preparing the face input gave wrong positions, and we report them because the same mistakes are easy to make in any inpainting benchmark that resamples its images (Table~\ref{tab:s-input}).
-In the first, the frame was upsampled before the window was masked, so the interpolation kernel carried the hidden values of the window's border into the visible pixels next to it; both LaMa models then scored closer to the target than with a clean input.
-In the second, the window was filled with the mean of its surroundings before upsampling; this left a faint outline around the window, and the scene-trained model continued it as a dark frame inside the hole and scored almost as far as a random person in CelebA.
+In the first, the frame was upsampled before the window was masked, so the interpolation kernel carried the hidden values of the window's border into the visible pixels next to it; both LaMa models then scored 0.03 to 0.06 closer to the target than with a clean input.
+In the second, the window was filled with the mean of its surroundings before upsampling; this left a faint outline around the window, and the scene-trained model continued it as a dark frame inside the hole and scored \mfSensLamaPlacesCelebaVtwo{} in CelebA and \mfSensLamaPlacesImdbVtwo{} in IMDb-WIKI, close to a random person.
 The input described above avoids both.
-Two alternatives that also read visible pixels only, replicating pixels without interpolation and running the model at the 128-pixel frame without any resampling, were run on every eighth target and place each model within \mfSensSpread{} of the reported value.
-A model's position on an error scale therefore depends on how the pixels next to the mask are prepared.
+Two alternatives that also read visible pixels only, replicating pixels without interpolation and running the model at the 128-pixel frame without any resampling, were run on every eighth person and place each model within \mfSensSpread{} of the reported value.
+The reported input is the most favorable of the three for both models.
+With pixel replication the face-trained model stays ahead of the mean of the 16 nearest people (\mfSensLamaHqCelebaNearest{} and \mfSensLamaHqImdbNearest{}); at the frame resolution it is level with that mean, and the scene-trained model is level with it under both alternatives (0.19 to 0.21).
+A model's position on an error scale, and its small lead over the retrieval baseline, therefore depend on how the pixels next to the mask are prepared.
 
 \begin{table}[htbp]
 \centering
 \caption{\textbf{The same model under five ways of preparing the masked face.}
-\acs{MSE} on the random-person scale at 1/8 of the object, on every eighth target of each set (Targets).
+\acs{MSE} on the random-person scale at 1/8 of the object, on every eighth person of each set (column Targets).
 Reported: interpolation from visible pixels only; replicated: pixel replication; native: model run at the frame resolution; outline and leak: the two discarded inputs, shown for the record; near: mean of the 16 nearest people on the same targets.
 Compare each row from left to right: the three inputs that neither leak nor invent a value should agree, and the two discarded ones show how far the same model moves when the pixels next to the mask are wrong.}
 \label{tab:s-input}
@@ -54,7 +56,10 @@ Set & Model & Targets & Reported & Replicated & Native & Outline & Leak & Near \
 % Source: results/model_fills_v1/model_fills_input_sensitivity.json; rows by make_model_fills.py.
 
 \paragraph{Size of the hidden region.}
-Table~\ref{tab:s-size} adds the two LaMa models to the size curve of the main text, on the same 100 evenly spaced targets per face set.
+Table~\ref{tab:s-size} adds the two LaMa models to the size curve of the main text, on the same 100 evenly spaced people per face set.
+At 1/16 and 1/8 of the face both models are ahead of the mean of the 16 nearest people.
+At 1/5 only the face-trained model is, and at 1/4 it is level with that mean (\mfSizeLamaHqCelebaTwenty{} against \mfSizeRefNearestCelebaTwenty{} in CelebA, \mfSizeLamaHqImdbTwenty{} against \mfSizeRefNearestImdbTwenty{} in IMDb-WIKI) while the scene-trained model is behind it (\mfSizeLamaPlacesCelebaTwenty{} and \mfSizeLamaPlacesImdbTwenty{}).
+The lead of these models over a retrieval baseline that needs no training thus shrinks as the hidden region grows.
 This analysis was added after the result at 1/8 was known and is exploratory.
 
 \begin{table}[htbp]
@@ -71,6 +76,11 @@ Set & Fill & 1/16 & 1/8 & 1/5 & 1/4 \\
 \input{tab/model_fills_size}\end{tabular}
 \end{table}
 % Source: results/model_fills_v1/model_fills_size_faces.json; rows by make_model_fills.py.
+
+\paragraph{Perceptual and set-level metrics.}
+At the 16-pixel window, \ac{LPIPS} places the three face models at \mfFaceLpipsMin{} to \mfFaceLpipsMax{}, closer than the person's own second photograph (\mfLamaHqCelebaRefRepeatLpips{} in CelebA and \mfLamaHqImdbRefRepeatLpips{} in IMDb-WIKI) and than its softened version (\mfLamaHqCelebaRefSoftLpips{} and \mfLamaHqImdbRefSoftLpips{}).
+The sets of model fills are also close to the target set: their \ac{FID} is \mfFaceFidMin{} to \mfFaceFidMax{} times that of the random-person set, against \mfRefCelebaMeanFid{} and \mfRefImdbMeanFid{} for the dataset average and \mfRefCelebaSoftFid{} and \mfRefImdbSoftFid{} for the softened same person, and their \ac{FWD} is \mfFaceFwdMin{} to \mfFaceFwdMax{} times, against \mfRefCelebaMeanFwd{} and \mfRefImdbMeanFwd{} for the dataset average (Table~\ref{tab:s-models}).
+The models thus score well in both metric families at once, although they have never seen the person: neither family, alone or together, shows whether a fill kept the person.
 
 \paragraph{Subsets.}
 The two slow models ran on subsets fixed in advance by compute cost alone.

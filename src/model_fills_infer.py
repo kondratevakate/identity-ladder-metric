@@ -190,7 +190,7 @@ def verify_ckpt(ckpt, expected):
 
 
 def run(job, model, backend, ckpt, out_dir, device, batch, model_size, repo=None, config=None, steps=20,
-        every=1, ckpt_sha256=None, allow_unpickle=False, revision=None, input_mode="norm"):
+        every=1, ckpt_sha256=None, allow_unpickle=False, revision=None, input_mode="norm", sample=0):
     """`every`: keep every n-th target of the job (a stated subset for slow models); 1 = all.
     File checkpoints (torchscript, lama_repo) are hash-checked before loading; the diffusers model is pinned by its
     Hub `revision` (commit hash) when one is given."""
@@ -215,7 +215,7 @@ def run(job, model, backend, ckpt, out_dir, device, batch, model_size, repo=None
     meta = json.load(open(meta_path)) if os.path.exists(meta_path) else {"sources": {}, "seconds": 0.0, "windows": 0}
     meta.update({"model": model, "backend": backend, "ckpt": os.path.basename(str(ckpt)), "ckpt_sha256": sha256(ckpt),
                  "device": device, "window_px": w, "zclip": ZCLIP, "model_size": model_size, "every": every,
-                 "input_version": INPUT_VERSION, "input_mode": input_mode,
+                 "input_version": INPUT_VERSION, "input_mode": input_mode, "sample": sample,
                  "torch": torch.__version__, "gpu": torch.cuda.get_device_name(0) if device.startswith("cuda") else None,
                  **net.info})
     for src in sorted(k[2:] for k in J.files if k.startswith("X_")):
@@ -239,7 +239,7 @@ def run(job, model, backend, ckpt, out_dir, device, batch, model_size, repo=None
             for k, (_, pk) in enumerate(chunk):
                 y0, x0 = pos[pk]
                 H[k, y0:y0 + w, x0:x0 + w] = True
-            keys = [SEED + int(tidx[a]) * 1000 + pk for a, pk in chunk]
+            keys = [SEED + sample * 10_000_000 + int(tidx[a]) * 1000 + pk for a, pk in chunk]   # sample 0 = main run
             O = net(Z, H, keys)
             for k, (a, pk) in enumerate(chunk):
                 y0, x0 = pos[pk]
@@ -284,9 +284,11 @@ def main():
     ap.add_argument("--revision", help="sd_inpaint: Hub commit hash of the model repository")
     ap.add_argument("--input-mode", default="norm", choices=INPUT_MODES,
                     help="how the frame reaches the model resolution (see the module text); default norm")
+    ap.add_argument("--sample", type=int, default=0,
+                    help="index of the sample for stochastic models (shifts every seed); 0 = the reported run")
     a = ap.parse_args()
     run(a.job, a.model, a.backend, a.ckpt, a.out, a.device, a.batch, a.model_size, a.lama_repo, a.config, a.steps,
-        a.every, a.ckpt_sha256, a.allow_unpickle, a.revision, a.input_mode)
+        a.every, a.ckpt_sha256, a.allow_unpickle, a.revision, a.input_mode, a.sample)
 
 
 if __name__ == "__main__":

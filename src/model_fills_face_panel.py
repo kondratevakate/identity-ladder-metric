@@ -38,6 +38,9 @@ def load_model(model):
     meta = json.load(open(os.path.join(d, "infer_meta.json")))
     if meta["window_px"] != FM.WIN:
         raise SystemExit(f"{model}: fills at {meta['window_px']} px, the panel window is {FM.WIN} px")
+    if meta.get("input_version") != MF.MI.INPUT_VERSION:       # never mix input versions (v1 leak, v2 outline)
+        raise SystemExit(f"{model}: fills have input version {meta.get('input_version')}, "
+                         f"this code reads {MF.MI.INPUT_VERSION} only")
     return ({s: np.load(os.path.join(d, f"{s}.npy")) for s in meta["sources"]},
             {s: {ti: a for a, ti in enumerate(m["target_index"])} for s, m in meta["sources"].items()}, meta)
 

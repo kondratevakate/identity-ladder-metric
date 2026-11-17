@@ -325,10 +325,32 @@ def qc(model, limit):
         print(path, flush=True)
 
 
+def mean_fill(model, parts, limit=0, win=None):
+    """Pixelwise mean of the fills of several runs of one stochastic model (same people and windows), stored as the
+    fills of `model` so that it is scored like any other fill. A window that one run did not fill stays not run."""
+    dirs = [os.path.join(PRIVATE, tag_of(m, limit, win)) for m in parts]
+    metas = [json.load(open(os.path.join(d, "infer_meta.json"))) for d in dirs]
+    keys = ("window_px", "input_version", "input_mode", "model_size", "every")
+    for m in metas[1:]:
+        same_people = all(m["sources"][s_]["target_index"] == metas[0]["sources"][s_]["target_index"]
+                          for s_ in m["sources"])
+        if any(m.get(k) != metas[0].get(k) for k in keys) or not same_people:
+            raise SystemExit("the runs differ in window, input, model size or people; no mean is formed")
+    out = os.path.join(PRIVATE, tag_of(model, limit, win))
+    os.makedirs(out, exist_ok=True)
+    for s_ in metas[0]["sources"]:
+        arrs = [np.load(os.path.join(d, f"{s_}.npy")).astype(np.float64) for d in dirs]
+        np.save(os.path.join(out, f"{s_}.npy"), np.mean(arrs, axis=0).astype(np.float32))   # NaN where any is NaN
+    meta = dict(metas[0], model=model, mean_of=list(parts), samples=[m.get("sample", 0) for m in metas])
+    json.dump(meta, open(os.path.join(out, "infer_meta.json"), "w"), indent=1)
+    print(out, flush=True)
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("stage", choices=("export", "infer", "score", "qc", "summ"))
+    ap.add_argument("stage", choices=("export", "infer", "score", "qc", "summ", "mean"))
     ap.add_argument("--model")
+    ap.add_argument("--parts", nargs="+", help="mean: the runs whose fills are averaged into --model")
     ap.add_argument("--ckpt")
     ap.add_argument("--limit", type=int, required=True, help="4 = smoke (rq4 n4 targets), 0 = all targets")
     ap.add_argument("--device", default="cpu")
@@ -348,6 +370,10 @@ def main():
         if not a.ckpt:
             raise SystemExit("--ckpt is required for infer")
         return infer(a.model, a.ckpt, a.limit, a.device, a.batch)
+    if a.stage == "mean":
+        if not a.parts or len(a.parts) < 2:
+            raise SystemExit("--parts needs at least two runs")
+        return mean_fill(a.model, a.parts, a.limit, a.win)
     if a.stage == "score":
         return score(a.model, a.limit, a.workers, a.win)
     if a.stage == "qc":
