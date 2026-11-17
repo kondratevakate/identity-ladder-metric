@@ -42,7 +42,7 @@ A model's position on an error scale and its small lead over the retrieval basel
 \centering
 \caption{\textbf{The same model under five ways of preparing the masked face.}
 \acs{MSE} on the random-person scale at 1/8 of the object, on every eighth person of each set (column Targets).
-Reported: interpolation from visible pixels only; replicated: pixel replication; native: model run at the frame resolution; outline and leak: the two discarded inputs, shown for the record; near: mean of the 16 nearest people on the same targets.
+Reported: interpolation from visible pixels only; replicated: pixel replication; native: model run at the frame resolution; leak: frame upsampled before masking; outline: the second discarded input (see text); both shown for the record; near: mean of the 16 nearest people on the same targets.
 Compare each row from left to right: the three inputs that neither leak nor invent a value should agree, and the two discarded ones show how far the same model moves when the pixels next to the mask are wrong.}
 \label{tab:s-input}
 \small
@@ -66,7 +66,7 @@ This analysis was added after the result at 1/8 was known and is exploratory.
 \centering
 \caption{\textbf{LaMa on the size curve in faces.}
 \acs{MSE} on the random-person scale for hidden regions of 1/16, 1/8, 1/5, and 1/4 of the face width (5, 10, 16, and 20 pixels), 100 targets per set.
-Read each column from top to bottom: a model above the row of the 16 nearest people is closer to the target than that retrieval baseline at this size.}
+Read each column from top to bottom: a model with a smaller value than the row of the 16 nearest people is closer to the target than that retrieval baseline at this size.}
 \label{tab:s-size}
 \small
 \begin{tabular}{@{}llrrrr@{}}
@@ -122,6 +122,7 @@ Set & Model & Targets & \acs{MSE} & \acs{SSIM} & \acs{TM} & \acs{GDT} & \acs{lDD
 \caption{\textbf{Pretrained models and references under \acs{MSE}.}
 Each panel is one image set and each row one fill: the references of the main text above the line, the models below it.
 The horizontal position is the distance on the random-person scale with the hidden region at 1/8 of the object, with 95\% bootstrap intervals (often narrower than the marker); a dagger marks a model run on a subset of people.
-Read each panel from left (the target) to right (a random person): in faces, both LaMa models lie left of every reference, and in the brain, the model lies between the same person's second scan and the mean of the 16 nearest people.}
+Read each panel from left (the target) to right (a random person): in faces, both LaMa models lie left of every reference, and in the brain, the model lies between the same person's second scan and the mean of the 16 nearest people.
+The QTIM references in this figure use all 221 people; the model table of the main text gives them on the 37 people of the brain model.}
 \label{fig:s-models}
 \end{figure}

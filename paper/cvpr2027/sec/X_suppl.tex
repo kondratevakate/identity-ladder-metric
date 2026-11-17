@@ -16,7 +16,7 @@ Figure~\ref{fig:atlas-all} maps the local squared error of each rung for every i
 \includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{fig/atlas_all_modalities_full_v3.pdf}
 \caption{\textbf{Where in the image each rung is close or far: local squared error in units of the dataset average ($Q$).}
 Rows: CelebA and IMDb-WIKI faces, QTIM brain MRI, GRAPE and PAPILA retina, UTIRIS NIR, UPOL and UTIRIS VIS iris, and IXI brain MRI (no second scans or families).
-Columns: mean anatomy, second image, opposite side, sibling, random person, mean of the 16 nearest people, same-sex-and-age mean, and the error of the dataset average on its own scale.
+Columns: dataset average image, second image, opposite side, sibling, random person, mean of the 16 nearest people, the average of unrelated people of the same sex and age band, and the error of the dataset average on its own scale.
 Color: error of the fill divided by the error of the dataset average; 1 (white) is the dataset average and about 2 (red) is a random person; blue is closer than the average. Below each map: its mean over the region with the 95\% interval. Maps are population summaries (masked Gaussian windows, standard deviation $16/\sqrt{12}$\,mm in the brain); gray panels and the bare template in the IXI row mark rungs that the image set does not have.
 The random person is red everywhere, while the mean of the 16 nearest people stays below the dataset average in every row (0.50 to 0.94).}
 \label{fig:atlas-all}
@@ -76,7 +76,7 @@ Target units are people for brain and faces, and eyes for iris and retina; clust
 \small
 \begin{tabular}{@{}lrrll@{}}
 \toprule
-Dataset & Target units & Clusters & With repeat & Alignment \\
+Dataset & Target units & Clusters & With 2nd image & Alignment \\
 \midrule
 \input{tab/coverage}
 \end{tabular}
@@ -261,24 +261,23 @@ A cluster-only interval answers a different uncertainty question from the two-wa
 Neither interval corrects a registration bias or an incorrect definition of identity.
 
 \section{Full brain profiles}
-Table~\ref{tab:s-brain-full} gives every distance computed in the brain for the selected rungs, with the number of targets and families behind each value.
+Table~\ref{tab:s-brain-full} gives every distance computed in the brain for the selected rungs.
 
-{\small
-\begin{longtable}{@{}llcrr@{}}
-\caption{\textbf{Brain profiles for all distances} (QTIM; $R_{\rm rep}$ of Eq.~2 anchored on the second scan; mean and 95\% interval).}
-\label{tab:s-brain-full}\\
+\begin{table*}[htbp]
+\centering
+\caption{\textbf{Brain profiles for all distances} (QTIM; $R$ of Eq.~2 of the main text with the second scan as anchor: 0 = second scan, 1 = random person; mean and 95\% interval).
+One row per distance and one column per fill; bold: the closest fill in the row; $\cdot$: the distance is not defined for this fill.
+The dataset average, opposite side, wrong detail and noise use 221 targets from 168 families; the softened second scan uses the 23 people with a second scan.}
+\label{tab:s-brain-full}
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}lccccc@{}}
 \toprule
-Metric & Rung & $R_{\rm rep}$ & Targets & Families \\
+Distance & Dataset average & Opposite side & Softened second scan & Wrong detail & Noise \\
 \midrule
-\endfirsthead
-\toprule
-Metric & Rung & $R_{\rm rep}$ & Targets & Families \\
-\midrule
-\endhead
-\input{tab/brain_full}
-\end{longtable}
-}
-% Source: results/donor_ladder_brain_metrics.json.
+\input{tab/brain_full_wide}\end{tabular}
+\end{table*}
+% Source: results/donor_ladder_brain_metrics.json; wide form written by make_brain_full_wide.py from tab/brain_full.tex.
 
 \input{sec/X_suppl_rq4}
 
