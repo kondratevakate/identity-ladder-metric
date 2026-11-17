@@ -3,7 +3,7 @@
 \input{sec/fig_summary}
 % sec/main_profiles (Tables brain, faces, retina and iris) moved to the supplement, Section S5 (17 Nov 2026).
 % Every number cites its results file in a comment.
-We answer the four research questions in turn, first on averages over the nine image sets and then per modality.
+We answer the four research questions in turn: first, by averaging across the nine image sets, and then per modality.
 
 \subsection{RQ1, RQ2: pixel metrics see the person but reward averaging}
 \label{sec:r-cross}
@@ -21,7 +21,7 @@ The directional tests show the same in every image set (Table~\ref{tab:tests}): 
 
 Set-level metrics behave the other way round.
 \ac{FID} and \ac{FWD} place the dataset-average set 16 and 186 times as far as the random-person set.
-They place the same-person set at 0.93 and 0.57 of the random-person set.
+They place the same-person set at 0.93 (\ac{FID}) and 0.57 (\ac{FWD}) of the random-person set's distance.
 In rank terms the random person lies only 0.10 of the ladder beyond the same person, against 0.59 for \ac{MSE}.
 Because set distances are biased upward for small sets, we left QTIM out of the set-level summary after its second-scan set (138 of 1{,}326 regions) gave 8.3, and IXI because its opposite-side set is the target set itself, and dropped rungs with fewer than half the random-person set's regions; both rules were fixed after seeing that value.
 No metric reaches the shaded corner of Figure~\ref{fig:summary}A, where it would both recognize the individual and penalize subtle averaging.
