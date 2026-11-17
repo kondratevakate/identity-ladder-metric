@@ -3,13 +3,14 @@
 \input{sec/fig_summary}
 % sec/main_profiles (Tables brain, faces, retina and iris) moved to the supplement, Section S5 (17 Nov 2026).
 % Every number cites its results file in a comment.
-We answer the four research questions in turn: first, by averaging across the nine image sets, and then per modality.
+We answer the four research questions in turn: first as unweighted means over the nine image sets (64 to 921 people each; UTIRIS enters with both \ac{NIR} and \ac{VIS}), then per modality.
 
 \subsection{RQ1, RQ2: pixel metrics see the person but reward averaging}
 \label{sec:r-cross}
 Figure~\ref{fig:summary} places all ten metric variants on the random-person scale, averaged over the nine image sets; Figure~\ref{fig:explainer} traces one row.
 Error and similarity metrics see the person: under \ac{MSE} the same person is at 0.41 and the random person at 1\statuspre.
 They do not reject averaging: the dataset average is at 0.50, and the softened same person at 0.29 is closer than the unchanged same person\statuspre.
+The two face sets alone show the same: the same person at \mfLamaHqCelebaRefRepeatMse{} and \mfLamaHqImdbRefRepeatMse{}, its softened version at \mfLamaHqCelebaRefSoftMse{} and \mfLamaHqImdbRefSoftMse{}, and the dataset average at \mfLamaHqCelebaRefMeanMse{}.
 In the brain, anchored on the second scan, the softened scan is at $-0.01$ $[-0.028,-0.004]$, so T2 fails\statuspre.
 \input{sec/tab_tests}
 The directional tests show the same in every tested set (Table~\ref{tab:tests}).
@@ -24,7 +25,7 @@ Topology also rewards averaging: under Betti matching the softened same person (
 
 Set-level metrics behave the other way round.
 \ac{FID} and \ac{FWD} place the dataset-average set 16 and 186 times as far as the random-person set.
-They place the same-person set at 0.93 (\ac{FID}) and 0.57 (\ac{FWD}) of the random-person set's distance.
+They place the same-person set at 0.93 (\ac{FID}) and 0.57 (\ac{FWD}) of the random-person set's distance, as a set distance must: both sets are real images of one population.
 By rank (Figure~\ref{fig:summary}A, x), the random person lies only 0.10 of the ladder beyond the same person, against 0.59 for \ac{MSE}.
 Set distances are biased upward for small sets: the second-scan set of QTIM (138 of 1{,}326 regions) lies at 8.3 times the random-person set.
 We therefore left QTIM out of the set-level summary, and IXI because its opposite-side set is the target set itself.

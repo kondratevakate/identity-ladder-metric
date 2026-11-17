@@ -6,14 +6,13 @@ Put simply, when the hidden content cannot be predicted, the safest guess under 
 The softened same person and the mean of the 16 nearest people are empirical stand-ins for that mean.
 Under \ac{MSE} this reward is exact: if the second image $s$ has as much individual detail as the target, the softened version is at $1-Q(s)/4$ times its distance, so T2 shows only its size.
 The ladder adds that size on real anatomy: no error or similarity metric places the person's own second image ahead of its softened version in any image set (Table~\ref{tab:tests}), and set-level metrics trade this reward for the opposite blind spot.
-We therefore suggest reporting three numbers next to any inpainting score on the same masks: the score of the dataset average, the score for the mean of the 16 nearest people chosen from the context, and the score for a random person.
-Under \ac{MSE} alone, beating the nearest-people mean can also mean averaging more, which is why the softened control belongs next to it.
 A conditional mean remains the right answer when the hidden content is truly ambiguous; the controls make that choice visible.
 
 \paragraph{A recipe for inpainting benchmarks.}
 For each hidden region, a benchmark can compute the region's dataset average over unrelated people, the mean of the 16 people whose context rings are closest, and 16 random people, all using the same valid pixels as the submitted fills.
 Scores are then reported on the random-person scale of Eq.~\ref{eq:anchors}, so that a submission at 0.5 is as close as the dataset average, and its gap to a context search is read against that set's own nearest-people score (0.20 to 0.40 at 1/8).
 Where a dataset has second images of the same people, the softened second image adds a direct test of whether the metric rewards averaging, and a set-level metric on the same fills shows whether the submission has lost realism.
+Under \ac{MSE} alone, beating the nearest-people mean can also mean averaging more, which is why the softened control belongs next to it.
 
 \paragraph{What the pretrained models add.}
 % Sources: results/model_fills_v1/model_fills_f8.json and model_fills_face_panel.json (numbers via tab/model_fills_numbers.tex).
@@ -25,13 +24,14 @@ The pretrained models run mostly outside their training domain, with one diffusi
 Residual misalignment is the main confounder outside faces: it adds to every distance in brain, retina, and iris, most in mirrored comparisons with the opposite side.
 Misalignment alone does not explain the averaging reward, because faces, aligned on landmarks, fail T2 in the same way (Table~\ref{tab:tests}).
 The cross-dataset summaries and tests were defined after the per-dataset results and are exploratory; only 23 QTIM people have a second scan, two of nine image sets record families, and the set-level exclusion rule was fixed after seeing one value.
-\ac{LPIPS}, topology and set-level metrics still use about 1/5 of the object in faces, retina, and iris.
+\ac{LPIPS}, topology and set-level metrics still use about 1/5 of the object in faces, retina, and iris, and \ac{FID} applies Inception features to small gray patches, far from their training domain~\cite{kynkaanniemi2023fid}.
 The ladder measures closeness to known references, not clinical or biometric correctness: a fill at the same person's position can still miss a lesion.
 
 \paragraph{Ethics and data.}
 We collected no new data and use nine public image sets under their terms: QTIM and GRAPE (CC0), IXI (CC BY-SA 3.0), PAPILA (GPL 3.0+), CelebA (non-commercial research only), IMDb-WIKI (academic research only), and UTIRIS and UPOL (free with citation).
 QTIM, GRAPE and PAPILA report ethics approval and signed informed consent; CelebA and IMDb-WIKI are Internet images of public figures (Supplementary Section~S2).
 Faces, irises and retinas are biometric, so we show one QTIM brain scan (CC0) and otherwise only population averages or maps.
+The nearest-person search is a form of biometric retrieval; we run it only within each image set and report aggregate distances.
 We did not balance the image sets by sex, age or ancestry, so the distances describe these cohorts, not clinical populations.
 % [CONFIRM] Kate: no institutional approval sentence for secondary use of public data; IXI, UTIRIS and UPOL state no ethics approval.
 

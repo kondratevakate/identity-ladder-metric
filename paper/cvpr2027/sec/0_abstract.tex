@@ -6,7 +6,7 @@ We therefore audit the metrics on references whose relationship to the hidden re
 We add three constructed controls: the person's own second image, pulled toward the dataset average; the same amount of detail taken from a random person; and white noise.
 We apply this identity ladder to nine image sets of brain magnetic resonance imaging (MRI), retinal photographs, faces, and irises.
 On a scale where 0 is the target and 1 is a random person, with the hidden region 1/8 as wide as the imaged structure, mean squared error (MSE) places the person's second image at 0.41 and the dataset average at 0.50.
-The second image pulled toward the average scores better (0.29) than the unchanged one.
+The second image pulled toward the average scores better (0.29) than the unchanged one: by construction under MSE, and under SSIM and the tolerance scores as well.
 Fr\'echet inception distance (FID) and Fr\'echet wavelet distance (FWD), which compare whole sets of fills, place averaged fills 16 and 186 times as far as random people but barely distinguish the right person from a random one.
 No metric we tested does both.
 Squared error is known to favor the average; the ladder measures by how much on real anatomy.
