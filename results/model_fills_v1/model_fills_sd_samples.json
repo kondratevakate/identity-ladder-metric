@@ -1,0 +1,13 @@
+{
+ "method": "Faces at f = 1/8: two samples of the diffusion model on the same people and windows, and their pixelwise mean\n    (protocol amendment 3). Sample 0 is the reported run. Paired differences are in R units with a 95 % interval from\n    1000 bootstrap draws over the unit.",
+ "f": "1/8",
+ "scale": "R_self: target 0, mean of 16 random people 1; lower = closer",
+ "datasets": {
+  "CelebA": {
+   "status": "second sample not run"
+  },
+  "IMDb-WIKI": {
+   "status": "second sample not run"
+  }
+ }
+}

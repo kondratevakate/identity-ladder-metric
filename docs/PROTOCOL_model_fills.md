@@ -173,3 +173,16 @@ of the ladder) the cube at the mirrored x position is hidden in the true scan an
 7. **Spend.** Hard cap 30 USD unchanged. Spent before the v3 runs: about 6 USD (estimate from run time; to be
    reconciled with billing). The v3 face runs add about 5.5 GPU hours on demand (about 5 USD); the diffusion model
    is pinned to Hub snapshot 8a4288a76071f7280aedbdb3253bdb9e9d5d84bb.
+
+## 10. Amendment 3 (17 Nov 2026, written before the second sample was scored)
+
+1. **Second sample of the diffusion model.** The reported diffusion row uses one sample per region (section 2). To
+   measure how much its position depends on the seed, the same model, input (v3, `norm`) and people (every 16th
+   person of each face set, 10 px windows) are run once more with every seed shifted (`--sample 1`; sample 0 is the
+   reported run and keeps its seeds). Reported: R of each sample on the same cells, their paired difference with a
+   bootstrap interval, and R of the pixelwise mean of the two samples (`model_fills_sd_samples.json`). The reported
+   row stays sample 0. Exploratory: added after the position of sample 0 was known, at a cost of about one GPU hour.
+2. **Status of the v3 face results at the time of this amendment.** LaMa (both weights) and the diffusion model at
+   10 px are scored and their sheets were looked at (gates passed); R under MSE: LaMa CelebA-HQ 0.139 (CelebA) and
+   0.151 (IMDb-WIKI), LaMa Places 0.167 and 0.185, diffusion 0.130 and 0.136 (58 and 43 people). The brain run
+   ended on its budget after 37 people (0.256).

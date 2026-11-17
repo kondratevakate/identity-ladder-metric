@@ -162,6 +162,7 @@ def main():
     print(OUT, flush=True)
     size_curve()
     input_sensitivity()
+    sd_samples()
 
 
 OUT_SIZE = os.path.join(ROOT, "results", "model_fills_v1", "model_fills_size_faces.json")
@@ -279,6 +280,62 @@ def input_sensitivity():
     with open(OUT_SENS, "w", encoding="utf-8") as fh:
         json.dump(out, fh, indent=1, allow_nan=False)
     print(OUT_SENS, flush=True)
+
+
+OUT_SAMPLES = os.path.join(ROOT, "results", "model_fills_v1", "model_fills_sd_samples.json")
+SAMPLE_RUNS = {"sample_0": "sd15_inpaint", "sample_1": "sd15_inpaint_s1", "mean_of_2": "sd15_inpaint_mean2"}
+
+
+def sd_samples():
+    """Faces at f = 1/8: two samples of the diffusion model on the same people and windows, and their pixelwise mean
+    (protocol amendment 3). Sample 0 is the reported run. Paired differences are in R units with a 95 % interval from
+    1000 bootstrap draws over the unit."""
+    out = {"method": sd_samples.__doc__.strip(), "f": "1/8",
+           "scale": "R_self: target 0, mean of 16 random people 1; lower = closer", "datasets": {}}
+    for name in ("CelebA", "IMDb-WIKI"):
+        spec = SETS[name]
+        src = spec["filt"][1]
+        base, why = RW.load(spec, RW.ALL)
+        if base is None:
+            raise SystemExit(f"{name}: {why}")
+        need = RW.need_cols(spec["cell"], spec["unit"], RW.ALL) | {"src"}
+        got = {}
+        for label, run in SAMPLE_RUNS.items():
+            path = FACES + run + "/rows.csv.gz"
+            if os.path.exists(path):
+                r = pd.read_csv(path, usecols=lambda c: c in need)
+                got[label] = r[(r.src == src) & (r.fill == f"model_{run}")].assign(fill=f"model_{label}")
+        if "sample_1" not in got:
+            out["datasets"][name] = {"status": "second sample not run"}
+            continue
+        cells = got["sample_1"][spec["cell"]].drop_duplicates()
+        r = pd.concat([base.merge(cells, on=spec["cell"])] +
+                      [g.merge(cells, on=spec["cell"]).reindex(columns=base.columns) for g in got.values()],
+                      ignore_index=True)
+        saved = RW.RUNGS
+        RW.RUNGS = saved + [f"model_{label}" for label in got]
+        try:
+            fr = RW.frame(r, spec["cell"], spec["unit"], list(SENS_METS), np.random.default_rng(RW.SEED))
+        finally:
+            RW.RUNGS = saved
+        prng = np.random.default_rng([RW.SEED, 78])
+        e = {"n_targets": int(cells.target.nunique()), "n_cells": int(len(cells)),
+             "R_self": {label: {x: fr["R_self"][f"model_{label}"][x] for x in SENS_METS} for label in got},
+             "references_same_targets": {k: {x: fr["R_self"][k][x] for x in SENS_METS} for k in REFS if k in fr["R_self"]},
+             "paired_difference": {
+                 "sample_1_minus_sample_0": {x: paired(r, spec["cell"], spec["unit"], x, "model_sample_1",
+                                                       "model_sample_0", prng) for x in SENS_METS}}}
+        if "mean_of_2" in got:
+            e["paired_difference"]["mean_of_2_minus_sample_0"] = {
+                x: paired(r, spec["cell"], spec["unit"], x, "model_mean_of_2", "model_sample_0", prng) for x in SENS_METS}
+        if "amplitude" in r.columns:
+            amp = r[r.fill.isin([f"model_{label}" for label in got])].groupby("fill")["amplitude"].median()
+            e["detail_norm_ratio_median"] = {k[len("model_"):]: round(float(v), 4) for k, v in amp.items()}
+        out["datasets"][name] = e
+        print(name, {label: v["mse"][0] for label, v in e["R_self"].items()}, flush=True)
+    with open(OUT_SAMPLES, "w", encoding="utf-8") as fh:
+        json.dump(out, fh, indent=1, allow_nan=False)
+    print(OUT_SAMPLES, flush=True)
 
 
 if __name__ == "__main__":
