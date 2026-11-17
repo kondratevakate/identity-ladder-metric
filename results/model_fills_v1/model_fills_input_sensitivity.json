@@ -1,0 +1,23 @@
+{
+ "method": "Faces at f = 1/8: the same model with different ways of bringing the masked frame to the model resolution, on\n    the targets of the sensitivity runs (every 8th target of each set). `norm` is the primary input (v3); `nearest`\n    and `native` are leak-free alternatives; v1 and v2 are the two discarded inputs, shown for the record only.",
+ "f": "1/8",
+ "scale": "R_self: target 0, mean of 16 random people 1; lower = closer",
+ "datasets": {
+  "CelebA": {
+   "lama_celebahq": {
+    "status": "sensitivity variants not run"
+   },
+   "lama_places": {
+    "status": "sensitivity variants not run"
+   }
+  },
+  "IMDb-WIKI": {
+   "lama_celebahq": {
+    "status": "sensitivity variants not run"
+   },
+   "lama_places": {
+    "status": "sensitivity variants not run"
+   }
+  }
+ }
+}

@@ -9,7 +9,11 @@ Directional comparisons (model minus reference, in R units, paired over the cell
 interval from 1000 multinomial bootstrap draws over the dataset's unit) are reported for the second image, the
 dataset average, the mean of the 16 nearest people and the softened same person.
 
-Usage: python src/model_fills_summary.py            writes results/model_fills_v1/model_fills_f8.json
+Face fills are read from the folder of the current input version (v3, `model_fills_infer.py`). `size_curve` adds
+the models to the RQ4 size curve and `input_sensitivity` compares the ways of presenting the hidden window.
+
+Usage: python src/model_fills_summary.py            writes results/model_fills_v1/model_fills_f8.json,
+                                                    model_fills_size_faces.json and model_fills_input_sensitivity.json
 """
 import glob
 import json
@@ -25,6 +29,7 @@ import rq4_window_size as RW  # noqa: E402
 ROOT = RW.ROOT
 P = RW.P
 RUN = P + "model-fills-20261116-v1/"
+FACES = RUN + "faces_v3/"                # face fills of input version v3; v1 and v2 stay in faces/ and faces_v2/
 OUT = os.path.join(ROOT, "results", "model_fills_v1", "model_fills_f8.json")
 COMMON8 = os.path.join(ROOT, "results", "cross_modality", "common_f8_v1.json")
 REFS = ("repeat", "dataset_mean", "lookalike16", "shrink_ref")
@@ -36,10 +41,10 @@ SETS = {   # order and seeds as in the producers of common_f8_v1.json, so the re
                  filt=lambda r: r[r.patch < 32], model_rows=RUN + "brain/{m}/rows.csv.gz", seed_group="brain"),
     "CelebA": dict(paths=[RW.RQ + "faces/rows_full_w10.csv.gz"], cell=["target", "patch"], unit="family",
                    ren={"mirror": "other_side"}, filt=("face", "celeba"),
-                   model_rows=RUN + "faces_v2/{m}/rows.csv.gz", seed_group="faces"),
+                   model_rows=FACES + "{m}/rows.csv.gz", seed_group="faces"),
     "IMDb-WIKI": dict(paths=[RW.RQ + "faces/rows_full_w10.csv.gz"], cell=["target", "patch"], unit="family",
                       ren={"mirror": "other_side"}, filt=("face", "imdb"),
-                      model_rows=RUN + "faces_v2/{m}/rows.csv.gz", seed_group="faces"),
+                      model_rows=FACES + "{m}/rows.csv.gz", seed_group="faces"),
 }
 MODELS = {"QTIM": ["brats24_unet"], "CelebA": ["lama_places", "lama_celebahq", "sd15_inpaint"],
           "IMDb-WIKI": ["lama_places", "lama_celebahq", "sd15_inpaint"]}
@@ -138,6 +143,10 @@ def main():
                  "references_same_targets": {k: {m: fm["R_self"][k][m] for m in SHOWN if m in fm["R_self"].get(k, {})}
                                              for k in REFS if k in fm["R_self"]},
                  "model_minus_reference": {}}
+            if "amplitude" in r.columns:     # norm of the fill's individual detail over the target's, same cells
+                amp = r[r.fill.isin([fill, *REFS])].groupby("fill")["amplitude"].median()
+                e["detail_norm_ratio_median"] = {("model" if k == fill else k): round(float(v), 4)
+                                                 for k, v in amp.items() if np.isfinite(v)}
             prng = np.random.default_rng([RW.SEED, 77])
             for ref in REFS:
                 if not (r.fill == ref).any():
@@ -152,6 +161,7 @@ def main():
         json.dump(out, fh, indent=1, allow_nan=False)
     print(OUT, flush=True)
     size_curve()
+    input_sensitivity()
 
 
 OUT_SIZE = os.path.join(ROOT, "results", "model_fills_v1", "model_fills_size_faces.json")
@@ -177,7 +187,7 @@ def size_curve():
                 raise SystemExit(f"{name} {w} px: {why}")
             rows, present = [base], []
             for m in SIZE_MODELS:
-                path = RUN + "faces_v2/" + SIZE_DIR[w].format(m=m) + "/rows.csv.gz"
+                path = FACES + SIZE_DIR[w].format(m=m) + "/rows.csv.gz"
                 if not os.path.exists(path):
                     continue
                 mr = pd.read_csv(path, usecols=["src", "target", "family", "patch", "fill", "mse"])
@@ -204,6 +214,71 @@ def size_curve():
     with open(OUT_SIZE, "w", encoding="utf-8") as fh:
         json.dump(out, fh, indent=1, allow_nan=False)
     print(OUT_SIZE, flush=True)
+
+
+OUT_SENS = os.path.join(ROOT, "results", "model_fills_v1", "model_fills_input_sensitivity.json")
+SENS_MODELS = ["lama_celebahq", "lama_places"]
+SENS_VARIANTS = {   # label: (rows file, fill name in that file, status)
+    "norm": (FACES + "{m}/rows.csv.gz", "model_{m}", "primary: mask-aware bicubic upsampling (input version v3)"),
+    "nearest": (FACES + "{m}_nearest/rows.csv.gz", "model_{m}_nearest", "sensitivity: pixel replication"),
+    "native": (FACES + "{m}_native/rows.csv.gz", "model_{m}_native", "sensitivity: frame resolution, no resampling"),
+    "v2_prefill": (RUN + "faces_v2/{m}/rows.csv.gz", "model_{m}",
+                   "invalid, kept for the record: ring-mean prefill drew an outline around the window"),
+    "v1_leak": (RUN + "faces/{m}/rows.csv.gz", "model_{m}",
+                "invalid, kept for the record: hidden border values leaked into the visible context"),
+}
+SENS_METS = ("mse", "ssim")
+
+
+def input_sensitivity():
+    """Faces at f = 1/8: the same model with different ways of bringing the masked frame to the model resolution, on
+    the targets of the sensitivity runs (every 8th target of each set). `norm` is the primary input (v3); `nearest`
+    and `native` are leak-free alternatives; v1 and v2 are the two discarded inputs, shown for the record only."""
+    out = {"method": input_sensitivity.__doc__.strip(), "f": "1/8",
+           "scale": "R_self: target 0, mean of 16 random people 1; lower = closer", "datasets": {}}
+    for name in ("CelebA", "IMDb-WIKI"):
+        spec = SETS[name]
+        src = spec["filt"][1]
+        base, why = RW.load(spec, RW.ALL)
+        if base is None:
+            raise SystemExit(f"{name}: {why}")
+        need = RW.need_cols(spec["cell"], spec["unit"], RW.ALL) | {"src"}
+        out["datasets"][name] = {}
+        for m in SENS_MODELS:
+            got = {}
+            for label, (path, fill, status) in SENS_VARIANTS.items():
+                path = path.format(m=m)
+                if not os.path.exists(path):
+                    continue
+                r = pd.read_csv(path, usecols=lambda c: c in need)
+                r = r[(r.src == src) & (r.fill == fill.format(m=m))].copy()
+                r["fill"] = f"model_{label}"
+                got[label] = (r, status)
+            if "nearest" not in got and "native" not in got:
+                out["datasets"][name][m] = {"status": "sensitivity variants not run"}
+                continue
+            cells = got["nearest" if "nearest" in got else "native"][0][spec["cell"]].drop_duplicates()
+            rows = [base.merge(cells, on=spec["cell"])]
+            for label, (r, _) in got.items():
+                rows.append(r.merge(cells, on=spec["cell"]).reindex(columns=base.columns))
+            saved = RW.RUNGS
+            RW.RUNGS = saved + [f"model_{label}" for label in got]
+            try:
+                fr = RW.frame(pd.concat(rows, ignore_index=True), spec["cell"], spec["unit"], list(SENS_METS),
+                              np.random.default_rng(RW.SEED))
+            finally:
+                RW.RUNGS = saved
+            e = {"n_targets": int(cells.target.nunique()), "n_cells": int(len(cells)),
+                 "references_same_targets": {k: {x: fr["R_self"][k][x] for x in SENS_METS}
+                                             for k in REFS if k in fr["R_self"]},
+                 "variants": {label: {"status": status, "n_cells": int(len(got[label][0].merge(cells, on=spec["cell"]))),
+                                      "R_self": {x: fr["R_self"][f"model_{label}"][x] for x in SENS_METS}}
+                              for label, (_, status) in got.items()}}
+            out["datasets"][name][m] = e
+            print(name, m, {label: v["R_self"]["mse"][0] for label, v in e["variants"].items()}, flush=True)
+    with open(OUT_SENS, "w", encoding="utf-8") as fh:
+        json.dump(out, fh, indent=1, allow_nan=False)
+    print(OUT_SENS, flush=True)
 
 
 if __name__ == "__main__":

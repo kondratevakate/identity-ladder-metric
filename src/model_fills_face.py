@@ -39,7 +39,8 @@ import rq4_face_lookalike16_size as R4  # noqa: E402
 
 RUN = "model-fills-20261116-v1"
 JOBS = os.path.join(os.path.dirname(FM.PRIVATE), RUN, "faces")        # job files (inputs) and the v1 fills, kept
-# v2 (17 Nov 2026): model input without the upsampling leak of v1 (see model_fills_infer.py); v1 outputs stay in JOBS
+# One folder per input version (see model_fills_infer.py): v1 (leak) stays in JOBS, v2 (outline) in faces_v2,
+# the current version v3 in faces_v3. Older versions are kept and never scored again.
 PRIVATE = os.path.join(os.path.dirname(FM.PRIVATE), RUN, "faces_" + MI.INPUT_VERSION)
 VERSION = R4.VERSION                   # "_v6f", explicit
 DENOM = 8                              # f = 1/8 only (Amendment 10)
@@ -178,6 +179,9 @@ def score(model, limit, workers, win=None):
     meta = json.load(open(os.path.join(fill_dir, "infer_meta.json")))
     if meta["window_px"] != w:
         raise SystemExit(f"fills were made at {meta['window_px']} px, the ladder window is {w} px")
+    if meta.get("input_version") != MI.INPUT_VERSION:        # no silent mixing of input versions (v1 leak, v2 outline)
+        raise SystemExit(f"fills in {fill_dir} have input version {meta.get('input_version')}, "
+                         f"this code scores {MI.INPUT_VERSION} only")
     have = {s_: set(m["target_index"]) for s_, m in meta["sources"].items()}
     jobs = [j[:3] + ([t_ for t_ in j[3] if t_[0] in have[j[0]]],) + j[4:] for j in jobs]   # targets the model ran on
     targets = targets[[ti in have[s_] for s_, ti in targets.itertuples(index=False)]]
@@ -207,6 +211,7 @@ def score(model, limit, workers, win=None):
     metrics = [c for c in FM.REPORTED if c in r.columns and c in ref.columns]
     gate = R4.compare(r, ref, sorted(set(ref.fill)) if keep is None else sorted(keep), metrics)
     gate.update({"model": model, "window_px": w, "n_targets": int(len(targets)),
+                 "input_version": meta["input_version"], "input_mode": meta.get("input_mode"),
                  "n_model_rows": int((r.fill == f"model_{model}").sum()), "minutes": round((time.time() - t0) / 60, 1)})
     json.dump(gate, open(os.path.join(fill_dir, "gate_score.json"), "w"), indent=1)
     print(json.dumps({k: v for k, v in gate.items() if k != "max_abs_diff"}), flush=True)

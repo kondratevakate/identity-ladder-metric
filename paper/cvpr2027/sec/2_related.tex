@@ -1,15 +1,22 @@
 \section{Related work}
 \label{sec:related}
-Two lines of work bear on the ladder: what image metrics measure, and how evaluation can take anatomy into account.
+Three lines of work bear on the ladder: what image metrics measure, which models and retrieval baselines fill images, and how evaluation can take anatomy into account.
 \paragraph{Distortion and perception.}
 The perception-distortion tradeoff separates distance to the true image from how realistic an image looks to a distribution-level judge~\cite{blau2018}.
 \ac{LPIPS} compares images in the features of a pretrained network~\cite{zhang2018lpips}, and \ac{SSIM} compares local means, contrasts and structure~\cite{wang2004}.
+A restoration model trained to predict one output aggregates all plausible answers and loses detail~\cite{delbracio2023indi}, and an inaccurate learned prior can add false structures to a medical image~\cite{bhadra2021}.
+\ac{FID} rests on Inception features and a normality assumption and changes with the sample size~\cite{cmmd2024}, so we report set distances only relative to the random-person set of the same image set.
 None of these measures says whether the detail in a fill belongs to the target person; our references of known relationships make that testable.
+
+\paragraph{Inpainting models and retrieval.}
+LaMa fills masks with a feed-forward network~\cite{lama2022}, latent diffusion models sample fills~\cite{rombach2022ldm}, and the \ac{BraTS} challenge ranks models that fill healthy-looking tissue into brain scans~\cite{brats2023}; we place such models on the ladder unchanged.
+Scene completion fills a hole with similar regions from a large photo collection~\cite{hays2007scene}; our mean of the 16 nearest people uses this idea as a yardstick.
 
 \paragraph{Anatomy-aware evaluation.}
 CARE evaluates sparse-view \ac{CT} reconstruction with anatomy-aware measurements of organs and vessels~\cite{care2025}, and LMSB harmonizes \ac{OCT} images with an anatomy-guided latent metric~\cite{lmsb2025}.
 Both target structural correctness, not whether the detail belongs to the scanned person.
 Brain-ID learns contrast-independent anatomical features~\cite{brainid2024}, which motivates our acquisition controls.
+BrainPrint describes brain shape compactly enough for subject identification and for the study of asymmetry and of genetic influence in twins~\cite{wachinger2015brainprint}, the relationships that our brain rungs encode.
 Iris recognition shows why the unit of identity must be fixed first: a person's two irises are different biometric instances~\cite{daugman2004,daugman2001}, so we treat an eye as the unit for irises.
 ArcFace embeds whole faces so that photographs of one person lie close together~\cite{arcface2022}; we use it as a whole-image identity check.
 Metrics Reloaded recommends matching validation measures to the task~\cite{metrics2024}; we follow it with separate controls for averaging, wrong detail, the opposite side and acquisition.

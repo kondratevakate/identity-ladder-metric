@@ -130,3 +130,46 @@ of the ladder) the cube at the mirrored x position is hidden in the true scan an
    the same files (hashes and commit are in their logs and `infer_meta.json`) through scripts without these guards.
    The diffusion model is pinned by its Hub revision once the snapshot hash of the run is recorded
    (`out/sd15_snapshot.txt`).
+
+## 9. Amendment 2 (17 Nov 2026, written before any v3 run was scored)
+
+1. **Input version v2 is discarded: it drew an outline around the window.** The v2 runs of both LaMa weights were
+   scored (gates passed) and their sheets were looked at before any number was used. The scene weights painted a
+   dark frame inside most windows; R under MSE at f = 1/8 was 0.885 (CelebA) and 0.723 (IMDb-WIKI) for LaMa Places
+   and 0.251 and 0.246 for LaMa CelebA-HQ. Cause: v2 filled the hidden pixels with the mean of a 3 px ring before
+   bicubic upsampling. Where the image has a gradient, that mean differs from the local value, so the one visible
+   model pixel next to the window was pulled toward it by about one pixel step (test: 1.05 of a step on a ramp).
+   The result is a faint rectangle around the window, and LaMa continues lines into the hole. This is an artifact of
+   our input, not a property of the model. The v2 fills and rows stay in `faces_v2/` (on the VM `out_v2_rim/`) and
+   are used for no reported number; the unfinished v2 run of the diffusion model was stopped.
+2. **Local check that separated the two effects** (LaMa Places on CPU, 6 evenly spaced CelebA targets, all 47
+   windows; rough scale without validity masks, so only the order of magnitude counts): v1 (leak) 0.15, v2 (outline)
+   0.81, pixel replication 0.25, frame resolution without resampling 0.23, mask-aware bicubic 0.22, mask-aware
+   bilinear 0.22, a constant fill with the ring mean 0.59. Three constructions that neither leak nor invent a value
+   agree; v1 was too good because of the leak and v2 too bad because of the outline.
+3. **Input version v3 (rule).** Every visible pixel the model sees is computed from visible pixels of the frame
+   only, and no invented value is mixed into it. Primary mode `norm`: mask-aware bicubic upsampling,
+   bicubic(frame x visible) / bicubic(visible), then the window is zeroed at model resolution; the hidden region
+   the model fills is exactly the scored window. The mode was chosen by this rule; the rough values of item 2 were
+   known when it was chosen, which is why two alternatives are run and reported next to it. Sensitivity modes, both
+   LaMa weights, every 8th target of each face set at f = 1/8: `nearest` (pixel replication, no interpolation) and
+   `native` (the model runs at the 128 px frame resolution, no resampling). The diffusion model runs in `norm`
+   only (a 128 px input is far from its training resolution, and a sensitivity run would cost 2 GPU hours).
+   Regression tests: `test_model_input_does_not_depend_on_hidden_pixels` (all modes) and
+   `test_model_input_draws_no_outline_around_the_window` (on a ramp the visible input stays within 0.35 of a pixel
+   step of the plain upsampling; the v2 construction fails it).
+4. **What is repeated.** Every face run of section 5 and of amendment 1 item 2 is repeated as v3 into `faces_v3/`:
+   both LaMa weights at 10 px on all targets, at 16 px on all targets, at 5 and 20 px on the F3 subset, the
+   diffusion model at 16 px on the stored set-level regions and at 10 px on every 16th target. The scorer refuses
+   fills whose recorded input version is not v3. The brain input has no interpolation and is not affected.
+5. **Reporting.** `results/model_fills_v1/model_fills_input_sensitivity.json` gives, on the targets of the
+   sensitivity runs, R for `norm`, `nearest` and `native` and, marked invalid and for the record only, for v1 and
+   v2. The paper states that the position of a model depends on how the pixels next to the mask are prepared and
+   gives these numbers.
+6. **Lesson for the workflow.** The v2 fix had a test for the leak but its model input and output were not looked at
+   before the full face runs were started; about 3 GPU hours were spent on an invalid input. From now on a change of
+   the model input is followed by a picture of the model input and output on one window and by a sheet of fills
+   before any full run (`faces_v2/dbg_input_v2_vs_norm_private.png` is that picture for v2 against v3).
+7. **Spend.** Hard cap 30 USD unchanged. Spent before the v3 runs: about 6 USD (estimate from run time; to be
+   reconciled with billing). The v3 face runs add about 5.5 GPU hours on demand (about 5 USD); the diffusion model
+   is pinned to Hub snapshot 8a4288a76071f7280aedbdb3253bdb9e9d5d84bb.

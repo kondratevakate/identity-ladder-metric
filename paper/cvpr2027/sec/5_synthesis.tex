@@ -15,21 +15,14 @@ For each hidden region, a benchmark can compute the region's dataset average ove
 Scores are then reported on the random-person scale of Eq.~\ref{eq:anchors}, so that a submission at 0.5 is as close as the dataset average, and its gap to a context search is read against that set's own nearest-people score (0.20 to 0.40 at 1/8).
 Where a dataset has second images of the same people, the softened second image adds a direct test of whether the metric rewards averaging, and a set-level metric on the same fills shows whether the submission has lost realism.
 
-\paragraph{Next step: placing generative models on the ladder.}
-% MODEL-RESULTS: when the pretrained-model points arrive, a short "where pretrained models sit on the ladder" paragraph goes here.
-The ladder is the baseline; the natural next step is to place generative models on it, across groups of people.
-For a held-out target $x_i$ (as in Eq.~\ref{eq:unit}) with visible context $c_i$ and mask $M_i$, let $y_{ik}=G(c_i,M_i,z_k)$ be the $k$-th fill of model $G$ with random seed $z_k$.
-For a group of targets $a$ (for example an age band or an acquisition site), a distance $d_m$ and a ladder control $f_{ir}$, the audit profile is
-\begin{equation}
-\Delta_{a,m,r}=\mathbb E_{i\mid a}\Bigl[\mathbb E_k\, d_m(y_{ik},x_i;E_{ir})-d_m(f_{ir},x_i;E_{ir})\Bigr],
-\label{eq:audit}
-\end{equation}
-where $E_{ir}$ are the valid pixels shared by the target and the control.
-A negative value means that the metric prefers the model's fills to the control, not that the person was kept.
-Seeds are averaged within a target, failed outputs are reported, and group gaps need uncertainty over independent people.
+\paragraph{What the pretrained models add.}
+% Sources: results/model_fills_v1/model_fills_f8.json and model_fills_face_panel.json (numbers via tab/model_fills_numbers.tex).
+Next to the references, a model score becomes readable (Table~\ref{tab:models}): most of LaMa's score in faces is reachable without a model, and the brain model is still twice as far as the second scan.
+Supplementary Section~S3 defines the same comparison within groups of people.
 
 \paragraph{Limitations.}
 The ladder calibrates metrics and does not by itself rank models.
+The pretrained models run mostly outside their training domain (a scene model on gray aligned faces, a tumor-inpainting model on healthy brains and on \mfBratsQtimN{} of 221 people).
 Alignment is the main confounder outside faces: misalignment adds to every distance in brain, retina and iris, most in mirrored comparisons with the opposite side.
 It does not explain the averaging reward alone, because faces, whose alignment passed visual \ac{QC}, fail T2 in the same way (Table~\ref{tab:tests}).
 The cross-dataset summaries and tests were defined after the per-dataset results and are exploratory; only 23 QTIM people have a second scan, two of nine image sets record families, and the set-level exclusion rule was fixed after seeing one value.
@@ -45,5 +38,5 @@ We did not balance the image sets by sex, age or ancestry, so the distances desc
 
 \paragraph{Conclusion.}
 References of known relationship turn a single inpainting score into a position on a ladder from the same person to a random one.
-On nine image sets, error and similarity metrics reward averaging, and set-level metrics barely separate the right person from a random one.
+On nine image sets, error and similarity metrics reward averaging, set-level metrics barely separate the right person from a random one, and pretrained models score close to a retrieval baseline that needs no model.
 The three controls cost no model and no labels and show which of these failures a new model has.

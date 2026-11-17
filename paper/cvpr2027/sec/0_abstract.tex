@@ -11,5 +11,6 @@ No metric we tested does both.
 Squared error is known to favor the average; the ladder measures by how much on real anatomy.
 The mean of the 16 unrelated people whose visible surroundings look most like the target's reaches 0.29 under MSE, averaged over the nine sets: closer than the opposite side of the same body in every set, and closer than a second photograph in faces.
 This retrieval baseline weakens as the hidden region grows, so it must be reported at a stated size.
+Placed on the same ladder, pretrained inpainting models become readable: in faces, LaMa reaches \mfLamaHqImdbMse{} under MSE, closer than the person's own second photograph and only \mfLamaHqImdbAheadNearest{} ahead of that retrieval baseline, and a challenge-winning brain model reaches \mfBratsQtimMse{}, ahead of the baseline but behind the person's second scan.
 The ladder is a deterministic baseline for placing inpainting models, and its controls should be reported next to classical metrics.
 \end{abstract}

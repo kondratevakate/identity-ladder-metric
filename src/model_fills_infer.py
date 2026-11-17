@@ -7,9 +7,14 @@ Optional `cells_s` [n, 2] (row of X_s, window index): only these windows are run
 
 The model sees the whole frame with ONE window hidden and returns that window. Grey level: fixed affine
 u = (clip(z, -ZCLIP, ZCLIP) + ZCLIP) / (2 ZCLIP) to [0, 1], three equal channels in, channel mean out, inverse affine
-back. Model resolution `--model-size` px (bicubic up, area down), mask nearest. Before upsampling the hidden pixels
-are replaced by the mean of the visible pixels within PREFILL_RING px of the window, so interpolation cannot carry a
-hidden value into the visible input (input version v2); after upsampling the hidden pixels are zeroed.
+back. Model resolution `--model-size` px (area down), mask nearest. Input version v3: every visible pixel the model
+sees is computed from visible pixels of the frame only, and no invented value is mixed into it (`--input-mode`):
+  norm     mask-aware bicubic upsampling: bicubic(frame * visible) / bicubic(visible); the default
+  nearest  pixel replication (no interpolation at all); sensitivity variant
+  native   the model runs at the frame resolution, no resampling; sensitivity variant (--model-size = frame size)
+After that the hidden pixels are zeroed. v1 upsampled before masking (hidden border values leaked into the context);
+v2 replaced the hidden pixels by the mean of a 3 px ring before upsampling, which drew a faint outline around the
+window that the models continued into the hole (PROTOCOL_model_fills.md, amendments 1 and 2).
 
 Backends:
   torchscript  model(image[B,3,H,W] in [0,1], mask[B,1,H,W]) -> image (big-lama TorchScript export)
@@ -30,8 +35,9 @@ import numpy as np
 
 ZCLIP = 4.0
 SEED = 20261116
-PREFILL_RING = 3                 # px of visible context whose mean replaces the hidden pixels before upsampling
-INPUT_VERSION = "v2"             # v1 = upsampling before masking (hidden border values leaked into the context)
+INPUT_VERSION = "v3"             # v1: hidden values leaked into the context; v2: prefill drew an outline (see above)
+INPUT_MODES = ("norm", "nearest", "native")
+NORM_FLOOR = 0.5                 # floor of the visible weight; visible pixels have at least 0.77, hidden ones are zeroed
 
 
 def z_to_u(z):
@@ -59,21 +65,33 @@ class Base:
         import torch
         self.torch, self.device, self.ms, self.fs = torch, device, model_size, frame_size
         self.info = {}
+        self.input_mode = "norm"
 
-    def __call__(self, z, hide, keys=None):
+    def model_input(self, z, hide):
+        """Masked frame at the model resolution and its mask. No visible value depends on a hidden pixel."""
         torch, F = self.torch, self.torch.nn.functional
         x = torch.from_numpy(z_to_u(z).astype(np.float32))[:, None].to(self.device)
         m0 = torch.from_numpy(hide.astype(np.float32))[:, None].to(self.device)
-        # v2 (17 Nov 2026): the hidden pixels are replaced BEFORE upsampling, by the mean of the visible pixels within
-        # PREFILL_RING px of the window. In v1 the frame was upsampled first, so the bicubic kernel carried hidden
-        # border values into the visible band next to the mask (up to 0.18 of the grey range).
-        k = 2 * PREFILL_RING + 1
-        ring = (F.max_pool2d(m0, k, stride=1, padding=PREFILL_RING) - m0).clamp(0, 1)
-        fill = (x * ring).sum((1, 2, 3), keepdim=True) / ring.sum((1, 2, 3), keepdim=True).clamp(min=1)
-        x = x * (1 - m0) + fill * m0
-        x = F.interpolate(x, size=self.ms, mode="bicubic", align_corners=False).clamp(0, 1)
-        m = F.interpolate(m0, size=self.ms, mode="nearest")
-        x = x * (1 - m)                                         # hidden pixels carry no target information
+        v = 1 - m0
+        if self.input_mode == "native":
+            if self.ms != self.fs:
+                raise SystemExit("input mode native needs --model-size equal to the frame size")
+            xh, m = x * v, m0
+        elif self.input_mode == "nearest":
+            xh = F.interpolate(x * v, size=self.ms, mode="nearest")
+            m = F.interpolate(m0, size=self.ms, mode="nearest")
+        elif self.input_mode == "norm":
+            num = F.interpolate(x * v, size=self.ms, mode="bicubic", align_corners=False)
+            den = F.interpolate(v, size=self.ms, mode="bicubic", align_corners=False)
+            xh = (num / den.clamp(min=NORM_FLOOR)).clamp(0, 1)
+            m = F.interpolate(m0, size=self.ms, mode="nearest")
+        else:
+            raise SystemExit(f"unknown input mode {self.input_mode}")
+        return xh * (1 - m), m                                  # hidden pixels carry no target information
+
+    def __call__(self, z, hide, keys=None):
+        torch, F = self.torch, self.torch.nn.functional
+        x, m = self.model_input(z, hide)
         with torch.no_grad():
             o = self.forward(x.repeat(1, 3, 1, 1), m, keys)
         o = F.interpolate(o.float().mean(1, keepdim=True), size=self.fs, mode="area")[:, 0].clamp(0, 1)
@@ -172,7 +190,7 @@ def verify_ckpt(ckpt, expected):
 
 
 def run(job, model, backend, ckpt, out_dir, device, batch, model_size, repo=None, config=None, steps=20,
-        every=1, ckpt_sha256=None, allow_unpickle=False, revision=None):
+        every=1, ckpt_sha256=None, allow_unpickle=False, revision=None, input_mode="norm"):
     """`every`: keep every n-th target of the job (a stated subset for slow models); 1 = all.
     File checkpoints (torchscript, lama_repo) are hash-checked before loading; the diffusers model is pinned by its
     Hub `revision` (commit hash) when one is given."""
@@ -189,12 +207,15 @@ def run(job, model, backend, ckpt, out_dir, device, batch, model_size, repo=None
         net = SDInpaint(ckpt, device, model_size, size, steps, revision)
     else:
         raise SystemExit(f"unknown backend {backend}")
+    if input_mode not in INPUT_MODES:
+        raise SystemExit(f"unknown input mode {input_mode}")
+    net.input_mode = input_mode
     os.makedirs(out_dir, exist_ok=True)
     meta_path = os.path.join(out_dir, "infer_meta.json")
     meta = json.load(open(meta_path)) if os.path.exists(meta_path) else {"sources": {}, "seconds": 0.0, "windows": 0}
     meta.update({"model": model, "backend": backend, "ckpt": os.path.basename(str(ckpt)), "ckpt_sha256": sha256(ckpt),
                  "device": device, "window_px": w, "zclip": ZCLIP, "model_size": model_size, "every": every,
-                 "input_version": INPUT_VERSION, "prefill_ring_px": PREFILL_RING,
+                 "input_version": INPUT_VERSION, "input_mode": input_mode,
                  "torch": torch.__version__, "gpu": torch.cuda.get_device_name(0) if device.startswith("cuda") else None,
                  **net.info})
     for src in sorted(k[2:] for k in J.files if k.startswith("X_")):
@@ -261,9 +282,11 @@ def main():
     ap.add_argument("--allow-unpickle", action="store_true",
                     help="lama_repo: allow a full unpickle of the hash-verified checkpoint if weights-only fails")
     ap.add_argument("--revision", help="sd_inpaint: Hub commit hash of the model repository")
+    ap.add_argument("--input-mode", default="norm", choices=INPUT_MODES,
+                    help="how the frame reaches the model resolution (see the module text); default norm")
     a = ap.parse_args()
     run(a.job, a.model, a.backend, a.ckpt, a.out, a.device, a.batch, a.model_size, a.lama_repo, a.config, a.steps,
-        a.every, a.ckpt_sha256, a.allow_unpickle, a.revision)
+        a.every, a.ckpt_sha256, a.allow_unpickle, a.revision, a.input_mode)
 
 
 if __name__ == "__main__":

@@ -82,7 +82,7 @@ def test_face_backend_hides_the_window_from_the_model():
 def test_model_input_does_not_depend_on_hidden_pixels():
     """Regression (17 Nov 2026): v1 upsampled the frame before masking, so the bicubic kernel carried hidden border
     values into the visible band next to the mask. Two frames that differ only inside the hidden window must give
-    the model exactly the same input."""
+    the model exactly the same input, in every input mode."""
     pytest.importorskip("torch")
     import model_fills_infer as MI
 
@@ -97,12 +97,51 @@ def test_model_input_does_not_depend_on_hidden_pixels():
     hide[:, 40:50, 60:70] = True
     z2 = z.copy()
     z2[hide] = rng.normal(size=int(hide.sum())).astype(np.float32) * 2
-    for size in (256, 512):
+    for mode, size in (("norm", 256), ("norm", 512), ("nearest", 256), ("nearest", 512), ("native", 128)):
         net = Echo("cpu", size, 128)
+        net.input_mode = mode
         net(z, hide)
         a = net.seen
         net(z2, hide)
-        assert bool((a == net.seen).all()), size
+        assert bool((a == net.seen).all()), (mode, size)
+
+
+def test_model_input_draws_no_outline_around_the_window():
+    """Regression (17 Nov 2026): v2 replaced the hidden pixels by the mean of a ring before bicubic upsampling. On an
+    image with a gradient that mean differs from the local value, so the visible band next to the window was pulled
+    toward it by about one pixel step: a faint outline of the window, which the scene model continued into the hole
+    (R 0.88 instead of 0.23 in CelebA). On a smooth ramp the visible input must stay within 0.35 of one pixel
+    step of the plain upsampling of the full frame, also right next to the window (measured: 0.16 at 2x, 0.28 at 4x)."""
+    torch = pytest.importorskip("torch")
+    import model_fills_infer as MI
+
+    class Echo(MI.Base):
+        def forward(self, x, m, keys):
+            self.seen, self.mask = x.clone(), m.clone()
+            return x
+
+    step = 0.02                                               # ramp of 0.02 z per pixel, far inside the clip
+    z = (np.arange(128, dtype=np.float32)[None, None, :] - 64) * step + np.zeros((1, 128, 1), np.float32)
+    hide = np.zeros_like(z, bool)
+    hide[:, 40:50, 60:70] = True
+    step_u = step / (2 * MI.ZCLIP)
+    for size in (256, 512):
+        net = Echo("cpu", size, 128)
+        net(z, hide)
+        plain = torch.nn.functional.interpolate(torch.from_numpy(MI.z_to_u(z))[:, None], size=size, mode="bicubic",
+                                                align_corners=False)
+        vis = net.mask[0, 0] == 0
+        dev = float((net.seen[0, 0] - plain[0, 0]).abs()[vis].max())
+        assert dev <= 0.35 * step_u, (size, dev / step_u)
+    # the discarded v2 construction fails this test by a wide margin (about one pixel step)
+    x = torch.from_numpy(MI.z_to_u(z))[:, None]
+    m0 = torch.from_numpy(hide.astype(np.float32))[:, None]
+    ring = (torch.nn.functional.max_pool2d(m0, 7, stride=1, padding=3) - m0).clamp(0, 1)
+    v2 = torch.nn.functional.interpolate(x * (1 - m0) + (x * ring).sum() / ring.sum() * m0, size=256, mode="bicubic",
+                                         align_corners=False)
+    plain = torch.nn.functional.interpolate(x, size=256, mode="bicubic", align_corners=False)
+    m = torch.nn.functional.interpolate(m0, size=256, mode="nearest")
+    assert float((v2 - plain).abs()[m == 0].max()) > 0.8 * step_u
 
 
 def test_grey_mapping_is_inverse_inside_the_clip():

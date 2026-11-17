@@ -198,7 +198,7 @@ def summ(model):
         print(m, " ".join(f"{k}={v[0]}({v[1]})" for k, v in row.items()))
 
 
-def qc(model, n_targets=8, positions=(0, 5, 11)):
+def qc(model, n_targets=8, positions=(0, 12, 24)):      # cubes of the budgeted run (every fourth)
     """Private sheet: central axial slice of the 16 mm cube inside its shell: target, model fill, second scan,
     dataset average, squared error of the model fill. Evenly spaced targets that the model ran on."""
     import matplotlib
@@ -260,7 +260,7 @@ def qc(model, n_targets=8, positions=(0, 5, 11)):
                           origin="lower", interpolation="nearest", **kw)
                 a_.add_patch(plt.Rectangle((shell - .5, shell - .5), size[0], size[1], fill=False, ec="#d33", lw=0.6))
     fig.suptitle("PRIVATE QC QTIM, 16 mm cubes (f = 1/8), drawn side, central axial slice; red = hidden cube, outside "
-                 "= 4 mm shell; light blue = outside the brain mask; grey panel = no second scan", fontsize=7)
+                 "= 4 mm shell; light blue = outside the brain mask or not run; grey panel = no second scan", fontsize=7)
     fig.tight_layout()
     out = os.path.join(PRIVATE, model, f"qc_{model}_private.png")
     fig.savefig(out, dpi=150)

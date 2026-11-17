@@ -9,7 +9,7 @@ This section collects analyses that support the main paper but answer none of it
 
 \subsection{Where in the image each rung is close or far}
 \label{sec:s-atlas}
-Figure~\ref{fig:atlas-all} maps the local squared error of each rung for every image set; the main text cites it in Section~4.4.
+Figure~\ref{fig:atlas-all} maps the local squared error of each rung for every image set; the main text cites it in Section~4.5.
 
 \begin{figure*}[t]
 \centering
@@ -128,7 +128,18 @@ UPOL & Free for use; citation required & Not stated on the dataset page \\
 
 \section{What an audit of a generative model needs}
 \label{sec:s-audit}
-The Discussion defines an audit profile (Eq.~3 of the main text) that places the fills of a generative model next to the ladder controls for groups of targets.
+Section~\ref{sec:s-models} places four pretrained models on the ladder for whole cohorts.
+The next step is an audit profile that compares a model with each ladder control within groups of people.
+For a held-out target $x_i$ (as in Eq.~1 of the main text) with visible context $c_i$ and mask $M_i$, let $y_{ik}=G(c_i,M_i,z_k)$ be the $k$-th fill of model $G$ with random seed $z_k$.
+For a group of targets $a$ (for example an age band or an acquisition site), a distance $d_m$ and a ladder control $f_{ir}$, the audit profile is
+\begin{equation}
+\Delta_{a,m,r}=\mathbb E_{i\mid a}\Bigl[\mathbb E_k\, d_m(y_{ik},x_i;E_{ir})-d_m(f_{ir},x_i;E_{ir})\Bigr],
+\label{eq:audit}
+\end{equation}
+where $E_{ir}$ are the valid pixels shared by the target and the control.
+A negative value means that the metric prefers the model's fills to the control, not that the person was kept.
+Seeds are averaged within a target, failed outputs are reported, and group gaps need uncertainty over independent people.
+Table~\ref{tab:s-models} gives the two terms of this profile for one group, the whole cohort, with one sample per target.
 Table~\ref{tab:decision} lists what such an audit must establish and what the reference experiments of this paper already provide.
 The reference cohorts for groups are defined: matched means use the recorded sex and age attributes in CelebA and the sex and age bands in IMDb-WIKI, and the brain uses sex- and age-matched cohorts with family exclusion.
 Group profiles of generated fills require model outputs on shared targets and masks, a fixed number of samples per target and a fixed rule for aggregating them.
@@ -160,6 +171,10 @@ Torchmetrics & SSIM original / permuted & PSNR / unclamped & $\tau$: plain / eps
 \end{tabular}
 \end{table}
 % Sources: results/brats_panel_checks_tm1.1.2.json and results/brats_panel_checks_tm1.9.0.json.
+
+\input{sec/X_suppl_models}
+
+\input{sec/X_suppl_profiles}
 
 \section{Distances, units, and aggregation}
 \subsection{Mean-relative error and finite references}

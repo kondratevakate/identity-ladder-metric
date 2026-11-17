@@ -9,7 +9,7 @@ We first define the fills that form the ladder and the three controls, then the 
 The \emph{target} is the region of a person's image hidden from the inpainting model: a cube in the brain, a square window in the 2D images.
 Its size is a fraction of the \emph{object}, the structure being imaged: the brain (127\,mm across in the template), the aligned face (79.5 pixels wide), the retinal field of view (square root of its mean area: 78 pixels in PAPILA, 85 in GRAPE) or the iris (diameter $256/\pi$ pixels); 1/8 gives 16\,mm cubes and 10 or 11 pixel windows.
 The \emph{context ring} is the band of visible pixels around the target that is used to choose the nearest people: 4\,mm in the brain, a quarter of the cube, and half the window width in the 2D images (5 or 6 pixels).
-A \emph{fill} is any content placed into the hidden region and compared with the target; every fill here is a real image, an average of real images, or a control built from them.
+A \emph{fill} is any content placed into the hidden region and compared with the target; every reference fill is a real image, an average of real images, or a control built from them, and Section~\ref{sec:m-models} adds the fills of pretrained models.
 \emph{Valid pixels} are pixels observed in both target and fill (field of view, brain mask, iris without lids and reflections); other pixels are missing, never zero.
 \emph{Unrelated people} are everyone outside the target person's family.
 
@@ -40,7 +40,7 @@ R(f)=\frac{\bar d(f)-\bar d_0}{\bar d(\mathrm{random})-\bar d_0},
 \end{equation}
 with $d$ the metric written as a distance (similarities negated), $\bar d$ its average over targets and regions, $\bar d(\mathrm{random})$ the average over the 16 random people and $\bar d_0$ the distance of the \emph{anchor}, the reference placed at 0, here the target itself, so $R=0$ is the target and $R=1$ a typical random person (Figure~\ref{fig:explainer}).
 The random person is the natural unit because it is the infill a model produces when it ignores the context and copies an arbitrary training image, and because every metric can measure it on every dataset; a metric that cannot place the same person below 1 does not see the person at all.
-The brain table also anchors $\bar d_0$ on the second scan, because two sessions of one brain differ.
+The brain profile (Supplementary Section~S5) also anchors $\bar d_0$ on the second scan, because two sessions of one brain differ.
 
 \subsection{Metrics and uncertainty}
 We compute ten variants in four families, the ones shown in Figure~\ref{fig:summary}; \ac{GDT}-like and \ac{RMSE}, which order the rungs as \ac{MSE} does, are reported in the text.
@@ -53,6 +53,12 @@ Kernels and tolerances are in the supplement.
 Intervals are 95\% bootstrap intervals (2{,}000 resamples of people or families).
 One-sided tests ask whether the second image beats the dataset average (T1), the softened same person (T2), wrong detail (T3a) and noise (T3b), Holm-corrected within the dataset.
 Maps use Gaussian local averages with standard deviation $w/\sqrt{12}$ for window width $w$.
+
+\subsection{Pretrained models}
+\label{sec:m-models}
+We place three pretrained inpainting models on the ladder with their released weights and no tuning: LaMa~\cite{lama2022} with weights trained on CelebA-HQ and with weights trained on scenes (Places), and the winning ensemble of the \ac{BraTS} 2024 inpainting challenge~\cite{brats2024winner}, run with the code of its container~\cite{bratsorch2025}.
+Each model sees the whole image of the target with one hidden region and returns that region, which is scored like every reference, by the same code on the same valid pixels.
+The brain ensemble is slow and ran on the first \mfBratsQtimN{} of 221 people in an order fixed in advance; CelebA-HQ is a subset of CelebA, so IMDb-WIKI is the leakage-free set for the face-trained weights (Supplementary Section~S4).
 
 \subsection{Datasets}
 \label{sec:m-brain}
