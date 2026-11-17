@@ -3,13 +3,15 @@
 \input{sec/fig_summary}
 % sec/main_profiles (Tables brain, faces, retina and iris) moved to the supplement, Section S5 (17 Nov 2026).
 % Every number cites its results file in a comment.
-We answer the four research questions in turn: first as unweighted means over the nine image sets (64 to 921 people each; UTIRIS enters with both \ac{NIR} and \ac{VIS}), then per modality.
+Cross-set numbers are unweighted means over the nine image sets (64 to 921 people each; UTIRIS enters with both \ac{NIR} and \ac{VIS}).
 
 \subsection{RQ1, RQ2: pixel metrics see the person but reward averaging}
 \label{sec:r-cross}
-Figure~\ref{fig:summary} places all ten metric variants on the random-person scale, averaged over the nine image sets; Figure~\ref{fig:explainer} traces one row.
+Figure~\ref{fig:summary} places all ten metric variants on the random-person scale, averaged over the nine image sets.
 Error and similarity metrics see the person: under \ac{MSE} the same person is at 0.41 and the random person at 1\statuspre.
 They do not reject averaging: the dataset average is at 0.50, and the softened same person at 0.29 is closer than the unchanged same person\statuspre.
+Over the seven sets with a true second image, the same person is at 0.33, its softened version at 0.25 and the dataset average at 0.50.
+% Source: results/cross_modality/common_f8_v1.json, R_self, mse, rungs repeat / shrink_ref / dataset_mean, unweighted mean over QTIM, CelebA, IMDb-WIKI, GRAPE, UTIRIS NIR, UTIRIS VIS, UPOL.
 The two face sets alone show the same: the same person at \mfLamaHqCelebaRefRepeatMse{} and \mfLamaHqImdbRefRepeatMse{}, its softened version at \mfLamaHqCelebaRefSoftMse{} and \mfLamaHqImdbRefSoftMse{}, and the dataset average at \mfLamaHqCelebaRefMeanMse{}.
 In the brain, anchored on the second scan, the softened scan is at $-0.01$ $[-0.028,-0.004]$, so T2 fails\statuspre.
 \input{sec/tab_tests}
@@ -37,7 +39,7 @@ No metric reaches the shaded corner of Figure~\ref{fig:summary}A, where it would
 Under \ac{MSE}, lost detail (softened same person) is at 0.29, wrong detail at 1.00, as far as a random person, and noise at 0.80\statuspre; only \ac{lDDT}-like puts noise far beyond a random person (1.58).
 \ac{FID} reverses the order: wrong detail at 1.29 and the softened same person at 2.55, so it prefers a sharp image of the wrong person to a softened image of the right one\statuspre.
 Residual correlation, which compares only the direction of individual detail, cannot see lost detail at all.
-The two families therefore fail in opposite directions: a model tuned on pixel metrics would learn to blur toward the mean, and a model tuned on \ac{FID} could produce realistic detail that belongs to someone else.
+The two families therefore fail in opposite directions.
 \subsection{RQ4: nearest people chosen from the context come close}
 \input{sec/fig_rq4}
 With the hidden region at 1/8 of the object, the mean of the 16 nearest people is at 0.29 under \ac{MSE} on average over the nine sets, and the best-matching person at 0.23\statuspre.
@@ -47,10 +49,9 @@ How close nearest people come depends on the size of the hidden region relative 
 When the hidden region grows from 1/16 to 1/8 and 1/4 of the object, the nearest person in the brain moves from 0.38 to 0.59 and 0.71 (8, 16 and 32\,mm cubes), and the other modalities follow the same course (Supplementary Table~S13)\statuspre.
 The dataset average remains between 0.49 and 0.53, and the second image and its softened version stay in place (QTIM: 0.16, 0.15, 0.15 and 0.14, 0.14, 0.14).
 The mean of the 16 nearest people grows more slowly (brain: 0.25 to 0.42; faces: 0.12 to 0.28) and remains below the dataset average at every size.
-Small regions are thus largely predictable from their surroundings, and large regions are not.
-Because the second image and its softened version maintain their distance at all sizes, the averaging reward under \ac{MSE} (RQ2) does not depend on size, whereas the RQ4 retrieval baseline must be reported at a specified fraction of the object.
+The averaging reward under \ac{MSE} (RQ2) thus does not depend on size, whereas the retrieval baseline must be reported at a stated fraction of the object.
 Acquisition also matters: in IXI, a random person from the same site is at 0.87 $[0.844, 0.899]$ and one from another site at 1.06 $[1.049, 1.072]$\statuspre.
-About a sixth of the distance to a random person from another site is therefore tied to the site, not the person, and a nearest-person search restricted to the same site would gain part of its advantage from matching the acquisition.
+About a sixth of the distance to a random person from another site is therefore tied to the site, not the person.
 
 \input{sec/models}
 

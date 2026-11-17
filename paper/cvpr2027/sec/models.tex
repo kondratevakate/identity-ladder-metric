@@ -5,7 +5,7 @@
 \caption{\textbf{Pretrained models among the references.}
 One row per model and image set, hidden region at 1/8 of the object, random-person scale (Eq.~\ref{eq:anchors}; 0 = target, 1 = random person).
 The last four columns are the references under \acs{MSE} on the same people and regions as the model (2nd: second image; soft.: softened second image; 16: mean of the 16 nearest people; avg.: dataset average; bold: lowest \acs{MSE} in the row).
-In faces, the models are closer than every reference but only \mfFaceAheadMin{} to \mfFaceAheadMax{} ahead of the mean of the 16 nearest people; in the brain, the second scan stays closer than the model.}
+In faces, the second photograph differs from the target in pose and lighting, so it is a same-person reference and not a ceiling for fills; the models are closer than every reference but only \mfFaceAheadMin{} to \mfFaceAheadMax{} ahead of the mean of the 16 nearest people; in the brain, the second scan stays closer than the model.}
 \label{tab:models}
 \scriptsize
 \setlength{\tabcolsep}{2.2pt}
@@ -29,7 +29,7 @@ Stable Diffusion 1.5 & IMDb-WIKI & \mfSdImdbN{} & \textbf{\mfSdImdbMse{}} & \mfS
 \end{table}
 % Sources: results/model_fills_v1/model_fills_f8.json (input version v3; docs/PROTOCOL_model_fills.md, amendment 2); the
 % table and every \mf... number are written by paper/cvpr2027/make_model_fills.py (tab/model_fills*.tex).
-In faces (Table~\ref{tab:models}), LaMa with face-trained weights is at \mfLamaHqCelebaMse{} in CelebA and \mfLamaHqImdbMse{} in IMDb-WIKI under \ac{MSE} (95\% intervals \mfLamaHqCelebaMseCi{} and \mfLamaHqImdbMseCi{}), with scene-trained weights at \mfLamaPlacesCelebaMse{} and \mfLamaPlacesImdbMse{}, and the diffusion model at \mfSdCelebaMse{} and \mfSdImdbMse{}: all closer than every reference, including the person's own second photograph (\mfLamaHqCelebaRefRepeatMse{} and \mfLamaHqImdbRefRepeatMse{}).
+In faces (Table~\ref{tab:models}), LaMa with face-trained weights is at \mfLamaHqCelebaMse{} in CelebA and \mfLamaHqImdbMse{} in IMDb-WIKI under \ac{MSE} (95\% intervals \mfLamaHqCelebaMseCi{} and \mfLamaHqImdbMseCi{}), with scene-trained weights at \mfLamaPlacesCelebaMse{} and \mfLamaPlacesImdbMse{}, and the diffusion model at \mfSdCelebaMse{} and \mfSdImdbMse{}: all closer than every reference. The person's own second photograph (\mfLamaHqCelebaRefRepeatMse{} and \mfLamaHqImdbRefRepeatMse{}) is no ceiling here, because it differs from the target in pose and lighting.
 The fills are not averaged: the norm of their individual detail is \mfFaceDetailMin{} to \mfFaceDetailMax{} of the target's (median), against \mfLamaHqCelebaRefNearestDetail{} for the mean of the 16 nearest people.
 Yet the models are only \mfFaceAheadMin{} to \mfFaceAheadMax{} ahead of that mean (\mfLamaHqCelebaRefNearestMse{} and \mfLamaHqImdbRefNearestMse{}), which uses no model and nothing of the person beyond the surroundings.
 In the brain, the challenge-winning ensemble is at \mfBratsQtimMse{} \mfBratsQtimMseCi{} on \mfBratsQtimN{} of 221 people: ahead of the mean of the 16 nearest people (\mfBratsQtimRefNearestMse{}) and the dataset average (\mfBratsQtimRefMeanMse{}), while the person's second scan stays twice as close (\mfBratsQtimRefRepeatMse{} on the same people and cubes).
