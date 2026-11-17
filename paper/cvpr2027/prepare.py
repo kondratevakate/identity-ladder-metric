@@ -177,10 +177,10 @@ def main():
         for test in ('T1','T2','T3a','T3b'):
             item=selected[test]
             if 'p_holm' not in item:
-                cells.append(r'\notrun')
+                cells.append(r'$\cdot$')
             else:
-                outcome='pass' if item['pass_holm_0.05'] else 'not established'
-                cells.append(f"{outcome} ({item['p_holm']:.2g})"+r'\statuspre')
+                outcome='pass' if item['pass_holm_0.05'] else 'fails'
+                cells.append(f"{outcome} (p = {item['p_holm']:.2g})"+r'\statuspre')
         tests.append([label]+cells)
         chosen['brain/tests/'+metric]=selected
     rows(TAB/'brain_tests.tex',tests)

@@ -78,28 +78,7 @@ Set & Fill & 1/16 & 1/8 & 1/5 & 1/4 \\
 % Source: results/model_fills_v1/model_fills_size_faces.json; rows by make_model_fills.py.
 
 \paragraph{One sample or two.}
-The diffusion row of the main text uses one sample per region.
-A second sample on the same people, with every seed changed, lands at the same position (Table~\ref{tab:s-samples}): the paired difference is \mfSamplesCelebaDiffOne{} in CelebA and \mfSamplesImdbDiffOne{} in IMDb-WIKI, with intervals that include zero.
-The pixelwise mean of the two samples is closer to the target than either of them, by \mfSamplesCelebaDiffMean{} and \mfSamplesImdbDiffMean{}, although it is no fill the model would produce.
-This is the averaging reward of the main text, measured on the outputs of a generative model.
-The second sample was added after the first was scored and is exploratory.
-
-\begin{table}[htbp]
-\centering
-\caption{\textbf{Two samples of the diffusion model and their mean.}
-\acs{MSE} on the random-person scale at 1/8 of the object, on the same people (column People) and windows.
-Sample 0 is the reported run; differences are paired, with 95\% bootstrap intervals; the last two columns give the norm of the individual detail relative to the target's (median).
-Averaging two samples moves the score toward the target while the fill keeps most of its detail.}
-\label{tab:s-samples}
-\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}lrrrrllrr@{}}
-\toprule
-Set & People & Sample 0 & Sample 1 & Mean of 2 & Sample 1 $-$ sample 0 & Mean $-$ sample 0 & Detail, one & Detail, mean \\
-\midrule
-\input{tab/model_fills_samples}\end{tabular}
-\end{table}
-% Source: results/model_fills_v1/model_fills_sd_samples.json (protocol amendment 3); rows by make_model_fills.py.
+The diffusion row of the main text uses one sample per region; a second sample on the same people lands at the same position (Section~\ref{sec:s-samples}).
 
 \paragraph{Perceptual and set-level metrics.}
 At the 16-pixel window, \ac{LPIPS} places the three face models at \mfFaceLpipsMin{} to \mfFaceLpipsMax{}, closer than the person's own second photograph (\mfLamaHqCelebaRefRepeatLpips{} in CelebA and \mfLamaHqImdbRefRepeatLpips{} in IMDb-WIKI) and than its softened version (\mfLamaHqCelebaRefSoftLpips{} and \mfLamaHqImdbRefSoftLpips{}).
@@ -123,7 +102,7 @@ The positions therefore describe what each metric rewards in these fills; they d
 \centering
 \caption{\textbf{Pretrained models: full results.}
 Random-person scale at 1/8 of the object, with the 95\% bootstrap interval for \acs{MSE}; the four reference columns give \acs{MSE} on the same targets as the model (2nd: same person's second image; soft: softened; near: mean of the 16 nearest people; avg: dataset average).
-\acs{LPIPS} (AlexNet), \acs{FID} and \acs{FWD} are from the 16-pixel window in faces; \acs{FID} and \acs{FWD} are divided by the distance of the random-person set (n/a: not computed).}
+\acs{LPIPS} (AlexNet), \acs{FID} and \acs{FWD} are from the 16-pixel window in faces; \acs{FID} and \acs{FWD} are divided by the distance of the random-person set ($\cdot$: not applicable to this modality).}
 \label{tab:s-models}
 \footnotesize
 \setlength{\tabcolsep}{3.2pt}

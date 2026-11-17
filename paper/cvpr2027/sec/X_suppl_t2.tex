@@ -1,0 +1,41 @@
+\section{The softened control under squared error}
+\label{sec:s-t2}
+\input{tab/t2_identity_numbers}
+Under \ac{MSE}, the position of the softened same person follows from the position of the unchanged second image, as the Discussion of the main text states.
+This section gives the derivation and compares it with the measured values.
+
+Let $d=x-\hat\mu$ be the individual detail of the target and $g=f-\hat\mu$ that of the second image, on the valid pixels of one hidden region.
+The softened fill is $\hat\mu+\lambda g$, so its squared error is
+\begin{equation}
+\|d-\lambda g\|^2=\|d\|^2-2\lambda\langle d,g\rangle+\lambda^2\|g\|^2 ,
+\end{equation}
+and the error of the unchanged second image, $\|d-g\|^2$, gives $2\langle d,g\rangle=\|d\|^2+\|g\|^2-\|d-g\|^2$.
+Summing over targets and regions and dividing by $\sum\|d\|^2$, which is the error of the dataset average in Eq.~1 of the main text, we obtain
+\begin{equation}
+Q_{\mathrm{soft}}=1-\lambda\,(1+G-Q)+\lambda^2 G,\qquad G=\frac{\sum\|g\|^2}{\sum\|d\|^2},
+\label{eq:s-t2}
+\end{equation}
+where $Q$ is the value of the unchanged second image and $G$ says how much individual detail the second images carry relative to the targets.
+No assumption about noise or independence enters.
+With $\lambda=1-Q/2$, the value used for the softened control, and $G=1$, Eq.~\ref{eq:s-t2} becomes $Q_{\mathrm{soft}}=Q\,(1-Q/4)$.
+The softened image is then at $1-Q/4$ times the distance of the unchanged one, on the $Q$ scale and on the random-person scale alike, whatever the anatomy.
+
+Table~\ref{tab:s-t2} compares this prediction with the measured positions in the \tTwoSets{} image sets that have a second image.
+The two agree within \tTwoMaxDiff{}, and the value of $G$ that makes Eq.~\ref{eq:s-t2} exact lies between 0.95 and 1.05.
+Under \ac{MSE}, test T2 therefore cannot pass in these image sets, and its result shows only the size of the reward for softening, which grows with $Q$.
+No such identity holds for \ac{SSIM}, the tolerance scores or \ac{LPIPS}, so for these metrics T2 is an empirical result.
+
+\begin{table}[htbp]
+\centering
+\caption{\textbf{Softened same person under \acs{MSE}: predicted against measured.}
+$Q$: error of the unchanged second image relative to the dataset average; $\lambda=1-Q/2$; same: measured position of the unchanged second image on the random-person scale; predicted: same times $1-Q/4$; measured: position of the softened second image; $G$: detail energy of the second images relative to the targets that makes Eq.~\ref{eq:s-t2} exact.
+Compare the predicted and measured columns: they differ by at most \tTwoMaxDiff{}.}
+\label{tab:s-t2}
+\small
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Image set & $Q$ & $\lambda$ & Same & Predicted & Measured & $G$ \\
+\midrule
+\input{tab/t2_identity}\end{tabular}
+\end{table}
+% Source: results/cross_modality/t2_identity_f8_v1.json (from common_f8_v1.json); rows by make_t2_identity.py.
