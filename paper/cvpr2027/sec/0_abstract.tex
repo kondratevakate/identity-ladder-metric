@@ -1,16 +1,16 @@
 \begin{abstract}
-Inpainting models fill a hidden region of an image using its visible surroundings, and their fills are usually compared pixel by pixel with the original content.
+Inpainting models fill a hidden region of an image using its visible surroundings, and their fills are usually compared pixel-by-pixel with the original content.
 A low error can mean that the infill recovered this person's own detail, or only that it looks like an average person.
-For a model output the right score is unknown, so the metric itself cannot be checked.
+For a model output, the right score is unknown, so the metric itself cannot be checked.
 We therefore audit the metrics on references whose relationship to the hidden region is known in advance: a second image of the same person, the opposite side of the same body, unrelated people, and averages of many people.
 We add three controls built from the truth: the person's own second image, pulled toward the population average; the same amount of detail taken from a random person; and white noise.
-We apply this identity ladder to nine image sets of brain magnetic resonance imaging (MRI), retinal photographs, faces and irises.
+We apply this identity ladder to nine image sets of brain magnetic resonance imaging (MRI), retinal photographs, faces, and irises.
 On a scale where 0 is the target and 1 is a random person, with the hidden region at 1/8 of the object, mean squared error (MSE) places the person's second image at 0.41, the dataset average at 0.50, and the same second image pulled toward the average scores better (0.29) than the unchanged one.
 Set-level Fr\'echet inception distance (FID) and Fr\'echet wavelet distance (FWD) reject averaged infills by factors of 16 and 186, but barely distinguish the right person from a random person.
 No metric we tested does both.
 Squared error is known to favor the average; the ladder measures by how much on real anatomy.
-The mean of the 16 unrelated people whose visible surroundings look most like the target's reaches 0.29 under MSE, averaged over the nine sets: closer than the opposite side of the same body in every set, and closer than a second photograph in faces.
+The mean of the 16 unrelated people whose visible surroundings most closely match the target's reaches 0.29 under MSE, averaged over the nine sets: closer than the opposite side of the same body in every set, and closer than a second photograph in faces.
 This retrieval baseline weakens as the hidden region grows, so it must be reported at a stated size.
 Pretrained inpainting models can then be read against these references: in faces, LaMa reaches \mfLamaHqImdbMse{} under MSE, closer than the person's own second photograph and only \mfLamaHqImdbAheadNearest{} ahead of that retrieval baseline, and a challenge-winning brain model reaches \mfBratsQtimMse{}, ahead of the baseline but behind the person's second scan.
-The ladder is a deterministic baseline for placing inpainting models, and its controls should be reported next to classical metrics.
+The ladder is a deterministic baseline for evaluating inpainting models, and its controls should be reported alongside classical metrics.
 \end{abstract}
