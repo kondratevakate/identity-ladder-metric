@@ -1,4 +1,68 @@
-# Handoff: identity-ladder-metric (updated 2026-11-08)
+# Handoff: identity-ladder-metric (updated 2026-11-17)
+
+## START HERE (state at the end of 17 Nov 2026)
+
+**Where.** Worktree `C:\Projects\02_academia\studies\_worktrees\identity-ladder-cvpr2027-review`, branch
+`cvpr2027-review-20261114`, equal to `origin/master` of the public repo `kondratevakate/identity-ladder-metric`.
+Paper sources in `paper/cvpr2027/`. All commits of 14 to 17 Nov were made by Claude sessions. Nothing is running:
+no local jobs, no GCP resources of this project (VM, disk and snapshot of the model runs were deleted on 17 Nov).
+
+**The paper.** CVPR 2027 submission 43304, "Identity Ladder: Auditing Inpainting Metrics with Population
+References". Main paper deadline was 17 Nov 12:00 UTC; Kate uploads to OpenReview herself, so ask her whether the
+upload and the new title, abstract and keywords went in before assuming it. The built files are `paper/cvpr2027/main.pdf`
+(11 pages, main text ends on page 8, LLM Usage Statement on page 9) and `paper/cvpr2027/supplementary.pdf` (14 pages).
+
+**Next deadline: supplement, 23 Nov 2026 Anywhere on Earth.** Open items for it, in order:
+1. R2-vi below: the seven-set means table (sets with a true second image) is computed but not yet in the supplement.
+2. Supplement tables S5 to S7, S9, S10 and S13 to S15 have no bold for the best value (S8 and the full brain table do).
+3. Figure S3 (`fig/model_fills_v1.pdf`): the QTIM panel shows references on all 221 people while the main-text model
+   table uses the 37 people of the brain model; the caption says so, a redraw on the 37 would be cleaner.
+4. Figure 3 axis still reads "rejects subtle averaging"; the text says "partial averaging" (label is inside the PDF,
+   see `paper/cvpr2027/relabel_suppl_figures.py` for how labels were replaced).
+5. Rebuild and re-read `supplementary.pdf`, then give Kate the file; she uploads it.
+The main text is frozen after the main deadline; do not edit `sec/0_abstract.tex` to `sec/5_synthesis.tex`,
+`sec/models.tex`, `sec/tab_tests.tex` or the main-text figures unless Kate says the submission can still change.
+
+**After that: rebuttal and next paper.** The computations asked for by the two expected reviews were not run and
+are listed in the backlog section below (R2-i to R2-vii) and here: bootstrap intervals for the FID and FWD factors
+(16 and 186), rank-1 identification of the second scan in QTIM for references and model fills, a softened control
+with lambda independent of Q or a lambda sweep, sensitivity to k = 16, more diffusion samples and a face-domain
+diffusion model. Each needs a smoke test, a look at the QC sheet and Kate's go before a full run.
+
+**How to build and test.** From `paper/cvpr2027`: `pdflatex main; bibtex main; pdflatex main; pdflatex main`
+(same for `supplementary`); latexmk does not work on this machine (no perl). Tests:
+`python -m pytest tests/test_model_fills.py tests/test_cross_modality.py -q` (51 pass) or the whole suite with
+`--deselect tests/test_logbook_claims.py -k "not topolog and not betti and not persist"` (481 pass). Known failures
+outside that selection: `tests/test_logbook_claims.py` expects old wording and needs rewriting; four topology
+tests need the gudhi DLL, which Windows Application Control blocks (leave OS security alone).
+
+**Generated files, do not edit by hand.** Model numbers are macros in `tab/model_fills_numbers.tex`
+(`make_model_fills.py`); `tab/brain_full_wide.tex` (`make_brain_full_wide.py` from `tab/brain_full.tex`, which
+`prepare.py` writes); `tab/tests_f8.tex` (`make_tests_table.py`); `tab/rq4_size_table.tex`
+(`make_rq4_size_table.py`); relabeled figures `fig/*_v3.pdf`, `fig/metric_summary_v8_f8.pdf`,
+`fig/fig_explainer_mse_v4.pdf` (`relabel_suppl_figures.py`, which reads the kept source PDFs of the previous version).
+The main-text model table is hand-written in `sec/models.tex` from those macros.
+
+**Overleaf.** Project `6ae9cc6f4e581ca12131e3e3` is linked to GitHub master and is behind it (it has commit
+32441b2). Kate pulls with Menu, GitHub, "Pull GitHub changes into Overleaf". Co-authors edit there: before pushing,
+`git fetch` and merge `origin/master`; on a conflict Overleaf creates a branch `overleaf-YYYY-MM-DD-HHMM` to merge
+locally. Edits made in Overleaf on 17 Nov introduced typos and a broken `\ref`, so read every incoming diff.
+
+**Terms fixed with the co-authors.** fill (not infill), dataset average, second image, opposite side, random
+person, nearest people, softened, wrong detail, noise; American English; no em or en dashes; scale R (0 = target,
+1 = random person) in the text, Q only in Table 1 and the teaser. Kate confirmed on 17 Nov that the visual QC of
+alignment passed in every image set; the text says so, and the note at the top of `AGENTS.md` about provisional
+results predates that.
+
+**Left on disk on purpose.** Worktree `_worktrees/identity-ladder-rq4size` (branch merged, but it holds an
+uncommitted `src/rq4_iris_extra_size.py`); private model fills under
+`C:\Projects\data\projects\identity-ladder-metric\model-fills-20261116-v1\` (about 2.9 GB; `faces` and `faces_v2`
+are the two invalid input versions, 0.7 GB, kept for the record until Kate decides); the local combined file
+`paper/cvpr2027/identity_ladder_cvpr2027_with_supplement.pdf` (not in git). The GCP project still holds four
+stopped `mriface-*` VMs with 200 GB disks and three snapshots from another task; they bill for storage and are not
+ours to delete. GCP spend of the model runs was about 8 USD by run time; reconcile with billing on 18 Nov in
+`C:\Projects\00_infra\brain\studies\gcp-spend-ledger.md`. Free space on C: was 16 GB on 17 Nov, so check headroom
+before any heavy local run.
 
 ## Backlog for the next paper: second expected review of CVPR 43304 (Kate, 17 Nov 2026)
 
